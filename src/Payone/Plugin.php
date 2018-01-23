@@ -6,21 +6,21 @@ defined('ABSPATH') or die('Direct access not allowed');
 
 class Plugin
 {
-    /**
-     * @var \Payone\Admin\Settings
-     */
-    private $settings;
-
-    /**
-     * @var \Payone\Payone\Api\Request
-     */
-    private $request;
-
-    public function __construct()
+    public function init()
     {
-        $this->settings = new \Payone\Admin\Settings();
-        $this->settings->init();
+        if (is_admin()) {
+            $settings = new \Payone\Admin\Settings();
+            $settings->init();
+        }
 
+        $gateways = [
+            \Payone\Gateway\CreditCard::GATEWAY_ID => new \Payone\Gateway\CreditCard(),
+        ];
+
+        foreach ($gateways as $gateway) {
+            add_filter('woocommerce_payment_gateways', [$gateway, 'add']);
+        }
+/*
         $this->request = new \Payone\Payone\Api\Request();
         $this->request
             ->set('amount', 10000)
@@ -35,9 +35,9 @@ class Plugin
             ->set('firstname', 'Timo')
             ->set('lastname', 'Tester')
             ->set('reference', substr(md5(uniqid('ref', true)), 0, 20))
-            ->set('request', 'preauthorization')
-        ;
+            ->set('request', 'preauthorization');
 
         #$this->request->execute();
+*/
     }
 }

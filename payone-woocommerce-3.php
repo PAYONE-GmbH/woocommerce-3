@@ -10,7 +10,7 @@ Author URI: http://URI_Of_The_Plugin_Author
 License: A "Slug" license name e.g. GPL2
 */
 
-defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
+defined('ABSPATH') or die('Direct access not allowed');
 
 define('PAYONE_PLUGIN_VERSION', '1.0');
 define('PAYONE_PLUGIN_PATH', __DIR__);
@@ -18,6 +18,7 @@ define('PAYONE_VIEW_PATH', PAYONE_PLUGIN_PATH.'/views');
 
 require_once 'src/autoload.php';
 
-if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
     $payonePlugin = new \Payone\Plugin();
+    add_action('plugins_loaded', [$payonePlugin, 'init']);
 }
