@@ -2,7 +2,7 @@
 
 namespace Payone;
 
-defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
+defined('ABSPATH') or die('Direct access not allowed');
 
 class Plugin
 {
@@ -23,11 +23,6 @@ class Plugin
 
         $this->request = new \Payone\Payone\Api\Request();
         $this->request
-            ->setMode('test')
-            ->setAccountId('39578')
-            ->setMerchantId('37834')
-            ->setPortalId('2027202')
-            ->setPortalKey('k2OBcwb2J0YayrU3')
             ->set('amount', 10000)
             ->set('cardexpiredate', 2001)
             ->set('cardpan', '4111111111111111')

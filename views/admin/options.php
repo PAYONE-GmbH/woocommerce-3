@@ -1,7 +1,10 @@
 <div class="wrap">
-<h1>Your Plugin Page Title</h1>
-<p>Here is where the form would go if I actually had options.</p>
-<form method="post">
-    <?php submit_button(); ?>
+<h1>BS PAYONE - Einstellungen</h1>
+<form method="post" action="options.php">
+    <?php
+        settings_fields( 'payone' );
+        do_settings_sections( 'payone-settings-account' );
+        submit_button();
+    ?>
 </form>
 </div>

@@ -8,13 +8,31 @@ class Request extends DataTransfer
     const SOLUTION_NAME = 'payone-woocommerce-3';
     const INTEGRATOR_NAME = 'woocommerce';
 
+    private $apiLogEnabled = false;
+
     public function __construct()
     {
         parent::__construct();
 
+        $options = get_option('payone_account', [
+            'account_id' => '',
+            'merchant_id' => '',
+            'portal_id' => '',
+            'key' => '',
+            'mode' => 'test',
+            'api_log' => 0,
+            'transaction_log' => 0,
+        ]);
+
+        $this->apiLogEnabled = $options['api_log'] ? true : false;
+
         $this
             ->set('api_version', '3.10')
-            ->set('mode', 'live')
+            ->setMode($options['mode'])
+            ->setAccountId($options['account_id'])
+            ->setMerchantId($options['merchant_id'])
+            ->setPortalId($options['portal_id'])
+            ->setPortalKey($options['key'])
             ->set('encoding', 'UTF-8')
             ->set('solution_name', self::SOLUTION_NAME)
             ->set('solution_version', PAYONE_PLUGIN_VERSION)
@@ -47,8 +65,10 @@ class Request extends DataTransfer
         curl_close($ch);
 
         $response = $this->createResponse($result);
-        $logEntry = $this->createLogEntry($this, $response);
-        $logEntry->save();
+        if ($this->apiLogEnabled) {
+            $logEntry = $this->createLogEntry($this, $response);
+            $logEntry->save();
+        }
     }
 
     /**

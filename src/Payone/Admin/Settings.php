@@ -2,29 +2,35 @@
 
 namespace Payone\Admin;
 
+use Payone\Admin\Option\Account;
+
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
 class Settings
 {
+    private $account;
+
     public function init()
     {
         add_action( 'admin_menu', [$this, 'pluginMenu'] );
+        add_action( 'admin_init', [$this, 'registerOptions'] );
     }
 
-    /** Step 1. */
     public function pluginMenu()
     {
-        add_menu_page('Payone Einstellungen', 'BS PAYONE', 'manage_options', 'payone-settings-start', [$this, 'pluginOptions']);
-        add_submenu_page( 'payone-settings-start', 'API-Log', 'API-Log', 'manage_options', 'payone-api-log', [$this, 'apiLog']);
+        add_menu_page('Payone Einstellungen', 'BS PAYONE', 'manage_options', 'payone-settings-account', [$this, 'renderAccountOptions']);
+        add_submenu_page( 'payone-settings-account', 'API-Log', 'API-Log', 'manage_options', 'payone-api-log', [$this, 'apiLog']);
     }
 
-    /** Step 3. */
-    public function pluginOptions()
+    public function registerOptions()
     {
-        if ( !current_user_can( 'manage_options' ) )  {
-            wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
-        }
-        include PAYONE_VIEW_PATH.'/admin/options.php';
+        $this->account = new Account();
+        $this->account->register();
+    }
+
+    public function renderAccountOptions()
+    {
+        $this->account->render();
     }
 
     public function apiLog()
