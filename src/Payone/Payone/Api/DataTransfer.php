@@ -6,6 +6,12 @@ class DataTransfer
 {
     private $parameterBag;
 
+    private $fieldsToAnonymize = [
+        'cardpan' => [4, 4],
+        'iban' => [4, 3],
+        'street' => [1, 1],
+    ];
+
     public function __construct()
     {
         $this->clear();
@@ -66,8 +72,32 @@ class DataTransfer
         $this->parameterBag = json_decode($serialized, true);
     }
 
-    private function anonymize()
+    public function anonymizeParameters()
     {
-        // @todo Alle persönlichen Daten anonymisieren
+        foreach ($this->parameterBag as $key => $value) {
+            $this->parameterBag[$key] = $this->anonymize($key, $value);
+        }
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     *
+     * @return string
+     */
+    private function anonymize($key, $value)
+    {
+        $anonymizationRule = isset($this->fieldsToAnonymize[$key]) ? $this->fieldsToAnonymize[$key] : null;
+
+        if ($anonymizationRule) {
+            $numberFirstCharacters = $anonymizationRule[0];
+            $numberLastCharacters = $anonymizationRule[1];
+
+            $value = substr($value, 0, $numberFirstCharacters)
+                     .str_repeat('x', strlen($value) - $numberFirstCharacters - $numberLastCharacters)
+                     .substr($value, -$numberLastCharacters);
+        }
+
+        return $value;
     }
 }
