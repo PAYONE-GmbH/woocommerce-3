@@ -28,7 +28,6 @@ namespace Payone\Transaction;
  *
  */
 
-class Log
-{
+class Log {
 
 }

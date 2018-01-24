@@ -2,102 +2,92 @@
 
 namespace Payone\Payone\Api;
 
-class DataTransfer
-{
-    private $parameterBag;
+class DataTransfer {
+	private $parameterBag;
 
-    private $fieldsToAnonymize = [
-        'cardpan' => [4, 4],
-        'iban' => [4, 3],
-        'street' => [1, 1],
-    ];
+	private $fieldsToAnonymize = [
+		'cardpan' => [ 4, 4 ],
+		'iban'    => [ 4, 3 ],
+		'street'  => [ 1, 1 ],
+	];
 
-    public function __construct()
-    {
-        $this->clear();
-    }
+	public function __construct() {
+		$this->clear();
+	}
 
-    public static function constructFromJson($jsonData)
-    {
-        $dataTransfer = new DataTransfer();
-        $dataTransfer->unserializeParameters($jsonData);
+	public static function constructFromJson( $jsonData ) {
+		$dataTransfer = new DataTransfer();
+		$dataTransfer->unserializeParameters( $jsonData );
 
-        return $dataTransfer;
-    }
+		return $dataTransfer;
+	}
 
-    public function clear()
-    {
-        $this->parameterBag = [];
-    }
+	public function clear() {
+		$this->parameterBag = [];
+	}
 
-    /**
-     * @todo Wenn ein $key erneut gesetzt wird, kann es auch sein, dass ein Array gespeichert wird.
-     *
-     * @param string $key
-     * @param mixed $value
-     *
-     * @param DataTransfer
-     */
-    public function set($key, $value)
-    {
-        $this->parameterBag[$key] = $value;
+	/**
+	 * @todo Wenn ein $key erneut gesetzt wird, kann es auch sein, dass ein Array gespeichert wird.
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param DataTransfer
+	 *
+	 * @return mixed
+	 */
+	public function set( $key, $value ) {
+		$this->parameterBag[ $key ] = $value;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function get($key)
-    {
-        if (array_key_exists($key, $this->parameterBag)) {
-            return $this->parameterBag[$key];
-        }
+	public function get( $key ) {
+		if ( array_key_exists( $key, $this->parameterBag ) ) {
+			return $this->parameterBag[ $key ];
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * @return string
-     */
-    public function getPostfieldsFromParameters()
-    {
-        return http_build_query($this->parameterBag);
-    }
+	/**
+	 * @return string
+	 */
+	public function getPostfieldsFromParameters() {
+		return http_build_query( $this->parameterBag );
+	}
 
-    public function getSerializedParameters()
-    {
-        return json_encode($this->parameterBag);
-    }
+	public function getSerializedParameters() {
+		return json_encode( $this->parameterBag );
+	}
 
-    public function unserializeParameters($serialized)
-    {
-        $this->parameterBag = json_decode($serialized, true);
-    }
+	public function unserializeParameters( $serialized ) {
+		$this->parameterBag = json_decode( $serialized, true );
+	}
 
-    public function anonymizeParameters()
-    {
-        foreach ($this->parameterBag as $key => $value) {
-            $this->parameterBag[$key] = $this->anonymize($key, $value);
-        }
-    }
+	public function anonymizeParameters() {
+		foreach ( $this->parameterBag as $key => $value ) {
+			$this->parameterBag[ $key ] = $this->anonymize( $key, $value );
+		}
+	}
 
-    /**
-     * @param string $key
-     * @param string $value
-     *
-     * @return string
-     */
-    private function anonymize($key, $value)
-    {
-        $anonymizationRule = isset($this->fieldsToAnonymize[$key]) ? $this->fieldsToAnonymize[$key] : null;
+	/**
+	 * @param string $key
+	 * @param string $value
+	 *
+	 * @return string
+	 */
+	private function anonymize( $key, $value ) {
+		$anonymizationRule = isset( $this->fieldsToAnonymize[ $key ] ) ? $this->fieldsToAnonymize[ $key ] : null;
 
-        if ($anonymizationRule) {
-            $numberFirstCharacters = $anonymizationRule[0];
-            $numberLastCharacters = $anonymizationRule[1];
+		if ( $anonymizationRule ) {
+			$numberFirstCharacters = $anonymizationRule[0];
+			$numberLastCharacters  = $anonymizationRule[1];
 
-            $value = substr($value, 0, $numberFirstCharacters)
-                     .str_repeat('x', strlen($value) - $numberFirstCharacters - $numberLastCharacters)
-                     .substr($value, -$numberLastCharacters);
-        }
+			$value = substr( $value, 0, $numberFirstCharacters )
+			         . str_repeat( 'x', strlen( $value ) - $numberFirstCharacters - $numberLastCharacters )
+			         . substr( $value, - $numberLastCharacters );
+		}
 
-        return $value;
-    }
+		return $value;
+	}
 }
