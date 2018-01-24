@@ -2,12 +2,17 @@
 
 namespace Payone;
 
+use Payone\Database\Migration;
+
 defined('ABSPATH') or die('Direct access not allowed');
 
 class Plugin
 {
     public function init()
     {
+    	$migration = new Migration();
+    	$migration->run();
+
         if (is_admin()) {
             $settings = new \Payone\Admin\Settings();
             $settings->init();
@@ -37,7 +42,7 @@ class Plugin
             ->set('reference', substr(md5(uniqid('ref', true)), 0, 20))
             ->set('request', 'preauthorization');
 
-        #$this->request->execute();
+        $this->request->execute();
 */
     }
 }
