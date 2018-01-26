@@ -14,16 +14,42 @@ class Account extends Helper {
 	public function register() {
 		register_setting( 'payone', self::OPTION_NAME, [ $this, 'sanitize' ] );
 
-		add_settings_section( 'payone_account_settings', 'Kontoinformationen', [ $this, 'accountInfo' ], 'payone-settings-account' );
-		add_settings_field( 'account_id', 'Account-ID', [ $this, 'fieldAccountId' ], 'payone-settings-account', 'payone_account_settings' );
-		add_settings_field( 'merchant_id', 'Merchant-ID', [ $this, 'fieldMerchantId' ], 'payone-settings-account', 'payone_account_settings' );
-		add_settings_field( 'portal_id', 'Portal ID', [ $this, 'fieldPortalId' ], 'payone-settings-account', 'payone_account_settings' );
+		add_settings_section( 'payone_account_settings',
+			'Kontoinformationen',
+			[ $this, 'accountInfo' ],
+			'payone-settings-account' );
+		add_settings_field( 'account_id',
+			'Account-ID',
+			[ $this, 'fieldAccountId' ],
+			'payone-settings-account',
+			'payone_account_settings' );
+		add_settings_field( 'merchant_id',
+			'Merchant-ID',
+			[ $this, 'fieldMerchantId' ],
+			'payone-settings-account',
+			'payone_account_settings' );
+		add_settings_field( 'portal_id',
+			'Portal ID',
+			[ $this, 'fieldPortalId' ],
+			'payone-settings-account',
+			'payone_account_settings' );
 		add_settings_field( 'key', 'Key', [ $this, 'fieldKey' ], 'payone-settings-account', 'payone_account_settings' );
 
-		add_settings_section( 'payone_settings', 'Einstellungen', [ $this, 'settingsInfo' ], 'payone-settings-account' );
+		add_settings_section( 'payone_settings',
+			'Einstellungen',
+			[ $this, 'settingsInfo' ],
+			'payone-settings-account' );
 		add_settings_field( 'mode', 'Modus', [ $this, 'fieldMode' ], 'payone-settings-account', 'payone_settings' );
-		add_settings_field( 'api_log', 'API-Log', [ $this, 'fieldApiLog' ], 'payone-settings-account', 'payone_settings' );
-		add_settings_field( 'transaction_log', 'Transaction-Log', [ $this, 'fieldTransactionLog' ], 'payone-settings-account', 'payone_settings' );
+		add_settings_field( 'api_log',
+			'API-Log',
+			[ $this, 'fieldApiLog' ],
+			'payone-settings-account',
+			'payone_settings' );
+		add_settings_field( 'transaction_log',
+			'Transaction-Log',
+			[ $this, 'fieldTransactionLog' ],
+			'payone-settings-account',
+			'payone_settings' );
 	}
 
 	/**
@@ -71,15 +97,24 @@ class Account extends Helper {
 	}
 
 	public function fieldMode() {
-		$this->textField( self::OPTION_NAME, 'mode' );
+		$this->selectField( self::OPTION_NAME, 'mode', [
+			'test' => 'Test',
+			'live' => 'Live',
+		] );
 	}
 
 	public function fieldApiLog() {
-		$this->textField( self::OPTION_NAME, 'api_log' );
+		$this->selectField( self::OPTION_NAME, 'api_log', [
+			'0' => 'Deaktiviert',
+			'1' => 'Aktiviert',
+		] );
 	}
 
 	public function fieldTransactionLog() {
-		$this->textField( self::OPTION_NAME, 'transaction_log' );
+		$this->selectField( self::OPTION_NAME, 'transaction_log', [
+			'0' => 'Deaktiviert',
+			'1' => 'Aktiviert',
+		] );
 	}
 
 	public function render() {

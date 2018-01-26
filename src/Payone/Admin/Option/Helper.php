@@ -13,4 +13,18 @@ abstract class Helper {
 			isset( $this->options[ $fieldName ] ) ? esc_attr( $this->options[ $fieldName ] ) : ''
 		);
 	}
+
+	protected function selectField( $optionName, $fieldName, $options ) {
+		$selectedValue = isset( $this->options[ $fieldName ] ) ? $this->options[ $fieldName ] : '';
+
+		echo '<select id="' . $fieldName . '" name="' . $optionName . '[' . $fieldName . ']">';
+		foreach ($options as $value => $label) {
+			$selected = '';
+			if ($selectedValue == $value) {
+				$selected = ' selected="selected"';
+			}
+			echo '<option value="'.esc_attr($value).'"'.$selected.'>'.esc_html($label).'</option>';
+		}
+		echo '</select>';
+	}
 }
