@@ -53,8 +53,15 @@ class PrePayment extends GatewayBase {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
+		$transaction = new \Payone\Transaction\PrePayment();
+		$response = $transaction->execute($order);
+
+		// @todo Fehler abfangen und transaktions-ID in Order ablegen.
+
+		$order->set_transaction_id($response->get('txid'));
+
 		// Mark as on-hold (we're awaiting the cheque)
-		$order->update_status( 'on-hold', __( 'Awaiting cheque payment', 'woocommerce' ) );
+		$order->update_status( 'on-hold', __( 'Überweisung wird abgewartet', 'woocommerce' ) );
 
 		// Reduce stock levels
 		$order->reduce_order_stock();

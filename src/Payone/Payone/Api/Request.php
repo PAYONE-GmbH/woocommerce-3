@@ -45,7 +45,10 @@ class Request extends DataTransfer {
 		}
 	}
 
-	public function execute() {
+	/**
+	 * @return Response
+	 */
+	public function submit() {
 		$ch = curl_init( self::API_URL );
 		curl_setopt_array( $ch,
 			[
@@ -65,6 +68,8 @@ class Request extends DataTransfer {
 			$logEntry = $this->createLogEntry( $this, $response );
 			$logEntry->save();
 		}
+
+		return $response;
 	}
 
 	/**

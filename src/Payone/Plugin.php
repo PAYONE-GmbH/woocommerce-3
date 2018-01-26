@@ -42,7 +42,7 @@ class Plugin {
 					->set('reference', substr(md5(uniqid('ref', true)), 0, 20))
 					->set('request', 'preauthorization');
 
-				$this->request->execute();
+				$this->request->submit();
 		*/
 	}
 }

@@ -35,7 +35,7 @@ class DataTransfer {
 	 *
 	 * @return mixed
 	 */
-	public function set( $key, $value ) {
+	public function set( $key, $value) {
 		$this->parameterBag[ $key ] = $value;
 
 		return $this;
@@ -47,6 +47,10 @@ class DataTransfer {
 		}
 
 		return null;
+	}
+
+	public function getAll() {
+		return $this->parameterBag;
 	}
 
 	/**
