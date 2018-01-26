@@ -18,6 +18,8 @@ class Plugin {
 
 		$gateways = [
 			\Payone\Gateway\CreditCard::GATEWAY_ID => new \Payone\Gateway\CreditCard(),
+			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => new \Payone\Gateway\SepaDirectDebit(),
+			\Payone\Gateway\PrePayment::GATEWAY_ID => new \Payone\Gateway\PrePayment(),
 		];
 
 		foreach ( $gateways as $gateway ) {

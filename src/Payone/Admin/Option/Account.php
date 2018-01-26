@@ -5,12 +5,14 @@ namespace Payone\Admin\Option;
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
 class Account extends Helper {
+	const OPTION_NAME = 'payone_account';
+
 	public function __construct() {
-		$this->options = get_option( 'payone_account' );
+		$this->options = get_option( self::OPTION_NAME );
 	}
 
 	public function register() {
-		register_setting( 'payone', 'payone_account', [ $this, 'sanitize' ] );
+		register_setting( 'payone', self::OPTION_NAME, [ $this, 'sanitize' ] );
 
 		add_settings_section( 'payone_account_settings', 'Kontoinformationen', [ $this, 'accountInfo' ], 'payone-settings-account' );
 		add_settings_field( 'account_id', 'Account-ID', [ $this, 'fieldAccountId' ], 'payone-settings-account', 'payone_account_settings' );
@@ -53,31 +55,31 @@ class Account extends Helper {
 	}
 
 	public function fieldAccountId() {
-		$this->textField( 'payone_account', 'account_id' );
+		$this->textField( self::OPTION_NAME, 'account_id' );
 	}
 
 	public function fieldMerchantId() {
-		$this->textField( 'payone_account', 'merchant_id' );
+		$this->textField( self::OPTION_NAME, 'merchant_id' );
 	}
 
 	public function fieldPortalId() {
-		$this->textField( 'payone_account', 'portal_id' );
+		$this->textField( self::OPTION_NAME, 'portal_id' );
 	}
 
 	public function fieldKey() {
-		$this->textField( 'payone_account', 'key' );
+		$this->textField( self::OPTION_NAME, 'key' );
 	}
 
 	public function fieldMode() {
-		$this->textField( 'payone_account', 'mode' );
+		$this->textField( self::OPTION_NAME, 'mode' );
 	}
 
 	public function fieldApiLog() {
-		$this->textField( 'payone_account', 'api_log' );
+		$this->textField( self::OPTION_NAME, 'api_log' );
 	}
 
 	public function fieldTransactionLog() {
-		$this->textField( 'payone_account', 'transaction_log' );
+		$this->textField( self::OPTION_NAME, 'transaction_log' );
 	}
 
 	public function render() {

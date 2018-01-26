@@ -2,14 +2,14 @@
 
 namespace Payone\Gateway;
 
-class CreditCard extends GatewayBase {
-	const GATEWAY_ID = 'bs_payone_creditcard';
+class SepaDirectDebit extends GatewayBase {
+	const GATEWAY_ID = 'bs_payone_sepa';
 
 	public function __construct() {
 		$this->id                 = self::GATEWAY_ID;
 		$this->icon               = '';
 		$this->has_fields         = true;
-		$this->method_title       = 'BS PAYONE Kreditkarte';
+		$this->method_title       = 'BS PAYONE Lastschrift (SEPA)';
 		$this->method_description = 'method_description';
 
 		$this->init_form_fields();
@@ -25,14 +25,14 @@ class CreditCard extends GatewayBase {
 			'enabled'     => [
 				'title'   => __( 'Enable/Disable', 'woocommerce' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Kreditkartenzahlung ermöglichen', 'woocommerce' ),
+				'label'   => __( 'SEPA-Lastschrift ermöglichen', 'woocommerce' ),
 				'default' => 'yes',
 			],
 			'title'       => [
 				'title'       => __( 'Title', 'woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-				'default'     => __( 'Kreditkarte', 'woocommerce' ),
+				'default'     => __( 'Vorkasse', 'woocommerce' ),
 				'desc_tip'    => true,
 			],
 			'description' => [
@@ -45,9 +45,8 @@ class CreditCard extends GatewayBase {
 
 	public function payment_fields() {
 		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-		$hash = $this->calculate_hash($options);
 
-		include PAYONE_VIEW_PATH . '/gateway/creditcard/payment-form.php';
+		include PAYONE_VIEW_PATH . '/gateway/sepa-direct-debit/payment-form.php';
 	}
 
 	public function process_payment( $order_id ) {
@@ -67,26 +66,6 @@ class CreditCard extends GatewayBase {
 		return array(
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
-		);
-	}
-
-	/**
-	 * @param array $options
-	 *
-	 * @return string
-	 */
-	public function calculate_hash($options)
-	{
-		return md5(
-			$options['account_id']
-			.'UTF-8'
-			.$options['merchant_id']
-			.$options['mode']
-			.$options['portal_id']
-			.'creditcardcheck'
-			.'JSON'
-			.'yes'
-			.$options['key']
 		);
 	}
 }
