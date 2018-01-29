@@ -27,11 +27,20 @@ class Log {
 	 */
 	private $createdAt;
 
+	/**
+	 * @var bool
+	 */
+	private $transactionLogEnabled;
+
 	public function __construct( $id = null ) {
 		if ( $id ) {
 			$this->id = $id;
 		}
 		$this->setCreatedAt( new \DateTime() );
+
+		$options = get_option( 'payone_account', [ 'transaction_log' => 0 ] );
+
+		$this->transactionLogEnabled = $options['transaction_log'] ? true : false;
 	}
 
 	/**
@@ -67,6 +76,10 @@ class Log {
 	}
 
 	public function save() {
+		if (!$this->transactionLogEnabled) {
+			return ;
+		}
+
 		global $wpdb;
 
 		$tableName = $wpdb->prefix . self::TABLE_NAME;
