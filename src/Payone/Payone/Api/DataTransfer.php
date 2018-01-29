@@ -11,15 +11,38 @@ class DataTransfer {
 		'street'  => [ 1, 1 ],
 	];
 
-	public function __construct() {
+	/**
+	 * DataTransfer constructor.
+	 *
+	 * @param array|null $parameterBag
+	 */
+	public function __construct($parameterBag = null) {
 		$this->clear();
+
+		if ($parameterBag !== null && is_array($parameterBag)) {
+			$this->parameterBag = $parameterBag;
+		}
 	}
 
+	/**
+	 * @param string $jsonData
+	 *
+	 * @return DataTransfer
+	 */
 	public static function constructFromJson( $jsonData ) {
 		$dataTransfer = new DataTransfer();
 		$dataTransfer->unserializeParameters( $jsonData );
 
 		return $dataTransfer;
+	}
+
+	/**
+	 * @param array $data
+	 *
+	 * @return DataTransfer
+	 */
+	public static function constructFromArray( $data ) {
+		return new DataTransfer($data);
 	}
 
 	public function clear() {

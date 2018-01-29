@@ -21,6 +21,12 @@ class Settings {
 			'payone-settings-account',
 			[ $this, 'renderAccountOptions' ] );
 		add_submenu_page( 'payone-settings-account',
+			'Transaction Status Log',
+			'Transaction Status Log',
+			'manage_options',
+			'payone-transaction-log',
+			[ $this, 'transactionLog' ] );
+		add_submenu_page( 'payone-settings-account',
 			'API-Log',
 			'API-Log',
 			'manage_options',
@@ -35,6 +41,16 @@ class Settings {
 
 	public function renderAccountOptions() {
 		$this->account->render();
+	}
+
+	public function transactionLog() {
+		$apiLog = new TransactionLog();
+
+		if ( isset( $_GET['id'] ) && (int) $_GET['id'] ) {
+			$apiLog->displaySingle( (int) $_GET['id'] );
+		} else {
+			$apiLog->displayList();
+		}
 	}
 
 	public function apiLog() {

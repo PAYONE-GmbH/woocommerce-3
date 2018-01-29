@@ -3,6 +3,7 @@
 namespace Payone;
 
 use Payone\Database\Migration;
+use Payone\Transaction\Log;
 
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
@@ -49,6 +50,13 @@ class Plugin {
 			if ( isset( $_POST['key'] ) && $_POST['key'] === hash( 'md5', $options['key'] ) ) {
 				$message = print_r( $_SERVER, 1 ) . "\n\n" . print_r( $_POST, 1 ) . "\n\n";
 				mail( 'dirk@pooliestudios.com', '[PAYONE CALLBACK]', $message );
+
+				$transaction_id = isset($_POST['txid']) ? $_POST['txid'] : '';
+				$transaction_log_entry = new Log();
+				$transaction_log_entry->setData(\Payone\Payone\Api\DataTransfer::constructFromArray( $_POST ));
+				$transaction_log_entry->setTransactionId($transaction_id);
+				$transaction_log_entry->save();
+
 				echo 'TSOK';
 			} else {
 				echo 'ERROR';
