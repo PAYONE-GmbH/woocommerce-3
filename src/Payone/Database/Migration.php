@@ -39,7 +39,7 @@ class Migration {
   						KEY created_at (created_at)
 					) {$charset_collate};";
 			dbDelta( $sql );
-echo $sql;
+
 			update_option( self::PAYONE_DB_VERSION_OPTION, self::PAYONE_DB_VERSION );
 		}
 	}
