@@ -49,7 +49,7 @@ class Plugin {
 			if ( isset( $_POST['key'] ) && $_POST['key'] === hash( 'md5', $options['key'] ) ) {
 				$message = print_r( $_SERVER, 1 ) . "\n\n" . print_r( $_POST, 1 ) . "\n\n";
 				mail( 'dirk@pooliestudios.com', '[PAYONE CALLBACK]', $message );
-				#echo 'TSOK';
+				echo 'TSOK';
 			} else {
 				echo 'ERROR';
 			}
