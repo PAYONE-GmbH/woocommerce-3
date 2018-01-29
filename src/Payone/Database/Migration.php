@@ -5,7 +5,7 @@ namespace Payone\Database;
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
 class Migration {
-	const PAYONE_DB_VERSION = '1.2';
+	const PAYONE_DB_VERSION = '1.3';
 	const PAYONE_DB_VERSION_OPTION = 'payone_db_version';
 
 	public function run() {
@@ -23,7 +23,7 @@ class Migration {
   						request text,
   						response text,
   						created_at datetime NOT NULL,
-  						PRIMARY KEY (id)
+  						PRIMARY KEY (id),
   						KEY created_at (created_at)
 					) {$charset_collate};";
 			dbDelta( $sql );
@@ -34,12 +34,12 @@ class Migration {
 						transaction_id varchar(32) NOT NULL,
   						data text,
   						created_at datetime NOT NULL,
-  						PRIMARY KEY (id)
-  						KEY transaction_id (transaction_id)
+  						PRIMARY KEY (id),
+  						KEY transaction_id (transaction_id),
   						KEY created_at (created_at)
 					) {$charset_collate};";
 			dbDelta( $sql );
-
+echo $sql;
 			update_option( self::PAYONE_DB_VERSION_OPTION, self::PAYONE_DB_VERSION );
 		}
 	}
