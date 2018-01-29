@@ -44,7 +44,15 @@ class Plugin {
 
 	public function catch_payone_callback() {
 		if ( get_query_var( self::CALLBACK_SLUG ) ) {
-			echo '<h1>Payone Callback</h1>';
+
+			$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+			if ( isset( $_POST['key'] ) && $_POST['key'] === hash( 'md5', $options['key'] ) ) {
+				$message = print_r( $_SERVER ) . "\n\n" . print_r( $_POST ) . "\n\n";
+				mail( 'dirk@pooliestudios.com', '[PAYONE CALLBACK]', $message );
+				#echo 'TSOK';
+			} else {
+				echo 'ERROR';
+			}
 			exit();
 		}
 	}
