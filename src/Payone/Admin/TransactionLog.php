@@ -39,7 +39,7 @@ class TransactionLog {
 	/**
 	 * @param int $id
 	 *
-	 * @return \Payone\Payone\Api\Log
+	 * @return \Payone\Transaction\Log
 	 */
 	private function getEntry( $id ) {
 		global $wpdb;
