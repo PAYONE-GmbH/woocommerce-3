@@ -6,19 +6,11 @@ class CreditCard extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_creditcard';
 
 	public function __construct() {
-		$this->id                 = self::GATEWAY_ID;
+		parent::__construct(self::GATEWAY_ID);
+
 		$this->icon               = '';
-		$this->has_fields         = true;
 		$this->method_title       = 'BS PAYONE Kreditkarte';
 		$this->method_description = 'method_description';
-
-		$this->init_form_fields();
-		$this->init_settings();
-
-		$this->requestType = $this->settings['request_type'];
-		$this->title       = $this->get_option( 'title' );
-
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
 	}
 
 	public function init_form_fields() {
