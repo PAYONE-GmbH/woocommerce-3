@@ -15,32 +15,14 @@ class SepaDirectDebit extends GatewayBase {
 		$this->init_form_fields();
 		$this->init_settings();
 
+		$this->requestType = $this->settings['request_type'];
 		$this->title = $this->get_option( 'title' );
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
 	}
 
 	public function init_form_fields() {
-		$this->form_fields = [
-			'enabled'     => [
-				'title'   => __( 'Enable/Disable', 'woocommerce' ),
-				'type'    => 'checkbox',
-				'label'   => __( 'SEPA-Lastschrift ermöglichen', 'woocommerce' ),
-				'default' => 'yes',
-			],
-			'title'       => [
-				'title'       => __( 'Title', 'woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-				'default'     => __( 'Vorkasse', 'woocommerce' ),
-				'desc_tip'    => true,
-			],
-			'description' => [
-				'title'   => __( 'Customer Message', 'woocommerce' ),
-				'type'    => 'textarea',
-				'default' => '',
-			],
-		];
+		$this->init_common_form_fields( __( 'SEPA Direct Debit', 'payone' ) );
 	}
 
 	public function payment_fields() {
@@ -57,7 +39,7 @@ class SepaDirectDebit extends GatewayBase {
 		$order->update_status( 'on-hold', __( 'Awaiting cheque payment', 'woocommerce' ) );
 
 		// Reduce stock levels
-		$order->reduce_order_stock();
+		wc_reduce_stock_levels( $order_id );
 
 		// Remove cart
 		$woocommerce->cart->empty_cart();

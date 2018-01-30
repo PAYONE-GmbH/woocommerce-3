@@ -7,12 +7,12 @@ defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 class ApiLog {
 	public function displayList() {
 		$entries = $this->getEntries();
-		include PAYONE_VIEW_PATH . '/admin/api_log_list.php';
+		include PAYONE_VIEW_PATH . '/admin/api-log-list.php';
 	}
 
 	public function displaySingle( $id ) {
 		$entry = $this->getEntry( $id );
-		include PAYONE_VIEW_PATH . '/admin/api_log_single.php';
+		include PAYONE_VIEW_PATH . '/admin/api-log-single.php';
 	}
 
 	/**

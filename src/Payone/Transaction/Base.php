@@ -5,8 +5,9 @@ namespace Payone\Transaction;
 use Payone\Payone\Api\Request;
 
 class Base extends Request {
-	public function __construct() {
+	public function __construct( $type ) {
 		parent::__construct();
+		$this->set( 'request', $type );
 	}
 
 	public function setPersonalDataFromOrder( \WC_Order $order ) {

@@ -16,32 +16,14 @@ class Invoice extends GatewayBase {
 		$this->init_form_fields();
 		$this->init_settings();
 
-		$this->title = $this->get_option( 'title' );
+		$this->requestType = $this->settings['request_type'];
+		$this->title       = $this->get_option( 'title' );
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
 	}
 
 	public function init_form_fields() {
-		$this->form_fields = [
-			'enabled'     => [
-				'title'   => __( 'Enable/Disable', 'woocommerce' ),
-				'type'    => 'checkbox',
-				'label'   => __( 'Kauf auf Rechnung ermöglichen', 'woocommerce' ),
-				'default' => 'yes',
-			],
-			'title'       => [
-				'title'       => __( 'Title', 'woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-				'default'     => __( 'Rechnung', 'woocommerce' ),
-				'desc_tip'    => true,
-			],
-			'description' => [
-				'title'   => __( 'Customer Message', 'woocommerce' ),
-				'type'    => 'textarea',
-				'default' => '',
-			],
-		];
+		$this->init_common_form_fields( __( 'Invoice', 'payone' ) );
 	}
 
 	public function payment_fields() {
@@ -52,12 +34,10 @@ class Invoice extends GatewayBase {
 
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 
-		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-		$transaction = new \Payone\Transaction\Refund();
-		$transaction->set('amount', -$amount * 100);
-		$response    = $transaction->execute( $order );
+		$transaction = new \Payone\Transaction\Debit();
+		$response    = $transaction->execute( $order, - $amount );
 
 		// @todo wirklich testen, ob der refund funktioniert hat
 		return true;
@@ -67,7 +47,7 @@ class Invoice extends GatewayBase {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-		$transaction = new \Payone\Transaction\Invoice();
+		$transaction = new \Payone\Transaction\Invoice( $this->requestType );
 		$response    = $transaction->execute( $order );
 
 		// @todo Fehler abfangen und transaktions-ID in Order ablegen.
@@ -79,7 +59,7 @@ class Invoice extends GatewayBase {
 		$order->update_status( 'on-hold', __( 'Rechnung wurde geschickt', 'woocommerce' ) );
 
 		// Reduce stock levels
-		$order->reduce_order_stock();
+		wc_reduce_stock_levels( $order_id );
 
 		// Remove cart
 		$woocommerce->cart->empty_cart();

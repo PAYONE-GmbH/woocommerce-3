@@ -23,10 +23,10 @@
                 <tr style="cursor:pointer" onclick="window.location = '?page=payone-transaction-log&id=<?php echo $entry->getId(); ?>'">
                     <td><?php echo $entry->getId(); ?></td>
                     <td><?php echo $entry->getTransactionId(); ?></td>
-                    <td></td>
+                    <td><?php echo $entry->getData()->get('reference'); ?></td>
                     <td><?php echo $entry->getData()->get('status'); ?></td>
                     <td></td>
-                    <td></td>
+                    <td><?php echo $entry->getData()->get('sequencenumber'); ?></td>
                     <td></td>
                     <td><?php echo $entry->getData()->get('mode'); ?></td>
                     <td><?php echo $entry->getData()->get('portalid'); ?></td>

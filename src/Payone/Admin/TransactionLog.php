@@ -7,12 +7,12 @@ defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 class TransactionLog {
 	public function displayList() {
 		$entries = $this->getEntries();
-		include PAYONE_VIEW_PATH . '/admin/transaction_log_list.php';
+		include PAYONE_VIEW_PATH . '/admin/transaction-log-list.php';
 	}
 
 	public function displaySingle( $id ) {
 		$entry = $this->getEntry( $id );
-		include PAYONE_VIEW_PATH . '/admin/transaction_log_single.php';
+		include PAYONE_VIEW_PATH . '/admin/transaction-log-single.php';
 	}
 
 	/**
