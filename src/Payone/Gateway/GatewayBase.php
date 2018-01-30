@@ -32,11 +32,31 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $methods;
 	}
 
+	/**
+	 * @todo Es ist nicht klar, warum das nicht ohne eigenen Code funktioniert. Die Doku zu $this->countries sieht
+	 *       eigentlich so aus, als ob es funktionieren müsste.
+	 * @todo Soll die billing_country oder shipping_country genommen werden?
+	 *
+	 * @return bool
+	 */
 	public function is_available() {
 		$is_available = parent::is_available();
 
 		if ( $is_available && $this->min_amount > $this->get_order_total() ) {
 			$is_available = false;
+		}
+
+		if ( $is_available ) {
+			$order_id = absint( get_query_var( 'order-pay' ) );
+
+			if ( $order_id ) {
+				$order = wc_get_order( $order_id );
+				$country = (string) $order->get_billing_country();
+			} elseif ( WC()->customer->get_billing_country() ) {
+				$country = (string) WC()->customer->get_billing_country();
+			}
+
+			$is_available = in_array($country, $this->countries);
 		}
 
 		return $is_available;
