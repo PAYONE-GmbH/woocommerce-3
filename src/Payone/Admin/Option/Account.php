@@ -15,47 +15,77 @@ class Account extends Helper {
 		register_setting( 'payone', self::OPTION_NAME, [ $this, 'sanitize' ] );
 
 		add_settings_section( 'payone_account_settings',
-			'Kontoinformationen',
-			[ $this, 'accountInfo' ],
+			__( 'Global Settings', 'payone' ),
+			[ $this, 'account_info' ],
 			'payone-settings-account' );
-		add_settings_field( 'account_id',
-			'Account-ID',
-			[ $this, 'fieldAccountId' ],
-			'payone-settings-account',
-			'payone_account_settings' );
 		add_settings_field( 'merchant_id',
-			'Merchant-ID',
-			[ $this, 'fieldMerchantId' ],
+			__( 'Merchant ID', 'payone' ),
+			[ $this, 'field_merchant_id' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'portal_id',
-			'Portal ID',
-			[ $this, 'fieldPortalId' ],
+			__( 'Portal ID', 'payone' ),
+			[ $this, 'field_portal_id' ],
 			'payone-settings-account',
 			'payone_account_settings' );
-		add_settings_field( 'key', 'Key', [ $this, 'fieldKey' ], 'payone-settings-account', 'payone_account_settings' );
-
-		add_settings_section( 'payone_settings',
-			'Einstellungen',
-			[ $this, 'settingsInfo' ],
-			'payone-settings-account' );
-		add_settings_field( 'mode', 'Modus', [ $this, 'fieldMode' ], 'payone-settings-account', 'payone_settings' );
+		add_settings_field( 'account_id',
+			__( 'Subaccount ID', 'payone' ),
+			[ $this, 'field_account_id' ],
+			'payone-settings-account',
+			'payone_account_settings' );
+		add_settings_field( 'key',
+			__( 'Key', 'payone' ),
+			[ $this, 'field_key' ],
+			'payone-settings-account',
+			'payone_account_settings' );
+		add_settings_field( 'mode',
+			__( 'Mode', 'payone' ),
+			[ $this, 'field_mode' ],
+			'payone-settings-account',
+			'payone_account_settings' );
+		add_settings_field( 'submit_cart',
+			__( 'Submit cart', 'payone' ),
+			[ $this, 'field_submit_cart' ],
+			'payone-settings-account',
+			'payone_account_settings' );
+		add_settings_field( 'activate_pdf_download',
+			__( 'Activate PDF download', 'payone' ),
+			[ $this, 'field_activate_pdf_download' ],
+			'payone-settings-account',
+			'payone_account_settings' );
+		add_settings_field( 'dynamic_invoice_text',
+			__( 'Dynamic invoice text', 'payone' ),
+			[ $this, 'field_dynamic_invoice_text' ],
+			'payone-settings-account',
+			'payone_account_settings' );
+		add_settings_field( 'dynamic_refund_text',
+			__( 'Dynamic refund text', 'payone' ),
+			[ $this, 'field_dynamic_refund_text' ],
+			'payone-settings-account',
+			'payone_account_settings' );
+		add_settings_field( 'text_on_booking_statement',
+			__( 'Text on booking statement', 'payone' ),
+			[ $this, 'field_text_on_booking_statement' ],
+			'payone-settings-account',
+			'payone_account_settings' );
 		add_settings_field( 'api_log',
-			'API-Log',
-			[ $this, 'fieldApiLog' ],
+			__( 'API-Log', 'payone' ),
+			[ $this, 'field_api_log' ],
 			'payone-settings-account',
-			'payone_settings' );
+			'payone_account_settings' );
 		add_settings_field( 'transaction_log',
-			'Transaction-Log',
-			[ $this, 'fieldTransactionLog' ],
+			__( 'Transaction Status Log', 'payone' ),
+			[ $this, 'field_transaction_log' ],
 			'payone-settings-account',
-			'payone_settings' );
+			'payone_account_settings' );
 	}
 
 	/**
 	 * Sanitize each setting field as needed
 	 *
 	 * @param array $input Contains all settings fields as array keys
+	 *
+	 * @return array
 	 */
 	public function sanitize( $input ) {
 		return $input;
@@ -72,49 +102,81 @@ class Account extends Helper {
 		return $new_input;
 	}
 
-	public function accountInfo() {
+	public function account_info() {
 		print 'Enter your account settings below:';
 	}
 
-	public function settingsInfo() {
-		print 'Enter your settings below:';
-	}
-
-	public function fieldAccountId() {
+	public function field_account_id() {
 		$this->textField( self::OPTION_NAME, 'account_id' );
 	}
 
-	public function fieldMerchantId() {
+	public function field_merchant_id() {
 		$this->textField( self::OPTION_NAME, 'merchant_id' );
 	}
 
-	public function fieldPortalId() {
+	public function field_portal_id() {
 		$this->textField( self::OPTION_NAME, 'portal_id' );
 	}
 
-	public function fieldKey() {
+	public function field_key() {
 		$this->textField( self::OPTION_NAME, 'key' );
 	}
 
-	public function fieldMode() {
-		$this->selectField( self::OPTION_NAME, 'mode', [
-			'test' => 'Test',
-			'live' => 'Live',
-		] );
+	public function field_mode() {
+		$this->selectField( self::OPTION_NAME,
+			'mode',
+			[
+				'test' => __( 'Test', 'payone' ),
+				'live' => __( 'Live', 'payone' ),
+			] );
 	}
 
-	public function fieldApiLog() {
-		$this->selectField( self::OPTION_NAME, 'api_log', [
-			'0' => 'Deaktiviert',
-			'1' => 'Aktiviert',
-		] );
+	public function field_submit_cart() {
+		$this->selectField( self::OPTION_NAME,
+			'submit_cart',
+			[
+				'0' => __( 'No', 'payone' ),
+				'1' => __( 'Yes', 'payone' ),
+			] );
 	}
 
-	public function fieldTransactionLog() {
-		$this->selectField( self::OPTION_NAME, 'transaction_log', [
-			'0' => 'Deaktiviert',
-			'1' => 'Aktiviert',
-		] );
+	public function field_activate_pdf_download() {
+		$this->selectField( self::OPTION_NAME,
+			'activate_pdf_download',
+			[
+				'0' => __( 'No', 'payone' ),
+				'1' => __( 'Yes', 'payone' ),
+			] );
+	}
+
+	public function field_dynamic_invoice_text() {
+		$this->textField( self::OPTION_NAME, 'dynamic_invoice_text', __( 'Your order No. {{order}}', 'payone' ) );
+	}
+
+	public function field_dynamic_refund_text() {
+		$this->textField( self::OPTION_NAME, 'dynamic_refund_text', __( 'Your refund No. {{order}}', 'payone' ) );
+	}
+
+	public function field_text_on_booking_statement() {
+		$this->textField( self::OPTION_NAME, 'text_on_booking_statement', __( 'Your order No. {{order}}', 'payone' ) );
+	}
+
+	public function field_api_log() {
+		$this->selectField( self::OPTION_NAME,
+			'api_log',
+			[
+				'0' => __( 'Deactivated', 'payone' ),
+				'1' => __( 'Activated', 'payone' ),
+			] );
+	}
+
+	public function field_transaction_log() {
+		$this->selectField( self::OPTION_NAME,
+			'transaction_log',
+			[
+				'0' => __( 'Deactivated', 'payone' ),
+				'1' => __( 'Activated', 'payone' ),
+			] );
 	}
 
 	public function render() {

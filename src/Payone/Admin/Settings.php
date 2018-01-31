@@ -10,40 +10,40 @@ class Settings {
 	private $account;
 
 	public function init() {
-		add_action( 'admin_menu', [ $this, 'pluginMenu' ] );
-		add_action( 'admin_init', [ $this, 'registerOptions' ] );
+		add_action( 'admin_menu', [ $this, 'plugin_menu' ] );
+		add_action( 'admin_init', [ $this, 'register_options' ] );
 	}
 
-	public function pluginMenu() {
-		add_menu_page( 'Payone Einstellungen',
+	public function plugin_menu() {
+		add_menu_page( __( 'BS PAYONE Settings', 'payone' ),
 			'BS PAYONE',
 			'manage_options',
 			'payone-settings-account',
-			[ $this, 'renderAccountOptions' ] );
+			[ $this, 'render_account_options' ] );
 		add_submenu_page( 'payone-settings-account',
-			'Transaction Status Log',
-			'Transaction Status Log',
+			__( 'Transaction Status Log', 'payone' ),
+			__( 'Transaction Status Log', 'payone' ),
 			'manage_options',
 			'payone-transaction-log',
-			[ $this, 'transactionLog' ] );
+			[ $this, 'transaction_log' ] );
 		add_submenu_page( 'payone-settings-account',
-			'API-Log',
-			'API-Log',
+			__( 'API-Log', 'payone' ),
+			__( 'API-Log', 'payone' ),
 			'manage_options',
 			'payone-api-log',
-			[ $this, 'apiLog' ] );
+			[ $this, 'api_log' ] );
 	}
 
-	public function registerOptions() {
+	public function register_options() {
 		$this->account = new Account();
 		$this->account->register();
 	}
 
-	public function renderAccountOptions() {
+	public function render_account_options() {
 		$this->account->render();
 	}
 
-	public function transactionLog() {
+	public function transaction_log() {
 		$apiLog = new TransactionLog();
 
 		if ( isset( $_GET['id'] ) && (int) $_GET['id'] ) {
@@ -53,7 +53,7 @@ class Settings {
 		}
 	}
 
-	public function apiLog() {
+	public function api_log() {
 		$apiLog = new ApiLog();
 
 		if ( isset( $_GET['id'] ) && (int) $_GET['id'] ) {

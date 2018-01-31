@@ -7,7 +7,19 @@ use Payone\Payone\Api\Request;
 class Base extends Request {
 	public function __construct( $type ) {
 		parent::__construct();
+
 		$this->set( 'request', $type );
+	}
+
+	/**
+	 * @param \Payone\Gateway\GatewayBase $gateway
+	 */
+	public function set_data_from_gateway( $gateway ) {
+		$this
+			->setAccountId( $gateway->get_account_id() )
+			->setMerchantId( $gateway->get_merchant_id() )
+			->setPortalId( $gateway->get_portal_id() )
+			->setKey( $gateway->get_key() );
 	}
 
 	public function setPersonalDataFromOrder( \WC_Order $order ) {

@@ -7,10 +7,10 @@ defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 abstract class Helper {
 	protected $options;
 
-	protected function textField( $optionName, $fieldName ) {
+	protected function textField( $optionName, $fieldName, $default = '' ) {
 		printf(
 			'<input type="text" id="' . $fieldName . '" name="' . $optionName . '[' . $fieldName . ']" value="%s" />',
-			isset( $this->options[ $fieldName ] ) ? esc_attr( $this->options[ $fieldName ] ) : ''
+			isset( $this->options[ $fieldName ] ) ? esc_attr( $this->options[ $fieldName ] ) : $default
 		);
 	}
 

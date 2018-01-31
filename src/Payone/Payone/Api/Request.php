@@ -31,7 +31,7 @@ class Request extends DataTransfer {
 			->setAccountId( $options['account_id'] )
 			->setMerchantId( $options['merchant_id'] )
 			->setPortalId( $options['portal_id'] )
-			->setPortalKey( $options['key'] )
+			->setKey( $options['key'] )
 			->set( 'encoding', 'UTF-8' )
 			->set( 'solution_name', self::SOLUTION_NAME )
 			->set( 'solution_version', PAYONE_PLUGIN_VERSION )
@@ -129,17 +129,17 @@ class Request extends DataTransfer {
 	/**
 	 * @return string
 	 */
-	public function getPortalKey() {
+	public function getKey() {
 		return $this->get( 'key' );
 	}
 
 	/**
-	 * @param string $portalKey
+	 * @param string $key
 	 *
 	 * @return Request
 	 */
-	public function setPortalKey( $portalKey ) {
-		$this->set( 'key', hash( 'md5', $portalKey ) );
+	public function setKey( $key ) {
+		$this->set( 'key', hash( 'md5', $key ) );
 
 		return $this;
 	}

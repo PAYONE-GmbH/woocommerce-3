@@ -6,7 +6,7 @@ class Invoice extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_invoice';
 
 	public function __construct() {
-		parent::__construct(self::GATEWAY_ID);
+		parent::__construct( self::GATEWAY_ID );
 
 		$this->icon               = '';
 		$this->method_title       = 'BS PAYONE Rechnung';
@@ -28,7 +28,7 @@ class Invoice extends GatewayBase {
 
 		$order = new \WC_Order( $order_id );
 
-		$transaction = new \Payone\Transaction\Debit();
+		$transaction = new \Payone\Transaction\Debit( $this );
 		$response    = $transaction->execute( $order, - $amount );
 
 		// @todo wirklich testen, ob der refund funktioniert hat
@@ -39,7 +39,7 @@ class Invoice extends GatewayBase {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-		$transaction = new \Payone\Transaction\Invoice( $this->requestType );
+		$transaction = new \Payone\Transaction\Invoice( $this );
 		$response    = $transaction->execute( $order );
 
 		// @todo Fehler abfangen und transaktions-ID in Order ablegen.

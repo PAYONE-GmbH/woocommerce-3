@@ -3,7 +3,10 @@
 namespace Payone\Transaction;
 
 class PrePayment extends Base {
-	public function __construct( $requestType ) {
+	/**
+	 * @param \Payone\Gateway\GatewayBase $gateway
+	 */
+	public function __construct( $gateway ) {
 		parent::__construct( $requestType );
 
 		$this->set( 'clearingtype', 'vor' );

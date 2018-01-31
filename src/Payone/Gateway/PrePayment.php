@@ -27,7 +27,7 @@ class PrePayment extends GatewayBase {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-		$transaction = new \Payone\Transaction\PrePayment( $this->requestType );
+		$transaction = new \Payone\Transaction\PrePayment( $this );
 		$response    = $transaction->execute( $order );
 
 		// @todo Fehler abfangen und transaktions-ID in Order ablegen.

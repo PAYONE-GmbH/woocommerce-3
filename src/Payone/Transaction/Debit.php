@@ -3,8 +3,12 @@
 namespace Payone\Transaction;
 
 class Debit extends Base {
-	public function __construct() {
-		parent::__construct( 'debit' );
+	/**
+	 * @param \Payone\Gateway\GatewayBase $gateway
+	 */
+	public function __construct( $gateway ) {
+		parent::__construct( $gateway->get_authorization_method() );
+		$this->set_data_from_gateway( $gateway );
 	}
 
 	public function execute( \WC_Order $order, $amount ) {
