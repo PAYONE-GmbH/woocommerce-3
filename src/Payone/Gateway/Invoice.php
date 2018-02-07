@@ -42,13 +42,17 @@ class Invoice extends GatewayBase {
 		$transaction = new \Payone\Transaction\Invoice( $this );
 		$response    = $transaction->execute( $order );
 
-		// @todo Fehler abfangen und transaktions-ID in Order ablegen.
+		if ( $response->has_error() ) {
+			wc_add_notice( __( 'Payment error: ', 'payone' ) . $response->get_error_message(),
+				'error' );
+
+			return;
+		}
 		// @todo Bei Kauf auf Rechnung anderer Status und Order abschließen?
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
-
-		// Mark as on-hold (we're awaiting the cheque)
-		$order->update_status( 'on-hold', __( 'Rechnung wurde geschickt', 'woocommerce' ) );
+		$order->update_meta_data( 'authorization_method', $transaction->get( 'request' ) );
+		$order->update_status( 'on-hold', __( 'Rechnung wurde geschickt', 'payone' ) );
 
 		// Reduce stock levels
 		wc_reduce_stock_levels( $order_id );

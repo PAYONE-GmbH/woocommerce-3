@@ -12,6 +12,20 @@ class Base extends Request {
 	}
 
 	/**
+	 * Requests like "debit" don't have an authorization method. Therefore only "" is returned.
+	 *
+	 * @return string
+	 */
+	public function get_authorization_method() {
+		$authorization_method = $this->get( 'request' );
+		if ( ! in_array( $authorization_method, [ 'authorization', 'preauthorization' ], true ) ) {
+			$authorization_method = '';
+		}
+
+		return $authorization_method;
+	}
+
+	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
 	 */
 	public function set_data_from_gateway( $gateway ) {

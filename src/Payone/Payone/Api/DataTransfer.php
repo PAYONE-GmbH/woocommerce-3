@@ -3,8 +3,16 @@
 namespace Payone\Payone\Api;
 
 class DataTransfer {
+	/**
+	 * @var array
+	 */
 	private $parameterBag;
 
+	/**
+	 * @todo Alle Felder herausfinden
+	 *
+	 * @var array
+	 */
 	private $fieldsToAnonymize = [
 		'cardpan' => [ 4, 4 ],
 		'iban'    => [ 4, 3 ],
