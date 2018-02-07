@@ -14,13 +14,28 @@ abstract class Helper {
 		);
 	}
 
-	protected function selectField( $optionName, $fieldName, $options ) {
+	protected function selectField( $optionName, $fieldName, $options, $type = 'single' ) {
 		$selectedValue = isset( $this->options[ $fieldName ] ) ? $this->options[ $fieldName ] : '';
 
-		echo '<select id="' . $fieldName . '" name="' . $optionName . '[' . $fieldName . ']">';
+		$multiple = '';
+		$name = $optionName . '[' . $fieldName . ']';
+		if ($type === 'multiple') {
+			$multiple = ' multiple="multiple"';
+			$name .= '[]';
+		}
+
+		echo '<select id="' . $fieldName . '" name="' . $name .'"'.$multiple.'>';
 		foreach ($options as $value => $label) {
-			$selected = '';
-			if ($selectedValue == $value) {
+			$selected = false;
+			if (is_array($selectedValue) && $type === 'multiple') {
+				if (in_array($value, $selectedValue)) {
+					$selected = true;
+				}
+			} elseif ($selectedValue == $value) {
+				$selected = true;
+			}
+
+			if ($selected) {
 				$selected = ' selected="selected"';
 			}
 			echo '<option value="'.esc_attr($value).'"'.$selected.'>'.esc_html($label).'</option>';

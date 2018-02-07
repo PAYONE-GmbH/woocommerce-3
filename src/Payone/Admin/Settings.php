@@ -2,12 +2,23 @@
 
 namespace Payone\Admin;
 
-use Payone\Admin\Option\Account;
-
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
 class Settings {
+	/**
+	 * @var \Payone\Admin\Option\Account
+	 */
 	private $account;
+
+	/**
+	 * @var \Payone\Admin\Option\AddressChecks
+	 */
+	private $address_checks;
+
+	/**
+	 * @var \Payone\Admin\Option\CreditCheck
+	 */
+	private $credit_check;
 
 	public function init() {
 		add_action( 'admin_menu', [ $this, 'plugin_menu' ] );
@@ -16,10 +27,22 @@ class Settings {
 
 	public function plugin_menu() {
 		add_menu_page( __( 'BS PAYONE Settings', 'payone' ),
-			'BS PAYONE',
+			__( 'BS PAYONE', 'payone' ),
 			'manage_options',
 			'payone-settings-account',
 			[ $this, 'render_account_options' ] );
+		add_submenu_page( 'payone-settings-account',
+			__( 'Address Checks', 'payone' ),
+			__( 'Address Checks', 'payone' ),
+			'manage_options',
+			'payone-address-checks',
+			[ $this, 'address_checks' ] );
+		add_submenu_page( 'payone-settings-account',
+			__( 'Credit Check', 'payone' ),
+			__( 'Credit Check', 'payone' ),
+			'manage_options',
+			'payone-credit-check',
+			[ $this, 'credit_check' ] );
 		add_submenu_page( 'payone-settings-account',
 			__( 'Transaction Status Log', 'payone' ),
 			__( 'Transaction Status Log', 'payone' ),
@@ -35,8 +58,14 @@ class Settings {
 	}
 
 	public function register_options() {
-		$this->account = new Account();
+		$this->account = new \Payone\Admin\Option\Account();
 		$this->account->register();
+
+		$this->address_checks = new \Payone\Admin\Option\AddressChecks();
+		$this->address_checks->register();
+
+		$this->credit_check = new \Payone\Admin\Option\CreditCheck();
+		$this->credit_check->register();
 	}
 
 	public function render_account_options() {
@@ -61,5 +90,13 @@ class Settings {
 		} else {
 			$apiLog->displayList();
 		}
+	}
+
+	public function address_checks() {
+		$this->address_checks->render();
+	}
+
+	public function credit_check() {
+		$this->credit_check->render();
 	}
 }
