@@ -29,6 +29,8 @@ class Plugin {
 		foreach ( $gateways as $gateway ) {
 			add_filter( 'woocommerce_payment_gateways', [ $gateway, 'add' ] );
 		}
+
+		add_action( 'woocommerce_order_status_changed', [ $this, 'order_status_changed' ], 10, 3 );
 	}
 
 	public function add_callback_url() {
@@ -63,5 +65,9 @@ class Plugin {
 			}
 			exit();
 		}
+	}
+
+	public function order_status_changed($id, $from_status, $to_status) {
+		// @todo Muss PAYONE kontaktiert werden?
 	}
 }
