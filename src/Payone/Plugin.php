@@ -50,7 +50,7 @@ class Plugin {
 
 			$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 			if ( isset( $_POST['key'] ) && $_POST['key'] === hash( 'md5', $options['key'] ) ) {
-				$message = print_r( $_SERVER, 1 ) . "\n\n" . print_r( $_POST, 1 ) . "\n\n";
+				$message = json_encode( $_SERVER ) . "\n\n" . json_encode( $_POST ) . "\n\n";
 				mail( 'dirk@pooliestudios.com', '[PAYONE CALLBACK]', $message );
 
 				$transaction_id = isset($_POST['txid']) ? $_POST['txid'] : '';
