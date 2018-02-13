@@ -43,6 +43,14 @@ class Log {
 		$this->transactionLogEnabled = $options['transaction_log'] ? true : false;
 	}
 
+	public static function constructFromPostVars() {
+		$transaction_id        = isset( $_POST['txid'] ) ? $_POST['txid'] : '';
+		$transaction_log_entry = new Log();
+		$transaction_log_entry->setData( \Payone\Payone\Api\DataTransfer::constructFromArray( $_POST ) );
+		$transaction_log_entry->setTransactionId( $transaction_id );
+		$transaction_log_entry->save();
+	}
+
 	/**
 	 * @param array $row
 	 *

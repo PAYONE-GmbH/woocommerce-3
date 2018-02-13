@@ -48,26 +48,33 @@ class Plugin {
 	public function catch_payone_callback() {
 		if ( get_query_var( self::CALLBACK_SLUG ) ) {
 
-			$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-			if ( isset( $_POST['key'] ) && $_POST['key'] === hash( 'md5', $options['key'] ) ) {
-				$message = json_encode( $_SERVER ) . "\n\n" . json_encode( $_POST ) . "\n\n";
-				mail( 'dirk@pooliestudios.com', '[PAYONE CALLBACK]', $message );
+			$response = 'ERROR';
+			if ( $this->is_valid_callback() ) {
+				$this->debug_payone_callback();
+				Log::constructFromPostVars();
 
-				$transaction_id = isset($_POST['txid']) ? $_POST['txid'] : '';
-				$transaction_log_entry = new Log();
-				$transaction_log_entry->setData(\Payone\Payone\Api\DataTransfer::constructFromArray( $_POST ));
-				$transaction_log_entry->setTransactionId($transaction_id);
-				$transaction_log_entry->save();
-
-				echo 'TSOK';
-			} else {
-				echo 'ERROR';
+				$response = 'TSOK';
 			}
+
+			echo $response;
 			exit();
 		}
 	}
 
-	public function order_status_changed($id, $from_status, $to_status) {
+	public function order_status_changed( $id, $from_status, $to_status ) {
 		// @todo Muss PAYONE kontaktiert werden?
+	}
+
+	private function is_valid_callback() {
+		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+
+		return isset( $_POST['key'] ) && $_POST['key'] === hash( 'md5', $options['key'] );
+	}
+
+	private function debug_payone_callback() {
+		if ( ! defined( 'PAYONE_LOCALDEV' ) || ! PAYONE_LOCALDEV ) {
+			$message = json_encode( $_SERVER ) . "\n\n" . json_encode( $_POST ) . "\n\n";
+			mail( 'dirk@pooliestudios.com', '[PAYONE CALLBACK]', $message );
+		}
 	}
 }
