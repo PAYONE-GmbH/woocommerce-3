@@ -76,11 +76,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$this->init_settings();
 		$this->init_form_fields();
 
-		$this->title       = $this->get_option( 'title' );
+		$this->title                = $this->get_option( 'title' );
 		$this->authorization_method = $this->settings['authorization_method'];
-		$this->min_amount  = $this->settings['min_amount'];
-		$this->max_amount  = $this->settings['max_amount'];
-		$this->countries   = $this->settings['countries'];
+		$this->min_amount           = $this->settings['min_amount'];
+		$this->max_amount           = $this->settings['max_amount'];
+		$this->countries            = $this->settings['countries'];
 
 		$this->process_global_settings();
 
@@ -123,6 +123,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $is_available;
 	}
 
+	/**
+	 * @param string $label
+	 */
 	public function init_common_form_fields( $label ) {
 		$default_merchant_id = $this->global_settings['merchant_id'];
 		$default_portal_id   = $this->global_settings['portal_id'];
@@ -240,6 +243,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				'default' => __( 'Your refund No. {{order}}', 'payone' ),
 			],
 		];
+
+		if ( $this->id === PrePayment::GATEWAY_ID ) {
+			unset( $this->form_fields['authorization_method']['options']['authorization'] );
+			$this->form_fields['authorization_method']['default'] = 'preauthorization';
+		}
 	}
 
 	/**
