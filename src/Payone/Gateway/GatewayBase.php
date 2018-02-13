@@ -2,6 +2,8 @@
 
 namespace Payone\Gateway;
 
+use Payone\Payone\Api\TransactionStatus;
+
 abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @var array
@@ -92,6 +94,8 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
 		return $methods;
 	}
+
+	abstract public function process_transaction_status(TransactionStatus $transaction_status, \WC_Order $order);
 
 	/**
 	 * @todo Es ist nicht klar, warum das nicht ohne eigenen Code funktioniert. Die Doku zu $this->countries sieht

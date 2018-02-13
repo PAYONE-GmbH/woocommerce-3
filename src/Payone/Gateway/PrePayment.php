@@ -2,6 +2,8 @@
 
 namespace Payone\Gateway;
 
+use Payone\Payone\Api\TransactionStatus;
+
 class PrePayment extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_prepayment';
 
@@ -35,7 +37,7 @@ class PrePayment extends GatewayBase {
 		$order->set_transaction_id( $response->get( 'txid' ) );
 
 		// Mark as on-hold (we're awaiting the cheque)
-		$order->update_status( 'on-hold', __( 'Überweisung wird abgewartet', 'woocommerce' ) );
+		$order->update_status( 'on-hold', __( 'Waiting for payment', 'payone' ) );
 
 		// Reduce stock levels
 		wc_reduce_stock_levels( $order_id );
@@ -48,5 +50,12 @@ class PrePayment extends GatewayBase {
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
 		);
+	}
+
+	public function process_transaction_status(TransactionStatus $transaction_status, \WC_Order $order) {
+		$balance = $transaction_status->get_balance();
+		if ($order->get_total() + $balance <= 0) {
+			$order->update_status( 'wc-processing', __( 'Payment received', 'payone' ) );
+		}
 	}
 }

@@ -2,6 +2,8 @@
 
 namespace Payone\Gateway;
 
+use Payone\Payone\Api\TransactionStatus;
+
 class CreditCard extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_creditcard';
 
@@ -42,6 +44,10 @@ class CreditCard extends GatewayBase {
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
 		);
+	}
+
+	public function process_transaction_status(TransactionStatus $transaction_status, \WC_Order $order) {
+
 	}
 
 	/**

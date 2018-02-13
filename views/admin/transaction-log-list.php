@@ -24,7 +24,7 @@
                     <td><?php echo $entry->getId(); ?></td>
                     <td><?php echo $entry->getTransactionId(); ?></td>
                     <td><?php echo $entry->getData()->get('reference'); ?></td>
-                    <td><?php echo $entry->getData()->get('status'); ?></td>
+                    <td><?php echo $entry->getData()->get('txaction'); ?></td>
                     <td></td>
                     <td><?php echo $entry->getData()->get('sequencenumber'); ?></td>
                     <td></td>

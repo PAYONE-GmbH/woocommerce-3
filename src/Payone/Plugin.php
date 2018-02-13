@@ -3,12 +3,19 @@
 namespace Payone;
 
 use Payone\Database\Migration;
+use Payone\Gateway\GatewayBase;
+use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
 
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
 class Plugin {
 	const CALLBACK_SLUG = 'payone-callback';
+
+	/**
+	 * @var GatewayBase[]
+	 */
+	private $gateways;
 
 	public function init() {
 		$migration = new Migration();
@@ -19,14 +26,14 @@ class Plugin {
 			$settings->init();
 		}
 
-		$gateways = [
+		$this->gateways = [
 			\Payone\Gateway\CreditCard::GATEWAY_ID      => new \Payone\Gateway\CreditCard(),
 			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => new \Payone\Gateway\SepaDirectDebit(),
 			\Payone\Gateway\PrePayment::GATEWAY_ID      => new \Payone\Gateway\PrePayment(),
 			\Payone\Gateway\Invoice::GATEWAY_ID         => new \Payone\Gateway\Invoice(),
 		];
 
-		foreach ( $gateways as $gateway ) {
+		foreach ( $this->gateways as $gateway ) {
 			add_filter( 'woocommerce_payment_gateways', [ $gateway, 'add' ] );
 		}
 
@@ -53,12 +60,23 @@ class Plugin {
 				$this->debug_payone_callback();
 				Log::constructFromPostVars();
 
+				$this->process_callback();
 				$response = 'TSOK';
 			}
 
 			echo $response;
 			exit();
 		}
+	}
+
+	public function process_callback() {
+		$transaction_status = TransactionStatus::constructFromPostParameters();
+		$order = new \WC_Order( $transaction_status->get_order_id() );
+		$gateway_id = $order->get_payment_method();
+
+		// @todo Was tun, wenn es das Gateway nicht gibt?
+		$gateway = isset( $this->gateways[$gateway_id] ) ? $this->gateways[$gateway_id] : null;
+		$gateway->process_transaction_status($transaction_status, $order);
 	}
 
 	public function order_status_changed( $id, $from_status, $to_status ) {

@@ -50,7 +50,7 @@ class DataTransfer {
 	 * @return DataTransfer
 	 */
 	public static function constructFromArray( $data ) {
-		return new DataTransfer($data);
+		return new DataTransfer( $data );
 	}
 
 	public function clear() {
@@ -72,12 +72,18 @@ class DataTransfer {
 		return $this;
 	}
 
-	public function get( $key ) {
+	/**
+	 * @param string $key
+	 * @param null $default
+	 *
+	 * @return mixed|null
+	 */
+	public function get( $key, $default = null ) {
 		if ( array_key_exists( $key, $this->parameterBag ) ) {
 			return $this->parameterBag[ $key ];
 		}
 
-		return null;
+		return $default;
 	}
 
 	public function getAll() {
