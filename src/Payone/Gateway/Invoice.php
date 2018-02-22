@@ -69,7 +69,11 @@ class Invoice extends GatewayBase {
 		);
 	}
 
-	public function process_transaction_status(TransactionStatus $transaction_status, \WC_Order $order) {
+	/**
+	 * @param TransactionStatus $transaction_status
+	 * @param \WC_Order $order
+	 */
+	public function process_transaction_status( TransactionStatus $transaction_status, \WC_Order $order ) {
 
 	}
 }

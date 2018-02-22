@@ -3,6 +3,7 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Transaction\Capture;
 
 class PrePayment extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_prepayment';
@@ -13,6 +14,7 @@ class PrePayment extends GatewayBase {
 		$this->icon               = '';
 		$this->method_title       = 'BS PAYONE Vorkasse';
 		$this->method_description = 'method_description';
+		$this->supports           = [ 'products', 'refunds' ];
 	}
 
 	public function init_form_fields() {
@@ -52,10 +54,28 @@ class PrePayment extends GatewayBase {
 		);
 	}
 
-	public function process_transaction_status(TransactionStatus $transaction_status, \WC_Order $order) {
+	/**
+	 * @param TransactionStatus $transaction_status
+	 * @param \WC_Order $order
+	 */
+	public function process_transaction_status( TransactionStatus $transaction_status, \WC_Order $order ) {
 		$balance = $transaction_status->get_balance();
 		if ($order->get_total() + $balance <= 0) {
 			$order->update_status( 'wc-processing', __( 'Payment received', 'payone' ) );
 		}
+	}
+
+	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
+		if ( $from_status === 'on-hold' && $to_status === 'processing' ) {
+			$this->capture( $order );
+		}
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 */
+	public function capture( \WC_Order $order ) {
+		$capture = new Capture( $this );
+		$capture->execute( $order );
 	}
 }

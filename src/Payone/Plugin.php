@@ -60,7 +60,10 @@ class Plugin {
 				$this->debug_payone_callback();
 				Log::constructFromPostVars();
 
-				$this->process_callback();
+				if ( defined( 'PAYONE_PROCESS_CALLBACKS' ) && PAYONE_PROCESS_CALLBACKS ) {
+					// @todo remove
+					$this->process_callback();
+				}
 				$response = 'TSOK';
 			}
 
@@ -72,15 +75,18 @@ class Plugin {
 	public function process_callback() {
 		$transaction_status = TransactionStatus::constructFromPostParameters();
 		$order = new \WC_Order( $transaction_status->get_order_id() );
-		$gateway_id = $order->get_payment_method();
 
-		// @todo Was tun, wenn es das Gateway nicht gibt?
-		$gateway = isset( $this->gateways[$gateway_id] ) ? $this->gateways[$gateway_id] : null;
-		$gateway->process_transaction_status($transaction_status, $order);
+		$gateway = $this->getGatewayForOrder( $order );
+		$gateway->process_transaction_status( $transaction_status, $order );
 	}
 
 	public function order_status_changed( $id, $from_status, $to_status ) {
-		// @todo Muss PAYONE kontaktiert werden?
+		$order = new \WC_Order( $id );
+		$gateway = $this->getGatewayForOrder($order);
+
+		if ( method_exists( $gateway, 'order_status_changed' ) ) {
+			$gateway->order_status_changed( $order, $from_status, $to_status );
+		}
 	}
 
 	private function is_valid_callback() {
@@ -94,5 +100,17 @@ class Plugin {
 			$message = json_encode( $_SERVER ) . "\n\n" . json_encode( $_POST ) . "\n\n";
 			mail( 'dirk@pooliestudios.com', '[PAYONE CALLBACK]', $message );
 		}
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return null|GatewayBase
+	 */
+	private function getGatewayForOrder( $order ) {
+		$gateway_id = $order->get_payment_method();
+
+		// @todo Was tun, wenn es das Gateway nicht gibt?
+		return isset( $this->gateways[$gateway_id] ) ? $this->gateways[$gateway_id] : null;
 	}
 }
