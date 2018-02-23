@@ -86,6 +86,16 @@ class DataTransfer {
 		return $default;
 	}
 
+	/**
+	 * @param string $key
+	 * @param float $default
+	 *
+	 * @return float
+	 */
+	public function get_float( $key, $default = 0.0 ) {
+		return (float)$this->get( $key, $default );
+	}
+
 	public function getAll() {
 		return $this->parameterBag;
 	}

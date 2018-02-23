@@ -39,7 +39,7 @@ class PrePayment extends GatewayBase {
 		$order->set_transaction_id( $response->get( 'txid' ) );
 
 		// Mark as on-hold (we're awaiting the cheque)
-		$order->update_status( 'on-hold', __( 'Waiting for payment', 'payone' ) );
+		$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone' ) );
 
 		// Reduce stock levels
 		wc_reduce_stock_levels( $order_id );
@@ -59,9 +59,12 @@ class PrePayment extends GatewayBase {
 	 * @param \WC_Order $order
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status, \WC_Order $order ) {
-		$balance = $transaction_status->get_balance();
-		if ($order->get_total() + $balance <= 0) {
-			$order->update_status( 'wc-processing', __( 'Payment received', 'payone' ) );
+		if ($transaction_status->isOverpaid()) {
+			$order->update_status( 'wc-processing', __( 'Payment received. Customer overpaid!', 'payone' ) );
+		} elseif ($transaction_status->isUnderpaid()) {
+			$order->add_order_note(__( 'Payment received. Customer underpaid!', 'payone' ));
+		} elseif ($transaction_status->isPaid()) {
+			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone' ) );
 		}
 	}
 

@@ -17,6 +17,15 @@ class Plugin {
 	 */
 	private $gateways;
 
+	/**
+	 * @todo Evtl. Zugriff über file_get_contents('php://input') realisieren, wenn der Server file_get_contents zulässt
+	 *
+	 * @return array
+	 */
+	public static function get_post_vars() {
+		return $_POST;
+	}
+
 	public function init() {
 		$migration = new Migration();
 		$migration->run();
@@ -91,8 +100,9 @@ class Plugin {
 
 	private function is_valid_callback() {
 		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+		$post_vars = self::get_post_vars();
 
-		return isset( $_POST['key'] ) && $_POST['key'] === hash( 'md5', $options['key'] );
+		return isset( $post_vars['key'] ) && $post_vars['key'] === hash( 'md5', $options['key'] );
 	}
 
 	private function debug_payone_callback() {
