@@ -104,7 +104,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @todo Es ist nicht klar, warum das nicht ohne eigenen Code funktioniert. Die Doku zu $this->countries sieht
 	 *       eigentlich so aus, als ob es funktionieren müsste.
-	 * @todo Soll die billing_country oder shipping_country genommen werden?
 	 *
 	 * @return bool
 	 */
