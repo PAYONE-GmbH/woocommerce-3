@@ -3,12 +3,13 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Transaction\Capture;
 
 class CreditCard extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_creditcard';
 
 	public function __construct() {
-		parent::__construct(self::GATEWAY_ID);
+		parent::__construct( self::GATEWAY_ID );
 
 		$this->icon               = '';
 		$this->method_title       = 'BS PAYONE Kreditkarte';
@@ -30,16 +31,30 @@ class CreditCard extends GatewayBase {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-		// Mark as on-hold (we're awaiting the cheque)
-		$order->update_status( 'on-hold', __( 'Awaiting cheque payment', 'woocommerce' ) );
+		$transaction = new \Payone\Transaction\CreditCard( $this );
+		$response    = $transaction->execute( $order );
 
-		// Reduce stock levels
+		if ( $response->has_error() ) {
+			wc_add_notice( __( 'Payment error: ', 'payone' ) . $response->get_error_message(), 'error' );
+
+			return;
+		}
+
+		$order->set_transaction_id( $response->get( 'txid' ) );
+
+		$authorization_method = $transaction->get( 'request' );
+		$order->update_meta_data( 'authorization_method', $authorization_method );
+
+		if ( $authorization_method === 'preauthorization' ) {
+			$order->update_status( 'on-hold', __( 'Credit card payment is preauthorized.', 'woocommerce' ) );
+		} elseif ( $authorization_method === 'authorization' ) {
+			$order->update_status( 'processing',
+				__( 'Credit card payment is authorized and captured.', 'woocommerce' ) );
+		}
+
 		wc_reduce_stock_levels( $order_id );
-
-		// Remove cart
 		$woocommerce->cart->empty_cart();
 
-		// Return thankyou redirect
 		return array(
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
@@ -51,7 +66,25 @@ class CreditCard extends GatewayBase {
 	 * @param \WC_Order $order
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status, \WC_Order $order ) {
+		if ($transaction_status->isPaid()) {
+			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone' ) );
+		} else {
+			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone' ) );
+		}
+	}
 
+	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
+		if ( $from_status === 'on-hold' && $to_status === 'processing' ) {
+			$this->capture( $order );
+		}
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 */
+	public function capture( \WC_Order $order ) {
+		$capture = new Capture( $this );
+		$capture->execute( $order );
 	}
 
 	/**

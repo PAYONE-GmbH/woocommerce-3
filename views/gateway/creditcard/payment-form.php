@@ -1,9 +1,13 @@
-<script type="text/javascript" src="https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js"></script>
-<form name="paymentform" action="" method="post">
-	<fieldset>
-		<input type="hidden" name="pseudocardpan" id="pseudocardpan">
-		<input type="hidden" name="truncatedcardpan" id="truncatedcardpan">
+<input type="hidden" name="card_pseudopan" id="card_pseudopan">
+<input type="hidden" name="card_truncatedpan" id="card_truncatedpan">
+<input type="hidden" name="card_firstname" id="card_firstname">
+<input type="hidden" name="card_lastname" id="card_lastname">
+<input type="hidden" name="card_type" id="card_type">
+<input type="hidden" name="card_expiredate" id="card_expiredate">
 
+<script type="text/javascript" src="https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js"></script>
+<!--form name="paymentform" action="" method="post"-->
+	<fieldset>
 		<!-- configure your cardtype-selection here -->
 		<label for="cardtypeInput">Card type</label>
 		<select id="cardtype">
@@ -24,15 +28,14 @@
             <span id="cardexpireyear"></span>
         </span>
 
-		<label for="firstname">Firstname:</label>
-		<input id="firstname" type="text" name="firstname" value="">
-		<label for="lastname">Lastname:</label>
-		<input id="lastname" type="text" name="lastname" value="">
+		<label for="card_firstname">Firstname:</label>
+		<input id="card_firstname" type="text" name="card_firstname" value="">
+		<label for="card_lastname">Lastname:</label>
+		<input id="card_lastname" type="text" name="card_lastname" value="">
 
 		<div id="errorOutput"></div>
-		<input id="paymentsubmit" type="button" value="Submit" onclick="check();">
 	</fieldset>
-</form>
+<!--/form-->
 <div id="paymentform"></div>
 <script>
     var request, config;
@@ -99,21 +102,37 @@
         iframes.setCardType(this.value);              // on change: set new type of credit card to process
     };
 
-    function check() {                               // Function called by submitting PAY-button
-	    if (iframes.isComplete()) {
+    var check_status = false;
+
+    jQuery( 'form.woocommerce-checkout' ).on( 'checkout_place_order', function(event) {
+        if (jQuery('input[name=payment_method]:checked').val() !== '<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>') {
+            // Only needed for creditcard payment
+            return true;
+        }
+        if (check_status === true) {
+            // Skip the test, as it already succeeded.
+            return true;
+        }
+
+        if (iframes.isComplete()) {
             iframes.creditCardCheck('checkCallback');// Perform "CreditCardCheck" to create and get a
                                                      // PseudoCardPan; then call your function "checkCallback"
         } else {
-            console.debug("not complete");
+            document.getElementById("errorOutput").value = 'Bitte Formular vollständig ausfüllen!';
         }
-    }
+
+        // Bearbeitung hier abschließen. Das Submit wird dann über "checkCallback" realisiert.
+        return false;
+    });
 
     function checkCallback(response) {
-        console.debug(response);
         if (response.status === "VALID") {
-            document.getElementById("pseudocardpan").value = response.pseudocardpan;
-            document.getElementById("truncatedcardpan").value = response.truncatedcardpan;
-            document.paymentform.submit();
+            check_status = true;
+            document.getElementById("card_pseudopan").value = response.pseudocardpan;
+            document.getElementById("card_truncatedpan").value = response.truncatedcardpan;
+            document.getElementById("card_type").value = response.cardtype;
+            document.getElementById("card_expiredate").value = response.cardexpiredate;
+            jQuery('#place_order').parents('form').submit();
         }
     }
 </script>
