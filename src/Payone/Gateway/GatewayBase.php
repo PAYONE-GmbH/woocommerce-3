@@ -89,8 +89,8 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
 	}
 
-	public function add( $methods ) {
-		$methods[] = get_class( $this );
+	public static function add( $methods ) {
+		$methods[] = get_called_class();
 
 		return $methods;
 	}

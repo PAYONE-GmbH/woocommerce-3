@@ -13,11 +13,6 @@ class Plugin {
 	const CALLBACK_SLUG = 'payone-callback';
 
 	/**
-	 * @var GatewayBase[]
-	 */
-	private $gateways;
-
-	/**
 	 * @todo Evtl. Zugriff über file_get_contents('php://input') realisieren, wenn der Server file_get_contents zulässt
 	 *
 	 * @return array
@@ -35,14 +30,14 @@ class Plugin {
 			$settings->init();
 		}
 
-		$this->gateways = [
-			\Payone\Gateway\CreditCard::GATEWAY_ID      => new \Payone\Gateway\CreditCard(),
-			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => new \Payone\Gateway\SepaDirectDebit(),
-			\Payone\Gateway\PrePayment::GATEWAY_ID      => new \Payone\Gateway\PrePayment(),
-			\Payone\Gateway\Invoice::GATEWAY_ID         => new \Payone\Gateway\Invoice(),
+		$gateways = [
+			\Payone\Gateway\CreditCard::GATEWAY_ID      => \Payone\Gateway\CreditCard::class,
+			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
+			\Payone\Gateway\PrePayment::GATEWAY_ID      => \Payone\Gateway\PrePayment::class,
+			\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
 		];
 
-		foreach ( $this->gateways as $gateway ) {
+		foreach ( $gateways as $gateway ) {
 			add_filter( 'woocommerce_payment_gateways', [ $gateway, 'add' ] );
 		}
 
@@ -85,13 +80,13 @@ class Plugin {
 		$transaction_status = TransactionStatus::constructFromPostParameters();
 		$order = new \WC_Order( $transaction_status->get_order_id() );
 
-		$gateway = $this->getGatewayForOrder( $order );
+		$gateway = $this->get_gateway_for_order( $order );
 		$gateway->process_transaction_status( $transaction_status, $order );
 	}
 
 	public function order_status_changed( $id, $from_status, $to_status ) {
 		$order = new \WC_Order( $id );
-		$gateway = $this->getGatewayForOrder($order);
+		$gateway = $this->get_gateway_for_order($order);
 
 		if ( method_exists( $gateway, 'order_status_changed' ) ) {
 			$gateway->order_status_changed( $order, $from_status, $to_status );
@@ -117,10 +112,24 @@ class Plugin {
 	 *
 	 * @return null|GatewayBase
 	 */
-	private function getGatewayForOrder( $order ) {
-		$gateway_id = $order->get_payment_method();
-
+	private function get_gateway_for_order( $order ) {
 		// @todo Was tun, wenn es das Gateway nicht gibt?
-		return isset( $this->gateways[$gateway_id] ) ? $this->gateways[$gateway_id] : null;
+		return $this->get_gateway($order->get_payment_method());
+	}
+
+	/**
+	 * @param string $gateway_id
+	 *
+	 * @return null|GatewayBase
+	 */
+	private function get_gateway( $gateway_id ) {
+		$payment_gateways = WC()->payment_gateways->payment_gateways();
+		foreach ( $payment_gateways as $payment_gateway_id => $payment_gateway ) {
+			if ( $gateway_id === $payment_gateway_id ) {
+				return $payment_gateway;
+			}
+		}
+
+		return null;
 	}
 }
