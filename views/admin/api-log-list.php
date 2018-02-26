@@ -16,7 +16,15 @@
             <?php foreach ($entries as $entry) { ?>
                 <tr style="cursor:pointer" onclick="window.location = '?page=payone-api-log&id=<?php echo $entry->getId(); ?>'">
                     <td><?php echo $entry->getId(); ?></td>
-                    <td><?php echo $entry->getRequest()->get('request'); ?></td>
+                    <td>
+                        <?php
+                            echo $entry->getRequest()->get( 'request' );
+                            $clearing_type = $entry->getRequest()->get('clearingtype');
+                            if ($clearing_type) {
+                                echo ' (' . $clearing_type . ')';
+                            }
+                        ?>
+                    </td>
                     <td><?php echo $entry->getResponse()->get('status'); ?></td>
                     <td><?php echo $entry->getRequest()->get('mode'); ?></td>
                     <td><?php echo $entry->getRequest()->get('mid'); ?></td>
