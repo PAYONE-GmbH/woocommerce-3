@@ -15,6 +15,8 @@ class PrePayment extends GatewayBase {
 		$this->method_title       = 'BS PAYONE Vorkasse';
 		$this->method_description = 'method_description';
 		$this->supports           = [ 'products', 'refunds' ];
+
+		$this->add_email_meta_hook([$this, 'email_meta_action']);
 	}
 
 	public function init_form_fields() {
@@ -34,9 +36,20 @@ class PrePayment extends GatewayBase {
 		$transaction = new \Payone\Transaction\PrePayment( $this );
 		$response    = $transaction->execute( $order );
 
-		// @todo Fehler abfangen und transaktions-ID in Order ablegen.
+		// @todo Fehler abfangen
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
+		$clearing_info = [
+			'bankaccount'       => $response->get( 'clearing_bankaccount' ),
+			'bankcode'          => $response->get( 'clearing_bankcode' ),
+			'bankcountry'       => $response->get( 'clearing_bankcountry' ),
+			'bankname'          => $response->get( 'clearing_bankname' ),
+			'bankaccountholder' => $response->get( 'clearing_bankaccountholder' ),
+			'bankcity'          => $response->get( 'clearing_bankcity' ),
+			'bankiban'          => $response->get( 'clearing_bankiban' ),
+			'bankbic'           => $response->get( 'clearing_bankbic' ),
+		];
+		$order->update_meta_data( 'clearing_info', json_encode( $clearing_info ) );
 
 		// Mark as on-hold (we're awaiting the cheque)
 		$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone' ) );
@@ -80,5 +93,16 @@ class PrePayment extends GatewayBase {
 	public function capture( \WC_Order $order ) {
 		$capture = new Capture( $this );
 		$capture->execute( $order );
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 * @param bool $sent_to_admin
+	 * @param string $plain_text
+	 * @param string $email
+	 */
+	public function email_meta_action(\WC_Order $order, $sent_to_admin, $plain_text, $email = '') {
+		$clearing_info = json_decode($order->get_meta('clearing_info'), true);
+		echo print_r($clearing_info, 1);
 	}
 }

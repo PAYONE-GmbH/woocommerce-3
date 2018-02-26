@@ -169,7 +169,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				'type'    => 'text',
 				'default' => '0',
 			],
-			'authorization_method'              => [
+			'authorization_method'      => [
 				'title'   => __( 'Method of Authorization', 'payone' ),
 				'type'    => 'select',
 				'options' => [
@@ -326,6 +326,12 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 */
 	public function get_text_on_booking_statement() {
 		return $this->text_on_booking_statement;
+	}
+
+	protected function add_email_meta_hook($callable = null) {
+		if ( $callable ) {
+			add_action( 'woocommerce_email_order_meta', $callable, 10, 3 );
+		}
 	}
 
 	private function process_global_settings() {
