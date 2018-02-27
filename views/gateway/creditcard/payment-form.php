@@ -118,7 +118,7 @@
             iframes.creditCardCheck('checkCallback');// Perform "CreditCardCheck" to create and get a
                                                      // PseudoCardPan; then call your function "checkCallback"
         } else {
-            document.getElementById("errorOutput").value = 'Bitte Formular vollständig ausfüllen!';
+            jQuery('#errorOutput').html('<strong style="color:red">Bitte Formular vollständig ausfüllen!</strong>');
         }
 
         // Bearbeitung hier abschließen. Das Submit wird dann über "checkCallback" realisiert.
