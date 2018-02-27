@@ -16,51 +16,51 @@ class SepaDirectDebit extends GatewayBase {
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'SEPA Direct Debit', 'payone' ) );
+		$this->init_common_form_fields( __( 'SEPA Direct Debit', 'payone-woocommerce-3' ) );
 		$this->form_fields['sepa_check_bank_data'] = [
-			'title'   => __( 'Check bank data', 'payone' ),
+			'title'   => __( 'Check bank data', 'payone-woocommerce-3' ),
 			'type'    => 'select',
 			'options' => [
-				'basic'    => __( 'Basic', 'payone' ),
-				'blacklist' => __( 'Check POS black list', 'payone' ),
-				'none' => __( 'None (only possible if PAYONE Mandate Management is inactive)', 'payone' ),
+				'basic'    => __( 'Basic', 'payone-woocommerce-3' ),
+				'blacklist' => __( 'Check POS black list', 'payone-woocommerce-3' ),
+				'none' => __( 'None (only possible if PAYONE Mandate Management is inactive)', 'payone-woocommerce-3' ),
 			],
 			'default' => 'basic',
 		];
 		$this->form_fields['sepa_ask_account_number'] = [
-			'title'   => __( 'Ask account number/bank code (for german accounts only)', 'payone' ),
+			'title'   => __( 'Ask account number/bank code (for german accounts only)', 'payone-woocommerce-3' ),
 			'type'    => 'select',
 			'options' => [
-				'0' => __( 'No', 'payone' ),
-				'1' => __( 'Yes', 'payone' ),
+				'0' => __( 'No', 'payone-woocommerce-3' ),
+				'1' => __( 'Yes', 'payone-woocommerce-3' ),
 			],
 			'default' => '1',
 		];
 		$this->form_fields['sepa_use_mandate_management'] = [
-			'title'   => __( 'Use PAYONE Mandate Management', 'payone' ),
+			'title'   => __( 'Use PAYONE Mandate Management', 'payone-woocommerce-3' ),
 			'type'    => 'select',
 			'options' => [
-				'0' => __( 'No', 'payone' ),
-				'1' => __( 'Yes', 'payone' ),
+				'0' => __( 'No', 'payone-woocommerce-3' ),
+				'1' => __( 'Yes', 'payone-woocommerce-3' ),
 			],
 			'default' => '1',
 		];
 		$this->form_fields['sepa_pdf_download_mandate'] = [
-			'title'   => __( 'Download mandate as PDF', 'payone' ),
+			'title'   => __( 'Download mandate as PDF', 'payone-woocommerce-3' ),
 			'type'    => 'select',
 			'options' => [
-				'0' => __( 'No', 'payone' ),
-				'1' => __( 'Yes', 'payone' ),
+				'0' => __( 'No', 'payone-woocommerce-3' ),
+				'1' => __( 'Yes', 'payone-woocommerce-3' ),
 			],
 			'default' => '1',
 		];
 		$this->form_fields['sepa_countries'] = [
-			'title'   => __( 'List of supported bank countries', 'payone' ),
+			'title'   => __( 'List of supported bank countries', 'payone-woocommerce-3' ),
 			'type'    => 'multiselect',
 			'options' => [
-				'DE' => __( 'Germany', 'payone' ),
-				'AT' => __( 'Austria', 'payone' ),
-				'CH' => __( 'Switzerland', 'payone' ),
+				'DE' => __( 'Germany', 'payone-woocommerce-3' ),
+				'AT' => __( 'Austria', 'payone-woocommerce-3' ),
+				'CH' => __( 'Switzerland', 'payone-woocommerce-3' ),
 			],
 			'default' => [ 'DE', 'AT', 'CH' ],
 		];

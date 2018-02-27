@@ -17,7 +17,7 @@ class Invoice extends GatewayBase {
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Invoice', 'payone' ) );
+		$this->init_common_form_fields( __( 'Invoice', 'payone-woocommerce-3' ) );
 	}
 
 	public function payment_fields() {
@@ -45,7 +45,7 @@ class Invoice extends GatewayBase {
 		$response    = $transaction->execute( $order );
 
 		if ( $response->has_error() ) {
-			wc_add_notice( __( 'Payment error: ', 'payone' ) . $response->get_error_message(),
+			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(),
 				'error' );
 
 			return;
@@ -54,7 +54,7 @@ class Invoice extends GatewayBase {
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
 		$order->update_meta_data( 'authorization_method', $transaction->get( 'request' ) );
-		$order->update_status( 'on-hold', __( 'Rechnung wurde geschickt', 'payone' ) );
+		$order->update_status( 'on-hold', __( 'Rechnung wurde geschickt', 'payone-woocommerce-3' ) );
 
 		// Reduce stock levels
 		wc_reduce_stock_levels( $order_id );

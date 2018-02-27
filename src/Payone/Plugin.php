@@ -42,6 +42,9 @@ class Plugin {
 		}
 
 		add_action( 'woocommerce_order_status_changed', [ $this, 'order_status_changed' ], 10, 3 );
+
+		$plugin_rel_path = dirname( plugin_basename(__FILE__) ) . '/../../lang/';
+		load_plugin_textdomain( 'payone-woocommerce-3', false, $plugin_rel_path);
 	}
 
 	public function add_callback_url() {

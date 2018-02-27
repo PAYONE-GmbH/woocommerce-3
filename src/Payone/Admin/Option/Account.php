@@ -15,31 +15,31 @@ class Account extends Helper {
 		register_setting( 'payone', self::OPTION_NAME, [ $this, 'sanitize' ] );
 
 		add_settings_section( 'payone_account_settings',
-			__( 'Global Settings', 'payone' ),
+			__( 'Global Settings', 'payone-woocommerce-3' ),
 			[ $this, 'account_info' ],
 			'payone-settings-account' );
 		add_settings_field( 'merchant_id',
-			__( 'Merchant ID', 'payone' ),
+			__( 'Merchant ID', 'payone-woocommerce-3' ),
 			[ $this, 'field_merchant_id' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'portal_id',
-			__( 'Portal ID', 'payone' ),
+			__( 'Portal ID', 'payone-woocommerce-3' ),
 			[ $this, 'field_portal_id' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'account_id',
-			__( 'Subaccount ID', 'payone' ),
+			__( 'Subaccount ID', 'payone-woocommerce-3' ),
 			[ $this, 'field_account_id' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'key',
-			__( 'Key', 'payone' ),
+			__( 'Key', 'payone-woocommerce-3' ),
 			[ $this, 'field_key' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'mode',
-			__( 'Mode', 'payone' ),
+			__( 'Mode', 'payone-woocommerce-3' ),
 			[ $this, 'field_mode' ],
 			'payone-settings-account',
 			'payone_account_settings' );
@@ -126,8 +126,8 @@ class Account extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'mode',
 			[
-				'test' => __( 'Test', 'payone' ),
-				'live' => __( 'Live', 'payone' ),
+				'test' => __( 'Test', 'payone-woocommerce-3' ),
+				'live' => __( 'Live', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -135,8 +135,8 @@ class Account extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'submit_cart',
 			[
-				'0' => __( 'No', 'payone' ),
-				'1' => __( 'Yes', 'payone' ),
+				'0' => __( 'No', 'payone-woocommerce-3' ),
+				'1' => __( 'Yes', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -144,8 +144,8 @@ class Account extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'activate_pdf_download',
 			[
-				'0' => __( 'No', 'payone' ),
-				'1' => __( 'Yes', 'payone' ),
+				'0' => __( 'No', 'payone-woocommerce-3' ),
+				'1' => __( 'Yes', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -165,8 +165,8 @@ class Account extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'api_log',
 			[
-				'0' => __( 'Deactivated', 'payone' ),
-				'1' => __( 'Activated', 'payone' ),
+				'0' => __( 'Deactivated', 'payone-woocommerce-3' ),
+				'1' => __( 'Activated', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -174,8 +174,8 @@ class Account extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'transaction_log',
 			[
-				'0' => __( 'Deactivated', 'payone' ),
-				'1' => __( 'Activated', 'payone' ),
+				'0' => __( 'Deactivated', 'payone-woocommerce-3' ),
+				'1' => __( 'Activated', 'payone-woocommerce-3' ),
 			] );
 	}
 

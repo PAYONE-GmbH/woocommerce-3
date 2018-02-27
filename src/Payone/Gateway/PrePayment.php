@@ -20,7 +20,7 @@ class PrePayment extends GatewayBase {
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Prepayment', 'payone' ) );
+		$this->init_common_form_fields( __( 'Prepayment', 'payone-woocommerce-3' ) );
 	}
 
 	public function payment_fields() {
@@ -52,7 +52,7 @@ class PrePayment extends GatewayBase {
 		$order->update_meta_data( 'clearing_info', json_encode( $clearing_info ) );
 
 		// Mark as on-hold (we're awaiting the cheque)
-		$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone' ) );
+		$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
 
 		// Reduce stock levels
 		wc_reduce_stock_levels( $order_id );
@@ -73,11 +73,11 @@ class PrePayment extends GatewayBase {
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status, \WC_Order $order ) {
 		if ($transaction_status->isOverpaid()) {
-			$order->add_order_note( __( 'Payment received. Customer overpaid!', 'payone' ) );
+			$order->add_order_note( __( 'Payment received. Customer overpaid!', 'payone-woocommerce-3' ) );
 		} elseif ($transaction_status->isUnderpaid()) {
-			$order->add_order_note(__( 'Payment received. Customer underpaid!', 'payone' ));
+			$order->add_order_note(__( 'Payment received. Customer underpaid!', 'payone-woocommerce-3' ));
 		} elseif ($transaction_status->isPaid()) {
-			$order->add_order_note( __( 'Payment received.', 'payone' ) );
+			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
 		}
 	}
 

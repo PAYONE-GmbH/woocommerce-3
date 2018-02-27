@@ -1,5 +1,5 @@
 <div class="wrap">
-	<h1><?php echo __( 'Address Checks', 'payone' ); ?></h1>
+	<h1><?php echo __( 'Address Checks', 'payone-woocommerce-3' ); ?></h1>
 	<?php settings_errors(); ?>
 	<form method="post" action="options.php">
 		<?php

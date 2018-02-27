@@ -15,51 +15,51 @@ class AddressChecks extends Helper {
 		register_setting( 'payone_address_checks', self::OPTION_NAME, [ $this, 'sanitize' ] );
 
 		add_settings_section( 'payone_address_checks',
-			__( 'Address validation', 'payone' ),
+			__( 'Address validation', 'payone-woocommerce-3' ),
 			[ $this, 'account_info' ],
 			'payone-address-checks' );
 		add_settings_field( 'active',
-			__( 'Active', 'payone' ),
+			__( 'Active', 'payone-woocommerce-3' ),
 			[ $this, 'field_active' ],
 			'payone-address-checks',
 			'payone_address_checks' );
 		add_settings_field( 'mode',
-			__( 'Mode', 'payone' ),
+			__( 'Mode', 'payone-woocommerce-3' ),
 			[ $this, 'field_mode' ],
 			'payone-address-checks',
 			'payone_address_checks' );
 		add_settings_field( 'address',
-			__( 'Address', 'payone' ),
+			__( 'Address', 'payone-woocommerce-3' ),
 			[ $this, 'field_address' ],
 			'payone-address-checks',
 			'payone_address_checks' );
 		add_settings_field( 'type',
-			__( 'Type', 'payone' ),
+			__( 'Type', 'payone-woocommerce-3' ),
 			[ $this, 'field_type' ],
 			'payone-address-checks',
 			'payone_address_checks' );
 		add_settings_field( 'countries',
-			__( 'Countries', 'payone' ),
+			__( 'Countries', 'payone-woocommerce-3' ),
 			[ $this, 'field_countries' ],
 			'payone-address-checks',
 			'payone_address_checks' );
 		add_settings_field( 'auto_correct',
-			__( 'Correct automatically', 'payone' ),
+			__( 'Correct automatically', 'payone-woocommerce-3' ),
 			[ $this, 'field_auto_correct' ],
 			'payone-address-checks',
 			'payone_address_checks' );
 		add_settings_field( 'on_error',
-			__( 'On error', 'payone' ),
+			__( 'On error', 'payone-woocommerce-3' ),
 			[ $this, 'field_on_error' ],
 			'payone-address-checks',
 			'payone_address_checks' );
 		add_settings_field( 'minimum_cart_value',
-			__( 'Minimum cart value', 'payone' ),
+			__( 'Minimum cart value', 'payone-woocommerce-3' ),
 			[ $this, 'field_minimum_cart_value' ],
 			'payone-address-checks',
 			'payone_address_checks' );
 		add_settings_field( 'maximum_cart_value',
-			__( 'Maximum cart value', 'payone' ),
+			__( 'Maximum cart value', 'payone-woocommerce-3' ),
 			[ $this, 'field_maximum_cart_value' ],
 			'payone-address-checks',
 			'payone_address_checks' );
@@ -69,7 +69,7 @@ class AddressChecks extends Helper {
 			'payone-address-checks',
 			'payone_address_checks' );
 		add_settings_field( 'error_message',
-			__( 'Error message', 'payone' ),
+			__( 'Error message', 'payone-woocommerce-3' ),
 			[ $this, 'field_error_message' ],
 			'payone-address-checks',
 			'payone_address_checks' );
@@ -105,8 +105,8 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'active',
 			[
-				'0' => __( 'No', 'payone' ),
-				'1' => __( 'Yes', 'payone' ),
+				'0' => __( 'No', 'payone-woocommerce-3' ),
+				'1' => __( 'Yes', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -114,8 +114,8 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'mode',
 			[
-				'test' => __( 'Test', 'payone' ),
-				'live' => __( 'Live', 'payone' ),
+				'test' => __( 'Test', 'payone-woocommerce-3' ),
+				'live' => __( 'Live', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -123,8 +123,8 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'address',
 			[
-				'invoice' => __( 'Invoice address', 'payone' ),
-				'delivery' => __( 'Delivery address', 'payone' ),
+				'invoice' => __( 'Invoice address', 'payone-woocommerce-3' ),
+				'delivery' => __( 'Delivery address', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -132,8 +132,8 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'type',
 			[
-				'basic' => __( 'Basic', 'payone' ),
-				'person' => __( 'Person (only available in Germany)', 'payone' ),
+				'basic' => __( 'Basic', 'payone-woocommerce-3' ),
+				'person' => __( 'Person (only available in Germany)', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -141,9 +141,9 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'countries',
 			[
-				'DE' => __( 'Germany', 'payone' ),
-				'AT' => __( 'Austria', 'payone' ),
-				'CH' => __( 'Switzerland', 'payone' ),
+				'DE' => __( 'Germany', 'payone-woocommerce-3' ),
+				'AT' => __( 'Austria', 'payone-woocommerce-3' ),
+				'CH' => __( 'Switzerland', 'payone-woocommerce-3' ),
 			],
 			'multiple'
 		);
@@ -153,9 +153,9 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'auto_correct',
 			[
-				'no' => __( 'No', 'payone' ),
-				'yes' => __( 'Yes', 'payone' ),
-				'customer-decides' => __( 'Customer decides', 'payone' ),
+				'no' => __( 'No', 'payone-woocommerce-3' ),
+				'yes' => __( 'Yes', 'payone-woocommerce-3' ),
+				'customer-decides' => __( 'Customer decides', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -163,10 +163,10 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'on_error',
 			[
-				'cancel' => __( 'Cancel checkout', 'payone' ),
-				're-entry' => __( 'Request re-entry of the address causing the problem', 'payone' ),
-				'follow-up' => __( 'Perform follow-up credit check', 'payone' ),
-				'continue' => __( 'Continue', 'payone' ),
+				'cancel' => __( 'Cancel checkout', 'payone-woocommerce-3' ),
+				're-entry' => __( 'Request re-entry of the address causing the problem', 'payone-woocommerce-3' ),
+				'follow-up' => __( 'Perform follow-up credit check', 'payone-woocommerce-3' ),
+				'continue' => __( 'Continue', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -183,7 +183,7 @@ class AddressChecks extends Helper {
 	}
 
 	public function field_error_message() {
-		$this->textField( self::OPTION_NAME, 'error_message', 'The data you provided wa sinvalid {{payone_customermessage}}' );
+		$this->textField( self::OPTION_NAME, 'error_message', 'The data you provided was invalid {{payone_customermessage}}' );
 	}
 
 	public function render() {
