@@ -64,11 +64,12 @@ class Plugin {
 				$this->debug_payone_callback();
 				Log::constructFromPostVars();
 
-				if ( defined( 'PAYONE_PROCESS_CALLBACKS' ) && PAYONE_PROCESS_CALLBACKS ) {
-					// @todo remove
+				try {
 					$this->process_callback();
+					$response = 'TSOK';
+				} catch (\Exception $e) {
+					$response .= ' (' . $e->getMessage() . ')';
 				}
-				$response = 'TSOK';
 			}
 
 			echo $response;
@@ -78,15 +79,28 @@ class Plugin {
 
 	public function process_callback() {
 		$transaction_status = TransactionStatus::constructFromPostParameters();
-		$order = new \WC_Order( $transaction_status->get_order_id() );
 
-		$gateway = $this->get_gateway_for_order( $order );
-		$gateway->process_transaction_status( $transaction_status, $order );
+		// @todo DEV-Modus entfernen. Wird genutzt um auf dem DEV-Server die Transaktionen nur zu loggen,
+		// @todo statt sie zu bearbeiten.
+		$do_process_callback = false;
+		if ( $transaction_status->get_order_id() < 1000000 ) {
+			$do_process_callback = true;
+		} elseif ( defined( 'PAYONE_LOCALDEV' ) && PAYONE_LOCALDEV ) {
+			$do_process_callback = true;
+		} elseif ( ! defined( 'PAYONE_DEV_MODE' ) || ! PAYONE_DEV_MODE ) {
+			$do_process_callback = true;
+		}
+		if ( $do_process_callback ) {
+			$order = new \WC_Order( $transaction_status->get_order_id() );
+
+			$gateway = $this->get_gateway_for_order( $order );
+			$gateway->process_transaction_status( $transaction_status, $order );
+		}
 	}
 
 	public function order_status_changed( $id, $from_status, $to_status ) {
-		$order = new \WC_Order( $id );
-		$gateway = $this->get_gateway_for_order($order);
+		$order   = new \WC_Order( $id );
+		$gateway = $this->get_gateway_for_order( $order );
 
 		if ( method_exists( $gateway, 'order_status_changed' ) ) {
 			$gateway->order_status_changed( $order, $from_status, $to_status );
@@ -94,7 +108,7 @@ class Plugin {
 	}
 
 	private function is_valid_callback() {
-		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+		$options   = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 		$post_vars = self::get_post_vars();
 
 		return isset( $post_vars['key'] ) && $post_vars['key'] === hash( 'md5', $options['key'] );
@@ -114,7 +128,7 @@ class Plugin {
 	 */
 	private function get_gateway_for_order( $order ) {
 		// @todo Was tun, wenn es das Gateway nicht gibt?
-		return $this->get_gateway($order->get_payment_method());
+		return $this->get_gateway( $order->get_payment_method() );
 	}
 
 	/**
