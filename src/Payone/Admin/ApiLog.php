@@ -4,9 +4,11 @@ namespace Payone\Admin;
 
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
-class ApiLog {
+class ApiLog implements ListTableInterface {
 	public function displayList() {
-		$entries = $this->getEntries();
+		$list_table = new ApiLogListTable( $this );
+		$list_table->prepare_items();
+
 		include PAYONE_VIEW_PATH . '/admin/api-log-list.php';
 	}
 
@@ -17,15 +19,17 @@ class ApiLog {
 
 	/**
 	 * @param int $page
+	 * @param int $per_page
 	 *
 	 * @return array
 	 */
-	private function getEntries( $page = 0 ) {
+	public function get_entries( $page = 1, $per_page = 10 ) {
 		global $wpdb;
 
 		$query = 'SELECT id, request, response, created_at
                   FROM ' . $wpdb->prefix . \Payone\Payone\Api\Log::TABLE_NAME . ' 
-                  ORDER BY created_at DESC';
+                  ORDER BY created_at DESC
+                  LIMIT ' . ( $page -1 ) * $per_page . ', ' . $per_page;
 		$rows  = $wpdb->get_results( $query, ARRAY_A );
 
 		$entries = [];
@@ -34,6 +38,18 @@ class ApiLog {
 		}
 
 		return $entries;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function get_num_total_entries() {
+		global $wpdb;
+
+		$query = 'SELECT COUNT(id)
+                  FROM ' . $wpdb->prefix . \Payone\Payone\Api\Log::TABLE_NAME;
+
+		return (int)$wpdb->get_var( $query );
 	}
 
 	/**
