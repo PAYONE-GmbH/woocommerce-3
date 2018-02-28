@@ -30,10 +30,10 @@ class Base extends Request {
 	 */
 	public function set_data_from_gateway( $gateway ) {
 		$this
-			->setAccountId( $gateway->get_account_id() )
-			->setMerchantId( $gateway->get_merchant_id() )
-			->setPortalId( $gateway->get_portal_id() )
-			->setKey( $gateway->get_key() );
+			->set_account_id( $gateway->get_account_id() )
+			->set_merchant_id( $gateway->get_merchant_id() )
+			->set_portal_id( $gateway->get_portal_id() )
+			->set_key( $gateway->get_key() );
 	}
 
 	public function setPersonalDataFromOrder( \WC_Order $order ) {

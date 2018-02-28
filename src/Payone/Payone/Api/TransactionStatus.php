@@ -6,7 +6,7 @@ class TransactionStatus extends DataTransfer {
 	/**
 	 * @return TransactionStatus
 	 */
-	public static function constructFromPostParameters() {
+	public static function construct_from_post_parameters() {
 		return new TransactionStatus( $_POST );
 	}
 
@@ -50,28 +50,28 @@ class TransactionStatus extends DataTransfer {
 	/**
 	 * @return bool
 	 */
-	public function isAppointed() {
+	public function is_appointed() {
 		return $this->get_action() === 'appointed';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isPaid() {
+	public function is_paid() {
 		return $this->get_action() === 'paid';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isUnderpaid() {
+	public function is_underpaid() {
 		return $this->get_action() === 'underpaid';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isOverpaid() {
-		return $this->isPaid() && $this->get_sum_missing() < 0.0;
+	public function is_overpaid() {
+		return $this->is_paid() && $this->get_sum_missing() < 0.0;
 	}
 }

@@ -66,7 +66,7 @@ class CreditCard extends GatewayBase {
 	 * @param \WC_Order $order
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status, \WC_Order $order ) {
-		if ($transaction_status->isPaid()) {
+		if ($transaction_status->is_paid()) {
 			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone' ) );
 		} else {
 			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone' ) );

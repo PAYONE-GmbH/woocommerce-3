@@ -22,8 +22,8 @@ class ApiLogListTable extends AbstractListTable {
 			case 'id':
 				return '<a href="?page=payone-api-log&id=' . $item->getId() . '">' . $item->getId() . '</a>';
 			case 'request':
-				$result = $item->getRequest()->get( 'request' );
-				$clearing_type = $item->getRequest()->get('clearingtype');
+				$result = $item->get_request()->get( 'request' );
+				$clearing_type = $item->get_request()->get('clearingtype');
 				if ($clearing_type) {
 					$result .= ' (' . $clearing_type . ')';
 				}
@@ -32,11 +32,11 @@ class ApiLogListTable extends AbstractListTable {
 			case 'response':
 				return $item->getResponse()->get('status');
 			case 'mode':
-				return $item->getRequest()->get('mode');
+				return $item->get_request()->get('mode');
 			case 'merchant_id':
-				return $item->getRequest()->get('mid');
+				return $item->get_request()->get('mid');
 			case 'portal_id':
-				return $item->getRequest()->get('portalid');
+				return $item->get_request()->get('portalid');
 			case 'created_at':
 				return $item->getCreatedAt()->format('d.m.Y H:i');
 			default:

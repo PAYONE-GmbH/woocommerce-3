@@ -76,7 +76,7 @@ class Log {
 
 		$object = new Log( $id );
 		$object
-			->setData( DataTransfer::constructFromJson( $data ) )
+			->setData( DataTransfer::construct_from_json( $data ) )
 			->setTransactionId( $transaction_id )
 			->setCreatedAt( new \DateTime( $created_at ) );
 
@@ -95,7 +95,7 @@ class Log {
 		$wpdb->insert(
 			$tableName,
 			[
-				'data'    => $this->getData()->getSerializedParameters(),
+				'data'    => $this->getData()->get_serialized_parameters(),
 				'transaction_id'   => $this->getTransactionId(),
 				'created_at' => $this->getCreatedAt()->format( 'Y-m-d H:i:s' ),
 			],

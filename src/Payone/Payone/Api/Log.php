@@ -40,8 +40,8 @@ class Log {
 	public static function constructFromDatabase( $row ) {
 		$object = new Log( $row['id'] );
 		$object
-			->setRequest( Request::constructFromJson( $row['request'] ) )
-			->setResponse( Response::constructFromJson( $row['response'] ) )
+			->set_request( Request::construct_from_json( $row['request'] ) )
+			->setResponse( Response::construct_from_json( $row['response'] ) )
 			->setCreatedAt( new \DateTime( $row['created_at'] ) );
 
 		return $object;
@@ -55,8 +55,8 @@ class Log {
 		$wpdb->insert(
 			$tableName,
 			[
-				'request'    => $this->request->getSerializedParameters(),
-				'response'   => $this->response->getSerializedParameters(),
+				'request'    => $this->request->get_serialized_parameters(),
+				'response'   => $this->response->get_serialized_parameters(),
 				'created_at' => $this->getCreatedAt()->format( 'Y-m-d H:i:s' ),
 			],
 			[ '%s', '%s', '%s' ]
@@ -73,7 +73,7 @@ class Log {
 	/**
 	 * @return Request
 	 */
-	public function getRequest() {
+	public function get_request() {
 		return $this->request;
 	}
 
@@ -82,7 +82,7 @@ class Log {
 	 *
 	 * @return Log
 	 */
-	public function setRequest( $request ) {
+	public function set_request( $request ) {
 		$this->request = $request;
 
 		return $this;

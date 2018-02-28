@@ -25,7 +25,7 @@ final class DataTransferTest extends TestCase {
 		$dataTransfer->set( 'iban', 'DE85123456782599100003' );
 		$dataTransfer->set( 'street', 'Hauptstrasse 1' );
 
-		$dataTransfer->anonymizeParameters();
+		$dataTransfer->anonymize_parameters();
 
 		$this->assertEquals( '1234', $dataTransfer->get( 'test' ) );
 		$this->assertEquals( '4111xxxxxxxx1111', $dataTransfer->get( 'cardpan' ) );

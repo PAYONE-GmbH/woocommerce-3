@@ -72,11 +72,11 @@ class PrePayment extends GatewayBase {
 	 * @param \WC_Order $order
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status, \WC_Order $order ) {
-		if ($transaction_status->isOverpaid()) {
+		if ($transaction_status->is_overpaid()) {
 			$order->add_order_note( __( 'Payment received. Customer overpaid!', 'payone-woocommerce-3' ) );
-		} elseif ($transaction_status->isUnderpaid()) {
+		} elseif ($transaction_status->is_underpaid()) {
 			$order->add_order_note(__( 'Payment received. Customer underpaid!', 'payone-woocommerce-3' ));
-		} elseif ($transaction_status->isPaid()) {
+		} elseif ($transaction_status->is_paid()) {
 			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
 		}
 	}

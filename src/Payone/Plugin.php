@@ -81,7 +81,7 @@ class Plugin {
 	}
 
 	public function process_callback() {
-		$transaction_status = TransactionStatus::constructFromPostParameters();
+		$transaction_status = TransactionStatus::construct_from_post_parameters();
 
 		// @todo DEV-Modus entfernen. Wird genutzt um auf dem DEV-Server die Transaktionen nur zu loggen,
 		// @todo statt sie zu bearbeiten.

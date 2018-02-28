@@ -7,7 +7,7 @@ class Request extends DataTransfer {
 	const SOLUTION_NAME = 'payone-woocommerce-3';
 	const INTEGRATOR_NAME = 'woocommerce';
 
-	private $apiLogEnabled = false;
+	private $api_log_enabled = false;
 
 	public function __construct() {
 		parent::__construct();
@@ -23,24 +23,24 @@ class Request extends DataTransfer {
 				'transaction_log' => 0,
 			] );
 
-		$this->apiLogEnabled = $options['api_log'] ? true : false;
+		$this->api_log_enabled = $options['api_log'] ? true : false;
 
 		$this
 			->set( 'api_version', '3.10' )
-			->setMode( $options['mode'] )
-			->setAccountId( $options['account_id'] )
-			->setMerchantId( $options['merchant_id'] )
-			->setPortalId( $options['portal_id'] )
-			->setKey( $options['key'] )
+			->set_mode( $options['mode'] )
+			->set_account_id( $options['account_id'] )
+			->set_merchant_id( $options['merchant_id'] )
+			->set_portal_id( $options['portal_id'] )
+			->set_key( $options['key'] )
 			->set( 'encoding', 'UTF-8' )
 			->set( 'solution_name', self::SOLUTION_NAME )
 			->set( 'solution_version', PAYONE_PLUGIN_VERSION )
 			->set( 'integrator_name', self::INTEGRATOR_NAME )
-			->set( 'integrator_version', $this->getWooCommerceVersionNumber() );
+			->set( 'integrator_version', $this->get_woocommerce_version_number() );
 	}
 
-	public function setParameters( $keyValues ) {
-		foreach ( $keyValues as $key => $value ) {
+	public function set_parameters( $key_values ) {
+		foreach ( $key_values as $key => $value ) {
 			$this->set( $key, $value );
 		}
 	}
@@ -56,17 +56,17 @@ class Request extends DataTransfer {
 				CURLOPT_POST           => 1,
 				CURLOPT_FOLLOWLOCATION => 1,
 				CURLOPT_RETURNTRANSFER => 1,
-				CURLOPT_POSTFIELDS     => $this->getPostfieldsFromParameters(),
+				CURLOPT_POSTFIELDS     => $this->get_postfields_from_parameters(),
 			] );
 
 		$result = curl_exec( $ch );
 
 		curl_close( $ch );
 
-		$response = $this->createResponse( $result );
-		if ( $this->apiLogEnabled ) {
-			$logEntry = $this->createLogEntry( $this, $response );
-			$logEntry->save();
+		$response = $this->create_response( $result );
+		if ( $this->api_log_enabled ) {
+			$log_entry = $this->create_log_entry( $this, $response );
+			$log_entry->save();
 		}
 
 		return $response;
@@ -75,7 +75,7 @@ class Request extends DataTransfer {
 	/**
 	 * @return string
 	 */
-	public function getAccountId() {
+	public function get_account_id() {
 		return $this->get( 'aid' );
 	}
 
@@ -84,7 +84,7 @@ class Request extends DataTransfer {
 	 *
 	 * @return Request
 	 */
-	public function setAccountId( $accountId ) {
+	public function set_account_id( $accountId ) {
 		$this->set( 'aid', $accountId );
 
 		return $this;
@@ -93,7 +93,7 @@ class Request extends DataTransfer {
 	/**
 	 * @return string
 	 */
-	public function getMerchantId() {
+	public function get_merchant_id() {
 		return $this->get( 'mid' );
 	}
 
@@ -102,7 +102,7 @@ class Request extends DataTransfer {
 	 *
 	 * @return Request
 	 */
-	public function setMerchantId( $merchantId ) {
+	public function set_merchant_id( $merchantId ) {
 		$this->set( 'mid', $merchantId );
 
 		return $this;
@@ -111,7 +111,7 @@ class Request extends DataTransfer {
 	/**
 	 * @return string
 	 */
-	public function getPortalId() {
+	public function get_portal_id() {
 		return $this->get( 'portalid' );
 	}
 
@@ -120,7 +120,7 @@ class Request extends DataTransfer {
 	 *
 	 * @return Request
 	 */
-	public function setPortalId( $portalId ) {
+	public function set_portal_id( $portalId ) {
 		$this->set( 'portalid', $portalId );
 
 		return $this;
@@ -129,7 +129,7 @@ class Request extends DataTransfer {
 	/**
 	 * @return string
 	 */
-	public function getKey() {
+	public function get_key() {
 		return $this->get( 'key' );
 	}
 
@@ -138,7 +138,7 @@ class Request extends DataTransfer {
 	 *
 	 * @return Request
 	 */
-	public function setKey( $key ) {
+	public function set_key( $key ) {
 		$this->set( 'key', hash( 'md5', $key ) );
 
 		return $this;
@@ -147,7 +147,7 @@ class Request extends DataTransfer {
 	/**
 	 * @return string
 	 */
-	public function getApiVersion() {
+	public function get_api_version() {
 		return $this->get( 'api_version' );
 	}
 
@@ -156,7 +156,7 @@ class Request extends DataTransfer {
 	 *
 	 * @return Request
 	 */
-	public function setApiVersion( $apiVersion ) {
+	public function set_api_version( $apiVersion ) {
 		$this->set( 'api_version', $apiVersion );
 
 		return $this;
@@ -165,7 +165,7 @@ class Request extends DataTransfer {
 	/**
 	 * @return string
 	 */
-	public function getMode() {
+	public function get_mode() {
 		return $this->get( 'mode' );
 	}
 
@@ -174,7 +174,7 @@ class Request extends DataTransfer {
 	 *
 	 * @return Request
 	 */
-	public function setMode( $mode ) {
+	public function set_mode( $mode ) {
 		$this->set( 'mode', $mode );
 
 		return $this;
@@ -183,7 +183,7 @@ class Request extends DataTransfer {
 	/**
 	 * @return string
 	 */
-	public function getEncoding() {
+	public function get_encoding() {
 		return $this->get( 'encoding' );
 	}
 
@@ -192,7 +192,7 @@ class Request extends DataTransfer {
 	 *
 	 * @return Request
 	 */
-	public function setEncoding( $encoding ) {
+	public function set_encoding( $encoding ) {
 		$this->set( 'encoding', $encoding );
 
 		return $this;
@@ -203,7 +203,7 @@ class Request extends DataTransfer {
 	 *
 	 * @return Response
 	 */
-	private function createResponse( $result ) {
+	private function create_response( $result ) {
 		/**
 		 * status=ERROR
 		 * errorcode=1202
@@ -232,10 +232,10 @@ class Request extends DataTransfer {
 	 *
 	 * @return Log
 	 */
-	private function createLogEntry( $request, $response ) {
+	private function create_log_entry( $request, $response ) {
 		$logEntry = new Log();
 		$logEntry
-			->setRequest( $request )
+			->set_request( $request )
 			->setResponse( $response );
 
 		return $logEntry;
@@ -246,7 +246,7 @@ class Request extends DataTransfer {
 	 *
 	 * @return string|null
 	 */
-	private function getWooCommerceVersionNumber() {
+	private function get_woocommerce_version_number() {
 		// If get_plugins() isn't available, require it
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
