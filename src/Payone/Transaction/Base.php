@@ -47,4 +47,17 @@ class Base extends Request {
 		$this->set( 'email', $order->get_billing_email() );
 		$this->set( 'telephonenumber', $order->get_billing_phone() );
 	}
+
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return int
+	 */
+	protected function get_next_sequencenumber( \WC_Order $order ) {
+		$sequencenumber = 1 + (int)$order->get_meta( 'sequencenumber');
+		$order->update_meta_data( 'sequencenumber', $sequencenumber );
+		$order->save_meta_data();
+
+		return $sequencenumber;
+	}
 }

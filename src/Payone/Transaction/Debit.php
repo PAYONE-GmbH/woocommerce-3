@@ -13,7 +13,7 @@ class Debit extends Base {
 
 	public function execute( \WC_Order $order, $amount ) {
 		$this->set( 'txid', $order->get_transaction_id() );
-		$this->set( 'sequencenumber', 1 ); // @todo
+		$this->set( 'sequencenumber', $this->get_next_sequencenumber( $order ) );
 		$this->set( 'amount', $amount * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 
