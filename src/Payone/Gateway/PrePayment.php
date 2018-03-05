@@ -49,7 +49,7 @@ class PrePayment extends GatewayBase {
 			'bankiban'          => $response->get( 'clearing_bankiban' ),
 			'bankbic'           => $response->get( 'clearing_bankbic' ),
 		];
-		$order->update_meta_data( 'clearing_info', json_encode( $clearing_info ) );
+		$order->update_meta_data( '_clearing_info', json_encode( $clearing_info ) );
 
 		// Mark as on-hold (we're awaiting the cheque)
 		$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );

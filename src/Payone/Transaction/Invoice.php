@@ -8,7 +8,7 @@ class Invoice extends Base {
 	 */
 	public function __construct( $gateway ) {
 		parent::__construct( $gateway->get_authorization_method() );
-		$this->set_data_from_gateway($gateway);
+		$this->set_data_from_gateway( $gateway );
 
 		$this->set( 'clearingtype', 'rec' );
 	}

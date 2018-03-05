@@ -43,7 +43,7 @@ class CreditCard extends GatewayBase {
 		$order->set_transaction_id( $response->get( 'txid' ) );
 
 		$authorization_method = $transaction->get( 'request' );
-		$order->update_meta_data( 'authorization_method', $authorization_method );
+		$order->update_meta_data( '_authorization_method', $authorization_method );
 
 		if ( $authorization_method === 'preauthorization' ) {
 			$order->update_status( 'on-hold', __( 'Credit card payment is preauthorized.', 'woocommerce' ) );
