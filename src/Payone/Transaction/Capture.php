@@ -14,7 +14,7 @@ class Capture extends Base {
 	/**
 	 * @param \WC_Order $order
 	 *
-	 * @return \Payone\Payone\Api\Response
+	 * @return null|\Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
 		$this->set( 'txid', $order->get_transaction_id() );
@@ -23,6 +23,18 @@ class Capture extends Base {
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		// @todo narrative_text
 
-		return $this->submit();
+		$is_already_captured = $order->get_meta('_captured');
+		if ($is_already_captured) {
+			return null;
+		}
+
+		$result = $this->submit();
+
+		if ($result->is_approved()) {
+			$order->update_meta_data( '_captured', 1 );
+			$order->save_meta_data();
+		}
+
+		return $result;
 	}
 }

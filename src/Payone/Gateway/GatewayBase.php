@@ -3,6 +3,7 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Transaction\Capture;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
@@ -100,6 +101,17 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @param \WC_Order $order
 	 */
 	abstract public function process_transaction_status( TransactionStatus $transaction_status, \WC_Order $order );
+
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return null|\Payone\Payone\Api\Response
+	 */
+	public function capture( \WC_Order $order ) {
+		$capture = new Capture( $this );
+
+		return $capture->execute( $order );
+	}
 
 	/**
 	 * @todo Es ist nicht klar, warum das nicht ohne eigenen Code funktioniert. Die Doku zu $this->countries sieht

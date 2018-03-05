@@ -3,7 +3,6 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
-use Payone\Transaction\Capture;
 
 class CreditCard extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_creditcard';
@@ -75,16 +74,9 @@ class CreditCard extends GatewayBase {
 
 	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
 		if ( $from_status === 'on-hold' && $to_status === 'processing' ) {
+			// @todo Reagieren, wenn Capture fehlschlägt?
 			$this->capture( $order );
 		}
-	}
-
-	/**
-	 * @param \WC_Order $order
-	 */
-	public function capture( \WC_Order $order ) {
-		$capture = new Capture( $this );
-		$capture->execute( $order );
 	}
 
 	/**
