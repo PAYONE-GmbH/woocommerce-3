@@ -203,20 +203,13 @@ class Request extends DataTransfer {
 	 *
 	 * @return Response
 	 */
-	private function create_response( $result ) {
-		/**
-		 * status=ERROR
-		 * errorcode=1202
-		 * errormessage=Parameter {request} faulty or missing
-		 * customermessage=An error occured while processing this transaction (wrong parameters).
-		 */
-
+	public function create_response( $result ) {
 		$response = new Response();
 		$lines    = explode( "\n", $result );
 		foreach ( $lines as $line ) {
-			$keyValue = explode( '=', $line );
-			$key      = isset( $keyValue[0] ) ? trim( $keyValue[0] ) : null;
-			$value    = isset( $keyValue[1] ) ? trim( $keyValue[1] ) : null;
+			$equal_sign = strpos( $line, '=' );
+			$key        = substr( $line, 0, $equal_sign );
+			$value      = substr( $line, $equal_sign + 1 );
 
 			if ( $key ) {
 				$response->set( $key, $value );
