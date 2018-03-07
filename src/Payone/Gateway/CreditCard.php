@@ -3,6 +3,7 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Transaction\Check3D;
 
 class CreditCard extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_creditcard';
@@ -32,6 +33,13 @@ class CreditCard extends GatewayBase {
 
 		$transaction = new \Payone\Transaction\CreditCard( $this );
 		$response    = $transaction->execute( $order );
+
+		if ( $response->is_redirect() ) {
+			return [
+				'result' => 'success',
+				'redirect' => $response->get_redirect_url(),
+			];
+		}
 
 		if ( $response->has_error() ) {
 			wc_add_notice( __( 'Payment error: ', 'payone' ) . $response->get_error_message(), 'error' );

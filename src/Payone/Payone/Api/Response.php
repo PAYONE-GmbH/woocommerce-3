@@ -18,6 +18,20 @@ class Response extends DataTransfer {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function is_redirect() {
+		return $this->get( 'status' ) === 'REDIRECT';
+	}
+
+	/**
+	 * @return mixed|null
+	 */
+	public function get_redirect_url() {
+		return $this->get( 'redirecturl' );
+	}
+
+	/**
 	 * @return string
 	 */
 	public function get_error_message() {

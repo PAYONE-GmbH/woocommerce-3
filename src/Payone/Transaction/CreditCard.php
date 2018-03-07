@@ -30,6 +30,9 @@ class CreditCard extends Base {
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		$this->setPersonalDataFromOrder( $order );
 		$this->set( 'pseudocardpan', $this->get('card_pseudopan' ) );
+		$this->set( 'successurl', 'http://success.local/?oid='.$order->get_id());
+		$this->set( 'errorurl', 'http://error.local/?oid='.$order->get_id());
+		$this->set( 'backurl', 'http://back.local/?oid='.$order->get_id());
 
 		return $this->submit();
 	}
