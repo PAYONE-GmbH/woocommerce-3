@@ -9,7 +9,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($entry->getData()->getAll() as $key => $value) { ?>
+            <?php foreach ($entry->getData()->get_all() as $key => $value) { ?>
                 <tr>
                     <td><?php echo $key; ?></td>
                     <td><?php echo $value; ?></td>

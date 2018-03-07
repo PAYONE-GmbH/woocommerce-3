@@ -96,7 +96,7 @@ class DataTransfer {
 		return (float) $this->get( $key, $default );
 	}
 
-	public function getAll() {
+	public function get_all() {
 		return $this->parameter_bag;
 	}
 
