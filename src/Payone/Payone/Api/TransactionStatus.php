@@ -2,12 +2,62 @@
 
 namespace Payone\Payone\Api;
 
+use Payone\Gateway\GatewayBase;
+use Payone\Plugin;
+
 class TransactionStatus extends DataTransfer {
+	/**
+	 * @var \WC_Order $order
+	 */
+	private $order;
+
+	/**
+	 * @var GatewayBase
+	 */
+	private $gateway;
+
 	/**
 	 * @return TransactionStatus
 	 */
 	public static function construct_from_post_parameters() {
-		return new TransactionStatus( $_POST );
+		$transaction_status = new TransactionStatus( $_POST );
+		$transaction_status->set_order( $transaction_status->get('reference') );
+
+		return $transaction_status;
+	}
+
+	/**
+	 * @param int $order_id
+	 *
+	 * @return TransactionStatus
+	 */
+	public function set_order( $order_id ) {
+		if ( $order_id ) {
+			$this->order = new \WC_Order( $order_id );
+			$this->gateway = Plugin::get_gateway_for_order( $this->order );
+
+			$this->order->update_meta_data( '_' . $this->get_action(), time() );
+			$this->order->save_meta_data();
+		} else {
+			$this->order = null;
+			$this->gateway = null;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return \WC_Order
+	 */
+	public function get_order() {
+		return $this->order;
+	}
+
+	/**
+	 * @return GatewayBase
+	 */
+	public function get_gateway() {
+		return $this->gateway;
 	}
 
 	/**
@@ -52,6 +102,13 @@ class TransactionStatus extends DataTransfer {
 	 */
 	public function is_appointed() {
 		return $this->get_action() === 'appointed';
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function is_capture() {
+		return $this->get_action() === 'capture';
 	}
 
 	/**

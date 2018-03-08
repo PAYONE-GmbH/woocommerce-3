@@ -31,7 +31,7 @@ class Capture extends Base {
 		$result = $this->submit();
 
 		if ($result->is_approved()) {
-			$order->update_meta_data( '_captured', 1 );
+			$order->update_meta_data( '_captured', time() );
 			$order->save_meta_data();
 		}
 

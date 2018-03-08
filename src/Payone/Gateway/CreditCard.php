@@ -28,29 +28,69 @@ class CreditCard extends GatewayBase {
 	}
 
 	public function process_payment( $order_id ) {
-		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-		$transaction = new \Payone\Transaction\CreditCard( $this );
-		$response    = $transaction->execute( $order );
+		$is_success = false;
+		$make_redirect = false;
+		if ( $this->is_redirect( 'success' ) ) {
+			$make_redirect = true;
+			$is_success = $order->get_meta( '_appointed' ) > 0;
+		} elseif ( $this->is_redirect( 'error' ) ) {
+			$make_redirect = true;
+			$is_success = false;
+			wc_add_notice( __( 'Payment error: ', 'payone' ), 'error' );
+		} else {
+			$transaction = new \Payone\Transaction\CreditCard( $this );
+			$response    = $transaction->execute( $order );
 
-		if ( $response->is_redirect() ) {
-			return [
-				'result' => 'success',
-				'redirect' => $response->get_redirect_url(),
-			];
+			$order->set_transaction_id( $response->get( 'txid' ) );
+
+			$authorization_method = $transaction->get( 'request' );
+			$order->update_meta_data( '_authorization_method', $authorization_method );
+			$order->save_meta_data();
+			$order->save();
+
+			if ( $response->is_redirect() ) {
+				return [
+					'result'   => 'success',
+					'redirect' => $response->get_redirect_url(),
+				];
+			}
+
+			if ( $response->has_error() ) {
+				wc_add_notice( __( 'Payment error: ', 'payone' ) . $response->get_error_message(), 'error' );
+			} else {
+				$is_success = true;
+			}
 		}
 
-		if ( $response->has_error() ) {
-			wc_add_notice( __( 'Payment error: ', 'payone' ) . $response->get_error_message(), 'error' );
+		if ( $is_success ) {
+			$this->handle_successfull_payment( $order );
+			$target_url = $this->get_return_url( $order );
 
-			return;
+			if ( $make_redirect ) {
+				wp_redirect( $target_url );
+				exit;
+			}
+
+			return array(
+				'result'   => 'success',
+				'redirect' => $target_url,
+			);
 		}
 
-		$order->set_transaction_id( $response->get( 'txid' ) );
+		if ( $make_redirect ) {
+			echo 'Hier muss zur Fehlerseite umgeleitet werden';
+			exit;
+		}
 
-		$authorization_method = $transaction->get( 'request' );
-		$order->update_meta_data( '_authorization_method', $authorization_method );
+		return;
+	}
+
+	private function handle_successfull_payment( \WC_Order $order ) {
+		global $woocommerce;
+
+		$authorization_method = $order->get_meta( '_authorization_method' );
 
 		if ( $authorization_method === 'preauthorization' ) {
 			$order->update_status( 'on-hold', __( 'Credit card payment is preauthorized.', 'woocommerce' ) );
@@ -59,21 +99,16 @@ class CreditCard extends GatewayBase {
 				__( 'Credit card payment is authorized and captured.', 'woocommerce' ) );
 		}
 
-		wc_reduce_stock_levels( $order_id );
+		wc_reduce_stock_levels( $order->get_id() );
 		$woocommerce->cart->empty_cart();
-
-		return array(
-			'result'   => 'success',
-			'redirect' => $this->get_return_url( $order ),
-		);
 	}
 
 	/**
 	 * @param TransactionStatus $transaction_status
-	 * @param \WC_Order $order
 	 */
-	public function process_transaction_status( TransactionStatus $transaction_status, \WC_Order $order ) {
-		if ($transaction_status->is_paid()) {
+	public function process_transaction_status( TransactionStatus $transaction_status ) {
+		$order = $transaction_status->get_order();
+		if ( $transaction_status->is_paid() || $transaction_status->is_capture() ) {
 			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone' ) );
 		} else {
 			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone' ) );
@@ -104,5 +139,14 @@ class CreditCard extends GatewayBase {
 			. 'yes'
 			. $options['key']
 		);
+	}
+
+	/**
+	 * @param string $type
+	 *
+	 * @return bool
+	 */
+	private function is_redirect( $type ) {
+		return $_GET['type'] === $type;
 	}
 }

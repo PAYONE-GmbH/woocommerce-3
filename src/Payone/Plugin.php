@@ -47,6 +47,20 @@ class Plugin {
 		load_plugin_textdomain( 'payone-woocommerce-3', false, $plugin_rel_path);
 	}
 
+	/**
+	 * @param string $type
+	 *
+	 * @return string
+	 */
+	public static function get_callback_url( $type = 'transaction' ) {
+		$url = get_site_url( null, self::CALLBACK_SLUG . '/' );
+		if ($type !== 'transaction') {
+			$url .= '?type=' . $type;
+		}
+
+		return esc_url( $url );
+	}
+
 	public function add_callback_url() {
 		add_rewrite_rule( '^' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
 		add_filter( 'query_vars', [ $this, 'add_rewrite_var' ] );
@@ -62,8 +76,12 @@ class Plugin {
 	public function catch_payone_callback() {
 		if ( get_query_var( self::CALLBACK_SLUG ) ) {
 
+			if ( $this->is_success_redirect() ) {
+				return $this->process_success_redirect();
+			}
+
 			$response = 'ERROR';
-			if ( $this->is_valid_callback() ) {
+			if ( $this->is_valid_transaction_callback() ) {
 				$this->debug_payone_callback();
 				Log::constructFromPostVars();
 
@@ -94,10 +112,9 @@ class Plugin {
 			$do_process_callback = true;
 		}
 		if ( $do_process_callback ) {
-			$order = new \WC_Order( $transaction_status->get_order_id() );
-
-			$gateway = $this->get_gateway_for_order( $order );
-			$gateway->process_transaction_status( $transaction_status, $order );
+			$transaction_status
+				->get_gateway()
+				->process_transaction_status( $transaction_status );
 		}
 	}
 
@@ -110,11 +127,33 @@ class Plugin {
 		}
 	}
 
-	private function is_valid_callback() {
+	private function is_valid_transaction_callback() {
 		$options   = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 		$post_vars = self::get_post_vars();
 
 		return isset( $post_vars['key'] ) && $post_vars['key'] === hash( 'md5', $options['key'] );
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function is_success_redirect() {
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'success' && isset( $_GET['oid'] ) && (int)$_GET['oid'] ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function process_success_redirect() {
+		$order_id = (int)$_GET['oid'];
+
+		$order = new \WC_Order( $order_id );
+		$gateway = self::get_gateway_for_order( $order );
+		return $gateway->process_payment( $order_id );
 	}
 
 	private function debug_payone_callback() {
@@ -129,9 +168,9 @@ class Plugin {
 	 *
 	 * @return null|GatewayBase
 	 */
-	private function get_gateway_for_order( $order ) {
+	public static function get_gateway_for_order( \WC_Order $order ) {
 		// @todo Was tun, wenn es das Gateway nicht gibt?
-		return $this->get_gateway( $order->get_payment_method() );
+		return self::find_gateway( $order->get_payment_method() );
 	}
 
 	/**
@@ -139,7 +178,7 @@ class Plugin {
 	 *
 	 * @return null|GatewayBase
 	 */
-	private function get_gateway( $gateway_id ) {
+	private static function find_gateway( $gateway_id ) {
 		$payment_gateways = WC()->payment_gateways->payment_gateways();
 		foreach ( $payment_gateways as $payment_gateway_id => $payment_gateway ) {
 			if ( $gateway_id === $payment_gateway_id ) {
