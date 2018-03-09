@@ -13,12 +13,6 @@ class CreditCard extends Base {
 		$this->set_data_from_gateway( $gateway );
 
 		$this->set( 'clearingtype', 'cc' );
-		$this->set( 'card_pseudopan', $_POST['card_pseudopan'] );
-		$this->set( 'card_truncatedpan', $_POST['card_truncatedpan'] );
-		$this->set( 'card_firstname', $_POST['card_firstname'] );
-		$this->set( 'card_lastname', $_POST['card_lastname'] );
-		$this->set( 'card_type', $_POST['card_type'] );
-		$this->set( 'card_expiredate', $_POST['card_expiredate'] );
 	}
 
 	/**
