@@ -3,7 +3,6 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
-use Payone\Transaction\Check3D;
 
 class CreditCard extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_creditcard';
@@ -35,10 +34,17 @@ class CreditCard extends GatewayBase {
 		if ( $this->is_redirect( 'success' ) ) {
 			$make_redirect = true;
 			$is_success = $order->get_meta( '_appointed' ) > 0;
+			if ( ! $is_success ) {
+				wc_add_notice( __( 'Payment error: ',
+						'payone-woocommerce-3' ) . __( 'Did not receive "appointed" callback',
+						'payone-woocommerce-3' ),
+					'error' );
+			}
 		} elseif ( $this->is_redirect( 'error' ) ) {
 			$make_redirect = true;
 			$is_success = false;
-			wc_add_notice( __( 'Payment error: ', 'payone' ), 'error' );
+			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( '3-D Secure returned error',
+					'payone-woocommerce-3' ), 'error' );
 		} else {
 			$transaction = new \Payone\Transaction\CreditCard( $this );
 			$response    = $transaction->execute( $order );
@@ -58,7 +64,7 @@ class CreditCard extends GatewayBase {
 			}
 
 			if ( $response->has_error() ) {
-				wc_add_notice( __( 'Payment error: ', 'payone' ) . $response->get_error_message(), 'error' );
+				wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(), 'error' );
 			} else {
 				$is_success = true;
 			}
@@ -80,11 +86,14 @@ class CreditCard extends GatewayBase {
 		}
 
 		if ( $make_redirect ) {
-			echo 'Hier muss zur Fehlerseite umgeleitet werden';
+			wp_redirect( wc_get_checkout_url() );
 			exit;
 		}
 
-		return;
+		return [
+			'result'   => 'error',
+			'redirect' => wc_get_checkout_url(),
+		];
 	}
 
 	private function handle_successfull_payment( \WC_Order $order ) {
@@ -109,9 +118,9 @@ class CreditCard extends GatewayBase {
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		$order = $transaction_status->get_order();
 		if ( $transaction_status->is_paid() || $transaction_status->is_capture() ) {
-			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone' ) );
+			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone-woocommerce-3' ) );
 		} else {
-			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone' ) );
+			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
 		}
 	}
 

@@ -25,16 +25,21 @@ class Capture extends Base {
 
 		$is_already_captured = $order->get_meta('_captured');
 		if ($is_already_captured) {
+			$order->add_order_note( __( 'Capture already done', 'payone-woocommerce-3' ) );
+
 			return null;
 		}
 
-		$result = $this->submit();
+		$response = $this->submit();
 
-		if ($result->is_approved()) {
+		if ($response->is_approved()) {
+			$order->add_order_note( __( 'Capture successfull', 'payone-woocommerce-3' ) );
 			$order->update_meta_data( '_captured', time() );
 			$order->save_meta_data();
+		} else {
+			$order->add_order_note( __( 'Capture failed: ', 'payone-woocommerce-3' ) . $response->get_error_message() );
 		}
 
-		return $result;
+		return $response;
 	}
 }

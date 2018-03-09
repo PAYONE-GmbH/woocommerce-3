@@ -76,8 +76,8 @@ class Plugin {
 	public function catch_payone_callback() {
 		if ( get_query_var( self::CALLBACK_SLUG ) ) {
 
-			if ( $this->is_success_redirect() ) {
-				return $this->process_success_redirect();
+			if ( $this->is_callback_after_redirect() ) {
+				return $this->process_callback_after_redirect();
 			}
 
 			$response = 'ERROR';
@@ -137,8 +137,11 @@ class Plugin {
 	/**
 	 * @return bool
 	 */
-	private function is_success_redirect() {
-		if ( isset( $_GET['type'] ) && $_GET['type'] === 'success' && isset( $_GET['oid'] ) && (int)$_GET['oid'] ) {
+	private function is_callback_after_redirect() {
+		$allowed_redirect_types = [ 'success', 'error', 'return' ];
+		if ( isset( $_GET['type'] ) && in_array( $_GET['type'], $allowed_redirect_types, true)
+		     && isset( $_GET['oid'] ) && (int)$_GET['oid']
+		) {
 			return true;
 		}
 
@@ -148,11 +151,12 @@ class Plugin {
 	/**
 	 * @return array
 	 */
-	private function process_success_redirect() {
+	private function process_callback_after_redirect() {
 		$order_id = (int)$_GET['oid'];
 
 		$order = new \WC_Order( $order_id );
 		$gateway = self::get_gateway_for_order( $order );
+
 		return $gateway->process_payment( $order_id );
 	}
 

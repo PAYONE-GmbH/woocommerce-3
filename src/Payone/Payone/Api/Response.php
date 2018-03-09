@@ -35,6 +35,6 @@ class Response extends DataTransfer {
 	 * @return string
 	 */
 	public function get_error_message() {
-		return __( $this->get( 'errormessage' ), 'payone' ).' ['.$this->get('errorcode').']';
+		return __( $this->get( 'errormessage' ), 'payone-woocommerce-3' ).' ['.$this->get('errorcode').']';
 	}
 }
