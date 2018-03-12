@@ -11,9 +11,11 @@
 		<!-- configure your cardtype-selection here -->
 		<label for="cardtypeInput">Card type</label>
 		<select id="cardtype">
-			<option value="V">VISA</option>
-			<option value="M">Mastercard</option>
-			<option value="A">Amex</option>
+            <?php foreach ( $this->get_option( 'cc_brands' ) as $cc_brand ) { ?>
+                <option value="<?php echo $cc_brand; ?>">
+                    <?php echo $this->get_option( 'cc_brand_label_' . $cc_brand ); ?>
+                </option>
+            <?php } ?>
 		</select>
 
 		<label for="cardpanInput">Cardpan:</label>
@@ -44,19 +46,19 @@
         fields: {
             cardpan: {
                 selector: "cardpan",                 // put name of your div-container here
-                type: "text",                        // text (default), password, tel
+                type: "<?php echo $this->get_option( 'cc_field_cardnumber_type' ); ?>",
                 style: "font-size: 1em; border: 1px solid #000;"
             },
             cardcvc2: {
                 selector: "cardcvc2",                // put name of your div-container here
-                type: "password",                    // select(default), text, password, tel
+                type: "<?php echo $this->get_option( 'cc_field_cvc2_type' ); ?>",
                 style: "font-size: 1em; border: 1px solid #000;",
                 size: "4",
                 maxlength: "4"
             },
             cardexpiremonth: {
                 selector: "cardexpiremonth",         // put name of your div-container here
-                type: "select",                      // select(default), text, password, tel
+                type: "<?php echo $this->get_option( 'cc_field_month_type' ); ?>",
                 size: "2",
                 maxlength: "2",
                 iframe: {
@@ -65,23 +67,22 @@
             },
             cardexpireyear: {
                 selector: "cardexpireyear",          // put name of your div-container here
-                type: "select",                      // select(default), text, password, tel
+                type: "<?php echo $this->get_option( 'cc_field_year_type' ); ?>",
                 iframe: {
                     width: "80px"
                 }
             }
         },
         defaultStyle: {
-            input: "font-size: 1em; border: 1px solid #000; width: 175px;",
-            select: "font-size: 1em; border: 1px solid #000;",
+            input: "<?php echo $this->get_option( 'cc_default_style_input' ); ?>",
+            select: "<?php echo $this->get_option( 'cc_default_style_select' ); ?>",
             iframe: {
-                height: "33px",
-                width: "180px"
+                width: "<?php echo $this->get_option( 'cc_default_style_iframe_width' ); ?>",
+                height: "<?php echo $this->get_option( 'cc_default_style_iframe_height' ); ?>"
             }
         },
-        error: "errorOutput",                        // area to display error-messages (optional)
-        language: Payone.ClientApi.Language.de       // Language to display error-messages
-                                                     // (default: Payone.ClientApi.Language.en)
+        error: "<?php echo $this->get_option( 'cc_error_output_active' ) ? 'errorOutput' : ''; ?>",
+        language: Payone.ClientApi.Language.<?php echo $this->get_option( 'cc_error_output_language' ); ?>
     };
 
     request = {
