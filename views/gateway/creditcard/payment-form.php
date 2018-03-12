@@ -6,7 +6,25 @@
 <input type="hidden" name="card_expiredate" id="card_expiredate">
 
 <script type="text/javascript" src="https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js"></script>
-<!--form name="paymentform" action="" method="post"-->
+
+<?php
+    $cardnumber_css = '';
+    if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
+	    $cardnumber_css = ' style="' . $this->get_option( 'cc_field_cardnumber_css' ) . '"';
+    }
+    $cvc2_css = '';
+    if ( $this->get_option( 'cc_field_cvc2_style' ) === 'custom' ) {
+	    $cvc2_css = ' style="' . $this->get_option( 'cc_field_cvc2_css' ) . '"';
+    }
+    $month_css = '';
+    if ( $this->get_option( 'cc_field_month_style' ) === 'custom' ) {
+	    $month_css = ' style="' . $this->get_option( 'cc_field_month_css' ) . '"';
+    }
+    $year_css = '';
+    if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
+        $year_css = ' style="' . $this->get_option( 'cc_field_year_css' ) . '"';
+    }
+?>
 	<fieldset>
 		<!-- configure your cardtype-selection here -->
 		<label for="cardtypeInput">Card type</label>
@@ -19,15 +37,15 @@
 		</select>
 
 		<label for="cardpanInput">Cardpan:</label>
-		<span class="inputIframe" id="cardpan"></span>
+		<span class="inputIframe" id="cardpan"<?php echo $cardnumber_css; ?>></span>
 
 		<label for="cvcInput">CVC:</label>
-		<span id="cardcvc2" class="inputIframe"></span>
+		<span id="cardcvc2" class="inputIframe"<?php echo $cvc2_css; ?>></span>
 
 		<label for="expireInput">Expire Date:</label>
 		<span id="expireInput" class="inputIframe">
-            <span id="cardexpiremonth"></span>
-            <span id="cardexpireyear"></span>
+            <span id="cardexpiremonth"<?php echo $month_css; ?>></span>
+            <span id="cardexpireyear"<?php echo $year_css; ?>></span>
         </span>
 
 		<label for="card_firstname">Firstname:</label>
@@ -47,30 +65,52 @@
             cardpan: {
                 selector: "cardpan",                 // put name of your div-container here
                 type: "<?php echo $this->get_option( 'cc_field_cardnumber_type' ); ?>",
-                style: "font-size: 1em; border: 1px solid #000;"
+                style: "font-size: 1em; border: 1px solid #000;",
+                size: "<?php echo $this->get_option( 'cc_field_cardnumber_length' ); ?>",
+                maxlength: "<?php echo $this->get_option( 'cc_field_cardnumber_maxchars' ); ?>"
+                <?php if ($this->get_option( 'cc_field_cardnumber_iframe' ) === 'custom') { ?>
+                , iframe: {
+                    width: "<?php echo $this->get_option( 'cc_field_cardnumber_width' ); ?>",
+                    height: "<?php echo $this->get_option( 'cc_field_cardnumber_width' ); ?>"
+                }
+                <?php } ?>
             },
             cardcvc2: {
                 selector: "cardcvc2",                // put name of your div-container here
                 type: "<?php echo $this->get_option( 'cc_field_cvc2_type' ); ?>",
                 style: "font-size: 1em; border: 1px solid #000;",
-                size: "4",
-                maxlength: "4"
+                size: "<?php echo $this->get_option( 'cc_field_cvc2_length' ); ?>",
+                maxlength: "<?php echo $this->get_option( 'cc_field_cvc2_maxchars' ); ?>"
+	            <?php if ($this->get_option( 'cc_field_cvc2_iframe' ) === 'custom') { ?>
+                , iframe: {
+                    width: "<?php echo $this->get_option( 'cc_field_cvc2_width' ); ?>",
+                    height: "<?php echo $this->get_option( 'cc_field_cvc2_width' ); ?>"
+                }
+	            <?php } ?>
             },
             cardexpiremonth: {
                 selector: "cardexpiremonth",         // put name of your div-container here
                 type: "<?php echo $this->get_option( 'cc_field_month_type' ); ?>",
-                size: "2",
-                maxlength: "2",
-                iframe: {
-                    width: "50px"
+                size: "<?php echo $this->get_option( 'cc_field_month_length' ); ?>",
+                maxlength: "<?php echo $this->get_option( 'cc_field_month_maxchars' ); ?>"
+                <?php if ($this->get_option( 'cc_field_month_iframe' ) === 'custom') { ?>
+                , iframe: {
+                    width: "<?php echo $this->get_option( 'cc_field_month_width' ); ?>",
+                    height: "<?php echo $this->get_option( 'cc_field_month_width' ); ?>"
                 }
+                <?php } ?>
             },
             cardexpireyear: {
                 selector: "cardexpireyear",          // put name of your div-container here
                 type: "<?php echo $this->get_option( 'cc_field_year_type' ); ?>",
-                iframe: {
-                    width: "80px"
+                size: "<?php echo $this->get_option( 'cc_field_year_length' ); ?>",
+                maxlength: "<?php echo $this->get_option( 'cc_field_year_maxchars' ); ?>"
+	            <?php if ($this->get_option( 'cc_field_year_iframe' ) === 'custom') { ?>
+                , iframe: {
+                    width: "<?php echo $this->get_option( 'cc_field_year_width' ); ?>",
+                    height: "<?php echo $this->get_option( 'cc_field_year_width' ); ?>"
                 }
+	            <?php } ?>
             }
         },
         defaultStyle: {
@@ -97,7 +137,7 @@
         hash: '<?php echo $hash; ?>'
     };
     var iframes = new Payone.ClientApi.HostedIFrames(config, request);
-    iframes.setCardType("V");
+    iframes.setCardType('<?php $cc_brand_choices = $this->get_option('cc_field_cardnumber_type'); echo $cc_brand_choices[1]; ?>');
 
     document.getElementById('cardtype').onchange = function () {
         iframes.setCardType(this.value);              // on change: set new type of credit card to process
