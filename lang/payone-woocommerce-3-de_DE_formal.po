@@ -4,35 +4,62 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: BS PAYONE v1.0.0\n"
-"POT-Creation-Date: 2018-02-27 13:27+0100\n"
-"PO-Revision-Date: \n"
-"Language-Team: Your Team <translations@example.com>\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"POT-Creation-Date: 2018-03-14 13:02+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Your Team <translations@example.com>\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,"
+"_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Generator: Poedit 2.0.6\n"
-"Last-Translator: \n"
-"Language: de_DE\n"
 "X-Poedit-SearchPath-0: .\n"
+
+#: src/Payone/Admin/ApiLogListTable.php:9
+msgid "Request"
+msgstr ""
+
+#: src/Payone/Admin/ApiLogListTable.php:10
+msgid "Response"
+msgstr ""
+
+#: src/Payone/Admin/ApiLogListTable.php:11
+#: src/Payone/Admin/TransactionLogListTable.php:13
+msgid "Modus"
+msgstr ""
+
+#: src/Payone/Admin/ApiLogListTable.php:12
+msgid "Merchant-ID"
+msgstr ""
+
+#: src/Payone/Admin/ApiLogListTable.php:13
+#: src/Payone/Admin/Option/Account.php:27
+#: src/Payone/Admin/TransactionLogListTable.php:14
+#: src/Payone/Gateway/GatewayBase.php:216
+msgid "Portal ID"
+msgstr ""
+
+#: src/Payone/Admin/ApiLogListTable.php:14
+#: src/Payone/Admin/TransactionLogListTable.php:15
+msgid "Created at"
+msgstr "Erstelldatum"
 
 #: src/Payone/Admin/Option/Account.php:18
 msgid "Global Settings"
 msgstr ""
 
 #: src/Payone/Admin/Option/Account.php:22
-#: src/Payone/Gateway/GatewayBase.php:200
+#: src/Payone/Gateway/GatewayBase.php:211
 msgid "Merchant ID"
-msgstr ""
-
-#: src/Payone/Admin/Option/Account.php:27
-#: src/Payone/Gateway/GatewayBase.php:205
-msgid "Portal ID"
 msgstr ""
 
 #: src/Payone/Admin/Option/Account.php:32
@@ -40,7 +67,7 @@ msgid "Subaccount ID"
 msgstr ""
 
 #: src/Payone/Admin/Option/Account.php:37
-#: src/Payone/Gateway/GatewayBase.php:215
+#: src/Payone/Gateway/GatewayBase.php:226
 msgid "Key"
 msgstr ""
 
@@ -51,27 +78,27 @@ msgid "Mode"
 msgstr "Modus"
 
 #: src/Payone/Admin/Option/Account.php:47
-#: src/Payone/Gateway/GatewayBase.php:220
+#: src/Payone/Gateway/GatewayBase.php:231
 msgid "Submit cart"
 msgstr ""
 
 #: src/Payone/Admin/Option/Account.php:52
-#: src/Payone/Gateway/GatewayBase.php:229
+#: src/Payone/Gateway/GatewayBase.php:240
 msgid "Activate PDF download"
 msgstr ""
 
 #: src/Payone/Admin/Option/Account.php:57
-#: src/Payone/Gateway/GatewayBase.php:238
+#: src/Payone/Gateway/GatewayBase.php:249
 msgid "Dynamic invoice text"
 msgstr ""
 
 #: src/Payone/Admin/Option/Account.php:62
-#: src/Payone/Gateway/GatewayBase.php:243
+#: src/Payone/Gateway/GatewayBase.php:254
 msgid "Dynamic refund text"
 msgstr ""
 
 #: src/Payone/Admin/Option/Account.php:67
-#: src/Payone/Gateway/GatewayBase.php:248
+#: src/Payone/Gateway/GatewayBase.php:259
 msgid "Text on booking statement"
 msgstr ""
 
@@ -102,9 +129,9 @@ msgstr ""
 #: src/Payone/Admin/Option/AddressChecks.php:108
 #: src/Payone/Admin/Option/AddressChecks.php:156
 #: src/Payone/Admin/Option/CreditCheck.php:103
-#: src/Payone/Gateway/GatewayBase.php:194
-#: src/Payone/Gateway/GatewayBase.php:223
-#: src/Payone/Gateway/GatewayBase.php:232
+#: src/Payone/Gateway/CreditCard.php:22 src/Payone/Gateway/GatewayBase.php:205
+#: src/Payone/Gateway/GatewayBase.php:234
+#: src/Payone/Gateway/GatewayBase.php:243
 #: src/Payone/Gateway/SepaDirectDebit.php:34
 #: src/Payone/Gateway/SepaDirectDebit.php:43
 #: src/Payone/Gateway/SepaDirectDebit.php:52
@@ -116,9 +143,9 @@ msgstr "Nein"
 #: src/Payone/Admin/Option/AddressChecks.php:109
 #: src/Payone/Admin/Option/AddressChecks.php:157
 #: src/Payone/Admin/Option/CreditCheck.php:104
-#: src/Payone/Gateway/GatewayBase.php:195
-#: src/Payone/Gateway/GatewayBase.php:224
-#: src/Payone/Gateway/GatewayBase.php:233
+#: src/Payone/Gateway/CreditCard.php:23 src/Payone/Gateway/GatewayBase.php:206
+#: src/Payone/Gateway/GatewayBase.php:235
+#: src/Payone/Gateway/GatewayBase.php:244
 #: src/Payone/Gateway/SepaDirectDebit.php:35
 #: src/Payone/Gateway/SepaDirectDebit.php:44
 #: src/Payone/Gateway/SepaDirectDebit.php:53
@@ -127,13 +154,13 @@ msgstr "Ja"
 
 #: src/Payone/Admin/Option/Account.php:153
 #: src/Payone/Admin/Option/Account.php:161
-#: src/Payone/Gateway/GatewayBase.php:240
+#: src/Payone/Gateway/GatewayBase.php:251
 msgid "Your order No. {{order}}"
 msgstr ""
 
 #: src/Payone/Admin/Option/Account.php:157
-#: src/Payone/Gateway/GatewayBase.php:245
-#: src/Payone/Gateway/GatewayBase.php:250
+#: src/Payone/Gateway/GatewayBase.php:256
+#: src/Payone/Gateway/GatewayBase.php:261
 msgid "Your refund No. {{order}}"
 msgstr ""
 
@@ -221,21 +248,21 @@ msgstr ""
 
 #: src/Payone/Admin/Option/AddressChecks.php:144
 #: src/Payone/Admin/Option/CreditCheck.php:121
-#: src/Payone/Gateway/GatewayBase.php:184
+#: src/Payone/Gateway/GatewayBase.php:195
 #: src/Payone/Gateway/SepaDirectDebit.php:61
 msgid "Germany"
 msgstr "Deutschland"
 
 #: src/Payone/Admin/Option/AddressChecks.php:145
 #: src/Payone/Admin/Option/CreditCheck.php:122
-#: src/Payone/Gateway/GatewayBase.php:185
+#: src/Payone/Gateway/GatewayBase.php:196
 #: src/Payone/Gateway/SepaDirectDebit.php:62
 msgid "Austria"
 msgstr "Österreich"
 
 #: src/Payone/Admin/Option/AddressChecks.php:146
 #: src/Payone/Admin/Option/CreditCheck.php:123
-#: src/Payone/Gateway/GatewayBase.php:186
+#: src/Payone/Gateway/GatewayBase.php:197
 #: src/Payone/Gateway/SepaDirectDebit.php:63
 msgid "Switzerland"
 msgstr "Schweiz"
@@ -335,79 +362,251 @@ msgstr ""
 msgid "Credit Check"
 msgstr ""
 
-#: src/Payone/Gateway/CreditCard.php:20
+#: src/Payone/Admin/TransactionLogListTable.php:9
+msgid "Transaction ID"
+msgstr ""
+
+#: src/Payone/Admin/TransactionLogListTable.php:10
+msgid "Order ID"
+msgstr ""
+
+#: src/Payone/Admin/TransactionLogListTable.php:11
+msgid "Transaction action"
+msgstr ""
+
+#: src/Payone/Admin/TransactionLogListTable.php:12
+msgid "Sequencenumber"
+msgstr "Sequenznummer"
+
+#: src/Payone/Gateway/CreditCard.php:19
 msgid "Creditcard"
 msgstr "Kreditkarte"
 
-#: src/Payone/Gateway/CreditCard.php:38 src/Payone/Gateway/Invoice.php:48
+#: src/Payone/Gateway/CreditCard.php:26
+msgid "Numeric"
+msgstr "Numerisch"
+
+#: src/Payone/Gateway/CreditCard.php:27
+msgid "Password"
+msgstr "Passwort"
+
+#: src/Payone/Gateway/CreditCard.php:28
+msgid "Text"
+msgstr "Text"
+
+#: src/Payone/Gateway/CreditCard.php:29 src/Payone/Gateway/CreditCard.php:296
+msgid "Select"
+msgstr "Auswahl"
+
+#: src/Payone/Gateway/CreditCard.php:32
+msgid "Default"
+msgstr "Standard"
+
+#: src/Payone/Gateway/CreditCard.php:33
+msgid "Custom"
+msgstr "Eigene"
+
+#: src/Payone/Gateway/CreditCard.php:37
+msgid "German"
+msgstr "Deutsch"
+
+#: src/Payone/Gateway/CreditCard.php:38
+msgid "English"
+msgstr "Englisch"
+
+#: src/Payone/Gateway/CreditCard.php:42
+msgid "Credit card brands"
+msgstr "Kreditkartenfirmen"
+
+#: src/Payone/Gateway/CreditCard.php:45 src/Payone/Gateway/CreditCard.php:58
+msgid "VISA"
+msgstr "VISA"
+
+#: src/Payone/Gateway/CreditCard.php:46 src/Payone/Gateway/CreditCard.php:63
+msgid "Mastercard"
+msgstr "Mastercard"
+
+#: src/Payone/Gateway/CreditCard.php:47 src/Payone/Gateway/CreditCard.php:68
+msgid "AmEX"
+msgstr "AmEX"
+
+#: src/Payone/Gateway/CreditCard.php:48 src/Payone/Gateway/CreditCard.php:73
+msgid "Diners"
+msgstr "Diners"
+
+#: src/Payone/Gateway/CreditCard.php:49 src/Payone/Gateway/CreditCard.php:78
+msgid "JCB"
+msgstr "JCB"
+
+#: src/Payone/Gateway/CreditCard.php:50 src/Payone/Gateway/CreditCard.php:83
+msgid "Maestro"
+msgstr "Maestro"
+
+#: src/Payone/Gateway/CreditCard.php:51 src/Payone/Gateway/CreditCard.php:88
+msgid "Discover"
+msgstr "Discover"
+
+#: src/Payone/Gateway/CreditCard.php:52 src/Payone/Gateway/CreditCard.php:93
+msgid "Carte Bleue"
+msgstr "Carte Bleue"
+
+#: src/Payone/Gateway/CreditCard.php:53 src/Payone/Gateway/CreditCard.php:98
+msgid "China Union Pay"
+msgstr "China Union Pay"
+
+#: src/Payone/Gateway/CreditCard.php:103
+msgid "Ask for CVC2"
+msgstr "Nach CVC2 fragen"
+
+#: src/Payone/Gateway/CreditCard.php:109
+msgid "Minimum validity of card"
+msgstr "Minimale Gültigkeit der Karte"
+
+#: src/Payone/Gateway/CreditCard.php:115
+msgid "Card number"
+msgstr "Kartennummer"
+
+#: src/Payone/Gateway/CreditCard.php:121 src/Payone/Gateway/CreditCard.php:165
+#: src/Payone/Gateway/CreditCard.php:209 src/Payone/Gateway/CreditCard.php:253
+msgid "Length"
+msgstr "Länge"
+
+#: src/Payone/Gateway/CreditCard.php:126 src/Payone/Gateway/CreditCard.php:170
+#: src/Payone/Gateway/CreditCard.php:214 src/Payone/Gateway/CreditCard.php:258
+msgid "Max. chars"
+msgstr "Max. Anzahl Zeichen"
+
+#: src/Payone/Gateway/CreditCard.php:131 src/Payone/Gateway/CreditCard.php:175
+#: src/Payone/Gateway/CreditCard.php:219 src/Payone/Gateway/CreditCard.php:263
+msgid "Iframe"
+msgstr "Iframe"
+
+#: src/Payone/Gateway/CreditCard.php:137 src/Payone/Gateway/CreditCard.php:181
+#: src/Payone/Gateway/CreditCard.php:225 src/Payone/Gateway/CreditCard.php:269
+msgid "Width"
+msgstr "Breite"
+
+#: src/Payone/Gateway/CreditCard.php:142 src/Payone/Gateway/CreditCard.php:186
+#: src/Payone/Gateway/CreditCard.php:230 src/Payone/Gateway/CreditCard.php:274
+msgid "Height"
+msgstr "Höhe"
+
+#: src/Payone/Gateway/CreditCard.php:147 src/Payone/Gateway/CreditCard.php:191
+#: src/Payone/Gateway/CreditCard.php:235 src/Payone/Gateway/CreditCard.php:279
+msgid "Style"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCard.php:153 src/Payone/Gateway/CreditCard.php:197
+#: src/Payone/Gateway/CreditCard.php:241 src/Payone/Gateway/CreditCard.php:285
+msgid "CSS"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCard.php:159
+msgid "CVC2"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCard.php:203
+msgid "Valid month"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCard.php:247
+msgid "Valid year"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCard.php:291
+msgid "Text input"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCard.php:301
+msgid "Iframe width"
+msgstr "Iframe Breite"
+
+#: src/Payone/Gateway/CreditCard.php:306
+msgid "Iframe height"
+msgstr "Iframe Höhe"
+
+#: src/Payone/Gateway/CreditCard.php:311 src/Payone/Gateway/CreditCard.php:317
+msgid "Error output active"
+msgstr "Fehlerausgabe aktiv"
+
+#: src/Payone/Gateway/CreditCard.php:340 src/Payone/Gateway/CreditCard.php:348
+#: src/Payone/Gateway/CreditCard.php:369 src/Payone/Gateway/Invoice.php:48
 msgid "Payment error: "
 msgstr "Fehler bei Zahlung: "
 
-#: src/Payone/Gateway/CreditCard.php:49
+#: src/Payone/Gateway/CreditCard.php:341
+msgid "Did not receive \"appointed\" callback"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCard.php:348
+msgid "3-D Secure returned error"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCard.php:407
 msgid "Credit card payment is preauthorized."
 msgstr ""
 
-#: src/Payone/Gateway/CreditCard.php:52
+#: src/Payone/Gateway/CreditCard.php:410
 msgid "Credit card payment is authorized and captured."
 msgstr ""
 
-#: src/Payone/Gateway/CreditCard.php:70 src/Payone/Gateway/PrePayment.php:80
+#: src/Payone/Gateway/CreditCard.php:423 src/Payone/Gateway/PrePayment.php:80
 msgid "Payment received."
 msgstr ""
 
-#: src/Payone/Gateway/CreditCard.php:72
+#: src/Payone/Gateway/CreditCard.php:425
 msgid "Payment failed."
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:144
+#: src/Payone/Gateway/GatewayBase.php:155
 msgid "Enable/Disable"
-msgstr ""
+msgstr "Aktivieren/Deaktivieren"
 
-#: src/Payone/Gateway/GatewayBase.php:146
+#: src/Payone/Gateway/GatewayBase.php:157
 msgid "Enable this payment method"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:150
+#: src/Payone/Gateway/GatewayBase.php:161
 msgid "Title"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:152
+#: src/Payone/Gateway/GatewayBase.php:163
 msgid "This controls the title which the user sees during checkout."
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:157
+#: src/Payone/Gateway/GatewayBase.php:168
 msgid "Customer Message"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:162
+#: src/Payone/Gateway/GatewayBase.php:173
 msgid "Minimum order value"
-msgstr ""
+msgstr "Minimaler Wert der Bestellung"
 
-#: src/Payone/Gateway/GatewayBase.php:167
+#: src/Payone/Gateway/GatewayBase.php:178
 msgid "Maximum order value"
-msgstr ""
+msgstr "Maximaler Wert der Bestellung"
 
-#: src/Payone/Gateway/GatewayBase.php:172
+#: src/Payone/Gateway/GatewayBase.php:183
 msgid "Method of Authorization"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:175
+#: src/Payone/Gateway/GatewayBase.php:186
 msgid "Authorization"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:176
+#: src/Payone/Gateway/GatewayBase.php:187
 msgid "Preauthorization"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:181
+#: src/Payone/Gateway/GatewayBase.php:192
 msgid "Active Countries"
 msgstr "Aktive Länder"
 
-#: src/Payone/Gateway/GatewayBase.php:191
+#: src/Payone/Gateway/GatewayBase.php:202
 msgid "Use global settings"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:210
+#: src/Payone/Gateway/GatewayBase.php:221
 msgid "Account ID"
 msgstr ""
 
@@ -416,14 +615,14 @@ msgid "Invoice"
 msgstr "Rechnung"
 
 #: src/Payone/Gateway/Invoice.php:57
-msgid "Rechnung wurde geschickt"
-msgstr ""
+msgid "Invoice has been sent"
+msgstr "Rechnung wurde verschickt"
 
-#: src/Payone/Gateway/PrePayment.php:23
+#: src/Payone/Gateway/PrePayment.php:22
 msgid "Prepayment"
 msgstr "Vorkasse"
 
-#: src/Payone/Gateway/PrePayment.php:55
+#: src/Payone/Gateway/PrePayment.php:54
 msgid "Waiting for payment."
 msgstr ""
 
@@ -470,3 +669,127 @@ msgstr ""
 #: src/Payone/Gateway/SepaDirectDebit.php:80
 msgid "Awaiting cheque payment"
 msgstr ""
+
+#: src/Payone/Transaction/Capture.php:28
+msgid "Capture already done"
+msgstr ""
+
+#: src/Payone/Transaction/Capture.php:36
+msgid "Capture successfull"
+msgstr ""
+
+#: src/Payone/Transaction/Capture.php:40
+msgid "Capture failed: "
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:151
+msgid "List View"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:152
+msgid "Excerpt View"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:312
+msgid "No items found."
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:434
+msgid "Select bulk action"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:436
+msgid "Bulk Actions"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:446
+msgid "Apply"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:494 src/Wordpress/WP_List_Table.php:1272
+msgid "Show more details"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:556
+msgid "Filter by date"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:558
+msgid "All dates"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:571
+#, php-format
+msgid "%1$s %2$d"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:621
+#, php-format
+msgid "%s comment"
+msgid_plural "%s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Wordpress/WP_List_Table.php:622
+#, php-format
+msgid "%s approved comment"
+msgid_plural "%s approved comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Wordpress/WP_List_Table.php:623
+#, php-format
+msgid "%s pending comment"
+msgid_plural "%s pending comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Wordpress/WP_List_Table.php:628 src/Wordpress/WP_List_Table.php:640
+#: src/Wordpress/WP_List_Table.php:653
+msgid "No comments"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:640
+msgid "No approved comments"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:653
+msgid "No pending comments"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:727 src/Wordpress/WP_List_Table.php:1296
+#, php-format
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Wordpress/WP_List_Table.php:763
+msgid "First page"
+msgstr "Erste Seite"
+
+#: src/Wordpress/WP_List_Table.php:773
+msgid "Previous page"
+msgstr "Vorherige Seite"
+
+#: src/Wordpress/WP_List_Table.php:780 src/Wordpress/WP_List_Table.php:783
+msgid "Current Page"
+msgstr "Aktuelle Seite"
+
+#: src/Wordpress/WP_List_Table.php:789
+#, php-format
+msgctxt "paging"
+msgid "%1$s of %2$s"
+msgstr ""
+
+#: src/Wordpress/WP_List_Table.php:796
+msgid "Next page"
+msgstr "Nächste Seite"
+
+#: src/Wordpress/WP_List_Table.php:806
+msgid "Last page"
+msgstr "Letzte Seite"
+
+#: src/Wordpress/WP_List_Table.php:1026
+msgid "Select All"
+msgstr "Alle auswählen"

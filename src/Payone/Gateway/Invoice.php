@@ -54,7 +54,7 @@ class Invoice extends GatewayBase {
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
 		$order->update_meta_data( '_authorization_method', $transaction->get( 'request' ) );
-		$order->update_status( 'on-hold', __( 'Rechnung wurde geschickt', 'payone-woocommerce-3' ) );
+		$order->update_status( 'on-hold', __( 'Invoice has been sent', 'payone-woocommerce-3' ) );
 
 		// Reduce stock levels
 		wc_reduce_stock_levels( $order_id );

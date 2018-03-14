@@ -11,7 +11,7 @@ class ApiLogListTable extends AbstractListTable {
 			'mode'        => __( 'Modus', 'payone-woocommerce-3' ),
 			'merchant_id' => __( 'Merchant-ID', 'payone-woocommerce-3' ),
 			'portal_id'   => __( 'Portal ID', 'payone-woocommerce-3' ),
-			'created_at'  => __( 'Erstelldatum', 'payone-woocommerce-3' ),
+			'created_at'  => __( 'Created at', 'payone-woocommerce-3' ),
 		);
 
 		return $columns;
