@@ -2,9 +2,7 @@
 
 namespace Payone\Transaction;
 
-use Payone\Plugin;
-
-class CreditCard extends Base {
+class SepaDirectDebit extends Base {
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
 	 */
@@ -12,8 +10,13 @@ class CreditCard extends Base {
 		parent::__construct( $gateway->get_authorization_method() );
 		$this->set_data_from_gateway( $gateway );
 
-		$this->set( 'clearingtype', 'cc' );
-		$this->set( 'pseudocardpan', $_POST['card_pseudopan'] );
+		$this->set( 'clearingtype', 'elv' );
+		$this->set( 'iban', $_POST['direct_debit_iban'] );
+		$this->set( 'bic', $_POST['direct_debit_bic'] );
+		$this->set( 'bankaccount', $_POST['direct_debit_account_number'] );
+		$this->set( 'bankcode', $_POST['direct_debit_bank_code'] );
+		$this->set( 'bankaccountholder', $_POST['direct_debit_account_holder'] );
+		$this->set( 'bankcountry', 'DE' ); // @todo Richtiges Land bestimmen
 	}
 
 	/**
@@ -26,9 +29,6 @@ class CreditCard extends Base {
 		$this->set( 'amount', $order->get_total() * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		$this->setPersonalDataFromOrder( $order );
-		$this->set( 'successurl', Plugin::get_callback_url('success') . '&oid=' . $order->get_id() );
-		$this->set( 'errorurl', Plugin::get_callback_url('error') . '&oid=' . $order->get_id() );
-		$this->set( 'backurl', Plugin::get_callback_url('back') . '&oid=' . $order->get_id() );
 
 		return $this->submit();
 	}

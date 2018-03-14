@@ -58,9 +58,48 @@ class SepaDirectDebit extends GatewayBase {
 			'title'   => __( 'List of supported bank countries', 'payone-woocommerce-3' ),
 			'type'    => 'multiselect',
 			'options' => [
-				'DE' => __( 'Germany', 'payone-woocommerce-3' ),
 				'AT' => __( 'Austria', 'payone-woocommerce-3' ),
+				'BE' => __( 'Belgium', 'payone-woocommerce-3' ),
+				'BG' => __( 'Bulgaria', 'payone-woocommerce-3' ),
+				'HR' => __( 'Croatia', 'payone-woocommerce-3' ),
+				'CY' => __( 'Cyprus', 'payone-woocommerce-3' ),
+				'CZ' => __( 'Czech Republic', 'payone-woocommerce-3' ),
+				'DK' => __( 'Denmark', 'payone-woocommerce-3' ),
+				'EE' => __( 'Estonia', 'payone-woocommerce-3' ),
+				'FI' => __( 'Finland', 'payone-woocommerce-3' ),
+				'FR' => __( 'France', 'payone-woocommerce-3' ),
+				'GF' => __( 'French Guiana', 'payone-woocommerce-3' ),
+				'DE' => __( 'Germany', 'payone-woocommerce-3' ),
+				'GI' => __( 'Gibraltar', 'payone-woocommerce-3' ),
+				'GR' => __( 'Greece', 'payone-woocommerce-3' ),
+				'GP' => __( 'Guadeloupe', 'payone-woocommerce-3' ),
+				'HU' => __( 'Hungary', 'payone-woocommerce-3' ),
+				'IS' => __( 'Iceland', 'payone-woocommerce-3' ),
+				'IE' => __( 'Ireland', 'payone-woocommerce-3' ),
+				'IT' => __( 'Italy', 'payone-woocommerce-3' ),
+				'LV' => __( 'Latvia', 'payone-woocommerce-3' ),
+				'LI' => __( 'Liechtenstein', 'payone-woocommerce-3' ),
+				'LT' => __( 'Lithuania', 'payone-woocommerce-3' ),
+				'LU' => __( 'Luxembourg', 'payone-woocommerce-3' ),
+				'MT' => __( 'Malta', 'payone-woocommerce-3' ),
+				'MQ' => __( 'Martinique', 'payone-woocommerce-3' ),
+				'YT' => __( 'Mayotte', 'payone-woocommerce-3' ),
+				'MC' => __( 'Monaco', 'payone-woocommerce-3' ),
+				'NL' => __( 'Netherlands', 'payone-woocommerce-3' ),
+				'NO' => __( 'Norway', 'payone-woocommerce-3' ),
+				'PL' => __( 'Poland', 'payone-woocommerce-3' ),
+				'PT' => __( 'Portugal', 'payone-woocommerce-3' ),
+				'RE' => __( 'Réunion', 'payone-woocommerce-3' ),
+				'RO' => __( 'Romania', 'payone-woocommerce-3' ),
+				'BL' => __( 'Saint Barthélemy', 'payone-woocommerce-3' ),
+				'MF' => __( 'Saint Martin (French part)', 'payone-woocommerce-3' ),
+				'PM' => __( 'Saint Pierre and Miquelon', 'payone-woocommerce-3' ),
+				'SK' => __( 'Slovakia', 'payone-woocommerce-3' ),
+				'SI' => __( 'Slovenia', 'payone-woocommerce-3' ),
+				'ES' => __( 'Spain', 'payone-woocommerce-3' ),
+				'SE' => __( 'Sweden', 'payone-woocommerce-3' ),
 				'CH' => __( 'Switzerland', 'payone-woocommerce-3' ),
+				'GB' => __( 'United Kingdom', 'payone-woocommerce-3' ),
 			],
 			'default' => [ 'DE', 'AT', 'CH' ],
 		];
@@ -76,8 +115,22 @@ class SepaDirectDebit extends GatewayBase {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-		// Mark as on-hold (we're awaiting the cheque)
-		$order->update_status( 'on-hold', __( 'Awaiting cheque payment', 'woocommerce' ) );
+		$transaction = new \Payone\Transaction\SepaDirectDebit( $this );
+		$response    = $transaction->execute( $order );
+
+		if ( $response->has_error() ) {
+			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(), 'error' );
+			return;
+		}
+
+		$order->set_transaction_id( $response->get( 'txid' ) );
+
+		$authorization_method = $transaction->get( 'request' );
+		$order->update_meta_data( '_authorization_method', $authorization_method );
+		$order->save_meta_data();
+		$order->save();
+
+		$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
 
 		// Reduce stock levels
 		wc_reduce_stock_levels( $order_id );
@@ -96,6 +149,18 @@ class SepaDirectDebit extends GatewayBase {
 	 * @param TransactionStatus $transaction_status
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
+		$order = $transaction_status->get_order();
+		if ( $transaction_status->is_paid() || $transaction_status->is_capture() ) {
+			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone-woocommerce-3' ) );
+		} elseif ( $transaction_status->is_cancelation() ) {
+			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
+		}
+	}
 
+	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
+		if ( $from_status === 'on-hold' && $to_status === 'processing' ) {
+			// @todo Reagieren, wenn Capture fehlschlägt?
+			$this->capture( $order );
+		}
 	}
 }

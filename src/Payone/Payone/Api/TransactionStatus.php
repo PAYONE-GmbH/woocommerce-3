@@ -126,6 +126,15 @@ class TransactionStatus extends DataTransfer {
 	}
 
 	/**
+	 * @todo Prüfen, ob es diesen Rückgabetyp genau so gibt. Wahrscheinlich bei SEPA
+	 *
+	 * @return bool
+	 */
+	public function is_cancelation() {
+		return $this->get_action() === 'cancelation';
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function is_overpaid() {

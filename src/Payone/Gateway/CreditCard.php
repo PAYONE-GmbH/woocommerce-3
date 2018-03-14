@@ -429,6 +429,7 @@ class CreditCard extends GatewayBase {
 	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
 		if ( $from_status === 'on-hold' && $to_status === 'processing' ) {
 			// @todo Reagieren, wenn Capture fehlschlägt?
+			// @todo Capture nur für pre-authorization notwendig!
 			$this->capture( $order );
 		}
 	}
@@ -458,6 +459,6 @@ class CreditCard extends GatewayBase {
 	 * @return bool
 	 */
 	private function is_redirect( $type ) {
-		return $_GET['type'] === $type;
+		return isset( $_GET['type'] ) && $_GET['type'] === $type;
 	}
 }
