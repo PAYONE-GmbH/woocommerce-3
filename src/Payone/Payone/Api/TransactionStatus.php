@@ -27,17 +27,25 @@ class TransactionStatus extends DataTransfer {
 	}
 
 	/**
+	 * @todo Der try-catch-Block wurde hinzugefügt, weil der DEV-Server die Order bearbeiten muss, auch wenn er die ID
+	 * @todo nicht kennt. Das kann/soll/muss evtl. beim Livegang wieder entfernt werden.
+	 * 
 	 * @param int $order_id
 	 *
 	 * @return TransactionStatus
 	 */
 	public function set_order( $order_id ) {
 		if ( $order_id ) {
-			$this->order = new \WC_Order( $order_id );
-			$this->gateway = Plugin::get_gateway_for_order( $this->order );
+			try {
+				$this->order   = new \WC_Order( $order_id );
+				$this->gateway = Plugin::get_gateway_for_order( $this->order );
 
-			$this->order->update_meta_data( '_' . $this->get_action(), time() );
-			$this->order->save_meta_data();
+				$this->order->update_meta_data( '_' . $this->get_action(), time() );
+				$this->order->save_meta_data();
+			} catch ( \Exception $e) {
+				$this->order = null;
+				$this->gateway = null;
+			}
 		} else {
 			$this->order = null;
 			$this->gateway = null;
