@@ -13,8 +13,6 @@ class SepaDirectDebit extends Base {
 		$this->set( 'clearingtype', 'elv' );
 		$this->set( 'iban', $_POST['direct_debit_iban'] );
 		$this->set( 'bic', $_POST['direct_debit_bic'] );
-		$this->set( 'bankaccount', $_POST['direct_debit_account_number'] );
-		$this->set( 'bankcode', $_POST['direct_debit_bank_code'] );
 		$this->set( 'bankaccountholder', $_POST['direct_debit_account_holder'] );
 		$this->set( 'bankcountry', 'DE' ); // @todo Richtiges Land bestimmen
 	}

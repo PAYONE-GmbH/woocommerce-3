@@ -27,15 +27,6 @@ class SepaDirectDebit extends GatewayBase {
 			],
 			'default' => 'basic',
 		];
-		$this->form_fields['sepa_ask_account_number'] = [
-			'title'   => __( 'Ask account number/bank code (for german accounts only)', 'payone-woocommerce-3' ),
-			'type'    => 'select',
-			'options' => [
-				'0' => __( 'No', 'payone-woocommerce-3' ),
-				'1' => __( 'Yes', 'payone-woocommerce-3' ),
-			],
-			'default' => '1',
-		];
 		$this->form_fields['sepa_use_mandate_management'] = [
 			'title'   => __( 'Use PAYONE Mandate Management', 'payone-woocommerce-3' ),
 			'type'    => 'select',
@@ -123,6 +114,11 @@ class SepaDirectDebit extends GatewayBase {
 			return;
 		}
 
+		// @todo Prüfen, ob es schon ein SEPA-Mandat gibt
+		// @todo Ggf. in \Payone\Transaction\SepaDirectDebit::execute() mit einbauen
+		$manage_mandate = new \Payone\Transaction\ManageMandate( $this, $response->get( 'userid' ) );
+		$manage_mandate_response = $manage_mandate->execute( $order );
+
 		$order->set_transaction_id( $response->get( 'txid' ) );
 
 		$authorization_method = $transaction->get( 'request' );
@@ -130,7 +126,12 @@ class SepaDirectDebit extends GatewayBase {
 		$order->save_meta_data();
 		$order->save();
 
-		$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
+		if ( $authorization_method === 'preauthorization' ) {
+			$order->update_status( 'on-hold', __( 'Waiting for payment.', 'woocommerce' ) );
+		} elseif ( $authorization_method === 'authorization' ) {
+			$order->update_status( 'processing',
+				__( 'Payment is authorized and captured.', 'woocommerce' ) );
+		}
 
 		// Reduce stock levels
 		wc_reduce_stock_levels( $order_id );
@@ -151,6 +152,9 @@ class SepaDirectDebit extends GatewayBase {
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		$order = $transaction_status->get_order();
 		if ( $transaction_status->is_paid() || $transaction_status->is_capture() ) {
+			// @todo Wenn der Status schon auf "processing" steht, sollte eine Notiz erstellt werden.
+			// @todo Das gilt aber auch nur, wenn es dabei bleibt, dass die SEPA-Lastschrift direkt als
+			// @todo "captured" angesehen wird, wenn es sich um ein "authorization" request handelte.
 			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone-woocommerce-3' ) );
 		} elseif ( $transaction_status->is_cancelation() ) {
 			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );

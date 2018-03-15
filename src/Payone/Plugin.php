@@ -127,6 +127,11 @@ class Plugin {
 		}
 	}
 
+	/**
+	 * @todo IP-Range von PAYONE testen
+	 * 
+	 * @return bool
+	 */
 	private function is_valid_transaction_callback() {
 		$options   = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 		$post_vars = self::get_post_vars();
