@@ -32,7 +32,7 @@ class Capture extends Base {
 
 		$response = $this->submit();
 
-		if ($response->is_approved()) {
+		if ( $response->is_approved() ) {
 			$order->add_order_note( __( 'Capture successfull', 'payone-woocommerce-3' ) );
 			$order->update_meta_data( '_captured', time() );
 			$order->save_meta_data();

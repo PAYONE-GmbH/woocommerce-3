@@ -4,6 +4,7 @@ namespace Payone;
 
 use Payone\Database\Migration;
 use Payone\Gateway\GatewayBase;
+use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
 
@@ -45,6 +46,8 @@ class Plugin {
 
 		$plugin_rel_path = dirname( plugin_basename(__FILE__) ) . '/../../lang/';
 		load_plugin_textdomain( 'payone-woocommerce-3', false, $plugin_rel_path);
+
+		add_action( 'woocommerce_after_checkout_form', [$this, 'add_javascript']);
 	}
 
 	/**
@@ -78,6 +81,8 @@ class Plugin {
 
 			if ( $this->is_callback_after_redirect() ) {
 				return $this->process_callback_after_redirect();
+			} elseif ( $this->is_manage_mandate_callback() ) {
+				return $this->process_manage_mandate_callback();
 			}
 
 			$response = 'ERROR';
@@ -165,6 +170,26 @@ class Plugin {
 		return $gateway->process_payment( $order_id );
 	}
 
+	/**
+	 * @return bool
+	 */
+	private function is_manage_mandate_callback() {
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-manage-mandate') {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function process_manage_mandate_callback() {
+		$gateway = self::find_gateway( SepaDirectDebit::GATEWAY_ID );
+
+		return $gateway->process_manage_mandate( $_POST );
+	}
+
 	private function debug_payone_callback() {
 		if ( ! defined( 'PAYONE_LOCALDEV' ) || ! PAYONE_LOCALDEV ) {
 			$message = json_encode( $_SERVER ) . "\n\n" . json_encode( $_POST ) . "\n\n";
@@ -180,6 +205,10 @@ class Plugin {
 	public static function get_gateway_for_order( \WC_Order $order ) {
 		// @todo Was tun, wenn es das Gateway nicht gibt?
 		return self::find_gateway( $order->get_payment_method() );
+	}
+
+	public function add_javascript() {
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout.js.php';
 	}
 
 	/**

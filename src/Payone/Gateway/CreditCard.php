@@ -428,9 +428,8 @@ class CreditCard extends GatewayBase {
 
 	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
 		$authorization_method = $order->get_meta( '_authorization_method' );
-
-		if ( $from_status === 'on-hold' && $to_status === 'processing'
-		     && $authorization_method === 'preauthorization'
+		if ( $authorization_method === 'preauthorization'
+		     && $from_status === 'on-hold' && $to_status === 'processing'
 		) {
 			// @todo Reagieren, wenn Capture fehlschlägt?
 			$this->capture( $order );

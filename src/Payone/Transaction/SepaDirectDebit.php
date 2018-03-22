@@ -10,11 +10,11 @@ class SepaDirectDebit extends Base {
 		parent::__construct( $gateway->get_authorization_method() );
 		$this->set_data_from_gateway( $gateway );
 
+		$this->set( 'mandate_identification', $_POST['direct_debit_reference'] );
 		$this->set( 'clearingtype', 'elv' );
 		$this->set( 'iban', $_POST['direct_debit_iban'] );
-		$this->set( 'bic', $_POST['direct_debit_bic'] );
-		$this->set( 'bankaccountholder', $_POST['direct_debit_account_holder'] );
-		$this->set( 'bankcountry', 'DE' ); // @todo Richtiges Land bestimmen
+		#$this->set( 'bic', $_POST['direct_debit_bic'] );
+		#$this->set( 'bankcountry', 'DE' ); // @todo Richtiges Land bestimmen
 	}
 
 	/**

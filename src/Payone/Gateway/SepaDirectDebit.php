@@ -114,11 +114,6 @@ class SepaDirectDebit extends GatewayBase {
 			return;
 		}
 
-		// @todo Prüfen, ob es schon ein SEPA-Mandat gibt
-		// @todo Ggf. in \Payone\Transaction\SepaDirectDebit::execute() mit einbauen
-		$manage_mandate = new \Payone\Transaction\ManageMandate( $this, $response->get( 'userid' ) );
-		$manage_mandate_response = $manage_mandate->execute( $order );
-
 		$order->set_transaction_id( $response->get( 'txid' ) );
 
 		$authorization_method = $transaction->get( 'request' );
@@ -146,23 +141,58 @@ class SepaDirectDebit extends GatewayBase {
 		);
 	}
 
+	public function process_manage_mandate( $data ) {
+		$transaction = new \Payone\Transaction\ManageMandate( $this, $data );
+		$response = $transaction->execute();
+
+		$result = [];
+		if ( $response->has_error() ) {
+			// @todo Die Fehlermeldung ist irreführend, wenn keine IBAN angegeben wurde. Hier muss von uns schon geprüft werden
+			$result = [
+				'status' => 'error',
+				'message' => $response->get( 'customermessage' ),
+			];
+		} elseif ( $response->is_approved() && $response->get( 'mandate_status' ) === 'active' ) {
+			$result = [
+				'status' => 'active',
+				'reference' => $response->get( 'mandate_identification' ),
+			];
+		} elseif ( $response->is_approved() && $response->get( 'mandate_status' ) === 'pending' ) {
+			$result = [
+				'status' => 'pending',
+				'reference' => $response->get( 'mandate_identification' ),
+				'text' => urldecode( $response->get( 'mandate_text' ) ),
+			];
+		}
+
+		$result['call'] = 'process_manage_mandate';
+		$result['date'] = $data;
+
+		echo json_encode($result);
+		exit;
+	}
+
 	/**
 	 * @param TransactionStatus $transaction_status
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		$order = $transaction_status->get_order();
 		if ( $transaction_status->is_paid() || $transaction_status->is_capture() ) {
-			// @todo Wenn der Status schon auf "processing" steht, sollte eine Notiz erstellt werden.
-			// @todo Das gilt aber auch nur, wenn es dabei bleibt, dass die SEPA-Lastschrift direkt als
-			// @todo "captured" angesehen wird, wenn es sich um ein "authorization" request handelte.
-			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone-woocommerce-3' ) );
+			if ( $order->get_status() === 'processing' ) {
+				$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			} else {
+				$order->update_status( 'wc-processing', __( 'Payment received.', 'payone-woocommerce-3' ) );
+			}
 		} elseif ( $transaction_status->is_cancelation() ) {
 			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
 		}
 	}
 
 	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
-		if ( $from_status === 'on-hold' && $to_status === 'processing' ) {
+		$authorization_method = $order->get_meta( '_authorization_method' );
+		if ( $authorization_method === 'preauthorization'
+		     && $from_status === 'on-hold' && $to_status === 'processing'
+		) {
 			// @todo Reagieren, wenn Capture fehlschlägt?
 			$this->capture( $order );
 		}

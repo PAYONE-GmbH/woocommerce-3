@@ -128,7 +128,7 @@
     request = {
         request: 'creditcardcheck',
         responsetype: 'JSON',
-        mode: '<?php echo $options['mode']; ?>',
+        mode: '<?php echo $options['mode']; // @todo Ausgaben escapen ?>',
         mid: '<?php echo $options['merchant_id']; ?>',
         aid: '<?php echo $options['account_id']; ?>',
         portalid: '<?php echo $options['portal_id']; ?>',
@@ -145,11 +145,7 @@
 
     var check_status = false;
 
-    jQuery( 'form.woocommerce-checkout' ).on( 'checkout_place_order', function(event) {
-        if (jQuery('input[name=payment_method]:checked').val() !== '<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>') {
-            // Only needed for creditcard payment
-            return true;
-        }
+    function payone_checkout_clicked_<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>() {
         if (check_status === true) {
             // Skip the test, as it already succeeded.
             return true;
@@ -160,11 +156,12 @@
                                                      // PseudoCardPan; then call your function "checkCallback"
         } else {
             jQuery('#errorOutput').html('<strong style="color:red">Bitte Formular vollständig ausfüllen!</strong>');
+            payone_unblock();
         }
 
         // Bearbeitung hier abschließen. Das Submit wird dann über "checkCallback" realisiert.
         return false;
-    });
+    }
 
     function checkCallback(response) {
         if (response.status === "VALID") {
@@ -173,6 +170,7 @@
             document.getElementById("card_truncatedpan").value = response.truncatedcardpan;
             document.getElementById("card_type").value = response.cardtype;
             document.getElementById("card_expiredate").value = response.cardexpiredate;
+            payone_unblock();
             jQuery('#place_order').parents('form').submit();
         }
     }
