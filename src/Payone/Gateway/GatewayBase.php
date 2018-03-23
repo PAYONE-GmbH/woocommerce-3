@@ -74,6 +74,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	public function __construct( $id ) {
 		$this->id              = $id;
 		$this->has_fields      = true;
+		$this->supports        = [ 'products', 'refunds' ];
 		$this->global_settings = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 
 		$this->init_settings();
@@ -99,7 +100,14 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @param TransactionStatus $transaction_status
 	 */
-	abstract public function process_transaction_status( TransactionStatus $transaction_status );
+	public function process_transaction_status( TransactionStatus $transaction_status ) {
+		$sequencenumber = $transaction_status->get_sequencenumber();
+		if ($sequencenumber) {
+			$order = $transaction_status->get_order();
+			$order->update_meta_data( '_sequencenumber', $sequencenumber );
+			$order->save_meta_data();
+		}
+	}
 
 	/**
 	 * @param \WC_Order $order
@@ -110,6 +118,16 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$capture = new Capture( $this );
 
 		return $capture->execute( $order );
+	}
+
+	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+		$order = new \WC_Order( $order_id );
+
+		$transaction = new \Payone\Transaction\Debit( $this );
+		$response    = $transaction->execute( $order, - $amount );
+
+		// @todo wirklich testen, ob der refund funktioniert hat
+		return true;
 	}
 
 	/**

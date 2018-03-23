@@ -106,6 +106,13 @@ class TransactionStatus extends DataTransfer {
 	}
 
 	/**
+	 * @return int
+	 */
+	public function get_sequencenumber() {
+		return $this->get_int( 'sequencenumber' );
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function is_appointed() {

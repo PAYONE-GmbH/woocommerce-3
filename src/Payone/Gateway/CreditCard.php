@@ -111,6 +111,11 @@ class CreditCard extends GatewayBase {
 			'default' => '30',
 		];
 
+		$this->form_fields['input_fields_configuration_'] = [
+			'title' => __( 'Configuration of input fields', 'payone-woocommerce-3' ),
+			'type'  => 'title',
+		];
+
 		$this->form_fields['cc_field_cardnumber_type'] = [
 			'title'   => __( 'Card number', 'payone-woocommerce-3' ),
 			'type'    => 'select',
@@ -418,6 +423,8 @@ class CreditCard extends GatewayBase {
 	 * @param TransactionStatus $transaction_status
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
+		parent::process_transaction_status( $transaction_status );
+
 		$order = $transaction_status->get_order();
 		if ( $transaction_status->is_paid() || $transaction_status->is_capture() ) {
 			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone-woocommerce-3' ) );

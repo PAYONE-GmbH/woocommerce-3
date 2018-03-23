@@ -13,7 +13,6 @@ class Invoice extends GatewayBase {
 		$this->icon               = '';
 		$this->method_title       = 'BS PAYONE Rechnung';
 		$this->method_description = 'method_description';
-		$this->supports           = [ 'products', 'refunds' ];
 	}
 
 	public function init_form_fields() {
@@ -24,17 +23,6 @@ class Invoice extends GatewayBase {
 		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 
 		include PAYONE_VIEW_PATH . '/gateway/invoice/payment-form.php';
-	}
-
-	public function process_refund( $order_id, $amount = null, $reason = '' ) {
-
-		$order = new \WC_Order( $order_id );
-
-		$transaction = new \Payone\Transaction\Debit( $this );
-		$response    = $transaction->execute( $order, - $amount );
-
-		// @todo wirklich testen, ob der refund funktioniert hat
-		return true;
 	}
 
 	public function process_payment( $order_id ) {
@@ -73,6 +61,6 @@ class Invoice extends GatewayBase {
 	 * @param TransactionStatus $transaction_status
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
-
+		parent::process_transaction_status( $transaction_status );
 	}
 }

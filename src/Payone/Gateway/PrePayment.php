@@ -13,7 +13,6 @@ class PrePayment extends GatewayBase {
 		$this->icon               = '';
 		$this->method_title       = 'BS PAYONE Vorkasse';
 		$this->method_description = 'method_description';
-		$this->supports           = [ 'products', 'refunds' ];
 
 		$this->add_email_meta_hook([$this, 'email_meta_action']);
 	}
@@ -70,6 +69,8 @@ class PrePayment extends GatewayBase {
 	 * @param TransactionStatus $transaction_status
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
+		parent::process_transaction_status( $transaction_status );
+
 		$order = $transaction_status->get_order();
 
 		if ($transaction_status->is_overpaid()) {

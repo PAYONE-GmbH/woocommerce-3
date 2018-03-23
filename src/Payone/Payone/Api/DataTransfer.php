@@ -96,6 +96,16 @@ class DataTransfer {
 		return (float) $this->get( $key, $default );
 	}
 
+	/**
+	 * @param string $key
+	 * @param int $default
+	 *
+	 * @return float
+	 */
+	public function get_int( $key, $default = 0 ) {
+		return (int) $this->get( $key, $default );
+	}
+
 	public function get_all() {
 		return $this->parameter_bag;
 	}

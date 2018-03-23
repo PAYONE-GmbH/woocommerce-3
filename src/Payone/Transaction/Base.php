@@ -54,7 +54,7 @@ class Base extends Request {
 	 * @return int
 	 */
 	protected function get_next_sequencenumber( \WC_Order $order ) {
-		$sequencenumber = 1 + (int)$order->get_meta( 'sequencenumber');
+		$sequencenumber = 1 + (int)$order->get_meta( '_sequencenumber');
 		$order->update_meta_data( '_sequencenumber', $sequencenumber );
 		$order->save_meta_data();
 
