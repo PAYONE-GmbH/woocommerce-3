@@ -31,6 +31,7 @@ class Settings {
 			'manage_options',
 			'payone-settings-account',
 			[ $this, 'render_account_options' ] );
+		/*
 		add_submenu_page( 'payone-settings-account',
 			__( 'Address Checks', 'payone' ),
 			__( 'Address Checks', 'payone' ),
@@ -43,6 +44,7 @@ class Settings {
 			'manage_options',
 			'payone-credit-check',
 			[ $this, 'credit_check' ] );
+		*/
 		add_submenu_page( 'payone-settings-account',
 			__( 'Transaction Status Log', 'payone' ),
 			__( 'Transaction Status Log', 'payone' ),
