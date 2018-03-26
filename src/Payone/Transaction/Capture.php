@@ -17,6 +17,8 @@ class Capture extends Base {
 	 * @return null|\Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
+		$current_sequencenumber = $order->get_meta( '_sequencenumber' );
+
 		$this->set( 'txid', $order->get_transaction_id() );
 		$this->set( 'sequencenumber', $this->get_next_sequencenumber( $order ) );
 		$this->set( 'amount', $order->get_total() * 100 );
@@ -25,6 +27,7 @@ class Capture extends Base {
 
 		$is_already_captured = $order->get_meta('_captured');
 		if ($is_already_captured) {
+			$this->set_sequencenumber( $order, $current_sequencenumber );
 			$order->add_order_note( __( 'Capture already done', 'payone-woocommerce-3' ) );
 
 			return null;
@@ -37,6 +40,7 @@ class Capture extends Base {
 			$order->update_meta_data( '_captured', time() );
 			$order->save_meta_data();
 		} else {
+			$this->set_sequencenumber( $order, $current_sequencenumber );
 			$order->add_order_note( __( 'Capture failed: ', 'payone-woocommerce-3' ) . $response->get_error_message() );
 		}
 

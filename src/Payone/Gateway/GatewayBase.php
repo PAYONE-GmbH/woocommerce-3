@@ -120,14 +120,19 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $capture->execute( $order );
 	}
 
+	/**
+	 * @param int $order_id
+	 * @param float|null $amount
+	 * @param string $reason
+	 *
+	 * @return bool
+	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		$order = new \WC_Order( $order_id );
 
 		$transaction = new \Payone\Transaction\Debit( $this );
-		$response    = $transaction->execute( $order, - $amount );
 
-		// @todo wirklich testen, ob der refund funktioniert hat
-		return true;
+		return $transaction->execute( $order, - $amount );
 	}
 
 	/**

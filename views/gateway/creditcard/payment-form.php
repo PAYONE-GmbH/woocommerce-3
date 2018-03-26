@@ -137,7 +137,7 @@
         hash: '<?php echo $hash; ?>'
     };
     var iframes = new Payone.ClientApi.HostedIFrames(config, request);
-    iframes.setCardType('<?php $cc_brand_choices = $this->get_option('cc_field_cardnumber_type'); echo $cc_brand_choices[1]; ?>');
+    iframes.setCardType('<?php $cc_brand_choices = $this->get_option('cc_brands'); echo $cc_brand_choices[0]; ?>');
 
     document.getElementById('cardtype').onchange = function () {
         iframes.setCardType(this.value);              // on change: set new type of credit card to process
@@ -172,6 +172,10 @@
             document.getElementById("card_expiredate").value = response.cardexpiredate;
             payone_unblock();
             jQuery('#place_order').parents('form').submit();
+        } else {
+            jQuery('#errorOutput').html('<strong style="color:red">'  + response.errormessage + '</strong>');
+            payone_unblock();
+            return false;
         }
     }
 </script>

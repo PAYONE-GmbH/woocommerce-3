@@ -37,4 +37,21 @@ class Response extends DataTransfer {
 	public function get_error_message() {
 		return __( $this->get( 'errormessage' ), 'payone-woocommerce-3' ).' ['.$this->get('errorcode').']';
 	}
+
+	/**
+	 * @param \WC_Order $order
+	 */
+	public function store_clearing_info( \WC_Order $order ) {
+		$clearing_info = [
+			'bankaccount'       => $this->get( 'clearing_bankaccount' ),
+			'bankcode'          => $this->get( 'clearing_bankcode' ),
+			'bankcountry'       => $this->get( 'clearing_bankcountry' ),
+			'bankname'          => $this->get( 'clearing_bankname' ),
+			'bankaccountholder' => $this->get( 'clearing_bankaccountholder' ),
+			'bankcity'          => $this->get( 'clearing_bankcity' ),
+			'bankiban'          => $this->get( 'clearing_bankiban' ),
+			'bankbic'           => $this->get( 'clearing_bankbic' ),
+		];
+		$order->update_meta_data( '_clearing_info', json_encode( $clearing_info ) );
+	}
 }

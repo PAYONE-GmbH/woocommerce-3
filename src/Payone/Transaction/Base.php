@@ -60,4 +60,13 @@ class Base extends Request {
 
 		return $sequencenumber;
 	}
+
+	/**
+	 * @param \WC_Order $order
+	 * @param int $sequencenumber
+	 */
+	protected function set_sequencenumber( \WC_Order $order, $sequencenumber ) {
+		$order->update_meta_data( '_sequencenumber', $sequencenumber );
+		$order->save_meta_data();
+	}
 }

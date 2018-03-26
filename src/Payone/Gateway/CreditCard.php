@@ -411,8 +411,8 @@ class CreditCard extends GatewayBase {
 		if ( $authorization_method === 'preauthorization' ) {
 			$order->update_status( 'on-hold', __( 'Credit card payment is preauthorized.', 'woocommerce' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
-			$order->update_status( 'processing',
-				__( 'Credit card payment is authorized and captured.', 'woocommerce' ) );
+			$order->add_order_note( __( 'Credit card payment is authorized and captured.', 'woocommerce' ) );
+			$order->payment_complete();
 		}
 
 		wc_reduce_stock_levels( $order->get_id() );
@@ -425,9 +425,18 @@ class CreditCard extends GatewayBase {
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		parent::process_transaction_status( $transaction_status );
 
+		if ( $transaction_status->is_appointed() ) {
+			return;
+		}
+
 		$order = $transaction_status->get_order();
-		if ( $transaction_status->is_paid() || $transaction_status->is_capture() ) {
-			$order->update_status( 'wc-processing', __( 'Payment received.', 'payone-woocommerce-3' ) );
+		$authorization_method = $order->get_meta( '_authorization_method' );
+		if ( $authorization_method === 'authorization' && $transaction_status->is_paid() ) {
+			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			$order->payment_complete();
+		} elseif ( $authorization_method === 'preauthorization' && $transaction_status->is_capture() ) {
+			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			$order->payment_complete();
 		} else {
 			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
 		}
@@ -435,9 +444,7 @@ class CreditCard extends GatewayBase {
 
 	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
 		$authorization_method = $order->get_meta( '_authorization_method' );
-		if ( $authorization_method === 'preauthorization'
-		     && $from_status === 'on-hold' && $to_status === 'processing'
-		) {
+		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
 			// @todo Reagieren, wenn Capture fehlschlägt?
 			$this->capture( $order );
 		}

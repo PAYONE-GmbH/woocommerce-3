@@ -13,6 +13,8 @@ class Invoice extends GatewayBase {
 		$this->icon               = '';
 		$this->method_title       = 'BS PAYONE Rechnung';
 		$this->method_description = 'method_description';
+
+		$this->add_email_meta_hook( [$this, 'email_meta_action'] );
 	}
 
 	public function init_form_fields() {
@@ -41,6 +43,7 @@ class Invoice extends GatewayBase {
 		// @todo Bei Kauf auf Rechnung anderer Status und Order abschließen?
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
+		$response->store_clearing_info( $order );
 		$order->update_meta_data( '_authorization_method', $transaction->get( 'request' ) );
 		$order->update_status( 'on-hold', __( 'Invoice has been sent', 'payone-woocommerce-3' ) );
 
@@ -62,5 +65,37 @@ class Invoice extends GatewayBase {
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		parent::process_transaction_status( $transaction_status );
+
+		$order = $transaction_status->get_order();
+
+		if ( $transaction_status->is_overpaid() ) {
+			$order->add_order_note( __( 'Payment received. Customer overpaid!', 'payone-woocommerce-3' ) );
+			$order->payment_complete();
+		} elseif ( $transaction_status->is_underpaid() ) {
+			$order->add_order_note(__( 'Payment received. Customer underpaid!', 'payone-woocommerce-3' ));
+		} elseif ( $transaction_status->is_paid() ) {
+			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			$order->payment_complete();
+		}
+	}
+
+	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
+		$authorization_method = $order->get_meta( '_authorization_method' );
+
+		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
+			// @todo Reagieren, wenn Capture fehlschlägt?
+			$this->capture( $order );
+		}
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 * @param bool $sent_to_admin
+	 * @param string $plain_text
+	 * @param string $email
+	 */
+	public function email_meta_action( \WC_Order $order, $sent_to_admin, $plain_text, $email = '' ) {
+		$clearing_info = json_decode($order->get_meta( 'clearing_info' ), true );
+		echo print_r( $clearing_info, 1 );
 	}
 }
