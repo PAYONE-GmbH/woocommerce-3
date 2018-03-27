@@ -88,7 +88,7 @@ class PrePayment extends GatewayBase {
 	 * @param string $email
 	 */
 	public function email_meta_action( \WC_Order $order, $sent_to_admin, $plain_text, $email = '' ) {
-		$clearing_info = json_decode($order->get_meta( 'clearing_info' ), true );
+		$clearing_info = json_decode($order->get_meta( '_clearing_info' ), true );
 		echo print_r( $clearing_info, 1 );
 	}
 }
