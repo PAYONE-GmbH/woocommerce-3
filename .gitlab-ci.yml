@@ -1,0 +1,14 @@
+before_script:
+    - bash ci/docker_install.sh > /dev/null
+test:5.6:
+    image: php:5.6
+    script:
+      - phpunit --configuration phpunit.xml
+test:7.0:
+    image: php:7.0
+    script:
+      - phpunit --configuration phpunit.xml
+test:7.1:
+    image: php:7.1
+    script:
+      - phpunit --configuration phpunit.xml
