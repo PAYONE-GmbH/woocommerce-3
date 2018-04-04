@@ -3,12 +3,18 @@ before_script:
 test:5.6:
     image: php:5.6
     script:
+      - curl --location --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar
+      - chmod +x /usr/local/bin/phpunit
       - phpunit --configuration phpunit.xml
 test:7.0:
     image: php:7.0
     script:
-      - phpunit --configuration phpunit.xml
+        - curl --location --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-6.5.phar
+        - chmod +x /usr/local/bin/phpunit
+        - phpunit --configuration phpunit.xml
 test:7.1:
     image: php:7.1
     script:
-      - phpunit --configuration phpunit.xml
+        - curl --location --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit.phar
+        - chmod +x /usr/local/bin/phpunit
+        - phpunit --configuration phpunit.xml
