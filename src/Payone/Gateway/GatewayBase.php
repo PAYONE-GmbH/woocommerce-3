@@ -188,7 +188,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				'desc_tip'    => true,
 			],
 			'description'               => [
-				'title'   => __( 'Customer Message', 'woocommerce' ),
+				'title'   => __( 'Customer Message', 'payone-woocommerce-3' ),
 				'type'    => 'textarea',
 				'default' => '',
 			],

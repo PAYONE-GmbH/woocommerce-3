@@ -44,37 +44,37 @@ class Account extends Helper {
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'submit_cart',
-			__( 'Submit cart', 'payone' ),
+			__( 'Submit cart', 'payone-woocommerce-3' ),
 			[ $this, 'field_submit_cart' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'activate_pdf_download',
-			__( 'Activate PDF download', 'payone' ),
+			__( 'Activate PDF download', 'payone-woocommerce-3' ),
 			[ $this, 'field_activate_pdf_download' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'dynamic_invoice_text',
-			__( 'Dynamic invoice text', 'payone' ),
+			__( 'Dynamic invoice text', 'payone-woocommerce-3' ),
 			[ $this, 'field_dynamic_invoice_text' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'dynamic_refund_text',
-			__( 'Dynamic refund text', 'payone' ),
+			__( 'Dynamic refund text', 'payone-woocommerce-3' ),
 			[ $this, 'field_dynamic_refund_text' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'text_on_booking_statement',
-			__( 'Text on booking statement', 'payone' ),
+			__( 'Text on booking statement', 'payone-woocommerce-3' ),
 			[ $this, 'field_text_on_booking_statement' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'api_log',
-			__( 'API-Log', 'payone' ),
+			__( 'API-Log', 'payone-woocommerce-3' ),
 			[ $this, 'field_api_log' ],
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field( 'transaction_log',
-			__( 'Transaction Status Log', 'payone' ),
+			__( 'Transaction Status Log', 'payone-woocommerce-3' ),
 			[ $this, 'field_transaction_log' ],
 			'payone-settings-account',
 			'payone_account_settings' );
@@ -103,7 +103,7 @@ class Account extends Helper {
 	}
 
 	public function account_info() {
-		print 'Enter your account settings below:';
+		echo __( 'plugin.settings.info', 'payone-woocommerce-3' );
 	}
 
 	public function field_account_id() {
