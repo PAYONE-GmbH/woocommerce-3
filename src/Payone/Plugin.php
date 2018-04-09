@@ -47,7 +47,8 @@ class Plugin {
 		$plugin_rel_path = dirname( plugin_basename(__FILE__) ) . '/../../lang/';
 		load_plugin_textdomain( 'payone-woocommerce-3', false, $plugin_rel_path);
 
-		add_action( 'woocommerce_after_checkout_form', [$this, 'add_javascript']);
+		add_action( 'woocommerce_after_checkout_form', [ $this, 'add_javascript' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enque_javascript' ] );
 	}
 
 	/**
@@ -207,8 +208,19 @@ class Plugin {
 		return self::find_gateway( $order->get_payment_method() );
 	}
 
+	/**
+	 *
+	 */
 	public function add_javascript() {
-		include PAYONE_VIEW_PATH . '/gateway/common/checkout.js.php';
+		if ( is_checkout() ) {
+			include PAYONE_VIEW_PATH . '/gateway/common/checkout.js.php';
+		}
+	}
+
+	public function enque_javascript() {
+		if ( is_checkout() ) {
+			wp_enqueue_script( 'payone_hosted', 'https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js' );
+		}
 	}
 
 	/**

@@ -5,8 +5,6 @@
 <input type="hidden" name="card_type" id="card_type">
 <input type="hidden" name="card_expiredate" id="card_expiredate">
 
-<script type="text/javascript" src="https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js"></script>
-
 <?php
     $cardnumber_css = '';
     if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
@@ -25,37 +23,35 @@
         $year_css = ' style="' . $this->get_option( 'cc_field_year_css' ) . '"';
     }
 ?>
-	<fieldset>
-		<!-- configure your cardtype-selection here -->
-		<label for="cardtypeInput">Card type</label>
-		<select id="cardtype">
-            <?php foreach ( $this->get_option( 'cc_brands' ) as $cc_brand ) { ?>
-                <option value="<?php echo $cc_brand; ?>">
-                    <?php echo $this->get_option( 'cc_brand_label_' . $cc_brand ); ?>
-                </option>
-            <?php } ?>
-		</select>
+<fieldset>
+    <label for="cardtypeInput">Card type</label>
+    <select id="cardtype">
+        <?php foreach ( $this->get_option( 'cc_brands' ) as $cc_brand ) { ?>
+            <option value="<?php echo $cc_brand; ?>">
+                <?php echo $this->get_option( 'cc_brand_label_' . $cc_brand ); ?>
+            </option>
+        <?php } ?>
+    </select>
 
-		<label for="cardpanInput">Cardpan:</label>
-		<span class="inputIframe" id="cardpan"<?php echo $cardnumber_css; ?>></span>
+    <label for="cardpanInput">Cardpan:</label>
+    <span class="inputIframe" id="cardpan"<?php echo $cardnumber_css; ?>></span>
 
-		<label for="cvcInput">CVC:</label>
-		<span id="cardcvc2" class="inputIframe"<?php echo $cvc2_css; ?>></span>
+    <label for="cvcInput">CVC:</label>
+    <span id="cardcvc2" class="inputIframe"<?php echo $cvc2_css; ?>></span>
 
-		<label for="expireInput">Expire Date:</label>
-		<span id="expireInput" class="inputIframe">
-            <span id="cardexpiremonth"<?php echo $month_css; ?>></span>
-            <span id="cardexpireyear"<?php echo $year_css; ?>></span>
-        </span>
+    <label for="expireInput">Expire Date:</label>
+    <span id="expireInput" class="inputIframe">
+        <span id="cardexpiremonth"<?php echo $month_css; ?>></span>
+        <span id="cardexpireyear"<?php echo $year_css; ?>></span>
+    </span>
 
-		<label for="card_firstname">Firstname:</label>
-		<input id="card_firstname" type="text" name="card_firstname" value="">
-		<label for="card_lastname">Lastname:</label>
-		<input id="card_lastname" type="text" name="card_lastname" value="">
+    <label for="card_firstname">Firstname:</label>
+    <input id="card_firstname" type="text" name="card_firstname" value="">
+    <label for="card_lastname">Lastname:</label>
+    <input id="card_lastname" type="text" name="card_lastname" value="">
 
-		<div id="errorOutput"></div>
-	</fieldset>
-<!--/form-->
+    <div id="errorOutput"></div>
+</fieldset>
 <div id="paymentform"></div>
 <script>
     var request, config;
@@ -63,7 +59,7 @@
     config = {
         fields: {
             cardpan: {
-                selector: "cardpan",                 // put name of your div-container here
+                selector: "cardpan",
                 type: "<?php echo $this->get_option( 'cc_field_cardnumber_type' ); ?>",
                 style: "font-size: 1em; border: 1px solid #000;",
                 size: "<?php echo $this->get_option( 'cc_field_cardnumber_length' ); ?>",
@@ -76,7 +72,7 @@
                 <?php } ?>
             },
             cardcvc2: {
-                selector: "cardcvc2",                // put name of your div-container here
+                selector: "cardcvc2",
                 type: "<?php echo $this->get_option( 'cc_field_cvc2_type' ); ?>",
                 style: "font-size: 1em; border: 1px solid #000;",
                 size: "<?php echo $this->get_option( 'cc_field_cvc2_length' ); ?>",
@@ -89,7 +85,7 @@
 	            <?php } ?>
             },
             cardexpiremonth: {
-                selector: "cardexpiremonth",         // put name of your div-container here
+                selector: "cardexpiremonth",
                 type: "<?php echo $this->get_option( 'cc_field_month_type' ); ?>",
                 size: "<?php echo $this->get_option( 'cc_field_month_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_month_maxchars' ); ?>"
@@ -101,7 +97,7 @@
                 <?php } ?>
             },
             cardexpireyear: {
-                selector: "cardexpireyear",          // put name of your div-container here
+                selector: "cardexpireyear",
                 type: "<?php echo $this->get_option( 'cc_field_year_type' ); ?>",
                 size: "<?php echo $this->get_option( 'cc_field_year_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_year_maxchars' ); ?>"

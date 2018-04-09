@@ -44,7 +44,6 @@
         return false;
     }
     function payone_manage_mandate(data) {
-        console.log('payone_manage_mandate');
         jQuery('#direct_debit_error').html('');
         jQuery.post('<?php echo \Payone\Plugin::get_callback_url('ajax-manage-mandate'); ?>', data, function(result) {
             result = jQuery.parseJSON(result);
