@@ -5,6 +5,7 @@ namespace Payone;
 use Payone\Database\Migration;
 use Payone\Gateway\GatewayBase;
 use Payone\Gateway\SepaDirectDebit;
+use Payone\Gateway\Sofort;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
 
@@ -36,6 +37,7 @@ class Plugin {
 			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
 			\Payone\Gateway\PrePayment::GATEWAY_ID      => \Payone\Gateway\PrePayment::class,
 			\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
+			\Payone\Gateway\Sofort::GATEWAY_ID          => \Payone\Gateway\Sofort::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
