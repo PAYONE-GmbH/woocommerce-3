@@ -16,7 +16,7 @@ class CreditCard extends GatewayBase {
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Creditcard', 'payone' ) );
+		$this->init_common_form_fields( __( 'Creditcard', 'payone-woocommerce-3' ) );
 
 		$yesno_options = [
 			'0' => __( 'No', 'payone-woocommerce-3' ),
@@ -40,7 +40,7 @@ class CreditCard extends GatewayBase {
 
 		$this->form_fields['cc_brands'] = [
 			'title'   => __( 'Credit card brands', 'payone-woocommerce-3' ),
-			'type'    => 'multiselect',
+			'type'    => 'cc_brands',
 			'options' => [
 				'V' => __( 'VISA', 'payone-woocommerce-3' ),
 				'M' => __( 'Mastercard', 'payone-woocommerce-3' ),
@@ -55,48 +55,39 @@ class CreditCard extends GatewayBase {
 			'default' => ['V', 'M', 'A', 'D', 'J', 'O', 'C', 'B', 'P'],
 		];
 		$this->form_fields['cc_brand_label_V'] = [
-			'title'   => __( 'VISA', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => 'VISA',
 		];
 		$this->form_fields['cc_brand_label_M'] = [
-			'title'   => __( 'Mastercard', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => 'Mastercard',
 		];
 		$this->form_fields['cc_brand_label_A'] = [
-			'title'   => __( 'AmEX', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => 'American Express',
 		];
 		$this->form_fields['cc_brand_label_D'] = [
-			'title'   => __( 'Diners', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => 'Diners Club',
 		];
 		$this->form_fields['cc_brand_label_J'] = [
-			'title'   => __( 'JCB', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => 'Japan Credit Bureau',
 		];
 		$this->form_fields['cc_brand_label_O'] = [
-			'title'   => __( 'Maestro', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => 'Maestro International',
 		];
 		$this->form_fields['cc_brand_label_C'] = [
-			'title'   => __( 'Discover', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => 'Discover',
 		];
 		$this->form_fields['cc_brand_label_B'] = [
-			'title'   => __( 'Carte Bleue', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => 'CarteBleue',
 		];
 		$this->form_fields['cc_brand_label_P'] = [
-			'title'   => __( 'China Union Pay', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => 'China Union Pay',
 		];
 		$this->form_fields['ask_for_cvc2'] = [
@@ -324,6 +315,48 @@ class CreditCard extends GatewayBase {
 			'options' => $language_options,
 			'default' => 'de',
 		];
+	}
+
+	public function generate_cc_brands_html( $key, $data ) {
+		$out =  '<tr valign="top">';
+		$out .= '<th scope="row" class="titledesc">';
+		$out .= '<label>' . __( 'Credit card brand', 'payone-woocommerce-3' ) . '</label>';
+		$out .= '</th><td class="forminp">';
+
+		$selected_brands = (array)$this->get_option( $key );
+		foreach ( $data[ 'options' ] as $brand_key => $brand_label ) {
+			$out .= '<div class="cc_brands_wrapper">';
+
+			if ( in_array( $brand_key, $selected_brands, true ) ) {
+				$checked = ' checked="checked"';
+			} else {
+				$checked = '';
+			}
+
+			$checkbox_id = $this->get_field_key($key);
+			$checkbox_name = $checkbox_id . '[]';
+			$out .= '<input type="checkbox" name="'. $checkbox_name . '" id="'. $checkbox_id . '" value="' . $brand_key  . '"'. $checked . '>';
+			$out .= '<label for="' . $checkbox_id . '">' . $brand_label . '</label>';
+
+			$text_input_name = 'cc_brand_label_' . $brand_key;
+			#echo $text_input_name .'<br>';
+			$value = $this->get_option( $text_input_name );
+			#echo $value.'<br>';
+			#print_r($this->settings);exit;
+			$text_input_name = $this->plugin_id . $this->id . '_' . $text_input_name;
+			$out .= '<input type="text" name="' . $text_input_name . '" id="' . $text_input_name . '" value="' . esc_attr( $value ). '">';
+
+			$out .= '</div>';
+		}
+		$out .= '</td></tr>';
+
+		return $out;
+	}
+
+	public function generate_no_display_html( $key, $data ) {}
+
+	public function validate_cc_brands_field( $key, $value  ) {
+		return $this->validate_multiselect_field( $key, (array) $value );
 	}
 
 	public function payment_fields() {
