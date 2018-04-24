@@ -442,9 +442,9 @@ class CreditCard extends GatewayBase {
 		$authorization_method = $order->get_meta( '_authorization_method' );
 
 		if ( $authorization_method === 'preauthorization' ) {
-			$order->update_status( 'on-hold', __( 'Credit card payment is preauthorized.', 'woocommerce' ) );
+			$order->update_status( 'on-hold', __( 'Credit card payment is preauthorized.', 'payone-woocommerce-3' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
-			$order->add_order_note( __( 'Credit card payment is authorized and captured.', 'woocommerce' ) );
+			$order->add_order_note( __( 'Credit card payment is authorized and captured.', 'payone-woocommerce-3' ) );
 			$order->payment_complete();
 		}
 
