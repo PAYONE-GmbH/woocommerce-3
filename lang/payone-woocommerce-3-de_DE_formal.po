@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BS PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2018-04-24 13:18+0200\n"
+"POT-Creation-Date: 2018-04-24 15:13+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -539,7 +539,8 @@ msgstr "Kreditkartenfirmen"
 #: src/Payone/Gateway/CreditCard.php:378 src/Payone/Gateway/CreditCard.php:386
 #: src/Payone/Gateway/CreditCard.php:407 src/Payone/Gateway/Invoice.php:38
 #: src/Payone/Gateway/SepaDirectDebit.php:113 src/Payone/Gateway/Sofort.php:39
-#: src/Payone/Gateway/Sofort.php:47 src/Payone/Gateway/Sofort.php:68
+#: src/Payone/Gateway/Sofort.php:47 src/Payone/Gateway/Sofort.php:52
+#: src/Payone/Gateway/Sofort.php:73
 msgid "Payment error: "
 msgstr "Fehler bei Zahlung: "
 
@@ -562,13 +563,13 @@ msgstr "Kreditkartenzahlung wurde autorisiert und belastet."
 #: src/Payone/Gateway/CreditCard.php:468 src/Payone/Gateway/CreditCard.php:471
 #: src/Payone/Gateway/Invoice.php:77 src/Payone/Gateway/PrePayment.php:72
 #: src/Payone/Gateway/SepaDirectDebit.php:184
-#: src/Payone/Gateway/SepaDirectDebit.php:186 src/Payone/Gateway/Sofort.php:129
-#: src/Payone/Gateway/Sofort.php:132
+#: src/Payone/Gateway/SepaDirectDebit.php:186 src/Payone/Gateway/Sofort.php:134
+#: src/Payone/Gateway/Sofort.php:137
 msgid "Payment received."
 msgstr "Zahlung eingegangen."
 
 #: src/Payone/Gateway/CreditCard.php:474
-#: src/Payone/Gateway/SepaDirectDebit.php:189 src/Payone/Gateway/Sofort.php:137
+#: src/Payone/Gateway/SepaDirectDebit.php:189 src/Payone/Gateway/Sofort.php:142
 msgid "Payment failed."
 msgstr "Zahlung fehlgeschlagen."
 
@@ -845,11 +846,15 @@ msgstr ""
 msgid "SOFORT.com returned error"
 msgstr "SOFORT.com hat einen Fehler gemeldet"
 
-#: src/Payone/Gateway/Sofort.php:106
+#: src/Payone/Gateway/Sofort.php:52
+msgid "Payment was canceled by user"
+msgstr "Zahlung wurde vom Kunden abgebrochen"
+
+#: src/Payone/Gateway/Sofort.php:111
 msgid "SOFORT.com payment is preauthorized."
 msgstr "Zahlung über SOFORT.com wurde vorautorisiert."
 
-#: src/Payone/Gateway/Sofort.php:108
+#: src/Payone/Gateway/Sofort.php:113
 msgid "SOFORT.com payment is authorized and captured."
 msgstr "Zahlung über SOFORT.com wurde autorisiert und belastet."
 

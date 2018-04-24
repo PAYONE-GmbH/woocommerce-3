@@ -151,7 +151,7 @@ class Plugin {
 	 * @return bool
 	 */
 	private function is_callback_after_redirect() {
-		$allowed_redirect_types = [ 'success', 'error', 'return' ];
+		$allowed_redirect_types = [ 'success', 'error', 'back' ];
 		if ( isset( $_GET['type'] ) && in_array( $_GET['type'], $allowed_redirect_types, true)
 		     && isset( $_GET['oid'] ) && (int)$_GET['oid']
 		) {

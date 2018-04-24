@@ -14,8 +14,8 @@ class Sofort extends Base {
 
 		$this->set( 'clearingtype', 'sb' );
 		$this->set( 'onlinebanktransfertype', 'PNT' );
-		$this->set( 'iban', $_POST['iban'] );
-		$this->set( 'bic', $_POST['bic'] );
+		$this->set( 'iban', isset( $_POST['iban'] ) ? $_POST['iban'] : '' );
+		$this->set( 'bic', isset( $_POST['bic'] ) ? $_POST['bic'] : '' );
 		$this->set( 'bankcountry', 'DE' ); // @todo Richtiges Land bestimmen
 	}
 

@@ -46,6 +46,11 @@ class Sofort extends GatewayBase {
 			$is_success = false;
 			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'SOFORT.com returned error',
 					'payone-woocommerce-3' ), 'error' );
+		} elseif ( $this->is_redirect( 'back' ) ) {
+			$make_redirect = true;
+			$is_success = false;
+			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Payment was canceled by user',
+					'payone-woocommerce-3' ), 'error' );
 		} else {
 			$transaction = new \Payone\Transaction\Sofort( $this );
 			$response    = $transaction->execute( $order );
