@@ -131,6 +131,8 @@ class Sofort extends GatewayBase {
 		} elseif ( $authorization_method === 'preauthorization' && $transaction_status->is_capture() ) {
 			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
 			$order->payment_complete();
+		} elseif ( $authorization_method === 'preauthorization' && $transaction_status->is_paid() ) {
+			// Do nothing. Everything already happened.
 		} else {
 			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
 		}
