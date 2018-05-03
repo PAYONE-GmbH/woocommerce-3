@@ -11,10 +11,8 @@ class Invoice extends GatewayBase {
 		parent::__construct( self::GATEWAY_ID );
 
 		$this->icon               = '';
-		$this->method_title       = 'BS PAYONE Rechnung';
-		$this->method_description = 'method_description';
-
-		$this->add_email_meta_hook( [$this, 'email_meta_action'] );
+		$this->method_title       = 'Payone Rechnung';
+		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
@@ -44,6 +42,7 @@ class Invoice extends GatewayBase {
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
 		$response->store_clearing_info( $order );
+		$this->add_email_meta_hook( [ $this, 'email_meta_action' ] );
 		$order->update_meta_data( '_authorization_method', $transaction->get( 'request' ) );
 		$order->update_status( 'on-hold', __( 'Invoice has been sent', 'payone-woocommerce-3' ) );
 
@@ -86,16 +85,5 @@ class Invoice extends GatewayBase {
 			// @todo Reagieren, wenn Capture fehlschlägt?
 			$this->capture( $order );
 		}
-	}
-
-	/**
-	 * @param \WC_Order $order
-	 * @param bool $sent_to_admin
-	 * @param string $plain_text
-	 * @param string $email
-	 */
-	public function email_meta_action( \WC_Order $order, $sent_to_admin, $plain_text, $email = '' ) {
-		$clearing_info = json_decode($order->get_meta( '_clearing_info' ), true );
-		echo print_r( $clearing_info, 1 );
 	}
 }

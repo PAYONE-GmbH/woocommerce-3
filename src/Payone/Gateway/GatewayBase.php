@@ -480,4 +480,28 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
 		return ob_get_clean();
 	}
+
+	/**
+	 * @param \WC_Order $order
+	 * @param bool $sent_to_admin
+	 * @param string $plain_text
+	 * @param string $email
+	 */
+	public function email_meta_action( \WC_Order $order, $sent_to_admin, $plain_text, $email = '' ) {
+		$clearing_info = @json_decode($order->get_meta( '_clearing_info' ), true );
+		if ( $clearing_info ) {
+			echo '<strong>' . __( 'IBAN', 'payone-woocommerce-3' ) . ':</strong> ';
+			echo $clearing_info['bankiban'] . '<br>';
+			echo '<strong>' . __( 'BIC', 'payone-woocommerce-3' ) . ':</strong> ';
+			echo $clearing_info['bankbic'] . '<br>';
+			echo '<strong>' . __( 'pp.bankaccount', 'payone-woocommerce-3' ) . ':</strong> ';
+			echo $clearing_info['bankaccount'] . '<br>';
+			echo '<strong>' . __( 'pp.bankaccountholder', 'payone-woocommerce-3' ) . ':</strong> ';
+			echo $clearing_info['bankaccountholder'] . '<br>';
+			echo '<strong>' . __( 'pp.reference', 'payone-woocommerce-3' ) . ':</strong> ';
+			echo $clearing_info['reference'] . '<br>';
+			echo '<strong>' . __( 'pp.bankname', 'payone-woocommerce-3' ) . ':</strong> ';
+			echo $clearing_info['bankname'] . '<br><br>';
+		}
+	}
 }

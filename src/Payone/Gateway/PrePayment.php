@@ -11,10 +11,8 @@ class PrePayment extends GatewayBase {
 		parent::__construct(self::GATEWAY_ID);
 
 		$this->icon               = '';
-		$this->method_title       = 'BS PAYONE Vorkasse';
-		$this->method_description = 'method_description';
-
-		$this->add_email_meta_hook( [$this, 'email_meta_action'] );
+		$this->method_title       = 'Payone Vorkasse';
+		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
@@ -38,14 +36,12 @@ class PrePayment extends GatewayBase {
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
 		$response->store_clearing_info( $order );
+		$this->add_email_meta_hook( [ $this, 'email_meta_action' ] );
 
-		// Mark as on-hold (we're awaiting the cheque)
 		$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
 
-		// Reduce stock levels
 		wc_reduce_stock_levels( $order_id );
 
-		// Remove cart
 		$woocommerce->cart->empty_cart();
 
 		// Return thankyou redirect
@@ -79,16 +75,5 @@ class PrePayment extends GatewayBase {
 			// @todo Reagieren, wenn Capture fehlschlägt?
 			$this->capture( $order );
 		}
-	}
-
-	/**
-	 * @param \WC_Order $order
-	 * @param bool $sent_to_admin
-	 * @param string $plain_text
-	 * @param string $email
-	 */
-	public function email_meta_action( \WC_Order $order, $sent_to_admin, $plain_text, $email = '' ) {
-		$clearing_info = json_decode($order->get_meta( '_clearing_info' ), true );
-		echo print_r( $clearing_info, 1 );
 	}
 }

@@ -26,7 +26,7 @@ class Settings {
 	}
 
 	public function plugin_menu() {
-		add_menu_page( __( 'BS PAYONE Settings', 'payone' ),
+		add_menu_page( __( 'Payone Settings', 'payone' ),
 			__( 'BS PAYONE', 'payone' ),
 			'manage_options',
 			'payone-settings-account',

@@ -42,6 +42,7 @@ class Response extends DataTransfer {
 	 * @param \WC_Order $order
 	 */
 	public function store_clearing_info( \WC_Order $order ) {
+		$clearing_reference = $this->get( 'clearing_reference', $order->get_transaction_id() );
 		$clearing_info = [
 			'bankaccount'       => $this->get( 'clearing_bankaccount' ),
 			'bankcode'          => $this->get( 'clearing_bankcode' ),
@@ -51,6 +52,7 @@ class Response extends DataTransfer {
 			'bankcity'          => $this->get( 'clearing_bankcity' ),
 			'bankiban'          => $this->get( 'clearing_bankiban' ),
 			'bankbic'           => $this->get( 'clearing_bankbic' ),
+			'reference'         => $clearing_reference,
 		];
 		$order->update_meta_data( '_clearing_info', json_encode( $clearing_info ) );
 	}

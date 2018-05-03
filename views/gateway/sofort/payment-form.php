@@ -1,4 +1,6 @@
-<h1><?php echo __('SOFORT.com', 'payone-woocommerce-3'); ?></h1>
+<p>
+	<?php echo nl2br( $this->get_option( 'description' ) ); ?>
+</p>
 <input type="hidden" id="sofort_reference" name="sofort_reference" value="">
 <div id="sofort_wrapper">
     <p id="sofort_iban_field" class="form-row form-row-wide">

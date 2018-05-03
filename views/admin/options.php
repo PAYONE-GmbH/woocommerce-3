@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1>BS PAYONE - Einstellungen</h1>
+    <h1>Payone - Einstellungen</h1>
     <?php settings_errors(); ?>
     <form method="post" action="options.php">
         <?php

@@ -1,1 +1,3 @@
-<h1>Rechnung</h1>
+<p>
+	<?php echo nl2br( $this->get_option( 'description' ) ); ?>
+</p>

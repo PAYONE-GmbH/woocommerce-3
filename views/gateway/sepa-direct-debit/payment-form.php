@@ -1,4 +1,6 @@
-<h1>SEPA-Lastschrift</h1>
+<p>
+	<?php echo nl2br( $this->get_option( 'description' ) ); ?>
+</p>
 <input type="hidden" id="direct_debit_reference" name="direct_debit_reference" value="">
 <div id="direct_debit_wrapper">
     <p id="direct_debit_iban_field" class="form-row form-row-wide">

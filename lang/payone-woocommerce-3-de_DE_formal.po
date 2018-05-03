@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BS PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2018-05-03 14:02+0200\n"
+"POT-Creation-Date: 2018-05-03 15:27+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -25,16 +25,16 @@ msgstr ""
 
 #: src/Payone/Admin/ApiLogListTable.php:9
 msgid "Request"
-msgstr ""
+msgstr "Anfrage"
 
 #: src/Payone/Admin/ApiLogListTable.php:10
 msgid "Response"
-msgstr ""
+msgstr "Antwort"
 
 #: src/Payone/Admin/ApiLogListTable.php:11
 #: src/Payone/Admin/TransactionLogListTable.php:13
 msgid "Modus"
-msgstr ""
+msgstr "Modus"
 
 #: src/Payone/Admin/ApiLogListTable.php:12
 msgid "Merchant-ID"
@@ -68,7 +68,7 @@ msgstr ""
 #: src/Payone/Admin/Option/Account.php:37
 #: src/Payone/Gateway/GatewayBase.php:249
 msgid "Key"
-msgstr ""
+msgstr "Schlüssel"
 
 #: src/Payone/Admin/Option/Account.php:42
 #: src/Payone/Admin/Option/AddressChecks.php:27
@@ -104,7 +104,7 @@ msgstr "Text auf Buchungsbeleg"
 #: src/Payone/Admin/Option/Account.php:72 src/Payone/Admin/Settings.php:55
 #: src/Payone/Admin/Settings.php:56
 msgid "API-Log"
-msgstr ""
+msgstr "API-Log"
 
 #: src/Payone/Admin/Option/Account.php:77 src/Payone/Admin/Settings.php:49
 #: src/Payone/Admin/Settings.php:50
@@ -119,13 +119,13 @@ msgstr ""
 #: src/Payone/Admin/Option/AddressChecks.php:117
 #: src/Payone/Admin/Option/CreditCheck.php:112
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #: src/Payone/Admin/Option/Account.php:130
 #: src/Payone/Admin/Option/AddressChecks.php:118
 #: src/Payone/Admin/Option/CreditCheck.php:113
 msgid "Live"
-msgstr ""
+msgstr "Live"
 
 #: src/Payone/Admin/Option/Account.php:138
 #: src/Payone/Admin/Option/Account.php:147
@@ -355,12 +355,12 @@ msgid "Abort checkout"
 msgstr ""
 
 #: src/Payone/Admin/Settings.php:29
-msgid "BS PAYONE Settings"
-msgstr ""
+msgid "Payone Settings"
+msgstr "Payone Einstellungen"
 
 #: src/Payone/Admin/Settings.php:30
 msgid "BS PAYONE"
-msgstr ""
+msgstr "BS PAYONE"
 
 #: src/Payone/Admin/TransactionLogListTable.php:9
 msgid "Transaction ID"
@@ -368,7 +368,7 @@ msgstr "Transaktion ID"
 
 #: src/Payone/Admin/TransactionLogListTable.php:10
 msgid "Order ID"
-msgstr ""
+msgstr "Bestellnummer"
 
 #: src/Payone/Admin/TransactionLogListTable.php:11
 msgid "Transaction action"
@@ -503,17 +503,17 @@ msgstr "Höhe"
 #: src/Payone/Gateway/CreditCard.php:231 src/Payone/Gateway/CreditCard.php:275
 #: src/Payone/Gateway/CreditCard.php:421
 msgid "Style"
-msgstr ""
+msgstr "Stil"
 
 #: src/Payone/Gateway/CreditCard.php:149 src/Payone/Gateway/CreditCard.php:193
 #: src/Payone/Gateway/CreditCard.php:237 src/Payone/Gateway/CreditCard.php:281
 #: src/Payone/Gateway/CreditCard.php:422
 msgid "CSS"
-msgstr ""
+msgstr "CSS"
 
 #: src/Payone/Gateway/CreditCard.php:155
 msgid "CVC2"
-msgstr ""
+msgstr "CVC2"
 
 #: src/Payone/Gateway/CreditCard.php:199
 msgid "Valid month"
@@ -572,7 +572,7 @@ msgid "Max. Chars"
 msgstr "Max. Anzahl Zeichen"
 
 #: src/Payone/Gateway/CreditCard.php:454 src/Payone/Gateway/CreditCard.php:462
-#: src/Payone/Gateway/CreditCard.php:483 src/Payone/Gateway/Invoice.php:38
+#: src/Payone/Gateway/CreditCard.php:483 src/Payone/Gateway/Invoice.php:36
 #: src/Payone/Gateway/SepaDirectDebit.php:113 src/Payone/Gateway/Sofort.php:39
 #: src/Payone/Gateway/Sofort.php:47 src/Payone/Gateway/Sofort.php:52
 #: src/Payone/Gateway/Sofort.php:73
@@ -596,7 +596,7 @@ msgid "Credit card payment is authorized and captured."
 msgstr "Kreditkartenzahlung wurde autorisiert und belastet."
 
 #: src/Payone/Gateway/CreditCard.php:544 src/Payone/Gateway/CreditCard.php:547
-#: src/Payone/Gateway/Invoice.php:77 src/Payone/Gateway/PrePayment.php:72
+#: src/Payone/Gateway/Invoice.php:76 src/Payone/Gateway/PrePayment.php:68
 #: src/Payone/Gateway/SepaDirectDebit.php:184
 #: src/Payone/Gateway/SepaDirectDebit.php:186 src/Payone/Gateway/Sofort.php:134
 #: src/Payone/Gateway/Sofort.php:137
@@ -660,27 +660,55 @@ msgstr "Benutze die globalen Einstellungen"
 msgid "Account ID"
 msgstr ""
 
-#: src/Payone/Gateway/Invoice.php:21
+#: src/Payone/Gateway/GatewayBase.php:493
+#: views/gateway/sepa-direct-debit/payment-form.php:8
+#: views/gateway/sofort/payment-form.php:8
+msgid "IBAN"
+msgstr "IBAN"
+
+#: src/Payone/Gateway/GatewayBase.php:495
+#: views/gateway/sepa-direct-debit/payment-form.php:12
+#: views/gateway/sofort/payment-form.php:12
+msgid "BIC"
+msgstr "BIC"
+
+#: src/Payone/Gateway/GatewayBase.php:497
+msgid "pp.bankaccount"
+msgstr "Kontonummer"
+
+#: src/Payone/Gateway/GatewayBase.php:499
+msgid "pp.bankaccountholder"
+msgstr "Zahlungsempfänger"
+
+#: src/Payone/Gateway/GatewayBase.php:501
+msgid "pp.reference"
+msgstr "Verwendungszweck"
+
+#: src/Payone/Gateway/GatewayBase.php:503
+msgid "pp.bankname"
+msgstr "Bank"
+
+#: src/Payone/Gateway/Invoice.php:19 views/gateway/invoice/payment-form.php:1
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: src/Payone/Gateway/Invoice.php:48
+#: src/Payone/Gateway/Invoice.php:47
 msgid "Invoice has been sent"
 msgstr "Rechnung wurde verschickt"
 
-#: src/Payone/Gateway/Invoice.php:72 src/Payone/Gateway/PrePayment.php:67
+#: src/Payone/Gateway/Invoice.php:71 src/Payone/Gateway/PrePayment.php:63
 msgid "Payment received. Customer overpaid!"
 msgstr "Bezahlung eingegangen. Kunde hat zu viel gezahlt!"
 
-#: src/Payone/Gateway/Invoice.php:75 src/Payone/Gateway/PrePayment.php:70
+#: src/Payone/Gateway/Invoice.php:74 src/Payone/Gateway/PrePayment.php:66
 msgid "Payment received. Customer underpaid!"
 msgstr "Bezahlung eingegangen. Kunde hat zu wenig gezahlt!"
 
-#: src/Payone/Gateway/PrePayment.php:21
+#: src/Payone/Gateway/PrePayment.php:19
 msgid "Prepayment"
 msgstr "Vorkasse"
 
-#: src/Payone/Gateway/PrePayment.php:43
+#: src/Payone/Gateway/PrePayment.php:41
 #: src/Payone/Gateway/SepaDirectDebit.php:125
 msgid "Waiting for payment."
 msgstr "Auf Zahlung warten."
@@ -875,7 +903,7 @@ msgstr "Zahlung wurde autorisiert und belastet."
 
 #: src/Payone/Gateway/Sofort.php:19 views/gateway/sofort/payment-form.php:1
 msgid "SOFORT.com"
-msgstr ""
+msgstr "Sofort-Überweisung"
 
 #: src/Payone/Gateway/Sofort.php:47
 msgid "SOFORT.com returned error"
@@ -1029,20 +1057,14 @@ msgstr ""
 msgid "Credit Check"
 msgstr ""
 
-#: views/gateway/sepa-direct-debit/payment-form.php:5
-#: views/gateway/sofort/payment-form.php:5
-msgid "IBAN"
-msgstr ""
+#: views/gateway/pre-payment/payment-form.php:1
+msgid "Pre Payment"
+msgstr "Vorkasse"
 
-#: views/gateway/sepa-direct-debit/payment-form.php:9
-#: views/gateway/sofort/payment-form.php:9
-msgid "BIC"
-msgstr ""
-
-#: views/gateway/sepa-direct-debit/payment-form.php:15
+#: views/gateway/sepa-direct-debit/payment-form.php:18
 msgid "direct.debit.mandate.headline"
 msgstr ""
 
-#: views/gateway/sepa-direct-debit/payment-form.php:20
+#: views/gateway/sepa-direct-debit/payment-form.php:23
 msgid "direct.debit.mandate.checkbox.label"
 msgstr ""

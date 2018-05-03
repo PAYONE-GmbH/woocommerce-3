@@ -11,8 +11,8 @@ class SepaDirectDebit extends GatewayBase {
 		parent::__construct( self::GATEWAY_ID );
 
 		$this->icon               = '';
-		$this->method_title       = 'BS PAYONE Lastschrift (SEPA)';
-		$this->method_description = 'method_description';
+		$this->method_title       = 'Payone Lastschrift (SEPA)';
+		$this->method_description = '';
 	}
 
 	public function init_form_fields() {

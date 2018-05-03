@@ -23,6 +23,9 @@
         $year_css = ' style="' . $this->get_option( 'cc_field_year_css' ) . '"';
     }
 ?>
+<p>
+	<?php echo nl2br( $this->get_option( 'description' ) ); ?>
+</p>
 <fieldset>
     <label for="cardtypeInput">Card type</label>
     <select id="cardtype">
