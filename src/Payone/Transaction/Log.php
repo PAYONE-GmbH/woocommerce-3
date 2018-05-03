@@ -25,7 +25,7 @@ class Log {
 	/**
 	 * @var \DateTime
 	 */
-	private $createdAt;
+	private $created_at;
 
 	/**
 	 * @var bool
@@ -36,7 +36,7 @@ class Log {
 		if ( $id ) {
 			$this->id = $id;
 		}
-		$this->setCreatedAt( new \DateTime() );
+		$this->set_created_at( new \DateTime() );
 
 		$options = get_option( 'payone_account', [ 'transaction_log' => 0 ] );
 
@@ -46,8 +46,8 @@ class Log {
 	public static function constructFromPostVars() {
 		$transaction_id        = isset( $_POST['txid'] ) ? $_POST['txid'] : '';
 		$transaction_log_entry = new Log();
-		$transaction_log_entry->setData( \Payone\Payone\Api\DataTransfer::constructFromArray( $_POST ) );
-		$transaction_log_entry->setTransactionId( $transaction_id );
+		$transaction_log_entry->set_data( \Payone\Payone\Api\DataTransfer::constructFromArray( $_POST ) );
+		$transaction_log_entry->set_transaction_id( $transaction_id );
 		$transaction_log_entry->save();
 	}
 
@@ -76,9 +76,9 @@ class Log {
 
 		$object = new Log( $id );
 		$object
-			->setData( DataTransfer::construct_from_json( $data ) )
-			->setTransactionId( $transaction_id )
-			->setCreatedAt( new \DateTime( $created_at ) );
+			->set_data( DataTransfer::construct_from_json( $data ) )
+			->set_transaction_id( $transaction_id )
+			->set_created_at( new \DateTime( $created_at ) );
 
 		return $object;
 	}
@@ -95,9 +95,9 @@ class Log {
 		$wpdb->insert(
 			$tableName,
 			[
-				'data'    => $this->getData()->get_serialized_parameters(),
-				'transaction_id'   => $this->getTransactionId(),
-				'created_at' => $this->getCreatedAt()->format( 'Y-m-d H:i:s' ),
+				'data'    => $this->get_data()->get_serialized_parameters(),
+				'transaction_id'   => $this->get_transaction_id(),
+				'created_at' => $this->get_created_at()->format( 'Y-m-d H:i:s' ),
 			],
 			[ '%s', '%s', '%s' ]
 		);
@@ -106,24 +106,24 @@ class Log {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function get_id() {
 		return $this->id;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTransactionId() {
+	public function get_transaction_id() {
 		return $this->transaction_id;
 	}
 
 	/**
-	 * @param string $transactionId
+	 * @param string $transaction_id
 	 *
 	 * @return Log
 	 */
-	public function setTransactionId( $transactionId ) {
-		$this->transaction_id = $transactionId;
+	public function set_transaction_id( $transaction_id ) {
+		$this->transaction_id = $transaction_id;
 
 		return $this;
 	}
@@ -131,7 +131,7 @@ class Log {
 	/**
 	 * @return DataTransfer
 	 */
-	public function getData() {
+	public function get_data() {
 		return $this->data;
 	}
 
@@ -140,7 +140,7 @@ class Log {
 	 *
 	 * @return Log
 	 */
-	public function setData( $data ) {
+	public function set_data( $data ) {
 		$this->data = $data;
 
 		return $this;
@@ -149,17 +149,17 @@ class Log {
 	/**
 	 * @return \DateTime
 	 */
-	public function getCreatedAt() {
-		return $this->createdAt;
+	public function get_created_at() {
+		return $this->created_at;
 	}
 
 	/**
-	 * @param \DateTime $createdAt
+	 * @param \DateTime $created_at
 	 *
 	 * @return Log
 	 */
-	public function setCreatedAt( $createdAt ) {
-		$this->createdAt = $createdAt;
+	public function set_reated_at( $created_at ) {
+		$this->created_at = $created_at;
 
 		return $this;
 	}

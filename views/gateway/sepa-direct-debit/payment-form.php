@@ -13,9 +13,6 @@
     </p>
 </div>
 <div id="direct_debit_confirmation">
-    <p>
-        <?php echo __( 'direct.debit.mandate.headline', 'payone-woocommerce-3' ); ?>
-    </p>
     <span id="direct_debit_confirmation_text"></span>
     <input id="direct_debit_confirmation_check" type="checkbox" name="direct_debit_confirmation_check" value="1">
     <label for="direct_debit_confirmation_check">
@@ -25,6 +22,7 @@
 <div id="direct_debit_error"></div>
 <script type="text/javascript">
     var mandate_ok = false;
+    var confirmation_check_displayed = false;
     jQuery('#direct_debit_confirmation').hide();
     function payone_checkout_clicked_<?php echo \Payone\Gateway\SepaDirectDebit::GATEWAY_ID; ?>() {
         if (mandate_ok) {
@@ -38,9 +36,12 @@
             iban: jQuery('#direct_debit_iban').val(),
             bic: jQuery('#direct_debit_bic').val(),
             currency: '<?php echo get_woocommerce_currency(); ?>',
-            confirmation_check: jQuery('#direct_debit_confirmation_check').prop('checked') ? 1 : 0,
+            confirmation_check: jQuery('#direct_debit_confirmation_check').prop('checked') ? 1 : 0
         };
 
+        if (!confirmation_check_displayed) {
+            data.confirmation_check = -1;
+        }
         payone_manage_mandate(data);
 
         return false;
@@ -49,19 +50,23 @@
         jQuery('#direct_debit_error').html('');
         jQuery.post('<?php echo \Payone\Plugin::get_callback_url('ajax-manage-mandate'); ?>', data, function(result) {
             result = jQuery.parseJSON(result);
-            // result.status = 'active'; // @todo entfernen!
-            if (result.status == 'error') {
+            if (result.status === 'error') {
                 jQuery('#direct_debit_error').html('<strong style="color:red">' + result.message + '</strong>');
-            } else if (result.status == 'active' ) {
+            } else if (result.status === 'active' ) {
                 document.getElementById("direct_debit_reference").value = result['reference'];
                 mandate_ok = true;
                 payone_unblock();
                 jQuery('#place_order').parents('form').submit();
-            } else if (result.status == 'pending') {
+            } else if (result.status === 'pending') {
+                confirmation_check_displayed = true;
                 jQuery('#direct_debit_confirmation_text').html(result['text']);
                 jQuery('#direct_debit_confirmation_check').prop('checked', false);
                 jQuery('#direct_debit_wrapper').hide();
                 jQuery('#direct_debit_confirmation').show();
+
+                if (result.error_message) {
+                    jQuery('#direct_debit_error').html('<strong style="color:red">' + result.error_message + '</strong>');
+                }
             }
             payone_unblock();
         });

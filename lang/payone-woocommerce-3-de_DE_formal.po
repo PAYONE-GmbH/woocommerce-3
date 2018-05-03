@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BS PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2018-05-03 15:27+0200\n"
+"POT-Creation-Date: 2018-05-03 16:09+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -597,14 +597,14 @@ msgstr "Kreditkartenzahlung wurde autorisiert und belastet."
 
 #: src/Payone/Gateway/CreditCard.php:544 src/Payone/Gateway/CreditCard.php:547
 #: src/Payone/Gateway/Invoice.php:76 src/Payone/Gateway/PrePayment.php:68
-#: src/Payone/Gateway/SepaDirectDebit.php:184
-#: src/Payone/Gateway/SepaDirectDebit.php:186 src/Payone/Gateway/Sofort.php:134
+#: src/Payone/Gateway/SepaDirectDebit.php:189
+#: src/Payone/Gateway/SepaDirectDebit.php:191 src/Payone/Gateway/Sofort.php:134
 #: src/Payone/Gateway/Sofort.php:137
 msgid "Payment received."
 msgstr "Zahlung eingegangen."
 
 #: src/Payone/Gateway/CreditCard.php:550
-#: src/Payone/Gateway/SepaDirectDebit.php:189 src/Payone/Gateway/Sofort.php:142
+#: src/Payone/Gateway/SepaDirectDebit.php:194 src/Payone/Gateway/Sofort.php:142
 msgid "Payment failed."
 msgstr "Zahlung fehlgeschlagen."
 
@@ -661,14 +661,14 @@ msgid "Account ID"
 msgstr ""
 
 #: src/Payone/Gateway/GatewayBase.php:493
-#: views/gateway/sepa-direct-debit/payment-form.php:8
-#: views/gateway/sofort/payment-form.php:8
+#: views/gateway/sepa-direct-debit/payment-form.php:7
+#: views/gateway/sofort/payment-form.php:7
 msgid "IBAN"
 msgstr "IBAN"
 
 #: src/Payone/Gateway/GatewayBase.php:495
-#: views/gateway/sepa-direct-debit/payment-form.php:12
-#: views/gateway/sofort/payment-form.php:12
+#: views/gateway/sepa-direct-debit/payment-form.php:11
+#: views/gateway/sofort/payment-form.php:11
 msgid "BIC"
 msgstr "BIC"
 
@@ -688,7 +688,7 @@ msgstr "Verwendungszweck"
 msgid "pp.bankname"
 msgstr "Bank"
 
-#: src/Payone/Gateway/Invoice.php:19 views/gateway/invoice/payment-form.php:1
+#: src/Payone/Gateway/Invoice.php:19
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -901,7 +901,11 @@ msgstr ""
 msgid "Payment is authorized and captured."
 msgstr "Zahlung wurde autorisiert und belastet."
 
-#: src/Payone/Gateway/Sofort.php:19 views/gateway/sofort/payment-form.php:1
+#: src/Payone/Gateway/SepaDirectDebit.php:167
+msgid "Please check this option"
+msgstr "Sie müssen diese Checkbox ankreuzen, um fortfahren zu können"
+
+#: src/Payone/Gateway/Sofort.php:19
 msgid "SOFORT.com"
 msgstr "Sofort-Überweisung"
 
@@ -1057,14 +1061,9 @@ msgstr ""
 msgid "Credit Check"
 msgstr ""
 
-#: views/gateway/pre-payment/payment-form.php:1
-msgid "Pre Payment"
-msgstr "Vorkasse"
-
-#: views/gateway/sepa-direct-debit/payment-form.php:18
-msgid "direct.debit.mandate.headline"
-msgstr ""
-
-#: views/gateway/sepa-direct-debit/payment-form.php:23
+#: views/gateway/sepa-direct-debit/payment-form.php:19
 msgid "direct.debit.mandate.checkbox.label"
-msgstr ""
+msgstr "Ich erteile das SEPA-Lastschriftmandat"
+
+#~ msgid "Pre Payment"
+#~ msgstr "Vorkasse"

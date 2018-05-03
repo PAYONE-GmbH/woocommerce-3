@@ -122,10 +122,10 @@ class SepaDirectDebit extends GatewayBase {
 		$order->save();
 
 		if ( $authorization_method === 'preauthorization' ) {
-			$order->update_status( 'on-hold', __( 'Waiting for payment.', 'woocommerce' ) );
+			$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
 			$order->update_status( 'processing',
-				__( 'Payment is authorized and captured.', 'woocommerce' ) );
+				__( 'Payment is authorized and captured.', 'payone-woocommerce-3' ) );
 		}
 
 		// Reduce stock levels
@@ -159,10 +159,15 @@ class SepaDirectDebit extends GatewayBase {
 			];
 		} elseif ( $response->is_approved() && $response->get( 'mandate_status' ) === 'pending' ) {
 			$result = [
-				'status' => 'pending',
+				'status'    => 'pending',
 				'reference' => $response->get( 'mandate_identification' ),
-				'text' => urldecode( $response->get( 'mandate_text' ) ),
+				'text'      => urldecode( $response->get( 'mandate_text' ) ),
 			];
+			if ( $data[ 'confirmation_check' ] === '0' ) {
+				$result[ 'error_message' ] = __( 'Please check this option', 'payone-woocommerce-3' );
+			} else {
+				$result[ 'error_message' ] = '';
+			}
 		}
 
 		$result['call'] = 'process_manage_mandate';

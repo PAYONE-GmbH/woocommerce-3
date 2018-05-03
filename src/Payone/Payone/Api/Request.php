@@ -229,7 +229,7 @@ class Request extends DataTransfer {
 		$logEntry = new Log();
 		$logEntry
 			->set_request( $request )
-			->setResponse( $response );
+			->set_response( $response );
 
 		return $logEntry;
 	}

@@ -26,7 +26,7 @@
         </tr>
         </thead>
         <tbody>
-		<?php foreach ($entry->getResponse()->get_all() as $key => $value) { ?>
+		<?php foreach ($entry->get_response()->get_all() as $key => $value) { ?>
             <tr>
                 <td><?php echo $key; ?></td>
                 <td><?php echo $value; ?></td>

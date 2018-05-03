@@ -21,21 +21,21 @@ class TransactionLogListTable extends AbstractListTable {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'id':
-				return '<a href="?page=payone-transaction-log&id=' . $item->getId() . '">' . $item->getId() . '</a>';
+				return '<a href="?page=payone-transaction-log&id=' . $item->get_id() . '">' . $item->get_id() . '</a>';
 			case 'transaction_id':
-				return $item->getTransactionId();
+				return $item->get_transaction_id();
 			case 'order_id':
-				return $item->getData()->get( 'reference' );
+				return $item->get_data()->get( 'reference' );
 			case 'txaction':
-				return $item->getData()->get( 'txaction' );
+				return $item->get_data()->get( 'txaction' );
 			case 'sequencenumber':
-				return $item->getData()->get( 'sequencenumber' );
+				return $item->get_data()->get( 'sequencenumber' );
 			case 'mode':
-				return $item->getData()->get( 'mode' );
+				return $item->get_data()->get( 'mode' );
 			case 'portal_id':
-				return $item->getData()->get( 'portalid' );
+				return $item->get_data()->get( 'portalid' );
 			case 'created_at':
-				return $item->getCreatedAt()->format( 'd.m.Y H:i' );
+				return $item->get_created_at()->format( 'd.m.Y H:i' );
 			default:
 				return print_r( $item, true ); // Show the whole array for troubleshooting purposes
 		}

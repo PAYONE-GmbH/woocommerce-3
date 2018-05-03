@@ -23,13 +23,13 @@ class Log {
 	/**
 	 * @var \DateTime
 	 */
-	private $createdAt;
+	private $created_at;
 
 	public function __construct( $id = null ) {
 		if ( $id ) {
 			$this->id = $id;
 		}
-		$this->setCreatedAt( new \DateTime() );
+		$this->set_created_at( new \DateTime() );
 	}
 
 	/**
@@ -41,8 +41,8 @@ class Log {
 		$object = new Log( $row['id'] );
 		$object
 			->set_request( Request::construct_from_json( $row['request'] ) )
-			->setResponse( Response::construct_from_json( $row['response'] ) )
-			->setCreatedAt( new \DateTime( $row['created_at'] ) );
+			->set_response( Response::construct_from_json( $row['response'] ) )
+			->set_created_at( new \DateTime( $row['created_at'] ) );
 
 		return $object;
 	}
@@ -57,7 +57,7 @@ class Log {
 			[
 				'request'    => $this->request->get_serialized_parameters(),
 				'response'   => $this->response->get_serialized_parameters(),
-				'created_at' => $this->getCreatedAt()->format( 'Y-m-d H:i:s' ),
+				'created_at' => $this->get_created_at()->format( 'Y-m-d H:i:s' ),
 			],
 			[ '%s', '%s', '%s' ]
 		);
@@ -66,7 +66,7 @@ class Log {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function get_id() {
 		return $this->id;
 	}
 
@@ -91,7 +91,7 @@ class Log {
 	/**
 	 * @return Response
 	 */
-	public function getResponse() {
+	public function get_response() {
 		return $this->response;
 	}
 
@@ -100,7 +100,7 @@ class Log {
 	 *
 	 * @return Log
 	 */
-	public function setResponse( $response ) {
+	public function set_response( $response ) {
 		$this->response = $response;
 
 		return $this;
@@ -109,17 +109,17 @@ class Log {
 	/**
 	 * @return \DateTime
 	 */
-	public function getCreatedAt() {
-		return $this->createdAt;
+	public function get_created_at() {
+		return $this->created_at;
 	}
 
 	/**
-	 * @param \DateTime $createdAt
+	 * @param \DateTime $created_at
 	 *
 	 * @return Log
 	 */
-	public function setCreatedAt( $createdAt ) {
-		$this->createdAt = $createdAt;
+	public function set_created_at( $created_at ) {
+		$this->created_at = $created_at;
 
 		return $this;
 	}
