@@ -58,7 +58,6 @@
                 payone_unblock();
                 jQuery('#place_order').parents('form').submit();
             } else if (result.status === 'pending') {
-                confirmation_check_displayed = true;
                 jQuery('#direct_debit_confirmation_text').html(result['text']);
                 jQuery('#direct_debit_confirmation_check').prop('checked', false);
                 jQuery('#direct_debit_wrapper').hide();
@@ -66,7 +65,13 @@
 
                 if (result.error_message) {
                     jQuery('#direct_debit_error').html('<strong style="color:red">' + result.error_message + '</strong>');
+                } else if (confirmation_check_displayed) {
+                    document.getElementById("direct_debit_reference").value = result['reference'];
+                    mandate_ok = true;
+                    payone_unblock();
+                    jQuery('#place_order').parents('form').submit();
                 }
+                confirmation_check_displayed = true;
             }
             payone_unblock();
         });
