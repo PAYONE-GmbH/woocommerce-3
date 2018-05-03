@@ -404,4 +404,80 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			$this->text_on_booking_statement = isset( $this->settings['text_on_booking_statement'] ) ? $this->settings['text_on_booking_statement'] : '';
 		}
 	}
+
+	/**
+	 * This is a copy of $this->>generate_select_html(), but without the table_markup
+	 *
+	 * @param string $key
+	 * @param array $data
+	 *
+	 * @return string
+	 */
+	public function generate_select_html_without_table_markup( $key, $data ) {
+		$field_key = $this->get_field_key( $key );
+		$defaults  = array(
+			'title'             => '',
+			'disabled'          => false,
+			'class'             => '',
+			'css'               => '',
+			'placeholder'       => '',
+			'type'              => 'text',
+			'desc_tip'          => false,
+			'description'       => '',
+			'custom_attributes' => array(),
+			'options'           => array(),
+		);
+
+		$data = wp_parse_args( $data, $defaults );
+		ob_start();
+		?>
+		<fieldset>
+			<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+			<select class="select <?php echo esc_attr( $data['class'] ); ?>" name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?>>
+				<?php foreach ( (array) $data['options'] as $option_key => $option_value ) : ?>
+					<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $option_key, esc_attr( $this->get_option( $key ) ) ); ?>><?php echo esc_attr( $option_value ); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<?php echo $this->get_description_html( $data ); ?>
+		</fieldset>
+		<?php
+
+		return ob_get_clean();
+	}
+
+	/**
+	 * This is a copy of $this->>generate_text_html(), but without the table_markup
+	 *
+	 * @param string $key
+	 * @param array $data
+	 *
+	 * @return string
+	 */
+	public function generate_text_html_without_table_markup( $key, $data ) {
+		$field_key = $this->get_field_key( $key );
+		$defaults  = array(
+			'title'             => '',
+			'disabled'          => false,
+			'class'             => '',
+			'css'               => '',
+			'placeholder'       => '',
+			'type'              => 'text',
+			'desc_tip'          => false,
+			'description'       => '',
+			'custom_attributes' => array(),
+		);
+
+		$data = wp_parse_args( $data, $defaults );
+
+		ob_start();
+		?>
+			<fieldset>
+				<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+				<input class="input-text regular-input <?php echo esc_attr( $data['class'] ); ?>" type="<?php echo esc_attr( $data['type'] ); ?>" name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo esc_attr( $this->get_option( $key ) ); ?>" placeholder="<?php echo esc_attr( $data['placeholder'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
+				<?php echo $this->get_description_html( $data ); ?>
+			</fieldset>
+		<?php
+
+		return ob_get_clean();
+	}
 }

@@ -102,185 +102,190 @@ class CreditCard extends GatewayBase {
 			'default' => '30',
 		];
 
-		$this->form_fields['input_fields_configuration_'] = [
+		$this->form_fields['input_fields_configuration_label'] = [
 			'title' => __( 'Configuration of input fields', 'payone-woocommerce-3' ),
 			'type'  => 'title',
 		];
 
 		$this->form_fields['cc_field_cardnumber_type'] = [
 			'title'   => __( 'Card number', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'style_input',
 			'options' => $type_options,
 			'default' => 'numeric',
 		];
 		$this->form_fields['cc_field_cardnumber_length'] = [
 			'title'   => __( 'Length', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display', // 'text',
 			'default' => '20',
 		];
 		$this->form_fields['cc_field_cardnumber_maxchars'] = [
 			'title'   => __( 'Max. chars', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display', // 'text',
 			'default' => '20',
 		];
 		$this->form_fields['cc_field_cardnumber_iframe'] = [
 			'title'   => __( 'Iframe', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'no_display', // 'select',
 			'options' => $iframe_options,
 			'default' => 'default',
 		];
 		$this->form_fields['cc_field_cardnumber_width'] = [
 			'title'   => __( 'Width', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display', // 'text',
 			'default' => '100px',
 		];
 		$this->form_fields['cc_field_cardnumber_height'] = [
 			'title'   => __( 'Height', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display', // 'text',
 			'default' => '20px',
 		];
 		$this->form_fields['cc_field_cardnumber_style'] = [
 			'title'   => __( 'Style', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'no_display', // 'select',
 			'options' => $style_options,
 			'default' => 'default',
 		];
 		$this->form_fields['cc_field_cardnumber_css'] = [
 			'title'   => __( 'CSS', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display', // 'text',
 			'default' => '',
 		];
 
 		$this->form_fields['cc_field_cvc2_type'] = [
 			'title'   => __( 'CVC2', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'style_input',
 			'options' => $type_options,
 			'default' => 'password',
 		];
 		$this->form_fields['cc_field_cvc2_length'] = [
 			'title'   => __( 'Length', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '4',
 		];
 		$this->form_fields['cc_field_cvc2_maxchars'] = [
 			'title'   => __( 'Max. chars', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '4',
 		];
 		$this->form_fields['cc_field_cvc2_iframe'] = [
 			'title'   => __( 'Iframe', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'no_display',
 			'options' => $iframe_options,
 			'default' => 'default',
 		];
 		$this->form_fields['cc_field_cvc2_width'] = [
 			'title'   => __( 'Width', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '30px',
 		];
 		$this->form_fields['cc_field_cvc2_height'] = [
 			'title'   => __( 'Height', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '20px',
 		];
 		$this->form_fields['cc_field_cvc2_style'] = [
 			'title'   => __( 'Style', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'no_display',
 			'options' => $style_options,
 			'default' => 'default',
 		];
 		$this->form_fields['cc_field_cvc2_css'] = [
 			'title'   => __( 'CSS', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '',
 		];
 
 		$this->form_fields['cc_field_month_type'] = [
 			'title'   => __( 'Valid month', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'style_input',
 			'options' => $type_options,
 			'default' => 'select',
 		];
 		$this->form_fields['cc_field_month_length'] = [
 			'title'   => __( 'Length', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '20',
 		];
 		$this->form_fields['cc_field_month_maxchars'] = [
 			'title'   => __( 'Max. chars', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '20',
 		];
 		$this->form_fields['cc_field_month_iframe'] = [
 			'title'   => __( 'Iframe', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'no_display',
 			'options' => $iframe_options,
 			'default' => 'default',
 		];
 		$this->form_fields['cc_field_month_width'] = [
 			'title'   => __( 'Width', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '20px',
 		];
 		$this->form_fields['cc_field_month_height'] = [
 			'title'   => __( 'Height', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '20px',
 		];
 		$this->form_fields['cc_field_month_style'] = [
 			'title'   => __( 'Style', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'no_display',
 			'options' => $style_options,
 			'default' => 'default',
 		];
 		$this->form_fields['cc_field_month_css'] = [
 			'title'   => __( 'CSS', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '',
 		];
 
 		$this->form_fields['cc_field_year_type'] = [
 			'title'   => __( 'Valid year', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'style_input',
 			'options' => $type_options,
 			'default' => 'select',
 		];
 		$this->form_fields['cc_field_year_length'] = [
 			'title'   => __( 'Length', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '20',
 		];
 		$this->form_fields['cc_field_year_maxchars'] = [
 			'title'   => __( 'Max. chars', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '20',
 		];
 		$this->form_fields['cc_field_year_iframe'] = [
 			'title'   => __( 'Iframe', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'no_display',
 			'options' => $iframe_options,
 			'default' => 'default',
 		];
 		$this->form_fields['cc_field_year_width'] = [
 			'title'   => __( 'Width', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '20px',
 		];
 		$this->form_fields['cc_field_year_height'] = [
 			'title'   => __( 'Height', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '20px',
 		];
 		$this->form_fields['cc_field_year_style'] = [
 			'title'   => __( 'Style', 'payone-woocommerce-3' ),
-			'type'    => 'select',
+			'type'    => 'no_display',
 			'options' => $style_options,
 			'default' => 'default',
 		];
 		$this->form_fields['cc_field_year_css'] = [
 			'title'   => __( 'CSS', 'payone-woocommerce-3' ),
-			'type'    => 'text',
+			'type'    => 'no_display',
 			'default' => '',
+		];
+
+		$this->form_fields['cc_default_style_label'] = [
+			'title' => __( 'Default style', 'payone-woocommerce-3' ),
+			'type'  => 'title',
 		];
 
 		$this->form_fields['cc_default_style_input'] = [
@@ -303,6 +308,12 @@ class CreditCard extends GatewayBase {
 			'type'    => 'text',
 			'default' => '33px',
 		];
+
+		$this->form_fields['cc_error_output_label'] = [
+			'title' => __( 'Error output', 'payone-woocommerce-3' ),
+			'type'  => 'title',
+		];
+
 		$this->form_fields['cc_error_output_active'] = [
 			'title'   => __( 'Error output active', 'payone-woocommerce-3' ),
 			'type'    => 'select',
@@ -335,16 +346,14 @@ class CreditCard extends GatewayBase {
 
 			$checkbox_id = $this->get_field_key($key);
 			$checkbox_name = $checkbox_id . '[]';
-			$out .= '<input type="checkbox" name="'. $checkbox_name . '" id="'. $checkbox_id . '" value="' . $brand_key  . '"'. $checked . '>';
-			$out .= '<label for="' . $checkbox_id . '">' . $brand_label . '</label>';
+			$out .= '<label for="' . $checkbox_id . '">';
+			$out .= '<input type="checkbox" name="'. $checkbox_name . '" id="'. $checkbox_id . '" value="' . esc_attr( $brand_key  ) . '"'. $checked . '>';
+			$out .=  $brand_label . '</label>';
 
 			$text_input_name = 'cc_brand_label_' . $brand_key;
-			#echo $text_input_name .'<br>';
 			$value = $this->get_option( $text_input_name );
-			#echo $value.'<br>';
-			#print_r($this->settings);exit;
 			$text_input_name = $this->plugin_id . $this->id . '_' . $text_input_name;
-			$out .= '<input type="text" name="' . $text_input_name . '" id="' . $text_input_name . '" value="' . esc_attr( $value ). '">';
+			$out .= '<input class="input-text regular-input" type="text" name="' . $text_input_name . '" id="' . $text_input_name . '" value="' . esc_attr( $value ). '">';
 
 			$out .= '</div>';
 		}
@@ -357,6 +366,73 @@ class CreditCard extends GatewayBase {
 
 	public function validate_cc_brands_field( $key, $value  ) {
 		return $this->validate_multiselect_field( $key, (array) $value );
+	}
+
+	public function generate_style_input_html( $key, $data ) {
+		if ( preg_match( '/cc_field_(.*)_/', $key, $matches ) ) {
+			$field = $matches[ 1 ];
+		} else {
+			return '';
+		}
+
+		// Werden für die Übersetzung benötigt
+		$labels = [
+			'cardnumber' => __( 'style.input.label.cardnumber', 'payone-woocommerce-3' ),
+			'cvc2'       => __( 'style.input.label.cvc2', 'payone-woocommerce-3' ),
+			'month'      => __( 'style.input.label.month', 'payone-woocommerce-3' ),
+			'year'       => __( 'style.input.label.year', 'payone-woocommerce-3' ),
+		];
+		$out =  '<tr valign="top">';
+		$out .= '<th scope="row" class="titledesc">';
+		$out .= '<label>' . $labels[ $field ] . '</label>';
+		$out .= '</th><td class="forminp"><table><tr>';
+		$out .= '<th>' . __( 'Type' , 'payone-woocommerce-3' ) . '</th>';
+		$out .= '<th>' . __( 'Length' , 'payone-woocommerce-3' ) . '</th>';
+		$out .= '<th>' . __( 'Max. Chars' , 'payone-woocommerce-3' ) . '</th>';
+		$out .= '</tr><tr>';
+
+		$out .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data ) . '</td>';
+
+		$key = 'cc_field_' . $field . '_length';
+		$data = $this->form_fields[$key];
+		$out .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
+
+		$key = 'cc_field_' . $field . '_maxchars';
+		$data = $this->form_fields[$key];
+		$out .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
+
+		$out .= '</tr><tr><th>' . __( 'Iframe' , 'payone-woocommerce-3' ) . '</th>';
+		$out .= '<th>' . __( 'Width' , 'payone-woocommerce-3' ) . '</th>';
+		$out .= '<th>' . __( 'Height' , 'payone-woocommerce-3' ) . '</th>';
+		$out .= '</tr><tr>';
+
+		$key = 'cc_field_' . $field . '_iframe';
+		$data = $this->form_fields[$key];
+		$out .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data ) . '</td>';
+
+		$key = 'cc_field_' . $field . '_width';
+		$data = $this->form_fields[$key];
+		$out .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
+
+		$key = 'cc_field_' . $field . '_height';
+		$data = $this->form_fields[$key];
+		$out .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
+
+		$out .= '</tr><tr><th>' . __( 'Style' , 'payone-woocommerce-3' ) . '</th>';
+		$out .= '<th>' . __( 'CSS' , 'payone-woocommerce-3' ) . '</th>';
+		$out .= '</tr><tr>';
+
+		$key = 'cc_field_' . $field . '_style';
+		$data = $this->form_fields[$key];
+		$out .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data ) . '</td>';
+
+		$key = 'cc_field_' . $field . '_css';
+		$data = $this->form_fields[$key];
+		$out .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
+
+		$out .= '</tr></table></td></tr>';
+
+		return $out;
 	}
 
 	public function payment_fields() {

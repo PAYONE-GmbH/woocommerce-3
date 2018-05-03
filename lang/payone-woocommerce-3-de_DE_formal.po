@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BS PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2018-04-24 15:13+0200\n"
+"POT-Creation-Date: 2018-05-03 14:02+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -195,6 +195,7 @@ msgid "Address"
 msgstr "Adresse"
 
 #: src/Payone/Admin/Option/AddressChecks.php:37
+#: src/Payone/Gateway/CreditCard.php:389
 msgid "Type"
 msgstr "Typ"
 
@@ -363,7 +364,7 @@ msgstr ""
 
 #: src/Payone/Admin/TransactionLogListTable.php:9
 msgid "Transaction ID"
-msgstr ""
+msgstr "Transaktion ID"
 
 #: src/Payone/Admin/TransactionLogListTable.php:10
 msgid "Order ID"
@@ -371,7 +372,7 @@ msgstr ""
 
 #: src/Payone/Admin/TransactionLogListTable.php:11
 msgid "Transaction action"
-msgstr ""
+msgstr "Transaktion Aktion"
 
 #: src/Payone/Admin/TransactionLogListTable.php:12
 msgid "Sequencenumber"
@@ -393,7 +394,7 @@ msgstr "Passwort"
 msgid "Text"
 msgstr "Text"
 
-#: src/Payone/Gateway/CreditCard.php:29 src/Payone/Gateway/CreditCard.php:292
+#: src/Payone/Gateway/CreditCard.php:29 src/Payone/Gateway/CreditCard.php:297
 msgid "Select"
 msgstr "Auswahl"
 
@@ -471,6 +472,7 @@ msgstr "Kartennummer"
 
 #: src/Payone/Gateway/CreditCard.php:117 src/Payone/Gateway/CreditCard.php:161
 #: src/Payone/Gateway/CreditCard.php:205 src/Payone/Gateway/CreditCard.php:249
+#: src/Payone/Gateway/CreditCard.php:390
 msgid "Length"
 msgstr "Länge"
 
@@ -481,26 +483,31 @@ msgstr "Max. Anzahl Zeichen"
 
 #: src/Payone/Gateway/CreditCard.php:127 src/Payone/Gateway/CreditCard.php:171
 #: src/Payone/Gateway/CreditCard.php:215 src/Payone/Gateway/CreditCard.php:259
+#: src/Payone/Gateway/CreditCard.php:404
 msgid "Iframe"
 msgstr "Iframe"
 
 #: src/Payone/Gateway/CreditCard.php:133 src/Payone/Gateway/CreditCard.php:177
 #: src/Payone/Gateway/CreditCard.php:221 src/Payone/Gateway/CreditCard.php:265
+#: src/Payone/Gateway/CreditCard.php:405
 msgid "Width"
 msgstr "Breite"
 
 #: src/Payone/Gateway/CreditCard.php:138 src/Payone/Gateway/CreditCard.php:182
 #: src/Payone/Gateway/CreditCard.php:226 src/Payone/Gateway/CreditCard.php:270
+#: src/Payone/Gateway/CreditCard.php:406
 msgid "Height"
 msgstr "Höhe"
 
 #: src/Payone/Gateway/CreditCard.php:143 src/Payone/Gateway/CreditCard.php:187
 #: src/Payone/Gateway/CreditCard.php:231 src/Payone/Gateway/CreditCard.php:275
+#: src/Payone/Gateway/CreditCard.php:421
 msgid "Style"
 msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:149 src/Payone/Gateway/CreditCard.php:193
 #: src/Payone/Gateway/CreditCard.php:237 src/Payone/Gateway/CreditCard.php:281
+#: src/Payone/Gateway/CreditCard.php:422
 msgid "CSS"
 msgstr ""
 
@@ -517,50 +524,78 @@ msgid "Valid year"
 msgstr "Gültiges Jahr"
 
 #: src/Payone/Gateway/CreditCard.php:287
+msgid "Default style"
+msgstr "Standard Style"
+
+#: src/Payone/Gateway/CreditCard.php:292
 msgid "Text input"
 msgstr "Textfeld"
 
-#: src/Payone/Gateway/CreditCard.php:297
+#: src/Payone/Gateway/CreditCard.php:302
 msgid "Iframe width"
 msgstr "Iframe Breite"
 
-#: src/Payone/Gateway/CreditCard.php:302
+#: src/Payone/Gateway/CreditCard.php:307
 msgid "Iframe height"
 msgstr "Iframe Höhe"
 
-#: src/Payone/Gateway/CreditCard.php:307 src/Payone/Gateway/CreditCard.php:313
+#: src/Payone/Gateway/CreditCard.php:313
+msgid "Error output"
+msgstr "Fehlerausgabe"
+
+#: src/Payone/Gateway/CreditCard.php:318 src/Payone/Gateway/CreditCard.php:324
 msgid "Error output active"
 msgstr "Fehlerausgabe aktiv"
 
-#: src/Payone/Gateway/CreditCard.php:323
+#: src/Payone/Gateway/CreditCard.php:334
 msgid "Credit card brand"
 msgstr "Kreditkartenfirmen"
 
-#: src/Payone/Gateway/CreditCard.php:378 src/Payone/Gateway/CreditCard.php:386
-#: src/Payone/Gateway/CreditCard.php:407 src/Payone/Gateway/Invoice.php:38
+#: src/Payone/Gateway/CreditCard.php:380
+msgid "style.input.label.cardnumber"
+msgstr "Kartennummer"
+
+#: src/Payone/Gateway/CreditCard.php:381
+msgid "style.input.label.cvc2"
+msgstr "CVC2"
+
+#: src/Payone/Gateway/CreditCard.php:382
+msgid "style.input.label.month"
+msgstr "Monat"
+
+#: src/Payone/Gateway/CreditCard.php:383
+msgid "style.input.label.year"
+msgstr "Jahr"
+
+#: src/Payone/Gateway/CreditCard.php:391
+msgid "Max. Chars"
+msgstr "Max. Anzahl Zeichen"
+
+#: src/Payone/Gateway/CreditCard.php:454 src/Payone/Gateway/CreditCard.php:462
+#: src/Payone/Gateway/CreditCard.php:483 src/Payone/Gateway/Invoice.php:38
 #: src/Payone/Gateway/SepaDirectDebit.php:113 src/Payone/Gateway/Sofort.php:39
 #: src/Payone/Gateway/Sofort.php:47 src/Payone/Gateway/Sofort.php:52
 #: src/Payone/Gateway/Sofort.php:73
 msgid "Payment error: "
 msgstr "Fehler bei Zahlung: "
 
-#: src/Payone/Gateway/CreditCard.php:379 src/Payone/Gateway/Sofort.php:40
+#: src/Payone/Gateway/CreditCard.php:455 src/Payone/Gateway/Sofort.php:40
 msgid "Did not receive \"appointed\" callback"
 msgstr "„Appointed“ callback wurde nicht empfangen"
 
-#: src/Payone/Gateway/CreditCard.php:386
+#: src/Payone/Gateway/CreditCard.php:462
 msgid "3-D Secure returned error"
 msgstr "3-D Secure hat einen Fehler gemeldet"
 
-#: src/Payone/Gateway/CreditCard.php:445
+#: src/Payone/Gateway/CreditCard.php:521
 msgid "Credit card payment is preauthorized."
 msgstr "Kreditkartenzahlung wurde vorautorisiert."
 
-#: src/Payone/Gateway/CreditCard.php:447
+#: src/Payone/Gateway/CreditCard.php:523
 msgid "Credit card payment is authorized and captured."
 msgstr "Kreditkartenzahlung wurde autorisiert und belastet."
 
-#: src/Payone/Gateway/CreditCard.php:468 src/Payone/Gateway/CreditCard.php:471
+#: src/Payone/Gateway/CreditCard.php:544 src/Payone/Gateway/CreditCard.php:547
 #: src/Payone/Gateway/Invoice.php:77 src/Payone/Gateway/PrePayment.php:72
 #: src/Payone/Gateway/SepaDirectDebit.php:184
 #: src/Payone/Gateway/SepaDirectDebit.php:186 src/Payone/Gateway/Sofort.php:134
@@ -568,7 +603,7 @@ msgstr "Kreditkartenzahlung wurde autorisiert und belastet."
 msgid "Payment received."
 msgstr "Zahlung eingegangen."
 
-#: src/Payone/Gateway/CreditCard.php:474
+#: src/Payone/Gateway/CreditCard.php:550
 #: src/Payone/Gateway/SepaDirectDebit.php:189 src/Payone/Gateway/Sofort.php:142
 msgid "Payment failed."
 msgstr "Zahlung fehlgeschlagen."
@@ -740,7 +775,7 @@ msgstr "Island"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:69
 msgid "Ireland"
-msgstr ""
+msgstr "Irland"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:70
 msgid "Italy"
