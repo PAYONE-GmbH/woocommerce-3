@@ -158,7 +158,7 @@ class Log {
 	 *
 	 * @return Log
 	 */
-	public function set_reated_at( $created_at ) {
+	public function set_created_at( $created_at ) {
 		$this->created_at = $created_at;
 
 		return $this;
