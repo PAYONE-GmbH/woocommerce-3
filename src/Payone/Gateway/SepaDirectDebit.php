@@ -118,6 +118,8 @@ class SepaDirectDebit extends GatewayBase {
 
 		$authorization_method = $transaction->get( 'request' );
 		$order->update_meta_data( '_authorization_method', $authorization_method );
+		$order->update_meta_data( '_mandate_identification', $transaction->get( 'mandate_identification' ) );
+		$order->update_meta_data( '_mandate_identification_hash', uniqid( $order_id, true ) );
 		$order->save_meta_data();
 		$order->save();
 
@@ -174,6 +176,14 @@ class SepaDirectDebit extends GatewayBase {
 		$result['date'] = $data;
 
 		echo json_encode($result);
+		exit;
+	}
+
+	public function process_manage_mandate_getfile( $data ) {
+		$mandate_identification_hash = isset ($data[ 'hash' ] ) ? $data[ 'hash' ] : '';
+		$transaction = new \Payone\Transaction\GetFile( $this );
+		$response = $transaction->execute( $mandate_identification_hash );
+
 		exit;
 	}
 

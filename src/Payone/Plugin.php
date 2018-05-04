@@ -86,6 +86,8 @@ class Plugin {
 				return $this->process_callback_after_redirect();
 			} elseif ( $this->is_manage_mandate_callback() ) {
 				return $this->process_manage_mandate_callback();
+			} elseif ( $this->is_manage_mandate_getfile() ) {
+				return $this->process_manage_mandate_getfile();
 			}
 
 			$response = 'ERROR';
@@ -191,6 +193,26 @@ class Plugin {
 		$gateway = self::find_gateway( SepaDirectDebit::GATEWAY_ID );
 
 		return $gateway->process_manage_mandate( $_POST );
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function is_manage_mandate_getfile() {
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'manage-mandate-getfile') {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function process_manage_mandate_getfile() {
+		$gateway = self::find_gateway( SepaDirectDebit::GATEWAY_ID );
+
+		return $gateway->process_manage_mandate_getfile( $_GET );
 	}
 
 	private function debug_payone_callback() {
