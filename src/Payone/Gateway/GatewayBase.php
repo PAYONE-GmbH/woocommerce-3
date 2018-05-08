@@ -111,6 +111,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
 	/**
 	 * @param \WC_Order $order
+	 */
+	public function add_content_to_thankyou_page( \WC_Order $order ) {}
+
+	/**
+	 * @param \WC_Order $order
 	 *
 	 * @return null|\Payone\Payone\Api\Response
 	 */

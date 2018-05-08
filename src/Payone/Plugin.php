@@ -51,6 +51,7 @@ class Plugin {
 
 		add_action( 'woocommerce_after_checkout_form', [ $this, 'add_javascript' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enque_javascript' ] );
+		add_action( 'woocommerce_thankyou', [$this, 'add_content_to_thankyou_page'] );
 	}
 
 	/**
@@ -244,6 +245,14 @@ class Plugin {
 	public function enque_javascript() {
 		if ( is_checkout() ) {
 			wp_enqueue_script( 'payone_hosted', 'https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js' );
+		}
+	}
+
+	public function add_content_to_thankyou_page( $order_id ) {
+		$order = wc_get_order( $order_id );
+		if ( $order ) {
+			$gateway = self::get_gateway_for_order( $order );
+			$gateway->add_content_to_thankyou_page( $order );
 		}
 	}
 
