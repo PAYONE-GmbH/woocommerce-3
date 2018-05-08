@@ -31,4 +31,14 @@ final class RequestTest extends TestCase {
 		$this->assertEquals( 'https://secure.pay1.de/3ds/redirect.php?md=20954722&txid=262491170', $response->get( 'redirecturl' ) );
 		$this->assertEquals( '262491170', $response->get( 'txid' ) );
 	}
+
+	public function testCreateGetfileResponse() {
+		$request = new \Payone\Payone\Api\Request();
+
+		$pdfData = "%PDF-1.5\n.SOME-DATA..\n%%EOF";
+		$response = $request->create_response($pdfData);
+
+		$this->assertEquals( 'OK', $response->get( 'status' ) );
+		$this->assertEquals( $pdfData, $response->get( '_DATA' ) );
+	}
 }

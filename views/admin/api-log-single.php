@@ -11,8 +11,8 @@
         <tbody>
             <?php foreach ($entry->get_request()->get_all() as $key => $value) { ?>
                 <tr>
-                    <td><?php echo $key; ?></td>
-                    <td><?php echo $value; ?></td>
+                    <td><?php echo esc_html( $key ); ?></td>
+                    <td><?php echo esc_html( $value ); ?></td>
                 </tr>
             <?php } ?>
         </tbody>
@@ -27,9 +27,12 @@
         </thead>
         <tbody>
 		<?php foreach ($entry->get_response()->get_all() as $key => $value) { ?>
+            <?php if ( $key === '_DATA' ) {
+                $value = substr( $value, 0, 50 ) . ' [...]';
+            } ?>
             <tr>
-                <td><?php echo $key; ?></td>
-                <td><?php echo $value; ?></td>
+                <td><?php echo esc_html( $key ); ?></td>
+                <td><?php echo esc_html( $value ); ?></td>
             </tr>
 		<?php } ?>
         </tbody>

@@ -184,6 +184,9 @@ class SepaDirectDebit extends GatewayBase {
 		$transaction = new \Payone\Transaction\GetFile( $this );
 		$response = $transaction->execute( $mandate_identification_hash );
 
+		header("Content-type:application/pdf");
+		header("Content-Disposition:attachment;filename=SEPA-Lastschriftmandat.pdf");
+		echo utf8_decode( $response->get( '_DATA' ) );
 		exit;
 	}
 

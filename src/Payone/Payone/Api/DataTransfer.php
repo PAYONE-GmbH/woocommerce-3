@@ -74,6 +74,17 @@ class DataTransfer {
 
 	/**
 	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	public function remove( $key ) {
+		unset( $this->parameter_bag[ $key ] );
+
+		return $this;
+	}
+
+	/**
+	 * @param string $key
 	 * @param null $default
 	 *
 	 * @return mixed|null
@@ -84,6 +95,15 @@ class DataTransfer {
 		}
 
 		return $default;
+	}
+
+	/**
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	public function has( $key ) {
+		return array_key_exists( $key, $this->parameter_bag );
 	}
 
 	/**
@@ -118,6 +138,15 @@ class DataTransfer {
 	}
 
 	public function get_serialized_parameters() {
+		if ( $this->has( '_DATA' ) ) {
+			// Der Wert wird sonst zu lang, um im api_log abgespeichert zu werden. Und es muss auch nicht ein ganzes
+			// PDF im Logfile landen.
+			$parameter_bag = $this->parameter_bag;
+			$parameter_bag[ '_DATA' ] = substr( $parameter_bag[ '_DATA' ], 0, 200 );
+
+			return json_encode( $parameter_bag );
+		}
+
 		return json_encode( $this->parameter_bag );
 	}
 

@@ -10,6 +10,7 @@ class GetFile extends Base {
 	public function __construct( $gateway ) {
 		parent::__construct( 'getfile' );
 		$this->set_data_from_gateway( $gateway );
+		$this->remove( 'aid' ); // Der Request darf diesen Parameter nicht enthalten
 		$this->set( 'file_type', 'SEPA_MANDATE' );
 		$this->set( 'file_format', 'PDF' );
 	}

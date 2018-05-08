@@ -205,14 +205,20 @@ class Request extends DataTransfer {
 	 */
 	public function create_response( $result ) {
 		$response = new Response();
-		$lines    = explode( "\n", $result );
-		foreach ( $lines as $line ) {
-			$equal_sign = strpos( $line, '=' );
-			$key        = substr( $line, 0, $equal_sign );
-			$value      = substr( $line, $equal_sign + 1 );
 
-			if ( $key ) {
-				$response->set( $key, $value );
+		if ( stripos( $result, '%PDF' ) === 0 ) {
+			$response->set( 'status', 'OK' );
+			$response->set( '_DATA', utf8_encode( $result ) );
+		} else {
+			$lines = explode( "\n", $result );
+			foreach ( $lines as $line ) {
+				$equal_sign = strpos( $line, '=' );
+				$key        = substr( $line, 0, $equal_sign );
+				$value      = substr( $line, $equal_sign + 1 );
+
+				if ( $key ) {
+					$response->set( $key, $value );
+				}
 			}
 		}
 
