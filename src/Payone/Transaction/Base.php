@@ -36,7 +36,7 @@ class Base extends Request {
 			->set_key( $gateway->get_key() );
 	}
 
-	public function setPersonalDataFromOrder( \WC_Order $order ) {
+	public function set_personal_data_from_order( \WC_Order $order ) {
 		$this->set( 'lastname', $order->get_billing_last_name() );
 		$this->set( 'firstname', $order->get_billing_first_name() );
 		$this->set( 'street', $order->get_billing_address_1() );

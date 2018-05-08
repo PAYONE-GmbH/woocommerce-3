@@ -25,7 +25,7 @@ class CreditCard extends Base {
 		$this->set( 'reference', $order->get_id() );
 		$this->set( 'amount', $order->get_total() * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
-		$this->setPersonalDataFromOrder( $order );
+		$this->set_personal_data_from_order( $order );
 		$this->set( 'successurl', Plugin::get_callback_url('success') . '&oid=' . $order->get_id() );
 		$this->set( 'errorurl', Plugin::get_callback_url('error') . '&oid=' . $order->get_id() );
 		$this->set( 'backurl', Plugin::get_callback_url('back') . '&oid=' . $order->get_id() );
