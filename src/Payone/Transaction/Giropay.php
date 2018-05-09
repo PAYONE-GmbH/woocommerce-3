@@ -4,7 +4,7 @@ namespace Payone\Transaction;
 
 use Payone\Plugin;
 
-class Sofort extends Base {
+class Giropay extends Base {
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
 	 */
@@ -13,9 +13,9 @@ class Sofort extends Base {
 		$this->set_data_from_gateway( $gateway );
 
 		$this->set( 'clearingtype', 'sb' );
-		$this->set( 'onlinebanktransfertype', 'PNT' );
-		$this->set( 'iban', isset( $_POST['sofort_iban'] ) ? $_POST['sofort_iban'] : '' );
-		$this->set( 'bic', isset( $_POST['sofort_bic'] ) ? $_POST['sofort_bic'] : '' );
+		$this->set( 'onlinebanktransfertype', 'GPY' );
+		$this->set( 'iban', isset( $_POST['giropay_iban'] ) ? $_POST['giropay_iban'] : '' );
+		$this->set( 'bic', isset( $_POST['giropay_bic'] ) ? $_POST['giropay_bic'] : '' );
 		$this->set( 'bankcountry', 'DE' ); // @todo Richtiges Land bestimmen
 	}
 

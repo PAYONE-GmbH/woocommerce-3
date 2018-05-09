@@ -4,26 +4,26 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
 
-class Sofort extends GatewayBase {
-	const GATEWAY_ID = 'bs_payone_sofort';
+class Giropay extends GatewayBase {
+	const GATEWAY_ID = 'bs_payone_giropay';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
 		$this->icon               = '';
-		$this->method_title       = 'Payone Sofortüberweisung';
+		$this->method_title       = 'Payone Giropay';
 		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'SOFORT.com', 'payone-woocommerce-3' ) );
+		$this->init_common_form_fields( __( 'Giropay', 'payone-woocommerce-3' ) );
 	}
 
 	public function payment_fields() {
-		include PAYONE_VIEW_PATH . '/gateway/sofort/payment-form.php';
+		include PAYONE_VIEW_PATH . '/gateway/giropay/payment-form.php';
 	}
 
-	// @todo Der Ablauf ist hier tatsächlich (bis auf die Texte) identisch zur Kreditkarte und Giropay
+	// @todo Der Ablauf ist hier tatsächlich (bis auf die Texte) identisch zur Kreditkarte und zu SOFORT.com
 	public function process_payment( $order_id ) {
 		$order = new \WC_Order( $order_id );
 
@@ -41,7 +41,7 @@ class Sofort extends GatewayBase {
 		} elseif ( $this->is_redirect( 'error' ) ) {
 			$make_redirect = true;
 			$is_success = false;
-			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'SOFORT.com returned error',
+			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Giropay returned error',
 					'payone-woocommerce-3' ), 'error' );
 		} elseif ( $this->is_redirect( 'back' ) ) {
 			$make_redirect = true;
@@ -49,7 +49,7 @@ class Sofort extends GatewayBase {
 			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Payment was canceled by user',
 					'payone-woocommerce-3' ), 'error' );
 		} else {
-			$transaction = new \Payone\Transaction\Sofort( $this );
+			$transaction = new \Payone\Transaction\Giropay( $this );
 			$response    = $transaction->execute( $order );
 
 			$order->set_transaction_id( $response->get( 'txid' ) );
@@ -105,9 +105,9 @@ class Sofort extends GatewayBase {
 		$authorization_method = $order->get_meta( '_authorization_method' );
 
 		if ( $authorization_method === 'preauthorization' ) {
-			$order->update_status( 'on-hold', __( 'SOFORT.com payment is preauthorized.', 'woocommerce' ) );
+			$order->update_status( 'on-hold', __( 'Giropay payment is preauthorized.', 'woocommerce' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
-			$order->add_order_note( __( 'SOFORT.com payment is authorized and captured.', 'woocommerce' ) );
+			$order->add_order_note( __( 'Giropay payment is authorized and captured.', 'woocommerce' ) );
 			$order->payment_complete();
 		}
 

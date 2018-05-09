@@ -5,7 +5,6 @@ namespace Payone;
 use Payone\Database\Migration;
 use Payone\Gateway\GatewayBase;
 use Payone\Gateway\SepaDirectDebit;
-use Payone\Gateway\Sofort;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
 
@@ -39,6 +38,10 @@ class Plugin {
 			\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
 			\Payone\Gateway\Sofort::GATEWAY_ID          => \Payone\Gateway\Sofort::class,
 		];
+
+		if ( defined( 'PAYONE_DEV_MODE' ) && PAYONE_DEV_MODE ) {
+			$gateways[ \Payone\Gateway\Giropay::GATEWAY_ID ]	= \Payone\Gateway\Giropay::class;
+		}
 
 		foreach ( $gateways as $gateway ) {
 			add_filter( 'woocommerce_payment_gateways', [ $gateway, 'add' ] );
