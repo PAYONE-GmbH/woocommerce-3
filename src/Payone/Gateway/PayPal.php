@@ -105,9 +105,9 @@ class PayPal extends GatewayBase {
 		$authorization_method = $order->get_meta( '_authorization_method' );
 
 		if ( $authorization_method === 'preauthorization' ) {
-			$order->update_status( 'on-hold', __( 'SOFORT.com payment is preauthorized.', 'woocommerce' ) );
+			$order->update_status( 'on-hold', __( 'PayPal payment is preauthorized.', 'woocommerce' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
-			$order->add_order_note( __( 'SOFORT.com payment is authorized and captured.', 'woocommerce' ) );
+			$order->add_order_note( __( 'PayPal payment is authorized and captured.', 'woocommerce' ) );
 			$order->payment_complete();
 		}
 
