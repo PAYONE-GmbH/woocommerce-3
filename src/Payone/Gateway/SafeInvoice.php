@@ -4,32 +4,32 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
 
-class Invoice extends GatewayBase {
-	const GATEWAY_ID = 'bs_payone_invoice';
+class SafeInvoice extends GatewayBase {
+	const GATEWAY_ID = 'bs_payone_safeinvoice';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
 		$this->icon               = '';
-		$this->method_title       = 'Payone ' . __( 'Invoice', 'payone-woocommerce-3' );
+		$this->method_title       = 'Payone ' . __( 'Safe Invoice', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Invoice', 'payone-woocommerce-3' ) );
+		$this->init_common_form_fields( __( 'Safe Invoice', 'payone-woocommerce-3' ) );
 	}
 
 	public function payment_fields() {
 		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 
-		include PAYONE_VIEW_PATH . '/gateway/invoice/payment-form.php';
+		include PAYONE_VIEW_PATH . '/gateway/safe-invoice/payment-form.php';
 	}
 
 	public function process_payment( $order_id ) {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-		$transaction = new \Payone\Transaction\Invoice( $this );
+		$transaction = new \Payone\Transaction\SafeInvoice( $this );
 		$response    = $transaction->execute( $order );
 
 		if ( $response->has_error() ) {

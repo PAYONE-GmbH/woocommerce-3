@@ -11,7 +11,7 @@ class PrePayment extends GatewayBase {
 		parent::__construct(self::GATEWAY_ID);
 
 		$this->icon               = '';
-		$this->method_title       = 'Payone Vorkasse';
+		$this->method_title       = 'Payone ' . __( 'Prepayment', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 

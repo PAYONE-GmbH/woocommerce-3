@@ -11,7 +11,7 @@ class Sofort extends GatewayBase {
 		parent::__construct( self::GATEWAY_ID );
 
 		$this->icon               = '';
-		$this->method_title       = 'Payone Sofortüberweisung';
+		$this->method_title       = 'Payone ' . __( 'SOFORT.com', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 

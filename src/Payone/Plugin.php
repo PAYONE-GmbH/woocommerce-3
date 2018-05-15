@@ -40,7 +40,9 @@ class Plugin {
 		];
 
 		if ( defined( 'PAYONE_DEV_MODE' ) && PAYONE_DEV_MODE ) {
-			$gateways[ \Payone\Gateway\Giropay::GATEWAY_ID ]	= \Payone\Gateway\Giropay::class;
+			$gateways[ \Payone\Gateway\Giropay::GATEWAY_ID ]	 = \Payone\Gateway\Giropay::class;
+			$gateways[ \Payone\Gateway\SafeInvoice::GATEWAY_ID ] = \Payone\Gateway\SafeInvoice::class;
+			$gateways[ \Payone\Gateway\PayPal::GATEWAY_ID ]      = \Payone\Gateway\PayPal::class;
 		}
 
 		foreach ( $gateways as $gateway ) {

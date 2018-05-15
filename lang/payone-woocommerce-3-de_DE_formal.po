@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BS PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2018-05-03 16:09+0200\n"
+"POT-Creation-Date: 2018-05-15 13:00+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -38,14 +38,14 @@ msgstr "Modus"
 
 #: src/Payone/Admin/ApiLogListTable.php:12
 msgid "Merchant-ID"
-msgstr ""
+msgstr "Merchant-ID"
 
 #: src/Payone/Admin/ApiLogListTable.php:13
 #: src/Payone/Admin/Option/Account.php:27
 #: src/Payone/Admin/TransactionLogListTable.php:14
-#: src/Payone/Gateway/GatewayBase.php:239
+#: src/Payone/Gateway/GatewayBase.php:244
 msgid "Portal ID"
-msgstr ""
+msgstr "Portal ID"
 
 #: src/Payone/Admin/ApiLogListTable.php:14
 #: src/Payone/Admin/TransactionLogListTable.php:15
@@ -57,16 +57,16 @@ msgid "Global Settings"
 msgstr "Globale Einstellungen"
 
 #: src/Payone/Admin/Option/Account.php:22
-#: src/Payone/Gateway/GatewayBase.php:234
+#: src/Payone/Gateway/GatewayBase.php:239
 msgid "Merchant ID"
-msgstr ""
+msgstr "Merchant ID"
 
 #: src/Payone/Admin/Option/Account.php:32
 msgid "Subaccount ID"
-msgstr ""
+msgstr "Subaccount ID"
 
 #: src/Payone/Admin/Option/Account.php:37
-#: src/Payone/Gateway/GatewayBase.php:249
+#: src/Payone/Gateway/GatewayBase.php:254
 msgid "Key"
 msgstr "Schlüssel"
 
@@ -77,27 +77,27 @@ msgid "Mode"
 msgstr "Modus"
 
 #: src/Payone/Admin/Option/Account.php:47
-#: src/Payone/Gateway/GatewayBase.php:254
+#: src/Payone/Gateway/GatewayBase.php:259
 msgid "Submit cart"
 msgstr "Warenkorb übermitteln"
 
 #: src/Payone/Admin/Option/Account.php:52
-#: src/Payone/Gateway/GatewayBase.php:263
+#: src/Payone/Gateway/GatewayBase.php:268
 msgid "Activate PDF download"
 msgstr "PDF-Download aktivieren"
 
 #: src/Payone/Admin/Option/Account.php:57
-#: src/Payone/Gateway/GatewayBase.php:272
+#: src/Payone/Gateway/GatewayBase.php:277
 msgid "Dynamic invoice text"
 msgstr "Dynamischer Rechnungstext"
 
 #: src/Payone/Admin/Option/Account.php:62
-#: src/Payone/Gateway/GatewayBase.php:277
+#: src/Payone/Gateway/GatewayBase.php:282
 msgid "Dynamic refund text"
 msgstr "Dynamischer Rückerstattungstext"
 
 #: src/Payone/Admin/Option/Account.php:67
-#: src/Payone/Gateway/GatewayBase.php:282
+#: src/Payone/Gateway/GatewayBase.php:287
 msgid "Text on booking statement"
 msgstr "Text auf Buchungsbeleg"
 
@@ -132,11 +132,11 @@ msgstr "Live"
 #: src/Payone/Admin/Option/AddressChecks.php:108
 #: src/Payone/Admin/Option/AddressChecks.php:156
 #: src/Payone/Admin/Option/CreditCheck.php:103
-#: src/Payone/Gateway/CreditCard.php:22 src/Payone/Gateway/GatewayBase.php:228
-#: src/Payone/Gateway/GatewayBase.php:257
-#: src/Payone/Gateway/GatewayBase.php:266
-#: src/Payone/Gateway/SepaDirectDebit.php:34
-#: src/Payone/Gateway/SepaDirectDebit.php:43
+#: src/Payone/Gateway/CreditCard.php:22 src/Payone/Gateway/GatewayBase.php:233
+#: src/Payone/Gateway/GatewayBase.php:262
+#: src/Payone/Gateway/GatewayBase.php:271
+#: src/Payone/Gateway/SepaDirectDebit.php:35
+#: src/Payone/Gateway/SepaDirectDebit.php:44
 msgid "No"
 msgstr "Nein"
 
@@ -145,23 +145,23 @@ msgstr "Nein"
 #: src/Payone/Admin/Option/AddressChecks.php:109
 #: src/Payone/Admin/Option/AddressChecks.php:157
 #: src/Payone/Admin/Option/CreditCheck.php:104
-#: src/Payone/Gateway/CreditCard.php:23 src/Payone/Gateway/GatewayBase.php:229
-#: src/Payone/Gateway/GatewayBase.php:258
-#: src/Payone/Gateway/GatewayBase.php:267
-#: src/Payone/Gateway/SepaDirectDebit.php:35
-#: src/Payone/Gateway/SepaDirectDebit.php:44
+#: src/Payone/Gateway/CreditCard.php:23 src/Payone/Gateway/GatewayBase.php:234
+#: src/Payone/Gateway/GatewayBase.php:263
+#: src/Payone/Gateway/GatewayBase.php:272
+#: src/Payone/Gateway/SepaDirectDebit.php:36
+#: src/Payone/Gateway/SepaDirectDebit.php:45
 msgid "Yes"
 msgstr "Ja"
 
 #: src/Payone/Admin/Option/Account.php:153
 #: src/Payone/Admin/Option/Account.php:161
-#: src/Payone/Gateway/GatewayBase.php:274
+#: src/Payone/Gateway/GatewayBase.php:279
 msgid "Your order No. {{order}}"
 msgstr "Ihre Bestellung Nr. {{order}}"
 
 #: src/Payone/Admin/Option/Account.php:157
-#: src/Payone/Gateway/GatewayBase.php:279
 #: src/Payone/Gateway/GatewayBase.php:284
+#: src/Payone/Gateway/GatewayBase.php:289
 msgid "Your refund No. {{order}}"
 msgstr "Ihre Rückerstattung No. {{order}}"
 
@@ -244,7 +244,7 @@ msgid "Delivery address"
 msgstr "Lieferadresse"
 
 #: src/Payone/Admin/Option/AddressChecks.php:135
-#: src/Payone/Gateway/SepaDirectDebit.php:24
+#: src/Payone/Gateway/SepaDirectDebit.php:25
 msgid "Basic"
 msgstr ""
 
@@ -254,22 +254,22 @@ msgstr "Person (nur in Deutschland verfügbar)"
 
 #: src/Payone/Admin/Option/AddressChecks.php:144
 #: src/Payone/Admin/Option/CreditCheck.php:121
-#: src/Payone/Gateway/GatewayBase.php:218
-#: src/Payone/Gateway/SepaDirectDebit.php:63
+#: src/Payone/Gateway/GatewayBase.php:223
+#: src/Payone/Gateway/SepaDirectDebit.php:64
 msgid "Germany"
 msgstr "Deutschland"
 
 #: src/Payone/Admin/Option/AddressChecks.php:145
 #: src/Payone/Admin/Option/CreditCheck.php:122
-#: src/Payone/Gateway/GatewayBase.php:219
-#: src/Payone/Gateway/SepaDirectDebit.php:52
+#: src/Payone/Gateway/GatewayBase.php:224
+#: src/Payone/Gateway/SepaDirectDebit.php:53
 msgid "Austria"
 msgstr "Österreich"
 
 #: src/Payone/Admin/Option/AddressChecks.php:146
 #: src/Payone/Admin/Option/CreditCheck.php:123
-#: src/Payone/Gateway/GatewayBase.php:220
-#: src/Payone/Gateway/SepaDirectDebit.php:92
+#: src/Payone/Gateway/GatewayBase.php:225
+#: src/Payone/Gateway/SepaDirectDebit.php:93
 msgid "Switzerland"
 msgstr "Schweiz"
 
@@ -378,7 +378,7 @@ msgstr "Transaktion Aktion"
 msgid "Sequencenumber"
 msgstr "Sequenznummer"
 
-#: src/Payone/Gateway/CreditCard.php:19
+#: src/Payone/Gateway/CreditCard.php:14 src/Payone/Gateway/CreditCard.php:19
 msgid "Creditcard"
 msgstr "Kreditkarte"
 
@@ -572,14 +572,20 @@ msgid "Max. Chars"
 msgstr "Max. Anzahl Zeichen"
 
 #: src/Payone/Gateway/CreditCard.php:454 src/Payone/Gateway/CreditCard.php:462
-#: src/Payone/Gateway/CreditCard.php:483 src/Payone/Gateway/Invoice.php:36
-#: src/Payone/Gateway/SepaDirectDebit.php:113 src/Payone/Gateway/Sofort.php:39
-#: src/Payone/Gateway/Sofort.php:47 src/Payone/Gateway/Sofort.php:52
-#: src/Payone/Gateway/Sofort.php:73
+#: src/Payone/Gateway/CreditCard.php:483 src/Payone/Gateway/Giropay.php:36
+#: src/Payone/Gateway/Giropay.php:44 src/Payone/Gateway/Giropay.php:49
+#: src/Payone/Gateway/Giropay.php:70 src/Payone/Gateway/Invoice.php:36
+#: src/Payone/Gateway/PayPal.php:36 src/Payone/Gateway/PayPal.php:44
+#: src/Payone/Gateway/PayPal.php:49 src/Payone/Gateway/PayPal.php:70
+#: src/Payone/Gateway/SafeInvoice.php:36
+#: src/Payone/Gateway/SepaDirectDebit.php:114 src/Payone/Gateway/Sofort.php:36
+#: src/Payone/Gateway/Sofort.php:44 src/Payone/Gateway/Sofort.php:49
+#: src/Payone/Gateway/Sofort.php:70
 msgid "Payment error: "
 msgstr "Fehler bei Zahlung: "
 
-#: src/Payone/Gateway/CreditCard.php:455 src/Payone/Gateway/Sofort.php:40
+#: src/Payone/Gateway/CreditCard.php:455 src/Payone/Gateway/Giropay.php:37
+#: src/Payone/Gateway/PayPal.php:37 src/Payone/Gateway/Sofort.php:37
 msgid "Did not receive \"appointed\" callback"
 msgstr "„Appointed“ callback wurde nicht empfangen"
 
@@ -596,334 +602,372 @@ msgid "Credit card payment is authorized and captured."
 msgstr "Kreditkartenzahlung wurde autorisiert und belastet."
 
 #: src/Payone/Gateway/CreditCard.php:544 src/Payone/Gateway/CreditCard.php:547
-#: src/Payone/Gateway/Invoice.php:76 src/Payone/Gateway/PrePayment.php:68
-#: src/Payone/Gateway/SepaDirectDebit.php:189
-#: src/Payone/Gateway/SepaDirectDebit.php:191 src/Payone/Gateway/Sofort.php:134
-#: src/Payone/Gateway/Sofort.php:137
+#: src/Payone/Gateway/Giropay.php:131 src/Payone/Gateway/Giropay.php:134
+#: src/Payone/Gateway/Invoice.php:76 src/Payone/Gateway/PayPal.php:131
+#: src/Payone/Gateway/PayPal.php:134 src/Payone/Gateway/PrePayment.php:68
+#: src/Payone/Gateway/SafeInvoice.php:76
+#: src/Payone/Gateway/SepaDirectDebit.php:216
+#: src/Payone/Gateway/SepaDirectDebit.php:218 src/Payone/Gateway/Sofort.php:131
+#: src/Payone/Gateway/Sofort.php:134
 msgid "Payment received."
 msgstr "Zahlung eingegangen."
 
-#: src/Payone/Gateway/CreditCard.php:550
-#: src/Payone/Gateway/SepaDirectDebit.php:194 src/Payone/Gateway/Sofort.php:142
+#: src/Payone/Gateway/CreditCard.php:550 src/Payone/Gateway/Giropay.php:139
+#: src/Payone/Gateway/PayPal.php:139 src/Payone/Gateway/SepaDirectDebit.php:221
+#: src/Payone/Gateway/Sofort.php:139
 msgid "Payment failed."
 msgstr "Zahlung fehlgeschlagen."
 
-#: src/Payone/Gateway/GatewayBase.php:178
+#: src/Payone/Gateway/GatewayBase.php:183
 msgid "Enable/Disable"
 msgstr "Aktivieren/Deaktivieren"
 
-#: src/Payone/Gateway/GatewayBase.php:180
+#: src/Payone/Gateway/GatewayBase.php:185
 msgid "Enable this payment method"
 msgstr "Diese Zahlungsmethode aktivieren"
 
-#: src/Payone/Gateway/GatewayBase.php:184
+#: src/Payone/Gateway/GatewayBase.php:189
 msgid "Title"
 msgstr "Titel"
 
-#: src/Payone/Gateway/GatewayBase.php:186
+#: src/Payone/Gateway/GatewayBase.php:191
 msgid "This controls the title which the user sees during checkout."
 msgstr "Dieser Text wird dem Kunden während des Bezahlvorganges angezeigt."
 
-#: src/Payone/Gateway/GatewayBase.php:191
+#: src/Payone/Gateway/GatewayBase.php:196
 msgid "Customer Message"
 msgstr "Kundennachricht"
 
-#: src/Payone/Gateway/GatewayBase.php:196
+#: src/Payone/Gateway/GatewayBase.php:201
 msgid "Minimum order value"
 msgstr "Minimaler Wert der Bestellung"
 
-#: src/Payone/Gateway/GatewayBase.php:201
+#: src/Payone/Gateway/GatewayBase.php:206
 msgid "Maximum order value"
 msgstr "Maximaler Wert der Bestellung"
 
-#: src/Payone/Gateway/GatewayBase.php:206
+#: src/Payone/Gateway/GatewayBase.php:211
 msgid "Method of Authorization"
 msgstr "Methode der Autorisierung"
 
-#: src/Payone/Gateway/GatewayBase.php:209
+#: src/Payone/Gateway/GatewayBase.php:214
 msgid "Authorization"
 msgstr "Autorisierung"
 
-#: src/Payone/Gateway/GatewayBase.php:210
+#: src/Payone/Gateway/GatewayBase.php:215
 msgid "Preauthorization"
 msgstr "Vorautorisierung & Belasten"
 
-#: src/Payone/Gateway/GatewayBase.php:215
+#: src/Payone/Gateway/GatewayBase.php:220
 msgid "Active Countries"
 msgstr "Aktive Länder"
 
-#: src/Payone/Gateway/GatewayBase.php:225
+#: src/Payone/Gateway/GatewayBase.php:230
 msgid "Use global settings"
 msgstr "Benutze die globalen Einstellungen"
 
-#: src/Payone/Gateway/GatewayBase.php:244
+#: src/Payone/Gateway/GatewayBase.php:249
 msgid "Account ID"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:493
+#: src/Payone/Gateway/GatewayBase.php:498
+#: views/gateway/giropay/payment-form.php:7
 #: views/gateway/sepa-direct-debit/payment-form.php:7
 #: views/gateway/sofort/payment-form.php:7
 msgid "IBAN"
 msgstr "IBAN"
 
-#: src/Payone/Gateway/GatewayBase.php:495
+#: src/Payone/Gateway/GatewayBase.php:500
+#: views/gateway/giropay/payment-form.php:11
 #: views/gateway/sepa-direct-debit/payment-form.php:11
 #: views/gateway/sofort/payment-form.php:11
 msgid "BIC"
 msgstr "BIC"
 
-#: src/Payone/Gateway/GatewayBase.php:497
+#: src/Payone/Gateway/GatewayBase.php:502
 msgid "pp.bankaccount"
 msgstr "Kontonummer"
 
-#: src/Payone/Gateway/GatewayBase.php:499
+#: src/Payone/Gateway/GatewayBase.php:504
 msgid "pp.bankaccountholder"
 msgstr "Zahlungsempfänger"
 
-#: src/Payone/Gateway/GatewayBase.php:501
+#: src/Payone/Gateway/GatewayBase.php:506
 msgid "pp.reference"
 msgstr "Verwendungszweck"
 
-#: src/Payone/Gateway/GatewayBase.php:503
+#: src/Payone/Gateway/GatewayBase.php:508
 msgid "pp.bankname"
 msgstr "Bank"
 
-#: src/Payone/Gateway/Invoice.php:19
+#: src/Payone/Gateway/Giropay.php:14 src/Payone/Gateway/Giropay.php:19
+msgid "Giropay"
+msgstr "Giropay"
+
+#: src/Payone/Gateway/Giropay.php:44
+msgid "Giropay returned error"
+msgstr "Giropay hat einen Fehler gemeldet"
+
+#: src/Payone/Gateway/Giropay.php:49 src/Payone/Gateway/PayPal.php:49
+#: src/Payone/Gateway/Sofort.php:49
+msgid "Payment was canceled by user"
+msgstr "Zahlung wurde vom Kunden abgebrochen"
+
+#: src/Payone/Gateway/Giropay.php:108
+msgid "Giropay payment is preauthorized."
+msgstr "Giropay wurde vorautorisiert."
+
+#: src/Payone/Gateway/Giropay.php:110
+msgid "Giropay payment is authorized and captured."
+msgstr "Giropay wurde autorisiert und belastet."
+
+#: src/Payone/Gateway/Invoice.php:14 src/Payone/Gateway/Invoice.php:19
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: src/Payone/Gateway/Invoice.php:47
+#: src/Payone/Gateway/Invoice.php:47 src/Payone/Gateway/SafeInvoice.php:47
 msgid "Invoice has been sent"
 msgstr "Rechnung wurde verschickt"
 
 #: src/Payone/Gateway/Invoice.php:71 src/Payone/Gateway/PrePayment.php:63
+#: src/Payone/Gateway/SafeInvoice.php:71
 msgid "Payment received. Customer overpaid!"
 msgstr "Bezahlung eingegangen. Kunde hat zu viel gezahlt!"
 
 #: src/Payone/Gateway/Invoice.php:74 src/Payone/Gateway/PrePayment.php:66
+#: src/Payone/Gateway/SafeInvoice.php:74
 msgid "Payment received. Customer underpaid!"
 msgstr "Bezahlung eingegangen. Kunde hat zu wenig gezahlt!"
 
-#: src/Payone/Gateway/PrePayment.php:19
+#: src/Payone/Gateway/PayPal.php:14 src/Payone/Gateway/PayPal.php:19
+msgid "PayPal"
+msgstr "PayPal"
+
+#: src/Payone/Gateway/PayPal.php:44
+msgid "PayPal returned error"
+msgstr "PayPal hat einen Fehler gemeldet"
+
+#: src/Payone/Gateway/PayPal.php:108 src/Payone/Gateway/Sofort.php:108
+msgid "SOFORT.com payment is preauthorized."
+msgstr "Zahlung über SOFORT.com wurde vorautorisiert."
+
+#: src/Payone/Gateway/PayPal.php:110 src/Payone/Gateway/Sofort.php:110
+msgid "SOFORT.com payment is authorized and captured."
+msgstr "Zahlung über SOFORT.com wurde autorisiert und belastet."
+
+#: src/Payone/Gateway/PrePayment.php:14 src/Payone/Gateway/PrePayment.php:19
 msgid "Prepayment"
 msgstr "Vorkasse"
 
 #: src/Payone/Gateway/PrePayment.php:41
-#: src/Payone/Gateway/SepaDirectDebit.php:125
+#: src/Payone/Gateway/SepaDirectDebit.php:128
 msgid "Waiting for payment."
 msgstr "Auf Zahlung warten."
 
-#: src/Payone/Gateway/SepaDirectDebit.php:19
+#: src/Payone/Gateway/SafeInvoice.php:14 src/Payone/Gateway/SafeInvoice.php:19
+msgid "Safe Invoice"
+msgstr "Sichere Rechnung"
+
+#: src/Payone/Gateway/SepaDirectDebit.php:15
+#: src/Payone/Gateway/SepaDirectDebit.php:20
 msgid "SEPA Direct Debit"
 msgstr "SEPA Abbuchung"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:21
+#: src/Payone/Gateway/SepaDirectDebit.php:22
 msgid "Check bank data"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:25
+#: src/Payone/Gateway/SepaDirectDebit.php:26
 msgid "Check POS black list"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:26
+#: src/Payone/Gateway/SepaDirectDebit.php:27
 msgid "None (only possible if PAYONE Mandate Management is inactive)"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:31
+#: src/Payone/Gateway/SepaDirectDebit.php:32
 msgid "Use PAYONE Mandate Management"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:40
+#: src/Payone/Gateway/SepaDirectDebit.php:41
 msgid "Download mandate as PDF"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:49
+#: src/Payone/Gateway/SepaDirectDebit.php:50
 msgid "List of supported bank countries"
 msgstr "Liste der unterstützen Banken"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:53
+#: src/Payone/Gateway/SepaDirectDebit.php:54
 msgid "Belgium"
 msgstr "Belgien"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:54
+#: src/Payone/Gateway/SepaDirectDebit.php:55
 msgid "Bulgaria"
 msgstr "Bulgarieb"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:55
+#: src/Payone/Gateway/SepaDirectDebit.php:56
 msgid "Croatia"
 msgstr "Kroatien"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:56
+#: src/Payone/Gateway/SepaDirectDebit.php:57
 msgid "Cyprus"
 msgstr "Zypern"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:57
+#: src/Payone/Gateway/SepaDirectDebit.php:58
 msgid "Czech Republic"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:58
+#: src/Payone/Gateway/SepaDirectDebit.php:59
 msgid "Denmark"
 msgstr "Dänemark"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:59
+#: src/Payone/Gateway/SepaDirectDebit.php:60
 msgid "Estonia"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:60
+#: src/Payone/Gateway/SepaDirectDebit.php:61
 msgid "Finland"
 msgstr "Finnland"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:61
+#: src/Payone/Gateway/SepaDirectDebit.php:62
 msgid "France"
 msgstr "Frankreich"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:62
+#: src/Payone/Gateway/SepaDirectDebit.php:63
 msgid "French Guiana"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:64
-msgid "Gibraltar"
-msgstr ""
-
 #: src/Payone/Gateway/SepaDirectDebit.php:65
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#: src/Payone/Gateway/SepaDirectDebit.php:66
 msgid "Greece"
 msgstr "Griechenland"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:66
+#: src/Payone/Gateway/SepaDirectDebit.php:67
 msgid "Guadeloupe"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:67
+#: src/Payone/Gateway/SepaDirectDebit.php:68
 msgid "Hungary"
 msgstr "Ungarn"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:68
+#: src/Payone/Gateway/SepaDirectDebit.php:69
 msgid "Iceland"
 msgstr "Island"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:69
+#: src/Payone/Gateway/SepaDirectDebit.php:70
 msgid "Ireland"
 msgstr "Irland"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:70
+#: src/Payone/Gateway/SepaDirectDebit.php:71
 msgid "Italy"
 msgstr "Italien"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:71
+#: src/Payone/Gateway/SepaDirectDebit.php:72
 msgid "Latvia"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:72
+#: src/Payone/Gateway/SepaDirectDebit.php:73
 msgid "Liechtenstein"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:73
+#: src/Payone/Gateway/SepaDirectDebit.php:74
 msgid "Lithuania"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:74
+#: src/Payone/Gateway/SepaDirectDebit.php:75
 msgid "Luxembourg"
 msgstr "Luxemburg"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:75
-msgid "Malta"
-msgstr ""
-
 #: src/Payone/Gateway/SepaDirectDebit.php:76
+msgid "Malta"
+msgstr "Malta"
+
+#: src/Payone/Gateway/SepaDirectDebit.php:77
 msgid "Martinique"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:77
+#: src/Payone/Gateway/SepaDirectDebit.php:78
 msgid "Mayotte"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:78
+#: src/Payone/Gateway/SepaDirectDebit.php:79
 msgid "Monaco"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:79
+#: src/Payone/Gateway/SepaDirectDebit.php:80
 msgid "Netherlands"
 msgstr "Niederlande"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:80
+#: src/Payone/Gateway/SepaDirectDebit.php:81
 msgid "Norway"
 msgstr "Norwegen"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:81
+#: src/Payone/Gateway/SepaDirectDebit.php:82
 msgid "Poland"
 msgstr "Polen"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:82
-msgid "Portugal"
-msgstr ""
-
 #: src/Payone/Gateway/SepaDirectDebit.php:83
+msgid "Portugal"
+msgstr "Portugal"
+
+#: src/Payone/Gateway/SepaDirectDebit.php:84
 msgid "Réunion"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:84
+#: src/Payone/Gateway/SepaDirectDebit.php:85
 msgid "Romania"
 msgstr "Rumänien"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:85
+#: src/Payone/Gateway/SepaDirectDebit.php:86
 msgid "Saint Barthélemy"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:86
+#: src/Payone/Gateway/SepaDirectDebit.php:87
 msgid "Saint Martin (French part)"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:87
+#: src/Payone/Gateway/SepaDirectDebit.php:88
 msgid "Saint Pierre and Miquelon"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:88
+#: src/Payone/Gateway/SepaDirectDebit.php:89
 msgid "Slovakia"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:89
+#: src/Payone/Gateway/SepaDirectDebit.php:90
 msgid "Slovenia"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:90
+#: src/Payone/Gateway/SepaDirectDebit.php:91
 msgid "Spain"
 msgstr "Spanien"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:91
+#: src/Payone/Gateway/SepaDirectDebit.php:92
 msgid "Sweden"
 msgstr "Schweden"
 
-#: src/Payone/Gateway/SepaDirectDebit.php:93
+#: src/Payone/Gateway/SepaDirectDebit.php:94
 msgid "United Kingdom"
 msgstr ""
 
-#: src/Payone/Gateway/SepaDirectDebit.php:128
+#: src/Payone/Gateway/SepaDirectDebit.php:131
 msgid "Payment is authorized and captured."
 msgstr "Zahlung wurde autorisiert und belastet."
 
-#: src/Payone/Gateway/SepaDirectDebit.php:167
+#: src/Payone/Gateway/SepaDirectDebit.php:170
 msgid "Please check this option"
 msgstr "Sie müssen diese Checkbox ankreuzen, um fortfahren zu können"
 
-#: src/Payone/Gateway/Sofort.php:19
+#: src/Payone/Gateway/Sofort.php:14 src/Payone/Gateway/Sofort.php:19
 msgid "SOFORT.com"
 msgstr "Sofort-Überweisung"
 
-#: src/Payone/Gateway/Sofort.php:47
+#: src/Payone/Gateway/Sofort.php:44
 msgid "SOFORT.com returned error"
 msgstr "SOFORT.com hat einen Fehler gemeldet"
-
-#: src/Payone/Gateway/Sofort.php:52
-msgid "Payment was canceled by user"
-msgstr "Zahlung wurde vom Kunden abgebrochen"
-
-#: src/Payone/Gateway/Sofort.php:111
-msgid "SOFORT.com payment is preauthorized."
-msgstr "Zahlung über SOFORT.com wurde vorautorisiert."
-
-#: src/Payone/Gateway/Sofort.php:113
-msgid "SOFORT.com payment is authorized and captured."
-msgstr "Zahlung über SOFORT.com wurde autorisiert und belastet."
 
 #: src/Payone/Transaction/Capture.php:31
 msgid "Capture already done"
