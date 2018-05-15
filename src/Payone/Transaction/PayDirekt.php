@@ -13,7 +13,7 @@ class PayDirekt extends Base {
 		$this->set_data_from_gateway( $gateway );
 
 		$this->set( 'clearingtype', 'wlt' );
-		$this->set( 'wallettype', 'PPE' );
+		$this->set( 'wallettype', 'PDT' );
 	}
 
 	/**
