@@ -43,6 +43,7 @@ class Plugin {
 			$gateways[ \Payone\Gateway\Giropay::GATEWAY_ID ]	 = \Payone\Gateway\Giropay::class;
 			$gateways[ \Payone\Gateway\SafeInvoice::GATEWAY_ID ] = \Payone\Gateway\SafeInvoice::class;
 			$gateways[ \Payone\Gateway\PayPal::GATEWAY_ID ]      = \Payone\Gateway\PayPal::class;
+			$gateways[ \Payone\Gateway\PayDirekt::GATEWAY_ID ]   = \Payone\Gateway\PayDirekt::class;
 		}
 
 		foreach ( $gateways as $gateway ) {
