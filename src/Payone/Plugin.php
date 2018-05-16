@@ -8,10 +8,12 @@ use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
 
-defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
-
 class Plugin {
 	const CALLBACK_SLUG = 'payone-callback';
+
+	const PAYONE_IP_RANGES = [
+		'213.178.72.196', '213.178.72.197', '217.70.200.0/24', '185.60.20.0/24'
+	];
 
 	/**
 	 * @todo Evtl. Zugriff über file_get_contents('php://input') realisieren, wenn der Server file_get_contents zulässt
@@ -72,6 +74,27 @@ class Plugin {
 		}
 
 		return esc_url( $url );
+	}
+
+	/**
+	 * https://gist.github.com/tott/7684443
+	 * 
+	 * @param string $ip_address
+	 * @param string $range
+	 *
+	 * @return bool
+	 */
+	public static function ip_address_is_in_range( $ip_address, $range ) {
+		if ( strpos( $range, '/' ) === false ) {
+			$range .= '/32';
+		}
+		list( $range, $netmask ) = explode( '/', $range, 2 );
+		$range_decimal    = ip2long( $range );
+		$ip_decimal       = ip2long( $ip_address );
+		$wildcard_decimal = pow( 2, ( 32 - $netmask ) ) - 1;
+		$netmask_decimal  = ~$wildcard_decimal;
+
+		return ( $ip_decimal & $netmask_decimal ) === ( $range_decimal & $netmask_decimal );
 	}
 
 	public function add_callback_url() {
@@ -138,15 +161,35 @@ class Plugin {
 	}
 
 	/**
-	 * @todo IP-Range von PAYONE testen
-	 * 
 	 * @return bool
 	 */
 	private function is_valid_transaction_callback() {
+		$request_is_from_payone = $this->request_is_from_payone();
+		$request_is_from_payone = apply_filters( 'payone_request_is_from_payone',  $request_is_from_payone );
+		if ( ! $request_is_from_payone ) {
+			return false;
+		}
+
 		$options   = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 		$post_vars = self::get_post_vars();
 
 		return isset( $post_vars['key'] ) && $post_vars['key'] === hash( 'md5', $options['key'] );
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function request_is_from_payone()
+	{
+		$ip_address = $_SERVER['REMOTE_ADDR'];
+
+		foreach ( self::PAYONE_IP_RANGES as $range ) {
+			if ( self::ip_address_is_in_range( $ip_address, $range ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
