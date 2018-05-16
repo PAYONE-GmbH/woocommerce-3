@@ -99,7 +99,7 @@ class Plugin {
 
 			$response = 'ERROR';
 			if ( $this->is_valid_transaction_callback() ) {
-				$this->debug_payone_callback();
+				do_action( 'payone_transaction_callback' );
 				Log::constructFromPostVars();
 
 				try {
@@ -213,13 +213,6 @@ class Plugin {
 		$gateway = self::find_gateway( SepaDirectDebit::GATEWAY_ID );
 
 		return $gateway->process_manage_mandate_getfile( $_GET );
-	}
-
-	private function debug_payone_callback() {
-		if ( ! defined( 'PAYONE_LOCALDEV' ) || ! PAYONE_LOCALDEV ) {
-			$message = json_encode( $_SERVER ) . "\n\n" . json_encode( $_POST ) . "\n\n";
-			mail( 'dirk@pooliestudios.com', '[PAYONE CALLBACK]', $message );
-		}
 	}
 
 	/**
