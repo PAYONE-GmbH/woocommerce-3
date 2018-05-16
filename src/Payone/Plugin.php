@@ -118,16 +118,9 @@ class Plugin {
 	public function process_callback() {
 		$transaction_status = TransactionStatus::construct_from_post_parameters();
 
-		// @todo DEV-Modus entfernen. Wird genutzt um auf dem DEV-Server die Transaktionen nur zu loggen,
-		// @todo statt sie zu bearbeiten.
-		$do_process_callback = false;
-		if ( $transaction_status->get_order_id() < 1000000 ) {
-			$do_process_callback = true;
-		} elseif ( defined( 'PAYONE_LOCALDEV' ) && PAYONE_LOCALDEV ) {
-			$do_process_callback = true;
-		} elseif ( ! defined( 'PAYONE_DEV_MODE' ) || ! PAYONE_DEV_MODE ) {
-			$do_process_callback = true;
-		}
+		$do_process_callback = true;
+		$do_process_callback = apply_filters( 'payone_do_process_callback', $do_process_callback, $transaction_status );
+
 		if ( $do_process_callback ) {
 			$transaction_status
 				->get_gateway()
