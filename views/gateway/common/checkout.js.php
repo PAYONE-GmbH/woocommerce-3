@@ -30,6 +30,8 @@
                 case '<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>':
                     result = payone_checkout_clicked_<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>();
                     break;
+                default:
+                    payone_unblock();
             }
 
             return result;
