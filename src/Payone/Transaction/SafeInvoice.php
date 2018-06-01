@@ -30,7 +30,7 @@ class SafeInvoice extends Base {
 			$va = 0;
 			if ( $tax_rates ) {
 				$tax_rate = array_pop( $tax_rates );
-				if ( $tax_rate ) {
+				if ( $tax_rate && isset( $tax_rate[ 'rate' ] ) ) {
 					$va = round( $tax_rate[ 'rate' ] );
 				}
 			}
@@ -48,7 +48,7 @@ class SafeInvoice extends Base {
 			$va = 0;
 			if ( $tax_rates ) {
 				$tax_rate = array_pop( $tax_rates );
-				if ( $tax_rate ) {
+				if ( $tax_rate && isset( $tax_rate[ 'rate' ] ) ) {
 					$va = round( $tax_rate[ 'rate' ] );
 				}
 			}
