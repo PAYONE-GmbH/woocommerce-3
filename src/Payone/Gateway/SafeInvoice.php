@@ -3,6 +3,7 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Transaction\Capture;
 
 class SafeInvoice extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_safeinvoice';
@@ -41,18 +42,16 @@ class SafeInvoice extends GatewayBase {
 		// @todo Bei Kauf auf Rechnung anderer Status und Order abschließen?
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
-		$response->store_clearing_info( $order );
+		if ( $transaction->get( 'request' ) === 'authorization' ) {
+			$response->store_clearing_info( $order );
+		}
 		$this->add_email_meta_hook( [ $this, 'email_meta_action' ] );
 		$order->update_meta_data( '_authorization_method', $transaction->get( 'request' ) );
 		$order->update_status( 'on-hold', __( 'Invoice has been sent', 'payone-woocommerce-3' ) );
 
-		// Reduce stock levels
 		wc_reduce_stock_levels( $order_id );
-
-		// Remove cart
 		$woocommerce->cart->empty_cart();
 
-		// Return thankyou redirect
 		return array(
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
@@ -82,8 +81,21 @@ class SafeInvoice extends GatewayBase {
 		$authorization_method = $order->get_meta( '_authorization_method' );
 
 		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
+			$capture = new Capture( $this );
+			\Payone\Transaction\SafeInvoice::add_article_list_to_transaction( $capture, $order );
+
+			$response = $capture->execute( $order );
+			if ( $response && $response->is_approved() ) {
+				$response->store_clearing_info( $order );
+				$order->save_meta_data();
+			}
 			// @todo Reagieren, wenn Capture fehlschlägt?
-			$this->capture( $order );
+
+			return $response;
 		}
+	}
+
+	protected function add_data_to_capture( Capture $capture, \WC_Order $order ) {
+		\Payone\Transaction\SafeInvoice::add_article_list_to_transaction( $capture, $order );
 	}
 }

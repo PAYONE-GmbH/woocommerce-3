@@ -121,9 +121,12 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 */
 	public function capture( \WC_Order $order ) {
 		$capture = new Capture( $this );
+        $this->add_data_to_capture( $capture, $order );
 
 		return $capture->execute( $order );
 	}
+
+	protected function add_data_to_capture( Capture $capture, \WC_Order $order ) { }
 
 	/**
 	 * @param int $order_id
