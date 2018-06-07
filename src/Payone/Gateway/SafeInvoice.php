@@ -64,6 +64,10 @@ class SafeInvoice extends GatewayBase {
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		parent::process_transaction_status( $transaction_status );
 
+		if ( $transaction_status->no_further_action_necessary() ) {
+			return;
+		}
+
 		$order = $transaction_status->get_order();
 
 		if ( $transaction_status->is_overpaid() ) {

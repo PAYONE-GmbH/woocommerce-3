@@ -153,4 +153,18 @@ class TransactionStatus extends DataTransfer {
 	public function is_overpaid() {
 		return $this->is_paid() && $this->get_sum_missing() < 0.0;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function is_refund() {
+		return $this->get_action() === 'debit';
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function no_further_action_necessary() {
+		return $this->is_appointed() || $this->is_refund();
+	}
 }

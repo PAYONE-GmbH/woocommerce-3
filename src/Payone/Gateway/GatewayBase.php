@@ -101,11 +101,20 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @param TransactionStatus $transaction_status
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
+		$order = $transaction_status->get_order();
 		$sequencenumber = $transaction_status->get_sequencenumber();
-		if ($sequencenumber) {
-			$order = $transaction_status->get_order();
+		if ( $sequencenumber ) {
 			$order->update_meta_data( '_sequencenumber', $sequencenumber );
 			$order->save_meta_data();
+		}
+
+		if ( $transaction_status->is_refund() ) {
+			$is_already_refunded = $order->get_meta( '_refunded' );
+			if ( ! $is_already_refunded ) {
+				$order->update_status( 'wc-refunded', __( 'Debit successfull', 'payone-woocommerce-3' ) );
+				$order->update_meta_data( '_refunded', time() );
+				$order->save_meta_data();
+			}
 		}
 	}
 

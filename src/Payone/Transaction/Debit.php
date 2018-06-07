@@ -34,6 +34,9 @@ class Debit extends Base {
 			return false;
 		}
 
+		$order->update_meta_data( '_refunded', time() );
+		$order->save_meta_data();
+
 		return true;
 	}
 }
