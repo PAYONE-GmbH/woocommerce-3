@@ -145,31 +145,49 @@ class SepaDirectDebit extends GatewayBase {
 	}
 
 	public function process_manage_mandate( $data ) {
-		$transaction = new \Payone\Transaction\ManageMandate( $this, $data );
-		$response = $transaction->execute();
-
 		$result = [];
-		if ( $response->has_error() ) {
-			// @todo Die Fehlermeldung ist irreführend, wenn keine IBAN angegeben wurde. Hier muss von uns schon geprüft werden
+
+		if ( $data['confirmation_check'] === '0' ) {
 			$result = [
 				'status' => 'error',
-				'message' => $response->get( 'customermessage' ),
+				'message' => __( 'Please check this option', 'payone-woocommerce-3' ),
 			];
-		} elseif ( $response->is_approved() && $response->get( 'mandate_status' ) === 'active' ) {
+		} elseif ( $data['confirmation_check'] === '1' ) {
 			$result = [
-				'status' => 'active',
-				'reference' => $response->get( 'mandate_identification' ),
+				'status'    => 'active',
+				'reference' => $data[ 'mandate_identification' ],
 			];
-		} elseif ( $response->is_approved() && $response->get( 'mandate_status' ) === 'pending' ) {
-			$result = [
-				'status'    => 'pending',
-				'reference' => $response->get( 'mandate_identification' ),
-				'text'      => urldecode( $response->get( 'mandate_text' ) ),
-			];
-			if ( $data[ 'confirmation_check' ] === '0' ) {
-				$result[ 'error_message' ] = __( 'Please check this option', 'payone-woocommerce-3' );
-			} else {
-				$result[ 'error_message' ] = '';
+		}
+
+		if ( !$result ) {
+			$transaction = new \Payone\Transaction\ManageMandate( $this, $data );
+			$response    = $transaction->execute();
+
+			if ( $data['confirmation_check'] === '0' ) {
+
+			} elseif ( $data['confirmation_check'] === '1' ) {
+				$result = [
+					'status'  => 'error',
+					'message' => __( 'Please check this option', 'payone-woocommerce-3' ),
+				];
+			} elseif ( $response->has_error() ) {
+				// @todo Die Fehlermeldung ist irreführend, wenn keine IBAN angegeben wurde. Hier muss von uns schon geprüft werden
+				$result = [
+					'status'  => 'error',
+					'message' => $response->get( 'customermessage' ),
+				];
+			} elseif ( $response->is_approved() && $response->get( 'mandate_status' ) === 'active' ) {
+				$result = [
+					'status'    => 'active',
+					'reference' => $response->get( 'mandate_identification' ),
+				];
+			} elseif ( $response->is_approved() && $response->get( 'mandate_status' ) === 'pending' ) {
+				$result = [
+					'status'        => 'pending',
+					'reference'     => $response->get( 'mandate_identification' ),
+					'text'          => urldecode( $response->get( 'mandate_text' ) ),
+					'error_message' => '',
+				];
 			}
 		}
 

@@ -22,6 +22,7 @@
 <div id="direct_debit_error"></div>
 <script type="text/javascript">
     var mandate_ok = false;
+    var mandate_identification = '';
     var confirmation_check_displayed = false;
     jQuery('#direct_debit_confirmation').hide();
     function payone_checkout_clicked_<?php echo \Payone\Gateway\SepaDirectDebit::GATEWAY_ID; ?>() {
@@ -36,7 +37,8 @@
             iban: jQuery('#direct_debit_iban').val(),
             bic: jQuery('#direct_debit_bic').val(),
             currency: '<?php echo get_woocommerce_currency(); ?>',
-            confirmation_check: jQuery('#direct_debit_confirmation_check').prop('checked') ? 1 : 0
+            confirmation_check: jQuery('#direct_debit_confirmation_check').prop('checked') ? 1 : 0,
+            mandate_identification: mandate_identification
         };
 
         if (!confirmation_check_displayed) {
@@ -53,19 +55,19 @@
             if (result.status === 'error') {
                 jQuery('#direct_debit_error').html('<strong style="color:red">' + result.message + '</strong>');
             } else if (result.status === 'active' ) {
+                mandate_identification = result['reference'];
                 document.getElementById("direct_debit_reference").value = result['reference'];
                 mandate_ok = true;
                 payone_unblock();
                 jQuery('#place_order').parents('form').submit();
             } else if (result.status === 'pending') {
+                mandate_identification = result['reference'];
                 jQuery('#direct_debit_confirmation_text').html(result['text']);
                 jQuery('#direct_debit_confirmation_check').prop('checked', false);
                 jQuery('#direct_debit_wrapper').hide();
                 jQuery('#direct_debit_confirmation').show();
 
-                if (result.error_message) {
-                    jQuery('#direct_debit_error').html('<strong style="color:red">' + result.error_message + '</strong>');
-                } else if (confirmation_check_displayed) {
+                if (confirmation_check_displayed) {
                     document.getElementById("direct_debit_reference").value = result['reference'];
                     mandate_ok = true;
                     payone_unblock();
