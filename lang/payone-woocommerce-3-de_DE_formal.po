@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BS PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2018-06-07 16:01+0200\n"
+"POT-Creation-Date: 2018-06-08 18:07+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -574,19 +574,19 @@ msgstr "Max. Anzahl Zeichen"
 
 #: src/Payone/Gateway/CreditCard.php:468 src/Payone/Gateway/CreditCard.php:471
 #: src/Payone/Gateway/Giropay.php:49 src/Payone/Gateway/Giropay.php:52
-#: src/Payone/Gateway/Invoice.php:76 src/Payone/Gateway/PayDirekt.php:49
+#: src/Payone/Gateway/Invoice.php:80 src/Payone/Gateway/PayDirekt.php:49
 #: src/Payone/Gateway/PayDirekt.php:52 src/Payone/Gateway/PayPal.php:49
-#: src/Payone/Gateway/PayPal.php:52 src/Payone/Gateway/PrePayment.php:68
-#: src/Payone/Gateway/SafeInvoice.php:75
-#: src/Payone/Gateway/SepaDirectDebit.php:234
-#: src/Payone/Gateway/SepaDirectDebit.php:236 src/Payone/Gateway/Sofort.php:49
+#: src/Payone/Gateway/PayPal.php:52 src/Payone/Gateway/PrePayment.php:72
+#: src/Payone/Gateway/SafeInvoice.php:79
+#: src/Payone/Gateway/SepaDirectDebit.php:238
+#: src/Payone/Gateway/SepaDirectDebit.php:240 src/Payone/Gateway/Sofort.php:49
 #: src/Payone/Gateway/Sofort.php:52
 msgid "Payment received."
 msgstr "Zahlung eingegangen."
 
 #: src/Payone/Gateway/CreditCard.php:474 src/Payone/Gateway/Giropay.php:57
 #: src/Payone/Gateway/PayDirekt.php:57 src/Payone/Gateway/PayPal.php:57
-#: src/Payone/Gateway/SepaDirectDebit.php:239 src/Payone/Gateway/Sofort.php:57
+#: src/Payone/Gateway/SepaDirectDebit.php:243 src/Payone/Gateway/Sofort.php:57
 msgid "Payment failed."
 msgstr "Zahlung fehlgeschlagen."
 
@@ -649,14 +649,12 @@ msgstr ""
 #: src/Payone/Gateway/GatewayBase.php:510
 #: views/gateway/giropay/payment-form.php:7
 #: views/gateway/sepa-direct-debit/payment-form.php:7
-#: views/gateway/sofort/payment-form.php:7
 msgid "IBAN"
 msgstr "IBAN"
 
 #: src/Payone/Gateway/GatewayBase.php:512
 #: views/gateway/giropay/payment-form.php:11
 #: views/gateway/sepa-direct-debit/payment-form.php:11
-#: views/gateway/sofort/payment-form.php:11
 msgid "BIC"
 msgstr "BIC"
 
@@ -698,13 +696,13 @@ msgstr "Fehler bei Zahlung: "
 msgid "Invoice has been sent"
 msgstr "Rechnung wurde verschickt"
 
-#: src/Payone/Gateway/Invoice.php:71 src/Payone/Gateway/PrePayment.php:63
-#: src/Payone/Gateway/SafeInvoice.php:70
+#: src/Payone/Gateway/Invoice.php:75 src/Payone/Gateway/PrePayment.php:67
+#: src/Payone/Gateway/SafeInvoice.php:74
 msgid "Payment received. Customer overpaid!"
 msgstr "Bezahlung eingegangen. Kunde hat zu viel gezahlt!"
 
-#: src/Payone/Gateway/Invoice.php:74 src/Payone/Gateway/PrePayment.php:66
-#: src/Payone/Gateway/SafeInvoice.php:73
+#: src/Payone/Gateway/Invoice.php:78 src/Payone/Gateway/PrePayment.php:70
+#: src/Payone/Gateway/SafeInvoice.php:77
 msgid "Payment received. Customer underpaid!"
 msgstr "Bezahlung eingegangen. Kunde hat zu wenig gezahlt!"
 
@@ -743,7 +741,6 @@ msgstr "Zahlung wurde vorautorisiert."
 
 #: src/Payone/Gateway/RedirectGatewayBase.php:98
 #, fuzzy
-#| msgid "Payment is authorized and captured."
 msgid "payment is authorized and captured."
 msgstr "Zahlung wurde autorisiert und belastet."
 
@@ -949,15 +946,19 @@ msgstr "Sie müssen diese Checkbox ankreuzen, um fortfahren zu können"
 msgid "SOFORT.com"
 msgstr "Sofort-Überweisung"
 
-#: src/Payone/Transaction/Capture.php:31
+#: src/Payone/Transaction/Base.php:144
+msgid "Discount"
+msgstr "Rabatt"
+
+#: src/Payone/Transaction/Capture.php:33
 msgid "Capture already done"
 msgstr "Belastung wurde bereits durchgeführt"
 
-#: src/Payone/Transaction/Capture.php:39
+#: src/Payone/Transaction/Capture.php:41
 msgid "Capture successfull"
 msgstr "Belastung erfolgreich"
 
-#: src/Payone/Transaction/Capture.php:44
+#: src/Payone/Transaction/Capture.php:46
 msgid "Capture failed: "
 msgstr "Belastung fehlgeschlagen: "
 

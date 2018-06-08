@@ -86,8 +86,6 @@ class SafeInvoice extends GatewayBase {
 
 		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
 			$capture = new Capture( $this );
-			\Payone\Transaction\SafeInvoice::add_article_list_to_transaction( $capture, $order );
-
 			$response = $capture->execute( $order );
 			if ( $response && $response->is_approved() ) {
 				$response->store_clearing_info( $order );
