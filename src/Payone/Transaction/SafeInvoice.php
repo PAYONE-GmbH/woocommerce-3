@@ -12,7 +12,7 @@ class SafeInvoice extends Base {
 
 		$this->set( 'clearingtype', 'rec' );
 		$this->set( 'clearingsubtype', 'POV' );
-		$this->set( 'businessrelation', 'b2b' ); // @todo
+		$this->set( 'businessrelation', 'b2c' ); // @todo
 	}
 
 	/**
