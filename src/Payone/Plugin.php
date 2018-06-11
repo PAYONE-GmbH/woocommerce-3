@@ -118,15 +118,17 @@ class Plugin {
 			}
 
 			$response = 'ERROR';
-			if ( $this->is_valid_transaction_callback() ) {
+			if ( $this->request_is_from_payone() ) {
 				do_action( 'payone_transaction_callback' );
-				Log::constructFromPostVars();
 
 				try {
-					$this->process_callback();
-					$response = 'TSOK';
+					$response = $this->process_callback();
 				} catch (\Exception $e) {
 					$response .= ' (' . $e->getMessage() . ')';
+				}
+
+				if ( $response === 'TSOK' ) {
+					Log::constructFromPostVars();
 				}
 			}
 
@@ -135,6 +137,9 @@ class Plugin {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function process_callback() {
 		$transaction_status = TransactionStatus::construct_from_post_parameters();
 
@@ -142,10 +147,15 @@ class Plugin {
 		$do_process_callback = apply_filters( 'payone_do_process_callback', $do_process_callback, $transaction_status );
 
 		if ( $do_process_callback ) {
-			$transaction_status
-				->get_gateway()
-				->process_transaction_status( $transaction_status );
+			$gateway = $transaction_status->get_gateway();
+			if ( $transaction_status->get( 'key' ) === hash( 'md5', $gateway->get_key() ) ) {
+				$gateway->process_transaction_status( $transaction_status );
+			} else {
+				return 'ERROR: Wrong key';
+			}
 		}
+
+		return 'TSOK';
 	}
 
 	public function order_status_changed( $id, $from_status, $to_status ) {
@@ -160,33 +170,20 @@ class Plugin {
 	/**
 	 * @return bool
 	 */
-	private function is_valid_transaction_callback() {
-		$request_is_from_payone = $this->request_is_from_payone();
-		$request_is_from_payone = apply_filters( 'payone_request_is_from_payone',  $request_is_from_payone );
-		if ( ! $request_is_from_payone ) {
-			return false;
-		}
-
-		$options   = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-		$post_vars = self::get_post_vars();
-
-		return isset( $post_vars['key'] ) && $post_vars['key'] === hash( 'md5', $options['key'] );
-	}
-
-	/**
-	 * @return bool
-	 */
 	private function request_is_from_payone()
 	{
 		$ip_address = $_SERVER['REMOTE_ADDR'];
 
+		$result = false;
+
 		foreach ( self::PAYONE_IP_RANGES as $range ) {
 			if ( self::ip_address_is_in_range( $ip_address, $range ) ) {
-				return true;
+				$result = true;
+				break;
 			}
 		}
 
-		return false;
+		return apply_filters( 'payone_request_is_from_payone',  $result );
 	}
 
 	/**
