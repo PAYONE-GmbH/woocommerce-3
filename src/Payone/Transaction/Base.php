@@ -138,24 +138,15 @@ class Base extends Request {
 			];
 			$n++;
 		}
-		foreach ( $order->get_shipping_methods() as $item_id => $item_data ) {
-			$shipping_tax_class = $item_data->get_tax_class();
-			$tax_rates =  $tax->get_rates( $shipping_tax_class );
-			$va = 0;
-			if ( $tax_rates ) {
-				$tax_rate = array_pop( $tax_rates );
-				if ( $tax_rate && isset( $tax_rate[ 'rate' ] ) ) {
-					$va = round( $tax_rate[ 'rate' ] );
-				}
-			}
 
-			$price = round( 100 * ($item_data->get_total_tax() + $item_data->get_total() ) );
+		foreach ( $order->get_shipping_methods() as $item_id => $item_data ) {
+			$data = $item_data->get_data();
 			$articles[ $n ] = [
 				'id' => $item_id,
-				'pr' => $price,
-				'no' => $item_data->get_quantity(),
-				'de' => $item_data->get_name(),
-				'va' => 100 * $va,
+				'pr' => round( 100 * ( $data[ 'total' ] + $data[ 'total_tax' ] ) ),
+				'no' => 1,
+				'de' => $data[ 'name' ],
+				'va' => round( 10000 * $data[ 'total_tax' ] / $data[ 'total' ] ),
 			];
 			$n++;
 		}
