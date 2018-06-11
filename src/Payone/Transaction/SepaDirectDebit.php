@@ -21,6 +21,9 @@ class SepaDirectDebit extends Base {
 	 * @return \Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
+		if ($this->should_submit_cart() ) {
+			$this->add_article_list_to_transaction( $order );
+		}
 		$this->set( 'reference', $order->get_id() );
 		$this->set( 'amount', $order->get_total() * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );

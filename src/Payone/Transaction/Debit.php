@@ -18,6 +18,9 @@ class Debit extends Base {
 	 * @return bool
 	 */
 	public function execute( \WC_Order $order, $amount ) {
+		if ($this->should_submit_cart() ) {
+			$this->add_article_list_to_transaction( $order );
+		}
 		$current_sequencenumber = $order->get_meta( '_sequencenumber' );
 
 		$this->set( 'txid', $order->get_transaction_id() );

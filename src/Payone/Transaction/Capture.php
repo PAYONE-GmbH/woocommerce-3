@@ -17,7 +17,9 @@ class Capture extends Base {
 	 * @return null|\Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
-		$this->add_article_list_to_transaction( $order );
+		if ($this->should_submit_cart() ) {
+			$this->add_article_list_to_transaction( $order );
+		}
 
 		$current_sequencenumber = $order->get_meta( '_sequencenumber' );
 

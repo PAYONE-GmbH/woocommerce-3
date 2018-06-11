@@ -344,10 +344,10 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	}
 
 	/**
-	 * @return string
+	 * @return bool
 	 */
-	public function get_submit_cart() {
-		return $this->submit_cart;
+	public function should_submit_cart() {
+		return $this->submit_cart === '1';
 	}
 
 	/**

@@ -2,13 +2,37 @@
 
 namespace Payone\Transaction;
 
+use Payone\Gateway\GatewayBase;
 use Payone\Payone\Api\Request;
 
 class Base extends Request {
+	/**
+	 * @var GatewayBase
+	 */
+	private $gateway;
+
 	public function __construct( $type ) {
 		parent::__construct();
 
+		$this->gateway = null;
 		$this->set( 'request', $type );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function should_submit_cart() {
+		if ( ! $this->gateway ) {
+			exit;
+			return false;
+		}
+
+		if ( $this->gateway->should_submit_cart() ) {
+			return true;
+		}
+
+		// Bei Sicherer Rechnung immer den Warenkorb mitsenden
+		return $this->gateway->id === \Payone\Gateway\SafeInvoice::GATEWAY_ID;
 	}
 
 	/**
@@ -29,11 +53,12 @@ class Base extends Request {
 	 * @param \Payone\Gateway\GatewayBase $gateway
 	 */
 	public function set_data_from_gateway( $gateway ) {
+		$this->gateway = $gateway;
 		$this
-			->set_account_id( $gateway->get_account_id() )
-			->set_merchant_id( $gateway->get_merchant_id() )
-			->set_portal_id( $gateway->get_portal_id() )
-			->set_key( $gateway->get_key() );
+			->set_account_id( $this->gateway->get_account_id() )
+			->set_merchant_id( $this->gateway->get_merchant_id() )
+			->set_portal_id( $this->gateway->get_portal_id() )
+			->set_key( $this->gateway->get_key() );
 	}
 
 	public function set_personal_data_from_order( \WC_Order $order ) {
