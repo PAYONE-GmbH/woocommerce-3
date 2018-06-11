@@ -18,15 +18,17 @@ class Debit extends Base {
 	 * @return bool
 	 */
 	public function execute( \WC_Order $order, $amount ) {
-		if ($this->should_submit_cart() ) {
-			$this->add_article_list_to_transaction( $order );
-		}
 		$current_sequencenumber = $order->get_meta( '_sequencenumber' );
 
 		$this->set( 'txid', $order->get_transaction_id() );
 		$this->set( 'sequencenumber', $this->get_next_sequencenumber( $order ) );
 		$this->set( 'amount', $amount * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
+
+		// Dieser Aufruf *muss* nach dem Setzen von 'amount' stattfinden!
+		if ($this->should_submit_cart() ) {
+			$this->add_article_list_to_transaction( $order );
+		}
 
 		$response = $this->submit();
 
@@ -41,5 +43,15 @@ class Debit extends Base {
 		$order->save_meta_data();
 
 		return true;
+	}
+
+	protected function get_article_list_for_transaction( \WC_Order $order ) {
+		return [ 'GS' => [
+			'id' => 'GS',
+			'pr' => $this->get('amount'),
+			'no' => 1,
+			'de' => 'Gutschrift für Ihre Bestellung',
+			'va' => 0,
+		] ];
 	}
 }
