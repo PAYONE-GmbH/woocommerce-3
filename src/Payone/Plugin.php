@@ -15,6 +15,8 @@ class Plugin {
 		'213.178.72.196', '213.178.72.197', '217.70.200.0/24', '185.60.20.0/24'
 	];
 
+	public static $send_mail_after_capture = false;
+
 	/**
 	 * @todo Evtl. Zugriff über file_get_contents('php://input') realisieren, wenn der Server file_get_contents zulässt
 	 *
@@ -57,6 +59,12 @@ class Plugin {
 		add_action( 'woocommerce_after_checkout_form', [ $this, 'add_javascript' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enque_javascript' ] );
 		add_action( 'woocommerce_thankyou', [$this, 'add_content_to_thankyou_page'] );
+
+		add_filter( 'woocommerce_email_enabled_customer_processing_order' , [ $this, 'disable_capture_mail_filter' ]);
+	}
+
+	public function disable_capture_mail_filter() {
+		return self::$send_mail_after_capture;
 	}
 
 	/**

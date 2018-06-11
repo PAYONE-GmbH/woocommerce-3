@@ -2,6 +2,8 @@
 
 namespace Payone\Transaction;
 
+use Payone\Plugin;
+
 class Capture extends Base {
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
@@ -39,14 +41,20 @@ class Capture extends Base {
 
 		$response = $this->submit();
 
+		Plugin::$send_mail_after_capture = false;
 		if ( $response->is_approved() ) {
 			$order->add_order_note( __( 'Capture successfull', 'payone-woocommerce-3' ) );
 			$order->update_meta_data( '_captured', time() );
 			$order->save_meta_data();
+			Plugin::$send_mail_after_capture = true;
 		} else {
 			$this->set_sequencenumber( $order, $current_sequencenumber );
 			$order->add_order_note( __( 'Capture failed: ', 'payone-woocommerce-3' ) . $response->get_error_message() );
 		}
+
+		$mail = new \WC_Email_Customer_Processing_Order();
+		$mail->trigger( null, $order );
+		Plugin::$send_mail_after_capture = false;
 
 		return $response;
 	}
