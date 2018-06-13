@@ -46,7 +46,7 @@ class Debit extends Base {
 	}
 
 	protected function get_article_list_for_transaction( \WC_Order $order ) {
-		return [ 'GS' => [
+		return [ '1' => [
 			'id' => 'GS',
 			'pr' => $this->get('amount'),
 			'no' => 1,
