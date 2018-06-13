@@ -115,6 +115,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				$order->update_meta_data( '_refunded', time() );
 				$order->save_meta_data();
 			}
+		} elseif ( $transaction_status->is_cancelation() ) {
+			$order->add_order_note( __( 'Payment was canceled: ', 'payone-woocommerce-3' ) . $transaction_status->get( 'failedcause' ));
+			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
 		}
 	}
 

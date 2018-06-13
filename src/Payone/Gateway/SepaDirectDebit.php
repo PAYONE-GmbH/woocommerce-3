@@ -239,8 +239,6 @@ class SepaDirectDebit extends GatewayBase {
 			} else {
 				$order->update_status( 'wc-processing', __( 'Payment received.', 'payone-woocommerce-3' ) );
 			}
-		} elseif ( $transaction_status->is_cancelation() ) {
-			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
 		}
 	}
 
