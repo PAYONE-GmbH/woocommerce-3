@@ -142,9 +142,12 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @param float|null $amount
 	 * @param string $reason
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+	    if ( (float)$amount <= 0.0 ) {
+	        return new \WP_Error( 1, __( 'Debit amount must be greater than zero.', 'payone-woocommerce-3' ) );
+        }
 		$order = new \WC_Order( $order_id );
 
 		$transaction = new \Payone\Transaction\Debit( $this );
