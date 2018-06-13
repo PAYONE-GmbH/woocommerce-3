@@ -15,8 +15,6 @@
         jQuery('form.woocommerce-checkout').on('checkout_place_order', function (event) {
             var current_gateway = jQuery('input[name=payment_method]:checked').val();
 
-            payone_block();
-
             /**
              * @todo Ich habe es nicht geschafft, hier eine abstrakte Lösung zu finden. Ein Versuch mit
              * window['checkout_clicked_'+current_gateway]() ruft zwar die Methode auf, der Rückgabewert
@@ -25,6 +23,7 @@
             var result = true;
             switch (current_gateway) {
                 case '<?php echo \Payone\Gateway\SepaDirectDebit::GATEWAY_ID; ?>':
+                    payone_block();
                     result = payone_checkout_clicked_<?php echo \Payone\Gateway\SepaDirectDebit::GATEWAY_ID; ?>();
                     break;
                 case '<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>':
