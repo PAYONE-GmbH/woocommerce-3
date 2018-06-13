@@ -27,31 +27,44 @@
 	<?php echo nl2br( $this->get_option( 'description' ) ); ?>
 </p>
 <fieldset>
-    <label for="cardtypeInput">Card type</label>
-    <select id="cardtype">
-        <?php foreach ( $this->get_option( 'cc_brands' ) as $cc_brand ) { ?>
-            <option value="<?php echo $cc_brand; ?>">
-                <?php echo $this->get_option( 'cc_brand_label_' . $cc_brand ); ?>
-            </option>
-        <?php } ?>
-    </select>
+    <p class="form-row form-row-wide">
+        <label for="cardtypeInput">Card type</label>
+        <select class="payoneSelect" id="cardtype">
+            <?php foreach ( $this->get_option( 'cc_brands' ) as $cc_brand ) { ?>
+                <option value="<?php echo $cc_brand; ?>">
+                    <?php echo $this->get_option( 'cc_brand_label_' . $cc_brand ); ?>
+                </option>
+            <?php } ?>
+        </select>
+    </p>
 
-    <label for="cardpanInput">Cardpan:</label>
-    <span class="inputIframe" id="cardpan"<?php echo $cardnumber_css; ?>></span>
+    <p class="form-row form-row-wide">
+        <label for="cardpan">Cardpan</label>
+        <span class="inputIframe" id="cardpan"<?php echo $cardnumber_css; ?>></span>
+    </p>
 
-    <label for="cvcInput">CVC:</label>
-    <span id="cardcvc2" class="inputIframe"<?php echo $cvc2_css; ?>></span>
+    <p class="form-row form-row-wide">
+        <label for="cvcInput">CVC</label>
+        <span id="cardcvc2" class="inputIframe"<?php echo $cvc2_css; ?>></span>
+    </p>
 
-    <label for="expireInput">Expire Date:</label>
-    <span id="expireInput" class="inputIframe">
-        <span id="cardexpiremonth"<?php echo $month_css; ?>></span>
-        <span id="cardexpireyear"<?php echo $year_css; ?>></span>
-    </span>
+    <p class="form-row form-row-wide">
+        <label for="expireInput">Expire Date</label>
+        <span id="expireInput" class="inputIframe">
+            <span id="cardexpiremonth"<?php echo $month_css; ?>></span>
+            <span id="cardexpireyear"<?php echo $year_css; ?>></span>
+        </span>
+    </p>
 
-    <label for="card_firstname">Firstname:</label>
-    <input id="card_firstname" type="text" name="card_firstname" value="">
-    <label for="card_lastname">Lastname:</label>
-    <input id="card_lastname" type="text" name="card_lastname" value="">
+    <p class="form-row form-row-wide">
+        <label for="payone_card_firstname">Firstname</label>
+        <input class="payoneInput" id="payone_card_firstname" type="text" name="card_firstname" value="">
+    </p>
+
+    <p class="form-row form-row-wide">
+        <label for="payone_card_lastname">Lastname</label>
+        <input class="payoneInput" id="payone_card_lastname" type="text" name="card_lastname" value="">
+    </p>
 
     <div id="errorOutput"></div>
 </fieldset>
@@ -178,3 +191,30 @@
         }
     }
 </script>
+<style>
+    .payoneInput {
+        -webkit-appearance: textfield !important;
+        background-color: white !important;
+        font-size: 1rem !important;
+        border: 1px solid black !important;
+        padding: 1px !important;
+        color: black !important;
+        outline: initial !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        font-family: system-ui !important;
+    }
+
+    .payoneSelect {
+        -webkit-appearance: menulist !important;
+        background-color: rgb(248, 248, 248) !important;
+        font-size: 1rem !important;
+        border: 1px solid black !important;
+        padding: 0 !important;
+        color: black !important;
+        outline: initial !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        font-family: system-ui !important;
+    }
+</style>
