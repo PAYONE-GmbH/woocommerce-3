@@ -76,7 +76,6 @@ class PrePayment extends GatewayBase {
 
 	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
 		if ( $from_status === 'on-hold' && $to_status === 'processing' ) {
-			// @todo Reagieren, wenn Capture fehlschlägt?
 			$this->capture( $order );
 		}
 	}

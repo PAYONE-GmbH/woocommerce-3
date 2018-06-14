@@ -140,19 +140,19 @@
     request = {
         request: 'creditcardcheck',
         responsetype: 'JSON',
-        mode: '<?php echo $options['mode']; // @todo Ausgaben escapen ?>',
-        mid: '<?php echo $options['merchant_id']; ?>',
-        aid: '<?php echo $options['account_id']; ?>',
-        portalid: '<?php echo $options['portal_id']; ?>',
+        mode: '<?php echo esc_attr( $options['mode'] ); ?>',
+        mid: '<?php echo esc_attr( $options['merchant_id'] ); ?>',
+        aid: '<?php echo esc_attr( $options['account_id'] ); ?>',
+        portalid: '<?php echo esc_attr( $options['portal_id'] ); ?>',
         encoding: 'UTF-8',
         storecarddata: 'yes',
-        hash: '<?php echo $hash; ?>'
+        hash: '<?php echo esc_attr( $hash ); ?>'
     };
     var iframes = new Payone.ClientApi.HostedIFrames(config, request);
-    iframes.setCardType('<?php $cc_brand_choices = $this->get_option('cc_brands'); echo $cc_brand_choices[0]; ?>');
+    iframes.setCardType('<?php $cc_brand_choices = $this->get_option('cc_brands'); echo esc_attr( $cc_brand_choices[0] ); ?>');
 
     document.getElementById('cardtype').onchange = function () {
-        iframes.setCardType(this.value);              // on change: set new type of credit card to process
+        iframes.setCardType(this.value);
     };
 
     var check_status = false;
@@ -164,8 +164,7 @@
         }
 
         if (iframes.isComplete()) {
-            iframes.creditCardCheck('checkCallback');// Perform "CreditCardCheck" to create and get a
-                                                     // PseudoCardPan; then call your function "checkCallback"
+            iframes.creditCardCheck('checkCallback');
         } else {
             jQuery('#errorOutput').html('<strong style="color:red">Bitte Formular vollständig ausfüllen!</strong>');
             payone_unblock();

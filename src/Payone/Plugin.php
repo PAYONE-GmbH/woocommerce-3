@@ -152,6 +152,10 @@ class Plugin {
 	public function process_callback() {
 		$transaction_status = TransactionStatus::construct_from_post_parameters();
 
+		if ( ! $transaction_status->has_valid_order() ) {
+			return 'Order ' . $transaction_status->get( 'reference' ) . ' not found';
+		}
+
 		$do_process_callback = true;
 		$do_process_callback = apply_filters( 'payone_do_process_callback', $do_process_callback, $transaction_status );
 

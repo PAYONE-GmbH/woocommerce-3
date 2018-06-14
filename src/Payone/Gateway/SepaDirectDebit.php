@@ -247,7 +247,6 @@ class SepaDirectDebit extends GatewayBase {
 		if ( $authorization_method === 'preauthorization'
 		     && $from_status === 'on-hold' && $to_status === 'processing'
 		) {
-			// @todo Reagieren, wenn Capture fehlschlägt?
 			$this->capture( $order );
 		}
 	}

@@ -61,7 +61,6 @@ class PayDirekt extends RedirectGatewayBase {
 	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
 		$authorization_method = $order->get_meta( '_authorization_method' );
 		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
-			// @todo Reagieren, wenn Capture fehlschlägt?
 			$this->capture( $order );
 		}
 	}

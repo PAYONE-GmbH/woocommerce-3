@@ -2,12 +2,12 @@
 
 /*
 Plugin Name: BS PAYONE WooCommerce 3
-Plugin URI: http://URI_Of_Page_Describing_Plugin_and_Updates
-Description: A brief description of the Plugin.
+Plugin URI: http://www.bspayone.com/
+Description: BS PAYONE Payment for WooCommerce 3
 Version: 1.3.4
-Author: BS PAYONE
-Author URI: http://URI_Of_The_Plugin_Author
-License: A "Slug" license name e.g. GPL2
+Author: pooliestudios
+Author URI: https://pooliestudios.com
+License: MIT
 */
 
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );

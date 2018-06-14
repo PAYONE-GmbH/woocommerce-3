@@ -86,7 +86,6 @@ class Invoice extends GatewayBase {
 		$authorization_method = $order->get_meta( '_authorization_method' );
 
 		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
-			// @todo Reagieren, wenn Capture fehlschlägt?
 			$this->capture( $order );
 		}
 	}

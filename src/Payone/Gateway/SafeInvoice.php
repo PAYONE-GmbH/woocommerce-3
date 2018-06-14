@@ -91,7 +91,6 @@ class SafeInvoice extends GatewayBase {
 				$response->store_clearing_info( $order );
 				$order->save_meta_data();
 			}
-			// @todo Reagieren, wenn Capture fehlschlägt?
 
 			return $response;
 		}

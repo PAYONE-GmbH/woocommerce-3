@@ -21,15 +21,12 @@ class TransactionStatus extends DataTransfer {
 	 */
 	public static function construct_from_post_parameters() {
 		$transaction_status = new TransactionStatus( $_POST );
-		$transaction_status->set_order( $transaction_status->get('reference') );
+		$transaction_status->set_order( $transaction_status->get( 'reference') );
 
 		return $transaction_status;
 	}
 
 	/**
-	 * @todo Der try-catch-Block wurde hinzugefügt, weil der DEV-Server die Order bearbeiten muss, auch wenn er die ID
-	 * @todo nicht kennt. Das kann/soll/muss evtl. beim Livegang wieder entfernt werden.
-	 * 
 	 * @param int $order_id
 	 *
 	 * @return TransactionStatus
@@ -110,6 +107,13 @@ class TransactionStatus extends DataTransfer {
 	 */
 	public function get_sequencenumber() {
 		return $this->get_int( 'sequencenumber' );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function has_valid_order() {
+		return $this->get_order() !== null;
 	}
 
 	/**
