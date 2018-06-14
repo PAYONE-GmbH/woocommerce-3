@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: BS PAYONE WooCommerce 3
-Plugin URI: http://www.bspayone.com/
+Plugin URI: https://www.bspayone.com/
 Description: BS PAYONE Payment for WooCommerce 3
 Version: 1.3.5
 Author: pooliestudios
