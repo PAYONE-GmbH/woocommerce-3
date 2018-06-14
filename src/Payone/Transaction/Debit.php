@@ -26,7 +26,7 @@ class Debit extends Base {
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 
 		// Dieser Aufruf *muss* nach dem Setzen von 'amount' stattfinden!
-		if ($this->should_submit_cart() ) {
+		if ( $this->should_submit_cart() ) {
 			$this->add_article_list_to_transaction( $order );
 		}
 
@@ -46,12 +46,20 @@ class Debit extends Base {
 	}
 
 	protected function get_article_list_for_transaction( \WC_Order $order ) {
+		// Bestimme die Default-Steuerrate
+		$tax_rates =  \WC_Tax::get_rates();
+		$va = 0;
+		if ( is_array( $tax_rates ) ) {
+			$rates = array_shift( $tax_rates );
+			$va    = round( array_shift( $rates ) );
+		}
+
 		return [ '1' => [
 			'id' => 'GS',
 			'pr' => $this->get('amount'),
 			'no' => 1,
 			'de' => 'Gutschrift für Ihre Bestellung',
-			'va' => 0,
+			'va' => 100 * $va,
 		] ];
 	}
 }

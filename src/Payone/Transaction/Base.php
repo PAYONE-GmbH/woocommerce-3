@@ -23,7 +23,6 @@ class Base extends Request {
 	 */
 	public function should_submit_cart() {
 		if ( ! $this->gateway ) {
-			exit;
 			return false;
 		}
 
