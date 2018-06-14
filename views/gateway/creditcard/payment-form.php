@@ -77,7 +77,7 @@
             cardpan: {
                 selector: "cardpan",
                 type: "<?php echo $this->get_option( 'cc_field_cardnumber_type' ); ?>",
-                style: "font-size: 1em; border: 1px solid #000;",
+                style: "font-size: 1em; border: 1px solid #000; width: " + <?php echo $this->get_option( 'cc_field_cardnumber_width' ); ?>,
                 size: "<?php echo $this->get_option( 'cc_field_cardnumber_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_cardnumber_maxchars' ); ?>"
                 <?php if ($this->get_option( 'cc_field_cardnumber_iframe' ) === 'custom') { ?>
