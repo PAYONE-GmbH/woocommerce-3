@@ -61,6 +61,7 @@ class Plugin {
 		add_action( 'woocommerce_thankyou', [$this, 'add_content_to_thankyou_page'] );
 
 		add_filter( 'woocommerce_email_enabled_customer_processing_order' , [ $this, 'disable_capture_mail_filter' ]);
+		add_action( 'wp_head', [ $this, 'add_stylesheet' ] );
 	}
 
 	public function disable_capture_mail_filter() {
@@ -270,9 +271,6 @@ class Plugin {
 		return self::find_gateway( $order->get_payment_method() );
 	}
 
-	/**
-	 *
-	 */
 	public function add_javascript() {
 		if ( is_checkout() ) {
 			include PAYONE_VIEW_PATH . '/gateway/common/checkout.js.php';
@@ -282,6 +280,14 @@ class Plugin {
 	public function enque_javascript() {
 		if ( is_checkout() ) {
 			wp_enqueue_script( 'payone_hosted', 'https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js' );
+		}
+	}
+
+	public function add_stylesheet() {
+		if ( is_checkout() ) {
+			echo "\n<style type='text/css'>\n";
+			include PAYONE_VIEW_PATH . '/gateway/common/checkout.css';
+			echo "\n</style>\n";
 		}
 	}
 
