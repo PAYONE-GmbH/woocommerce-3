@@ -4,6 +4,7 @@ namespace Payone\Transaction;
 
 use Payone\Gateway\GatewayBase;
 use Payone\Payone\Api\Request;
+use Payone\Plugin;
 
 class Base extends Request {
 	/**
@@ -106,28 +107,15 @@ class Base extends Request {
 	}
 
 	protected function get_article_list_for_transaction( \WC_Order $order ) {
-		$articles = $order->get_meta( '_article_list' );
-		if ( is_array( $articles ) ) {
-			return $articles;
-		}
-
 		$articles = [];
-
-		$tax = new \WC_Tax();
-		$n = 1;
+        $n = 1;
 		foreach ( $order->get_items() as $item_id => $item_data ) {
-			$product = $item_data->get_product();
-			$product_tax_class = $product->get_tax_class();
-			$tax_rates =  $tax->get_rates( $product_tax_class );
-			$va = 0;
-			if ( $tax_rates ) {
-				$tax_rate = array_pop( $tax_rates );
-				if ( $tax_rate && isset( $tax_rate[ 'rate' ] ) ) {
-					$va = round( $tax_rate[ 'rate' ] );
-				}
-			}
-
-			$price = round( 100 * wc_get_price_including_tax( $product ) );
+            $product = $item_data->get_product();
+            $data = $item_data->get_data();
+            $va = Plugin::get_tax_rate_for_item_data( $data );
+            $price_all = $data[ 'total' ] + $data[ 'total_tax' ];
+            $price_one = $price_all / $item_data->get_quantity();
+            $price = round( 100 * $price_one );
 			$articles[ $n ] = [
 				'id' => $item_id,
 				'pr' => $price,
@@ -140,12 +128,13 @@ class Base extends Request {
 
 		foreach ( $order->get_shipping_methods() as $item_id => $item_data ) {
 			$data = $item_data->get_data();
+			$va = Plugin::get_tax_rate_for_item_data( $data );
 			$articles[ $n ] = [
 				'id' => $item_id,
 				'pr' => round( 100 * ( $data[ 'total' ] + $data[ 'total_tax' ] ) ),
 				'no' => 1,
 				'de' => $data[ 'name' ],
-				'va' => round( 10000 * $data[ 'total_tax' ] / $data[ 'total' ] ),
+				'va' => 100 * $va,
 			];
 			$n++;
 		}
@@ -161,9 +150,6 @@ class Base extends Request {
 			];
 			$this->set( 'va[' . $n . ']', 0 );
 		}
-
-		$order->add_meta_data( '_article_list', $articles );
-		$order->save_meta_data();
 
 		return $articles;
 	}

@@ -303,6 +303,32 @@ class Plugin {
 		}
 	}
 
+    /**
+     * @param array $item_data
+     *
+     * @return float
+     */
+    public static function get_tax_rate_for_item_data( $item_data ) {
+	    $all_tax_classes = \WC_Tax::get_tax_classes();
+	    $all_tax_classes[] = '';
+        $all_tax_rates = [];
+        foreach ( $all_tax_classes as $tax_class ) {
+            $all_tax_rates[] = \WC_Tax::get_rates_for_tax_class( $tax_class );
+        }
+        $calculated_tax_rate = ( int ) ( 100 * round( 100 * $item_data[ 'total_tax' ] / $item_data[ 'total' ], 0 ) );
+
+        foreach ( $all_tax_rates as $tax_rates ) {
+            foreach ( $tax_rates as $tax_rate ) {
+                $the_tax_rate = ( int ) round( 100 * $tax_rate->tax_rate, 0 );
+                if ( $the_tax_rate === $calculated_tax_rate ) {
+                    return $tax_rate->tax_rate;
+                }
+            }
+        }
+
+        return 0.0;
+    }
+
 	/**
 	 * @param string $gateway_id
 	 *
