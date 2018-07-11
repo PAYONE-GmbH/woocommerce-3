@@ -104,7 +104,6 @@ final class PluginTest extends TestCase {
         $this->assertFalse( \Payone\Plugin::ip_address_is_in_range( '::ffff:192.168.0.1', '185.60.20.0/24' ) );
         $this->assertFalse( \Payone\Plugin::ip_address_is_in_range( '::ffff:185.60.21.1', '185.60.20.0/24' ) );
         $this->assertTrue( \Payone\Plugin::ip_address_is_in_range( '::ffff:192.168.65.178', '192.168.65.178' ) );
-
     }
 
 	public function test_get_tax_rate_for_item_19() {
