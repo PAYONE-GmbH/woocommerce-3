@@ -91,6 +91,10 @@ class Plugin {
 	 * @return bool
 	 */
 	public static function ip_address_is_in_range( $ip_address, $range ) {
+	    if ( strpos( $ip_address, '::ffff:' ) === 0) {
+	        $ip_address = substr( $ip_address, 7);
+        }
+
 		if ( strpos( $range, '/' ) === false ) {
 			$range .= '/32';
 		}
@@ -299,7 +303,9 @@ class Plugin {
 		$order = wc_get_order( $order_id );
 		if ( $order ) {
 			$gateway = self::get_gateway_for_order( $order );
-			$gateway->add_content_to_thankyou_page( $order );
+			if ( $gateway instanceof GatewayBase ) {
+                $gateway->add_content_to_thankyou_page($order);
+            }
 		}
 	}
 
