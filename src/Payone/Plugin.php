@@ -91,6 +91,10 @@ class Plugin {
 	 * @return bool
 	 */
 	public static function ip_address_is_in_range( $ip_address, $range ) {
+	    if ( strpos( $ip_address, '::ffff:' ) === 0) {
+	        $ip_address = substr( $ip_address, 7);
+        }
+
 		if ( strpos( $range, '/' ) === false ) {
 			$range .= '/32';
 		}
