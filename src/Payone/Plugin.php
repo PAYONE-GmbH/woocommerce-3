@@ -303,7 +303,9 @@ class Plugin {
 		$order = wc_get_order( $order_id );
 		if ( $order ) {
 			$gateway = self::get_gateway_for_order( $order );
-			$gateway->add_content_to_thankyou_page( $order );
+			if ( $gateway instanceof GatewayBase ) {
+                $gateway->add_content_to_thankyou_page($order);
+            }
 		}
 	}
 
