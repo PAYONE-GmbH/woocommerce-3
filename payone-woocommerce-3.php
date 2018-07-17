@@ -4,7 +4,7 @@
 Plugin Name: BS PAYONE WooCommerce 3
 Plugin URI: https://www.bspayone.com/
 Description: BS PAYONE Payment for WooCommerce 3
-Version: 1.3.9
+Version: 1.3.10
 Author: pooliestudios
 Author URI: https://pooliestudios.com
 License: MIT
@@ -12,7 +12,7 @@ License: MIT
 
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
-define( 'PAYONE_PLUGIN_VERSION', '1.3.9' );
+define( 'PAYONE_PLUGIN_VERSION', '1.3.10' );
 define( 'PAYONE_PLUGIN_PATH', __DIR__ );
 define( 'PAYONE_VIEW_PATH', PAYONE_PLUGIN_PATH . '/views' );
 

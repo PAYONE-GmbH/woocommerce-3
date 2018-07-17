@@ -20,7 +20,7 @@ class Plugin {
      *
      * @var bool
      */
-	public static $send_mail_after_capture = true;
+	public static $send_mail_after_capture = false;
 
 	/**
 	 * @todo Evtl. Zugriff über file_get_contents('php://input') realisieren, wenn der Server file_get_contents zulässt
@@ -69,8 +69,13 @@ class Plugin {
 		add_action( 'wp_head', [ $this, 'add_stylesheet' ] );
 	}
 
-	public function disable_capture_mail_filter() {
-		return self::$send_mail_after_capture;
+	public function disable_capture_mail_filter( $value ) {
+	    $screen = $GLOBALS[ 'current_screen' ];
+	    if ( $screen->id === 'woocommerce_page_wc-settings' ) {
+	        return $value;
+        }
+
+        return $value && self::$send_mail_after_capture;
 	}
 
 	/**
