@@ -15,7 +15,12 @@ class Plugin {
 		'213.178.72.196', '213.178.72.197', '217.70.200.0/24', '185.60.20.0/24'
 	];
 
-	public static $send_mail_after_capture = false;
+    /**
+     * Wird benutzt, um die Capture-Mail zu verhindern, wenn das Capture nicht erfolgreich war.
+     *
+     * @var bool
+     */
+	public static $send_mail_after_capture = true;
 
 	/**
 	 * @todo Evtl. Zugriff über file_get_contents('php://input') realisieren, wenn der Server file_get_contents zulässt
