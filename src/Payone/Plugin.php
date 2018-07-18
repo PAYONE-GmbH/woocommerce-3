@@ -15,6 +15,11 @@ class Plugin {
 		'213.178.72.196', '213.178.72.197', '217.70.200.0/24', '185.60.20.0/24'
 	];
 
+    /**
+     * Wird benutzt, um die Capture-Mail zu verhindern, wenn das Capture nicht erfolgreich war.
+     *
+     * @var bool
+     */
 	public static $send_mail_after_capture = false;
 
 	/**
@@ -64,8 +69,13 @@ class Plugin {
 		add_action( 'wp_head', [ $this, 'add_stylesheet' ] );
 	}
 
-	public function disable_capture_mail_filter() {
-		return self::$send_mail_after_capture;
+	public function disable_capture_mail_filter( $value ) {
+	    $screen = $GLOBALS[ 'current_screen' ];
+	    if ( $screen->id === 'woocommerce_page_wc-settings' ) {
+	        return $value;
+        }
+
+        return $value && self::$send_mail_after_capture;
 	}
 
 	/**
