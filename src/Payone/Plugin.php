@@ -167,6 +167,10 @@ class Plugin {
 		$transaction_status = TransactionStatus::construct_from_post_parameters();
 
 		if ( ! $transaction_status->has_valid_order() ) {
+		    if ( ! apply_filters( 'payone_do_throw_error_on_invalid_order', true ) ) {
+		        return 'TSOK';
+            }
+
 			return 'Order ' . $transaction_status->get( 'reference' ) . ' not found';
 		}
 
