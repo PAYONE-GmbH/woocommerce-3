@@ -70,8 +70,8 @@ class Plugin {
 	}
 
 	public function disable_capture_mail_filter( $value ) {
-	    $screen = $GLOBALS[ 'current_screen' ];
-	    if ( $screen->id === 'woocommerce_page_wc-settings' ) {
+	    $screen = isset( $GLOBALS[ 'current_screen' ] ) ? $GLOBALS[ 'current_screen' ] : '';
+	    if ( $screen && $screen->id === 'woocommerce_page_wc-settings' ) {
 	        return $value;
         }
 

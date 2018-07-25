@@ -127,6 +127,7 @@ class SepaDirectDebit extends GatewayBase {
 		if ( $authorization_method === 'preauthorization' ) {
 			$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
+		    Plugin::$send_mail_after_capture = true;
 			$order->update_status( 'processing',
 				__( 'Payment is authorized and captured.', 'payone-woocommerce-3' ) );
 		}
