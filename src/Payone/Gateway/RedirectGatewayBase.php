@@ -96,7 +96,6 @@ abstract class RedirectGatewayBase extends GatewayBase {
 			$order->update_status( 'on-hold', __( 'payment is preauthorized.', 'woocommerce' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
 			$order->add_order_note( __( 'payment is authorized and captured.', 'woocommerce' ) );
-            Plugin::$send_mail_after_capture = true;
 			$order->payment_complete();
 		}
 

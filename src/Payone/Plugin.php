@@ -20,7 +20,7 @@ class Plugin {
      *
      * @var bool
      */
-	public static $send_mail_after_capture = false;
+	public static $send_mail_after_capture = true;
 
 	/**
 	 * @todo Evtl. Zugriff über file_get_contents('php://input') realisieren, wenn der Server file_get_contents zulässt
@@ -65,13 +65,43 @@ class Plugin {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enque_javascript' ] );
 		add_action( 'woocommerce_thankyou', [$this, 'add_content_to_thankyou_page'] );
 
-		add_filter( 'woocommerce_email_enabled_customer_processing_order' , [ $this, 'disable_capture_mail_filter' ]);
+        add_action( 'woocommerce_order_status_processing', [ $this, 'pre_disable_capture_mail_filter' ], 10, 2 );
+        add_filter( 'woocommerce_email_enabled_customer_processing_order' , [ $this, 'disable_capture_mail_filter' ]);
+
 		add_action( 'wp_head', [ $this, 'add_stylesheet' ] );
 	}
 
+    /**
+     * Wenn die Bestellung den Status zu "processing" ändert und es sich um eine Bestellung mit "preauthorization"
+     * handelt, wird ein Capture nur manuell erfolgen. Deshalb wird self::$send_mail_after_capture auf false
+     * gesetzt, damit innerhalb von Capture::execute() nur die manuell verschickte Mail rausgeht - und dann auch nur,
+     * wenn das Capture erfolgreich war.
+     *
+     * @param $order_id
+     * @param $order
+     */
+    public function pre_disable_capture_mail_filter( $order_id, $order ) {
+	    if ( ! $order ) {
+	        $order = wc_get_order( $order_id );
+        }
+
+        $authorization_method = $order->get_meta( '_authorization_method' );
+        if ( $authorization_method === 'preauthorization' ) {
+            self::$send_mail_after_capture = false;
+        }
+    }
+
+    /**
+     * Sorgt dafür, dass über das Setzen von self::$send_mail_after_capture getriggert werden kann, ob die
+     * processing-Mail verschickt wird, oder nicht.
+     *
+     * @param $value
+     *
+     * @return bool
+     */
 	public function disable_capture_mail_filter( $value ) {
-	    $screen = isset( $GLOBALS[ 'current_screen' ] ) ? $GLOBALS[ 'current_screen' ] : '';
-	    if ( $screen && $screen->id === 'woocommerce_page_wc-settings' ) {
+        $screen = isset( $GLOBALS[ 'current_screen' ] ) ? $GLOBALS[ 'current_screen' ] : '';
+        if ( $screen && $screen->id === 'woocommerce_page_wc-settings' ) {
 	        return $value;
         }
 
