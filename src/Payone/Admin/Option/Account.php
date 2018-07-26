@@ -103,7 +103,7 @@ class Account extends Helper {
 	}
 
 	public function account_info() {
-		echo __( 'plugin.settings.info', 'payone-woocommerce-3' );
+		_e( 'plugin.settings.info', 'payone-woocommerce-3' );
 	}
 
 	public function field_account_id() {

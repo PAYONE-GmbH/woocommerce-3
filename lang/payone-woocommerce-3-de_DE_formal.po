@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BS PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2018-06-13 10:26+0200\n"
+"POT-Creation-Date: 2018-07-26 10:03+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
 "_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.1\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: src/Payone/Admin/ApiLogListTable.php:9
@@ -747,7 +747,6 @@ msgid "payment is preauthorized."
 msgstr "Zahlung wurde vorautorisiert."
 
 #: src/Payone/Gateway/RedirectGatewayBase.php:98
-#, fuzzy
 msgid "payment is authorized and captured."
 msgstr "Zahlung wurde autorisiert und belastet."
 
@@ -862,7 +861,7 @@ msgstr ""
 
 #: src/Payone/Gateway/SepaDirectDebit.php:74
 msgid "Lithuania"
-msgstr ""
+msgstr "Litauen"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:75
 msgid "Luxembourg"
@@ -926,7 +925,7 @@ msgstr ""
 
 #: src/Payone/Gateway/SepaDirectDebit.php:90
 msgid "Slovenia"
-msgstr ""
+msgstr "Slowenien"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:91
 msgid "Spain"
@@ -938,7 +937,7 @@ msgstr "Schweden"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:94
 msgid "United Kingdom"
-msgstr ""
+msgstr "Vereinigtes Königreich"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:131
 msgid "Payment is authorized and captured."
@@ -953,7 +952,7 @@ msgstr "Sie müssen diese Checkbox ankreuzen, um fortfahren zu können"
 msgid "SOFORT.com"
 msgstr "Sofort-Überweisung"
 
-#: src/Payone/Transaction/Base.php:160
+#: src/Payone/Transaction/Base.php:148
 msgid "Discount"
 msgstr "Rabatt"
 
@@ -961,11 +960,11 @@ msgstr "Rabatt"
 msgid "Capture already done"
 msgstr "Belastung wurde bereits durchgeführt"
 
-#: src/Payone/Transaction/Capture.php:46
+#: src/Payone/Transaction/Capture.php:44
 msgid "Capture successfull"
 msgstr "Belastung erfolgreich"
 
-#: src/Payone/Transaction/Capture.php:52
+#: src/Payone/Transaction/Capture.php:59
 msgid "Capture failed: "
 msgstr "Belastung fehlgeschlagen: "
 
@@ -1092,6 +1091,30 @@ msgstr ""
 #: views/admin/credit-check.php:2
 msgid "Credit Check"
 msgstr ""
+
+#: views/gateway/creditcard/payment-form.php:31
+msgid "Card type"
+msgstr "Kartentyp"
+
+#: views/gateway/creditcard/payment-form.php:42
+msgid "Cardpan"
+msgstr "Kartennummer"
+
+#: views/gateway/creditcard/payment-form.php:47
+msgid "CVC"
+msgstr "CVC"
+
+#: views/gateway/creditcard/payment-form.php:52
+msgid "Expire Date"
+msgstr "Gültig bis"
+
+#: views/gateway/creditcard/payment-form.php:60
+msgid "Firstname"
+msgstr "Vorname"
+
+#: views/gateway/creditcard/payment-form.php:65
+msgid "Lastname"
+msgstr "Nachname"
 
 #: views/gateway/sepa-direct-debit/payment-form.php:19
 msgid "direct.debit.mandate.checkbox.label"

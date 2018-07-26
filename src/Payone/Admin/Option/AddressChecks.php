@@ -98,7 +98,7 @@ class AddressChecks extends Helper {
 	}
 
 	public function account_info() {
-		echo __( 'plugin.address_check.info', 'payone-woocommerce-3' );
+		_e( 'plugin.address_check.info', 'payone-woocommerce-3' );
 	}
 
 	public function field_active() {

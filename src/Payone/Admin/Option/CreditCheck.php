@@ -93,7 +93,7 @@ class CreditCheck extends Helper {
 	}
 
 	public function account_info() {
-		echo __( 'plugin.credit_check.info', 'payone-woocommerce-3' );
+		_e( 'plugin.credit_check.info', 'payone-woocommerce-3' );
 	}
 
 	public function field_active() {
