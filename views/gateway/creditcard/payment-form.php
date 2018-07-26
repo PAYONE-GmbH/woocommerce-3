@@ -28,7 +28,7 @@
 </p>
 <fieldset>
     <p class="form-row form-row-wide">
-        <label for="cardtypeInput">Card type</label>
+        <label for="cardtypeInput"><?php _e( 'Card type', 'payone-woocommerce-3' ) ?></label>
         <select class="payoneSelect" id="cardtype">
             <?php foreach ( $this->get_option( 'cc_brands' ) as $cc_brand ) { ?>
                 <option value="<?php echo $cc_brand; ?>">
@@ -39,17 +39,17 @@
     </p>
 
     <p class="form-row form-row-wide">
-        <label for="cardpan">Cardpan</label>
+        <label for="cardpan"><?php _e( 'Cardpan', 'payone-woocommerce-3' ) ?></label>
         <span class="inputIframe" id="cardpan"<?php echo $cardnumber_css; ?>></span>
     </p>
 
     <p class="form-row form-row-wide">
-        <label for="cvcInput">CVC</label>
+        <label for="cvcInput"><?php _e( 'CVC', 'payone-woocommerce-3' ) ?></label>
         <span id="cardcvc2" class="inputIframe"<?php echo $cvc2_css; ?>></span>
     </p>
 
     <p class="form-row form-row-wide">
-        <label for="expireInput">Expire Date</label>
+        <label for="expireInput"><?php _e( 'Expire Date', 'payone-woocommerce-3' ) ?></label>
         <span id="expireInput" class="inputIframe">
             <span id="cardexpiremonth"<?php echo $month_css; ?>></span>
             <span id="cardexpireyear"<?php echo $year_css; ?>></span>
@@ -57,12 +57,12 @@
     </p>
 
     <p class="form-row form-row-wide">
-        <label for="payone_card_firstname">Firstname</label>
+        <label for="payone_card_firstname"><?php _e( 'Firstname', 'payone-woocommerce-3' ) ?></label>
         <input class="payoneInput" id="payone_card_firstname" type="text" name="card_firstname" value="">
     </p>
 
     <p class="form-row form-row-wide">
-        <label for="payone_card_lastname">Lastname</label>
+        <label for="payone_card_lastname"><?php _e( 'Lastname', 'payone-woocommerce-3' ) ?></label>
         <input class="payoneInput" id="payone_card_lastname" type="text" name="card_lastname" value="">
     </p>
 

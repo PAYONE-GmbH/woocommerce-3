@@ -38,23 +38,26 @@ class Capture extends Base {
 
 			return null;
 		}
-
 		$response = $this->submit();
 
-		Plugin::$send_mail_after_capture = false;
-		if ( $response->is_approved() ) {
+        if ( $response->is_approved() ) {
 			$order->add_order_note( __( 'Capture successfull', 'payone-woocommerce-3' ) );
 			$order->update_meta_data( '_captured', time() );
 			$order->save_meta_data();
+
+            /**
+             * Für manuelle Captures ist der Mailversand grundsätzlich ausgeschaltet.
+             * Siehe Plugin::pre_disable_capture_mail_filter()
+             */
+            $old_value = Plugin::$send_mail_after_capture;
 			Plugin::$send_mail_after_capture = true;
+            $mail = new \WC_Email_Customer_Processing_Order();
+            $mail->trigger( null, $order );
+            Plugin::$send_mail_after_capture = $old_value;
 		} else {
-			$this->set_sequencenumber( $order, $current_sequencenumber );
+            $this->set_sequencenumber( $order, $current_sequencenumber );
 			$order->add_order_note( __( 'Capture failed: ', 'payone-woocommerce-3' ) . $response->get_error_message() );
 		}
-
-		$mail = new \WC_Email_Customer_Processing_Order();
-		$mail->trigger( null, $order );
-		Plugin::$send_mail_after_capture = false;
 
 		return $response;
 	}
