@@ -17,7 +17,10 @@ class CreditCard extends RedirectGatewayBase {
 
 	public function init_form_fields() {
 		$this->init_common_form_fields( __( 'Creditcard', 'payone-woocommerce-3' ) );
-
+        $countries = new \WC_Countries();
+        $this->form_fields[ 'countries' ][ 'options' ] = $countries->get_countries();
+        $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE', 'AT', 'CH' ];
+        
 		$yesno_options = [
 			'0' => __( 'No', 'payone-woocommerce-3' ),
 			'1' => __( 'Yes', 'payone-woocommerce-3' ),
