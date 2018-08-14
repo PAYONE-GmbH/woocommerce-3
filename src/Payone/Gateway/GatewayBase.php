@@ -243,6 +243,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 					'CH' => __( 'Switzerland', 'payone-woocommerce-3' ),
 				],
 				'default' => [ 'DE', 'AT', 'CH' ],
+                'css'     => 'height:100px',
 			],
 			'use_global_settings'       => [
 				'title'   => __( 'Use global settings', 'payone-woocommerce-3' ),
@@ -429,7 +430,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	}
 
 	/**
-	 * This is a copy of $this->>generate_select_html(), but without the table_markup
+	 * This is a copy of $this->generate_select_html(), but without the table_markup
 	 *
 	 * @param string $key
 	 * @param array $data
@@ -469,7 +470,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	}
 
 	/**
-	 * This is a copy of $this->>generate_text_html(), but without the table_markup
+	 * This is a copy of $this->generate_text_html(), but without the table_markup
 	 *
 	 * @param string $key
 	 * @param array $data
