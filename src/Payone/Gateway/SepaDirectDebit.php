@@ -99,7 +99,7 @@ class SepaDirectDebit extends GatewayBase {
 		];
 
         $this->form_fields[ 'countries' ][ 'options' ] = $this->form_fields[ 'sepa_countries' ][ 'options' ];
-        $this->form_fields[ 'countries' ][ 'default' ] = $this->form_fields[ 'sepa_countries' ][ 'default' ];
+        $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE' ];
 	}
 
 	public function payment_fields() {
