@@ -46,60 +46,6 @@ class SepaDirectDebit extends GatewayBase {
 			],
 			'default' => '1',
 		];
-		$sepa_countries_options = [
-            'AT' => __( 'Austria', 'payone-woocommerce-3' ),
-            'BE' => __( 'Belgium', 'payone-woocommerce-3' ),
-            'BG' => __( 'Bulgaria', 'payone-woocommerce-3' ),
-            'HR' => __( 'Croatia', 'payone-woocommerce-3' ),
-            'CY' => __( 'Cyprus', 'payone-woocommerce-3' ),
-            'CZ' => __( 'Czech Republic', 'payone-woocommerce-3' ),
-            'DK' => __( 'Denmark', 'payone-woocommerce-3' ),
-            'EE' => __( 'Estonia', 'payone-woocommerce-3' ),
-            'FI' => __( 'Finland', 'payone-woocommerce-3' ),
-            'FR' => __( 'France', 'payone-woocommerce-3' ),
-            'GF' => __( 'French Guiana', 'payone-woocommerce-3' ),
-            'DE' => __( 'Germany', 'payone-woocommerce-3' ),
-            'GI' => __( 'Gibraltar', 'payone-woocommerce-3' ),
-            'GR' => __( 'Greece', 'payone-woocommerce-3' ),
-            'GP' => __( 'Guadeloupe', 'payone-woocommerce-3' ),
-            'HU' => __( 'Hungary', 'payone-woocommerce-3' ),
-            'IS' => __( 'Iceland', 'payone-woocommerce-3' ),
-            'IE' => __( 'Ireland', 'payone-woocommerce-3' ),
-            'IT' => __( 'Italy', 'payone-woocommerce-3' ),
-            'LV' => __( 'Latvia', 'payone-woocommerce-3' ),
-            'LI' => __( 'Liechtenstein', 'payone-woocommerce-3' ),
-            'LT' => __( 'Lithuania', 'payone-woocommerce-3' ),
-            'LU' => __( 'Luxembourg', 'payone-woocommerce-3' ),
-            'MT' => __( 'Malta', 'payone-woocommerce-3' ),
-            'MQ' => __( 'Martinique', 'payone-woocommerce-3' ),
-            'YT' => __( 'Mayotte', 'payone-woocommerce-3' ),
-            'MC' => __( 'Monaco', 'payone-woocommerce-3' ),
-            'NL' => __( 'Netherlands', 'payone-woocommerce-3' ),
-            'NO' => __( 'Norway', 'payone-woocommerce-3' ),
-            'PL' => __( 'Poland', 'payone-woocommerce-3' ),
-            'PT' => __( 'Portugal', 'payone-woocommerce-3' ),
-            'RE' => __( 'Réunion', 'payone-woocommerce-3' ),
-            'RO' => __( 'Romania', 'payone-woocommerce-3' ),
-            'BL' => __( 'Saint Barthélemy', 'payone-woocommerce-3' ),
-            'MF' => __( 'Saint Martin (French part)', 'payone-woocommerce-3' ),
-            'PM' => __( 'Saint Pierre and Miquelon', 'payone-woocommerce-3' ),
-            'SK' => __( 'Slovakia', 'payone-woocommerce-3' ),
-            'SI' => __( 'Slovenia', 'payone-woocommerce-3' ),
-            'ES' => __( 'Spain', 'payone-woocommerce-3' ),
-            'SE' => __( 'Sweden', 'payone-woocommerce-3' ),
-            'CH' => __( 'Switzerland', 'payone-woocommerce-3' ),
-            'GB' => __( 'United Kingdom', 'payone-woocommerce-3' ),
-        ];
-		$this->form_fields['sepa_countries'] = [
-			'title'   => __( 'List of supported bank countries', 'payone-woocommerce-3' ),
-			'type'    => 'multiselect',
-			'options' => $sepa_countries_options,
-			'default' => array_keys( $sepa_countries_options ),
-            'css'     => 'height:100px',
-		];
-
-        $this->form_fields[ 'countries' ][ 'options' ] = $this->form_fields[ 'sepa_countries' ][ 'options' ];
-        $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE' ];
 	}
 
 	public function payment_fields() {

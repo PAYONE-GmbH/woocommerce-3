@@ -17,13 +17,6 @@ class Sofort extends RedirectGatewayBase {
 
 	public function init_form_fields() {
 		$this->init_common_form_fields( __( 'SOFORT.com', 'payone-woocommerce-3' ) );
-        $this->form_fields[ 'countries' ][ 'options' ] = [
-            'DE' => __( 'Germany', 'payone-woocommerce-3' ),
-            'AT' => __( 'Austria', 'payone-woocommerce-3' ),
-            'NL' => __( 'Netherlands', 'payone-woocommerce-3' ),
-            'CH' => __( 'Switzerland', 'payone-woocommerce-3' ),
-        ];
-        $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE', 'AT', 'NL', 'CH' ];
 	}
 
 	public function payment_fields() {
