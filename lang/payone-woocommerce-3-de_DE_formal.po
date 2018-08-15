@@ -20,7 +20,7 @@ msgstr ""
 "esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
 "_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Generator: Poedit 2.1\n"
+"X-Generator: Poedit 2.1.1\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: src/Payone/Admin/ApiLogListTable.php:9
@@ -801,7 +801,7 @@ msgstr "Zypern"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:58
 msgid "Czech Republic"
-msgstr ""
+msgstr "Tschechische Republik"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:59
 msgid "Denmark"
@@ -809,7 +809,7 @@ msgstr "Dänemark"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:60
 msgid "Estonia"
-msgstr ""
+msgstr "Estland"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:61
 msgid "Finland"
@@ -821,7 +821,7 @@ msgstr "Frankreich"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:63
 msgid "French Guiana"
-msgstr ""
+msgstr "Französisch-Guayana"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:65
 msgid "Gibraltar"
@@ -833,7 +833,7 @@ msgstr "Griechenland"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:67
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Guadeloupe"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:68
 msgid "Hungary"
@@ -853,11 +853,11 @@ msgstr "Italien"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:72
 msgid "Latvia"
-msgstr ""
+msgstr "Lettland"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:73
 msgid "Liechtenstein"
-msgstr ""
+msgstr "Liechtenstein"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:74
 msgid "Lithuania"
@@ -873,15 +873,15 @@ msgstr "Malta"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:77
 msgid "Martinique"
-msgstr ""
+msgstr "Martinique"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:78
 msgid "Mayotte"
-msgstr ""
+msgstr "Mayotte"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:79
 msgid "Monaco"
-msgstr ""
+msgstr "Monaco"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:80
 msgid "Netherlands"
@@ -901,7 +901,7 @@ msgstr "Portugal"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:84
 msgid "Réunion"
-msgstr ""
+msgstr "Réunion"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:85
 msgid "Romania"
@@ -909,19 +909,19 @@ msgstr "Rumänien"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:86
 msgid "Saint Barthélemy"
-msgstr ""
+msgstr "Saint Barthélemy"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:87
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "Saint Martin (Französischer Teil)"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:88
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "Saint Pierre und Miquelon"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:89
 msgid "Slovakia"
-msgstr ""
+msgstr "Slowakei"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:90
 msgid "Slovenia"

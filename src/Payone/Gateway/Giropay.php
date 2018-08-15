@@ -17,6 +17,7 @@ class Giropay extends RedirectGatewayBase {
 
 	public function init_form_fields() {
 		$this->init_common_form_fields( __( 'Giropay', 'payone-woocommerce-3' ) );
+        $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE' ];
 	}
 
 	public function payment_fields() {

@@ -196,6 +196,8 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$default_account_id  = $this->global_settings['account_id'];
 		$default_key         = $this->global_settings['key'];
 
+		$countries = new \WC_Countries();
+
 		$this->form_fields = [
 			'enabled'                   => [
 				'title'   => __( 'Enable/Disable', 'woocommerce' ),
@@ -237,12 +239,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			'countries'                 => [
 				'title'   => __( 'Active Countries', 'payone-woocommerce-3' ),
 				'type'    => 'multiselect',
-				'options' => [
-					'DE' => __( 'Germany', 'payone-woocommerce-3' ),
-					'AT' => __( 'Austria', 'payone-woocommerce-3' ),
-					'CH' => __( 'Switzerland', 'payone-woocommerce-3' ),
-				],
+				'options' => $countries->get_countries(),
 				'default' => [ 'DE', 'AT', 'CH' ],
+                'css'     => 'height:100px',
 			],
 			'use_global_settings'       => [
 				'title'   => __( 'Use global settings', 'payone-woocommerce-3' ),
@@ -429,7 +428,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	}
 
 	/**
-	 * This is a copy of $this->>generate_select_html(), but without the table_markup
+	 * This is a copy of $this->generate_select_html(), but without the table_markup
 	 *
 	 * @param string $key
 	 * @param array $data
@@ -469,7 +468,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	}
 
 	/**
-	 * This is a copy of $this->>generate_text_html(), but without the table_markup
+	 * This is a copy of $this->generate_text_html(), but without the table_markup
 	 *
 	 * @param string $key
 	 * @param array $data

@@ -16,7 +16,7 @@ class PayPal extends RedirectGatewayBase {
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'PayPal', 'payone-woocommerce-3' ) );
+	    $this->init_common_form_fields( __( 'PayPal', 'payone-woocommerce-3' ) );
 	}
 
 	public function payment_fields() {
