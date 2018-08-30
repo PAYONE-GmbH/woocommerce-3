@@ -21,7 +21,7 @@ class TransactionStatus extends DataTransfer {
 	 */
 	public static function construct_from_post_parameters() {
 		$transaction_status = new TransactionStatus( $_POST );
-		$transaction_status->set_order( $transaction_status->get( 'reference') );
+		$transaction_status->set_order( $transaction_status->get_order_id() );
 
 		return $transaction_status;
 	}
@@ -43,6 +43,11 @@ class TransactionStatus extends DataTransfer {
 				$this->order = null;
 				$this->gateway = null;
 			}
+
+            if ( ! $this->order || ! $this->gateway ) {
+                $this->order = null;
+                $this->gateway = null;
+            }
 		} else {
 			$this->order = null;
 			$this->gateway = null;
@@ -76,7 +81,7 @@ class TransactionStatus extends DataTransfer {
 	 * @return string
 	 */
 	public function get_order_id() {
-		return $this->get( 'reference' );
+		return self::get_order_id_for_reference( $this->get( 'reference' ) );
 	}
 
 	/**

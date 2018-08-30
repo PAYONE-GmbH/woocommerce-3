@@ -2,7 +2,11 @@
 
 namespace Payone\Payone\Api;
 
+use Payone\Plugin;
+
 class DataTransfer {
+    const META_KEY_PAYONE_REFERENCE = '_payone_reference';
+
 	/**
 	 * @var array
 	 */
@@ -71,6 +75,23 @@ class DataTransfer {
 
 		return $this;
 	}
+
+    /**
+     * @param \WC_Order $order
+     *
+     * @return $this
+     */
+	public function set_reference( \WC_Order $order ) {
+        $reference = $order->get_meta( self::META_KEY_PAYONE_REFERENCE );
+        if ( ! $reference ) {
+            $reference = Plugin::sanitize_reference( $order->get_order_number() );
+            $order->update_meta_data( self::META_KEY_PAYONE_REFERENCE, $reference );
+        }
+
+        $this->set( 'reference', $reference );
+
+        return $this;
+    }
 
 	/**
 	 * @param string $key
@@ -180,4 +201,34 @@ class DataTransfer {
 
 		return $value;
 	}
+
+    /**
+     * @param string $reference
+     *
+     * @return int
+     */
+	protected static function get_order_id_for_reference( $reference ) {
+        $args = array(
+            'meta_key' => self::META_KEY_PAYONE_REFERENCE,
+            'meta_value' => $reference,
+            'post_type' => 'shop_order',
+            'post_status' => 'any',
+        );
+        $posts = get_posts( $args );
+        if ( count( $posts ) === 1 ) {
+            $post = array_shift($posts);
+
+            return $post->ID;
+        }
+
+        // Es wurde keine Order gefunden. Wir gehen jetzt davon aus, dass es sich bei $reference um eine Order-ID
+        // handelt, die vor der Einführung von META_KEY_PAYONE_REFERENCE angelegt wurde. Um sicher zu gehen,
+        // wird nun geprüft, ob die Order bereits einen Wert für META_KEY_PAYONE_REFERENCE hat. Nur wenn dem nicht
+        // so ist, wird $reference als Order-ID zurück gegeben.
+        if ( get_post_meta( $reference, self::META_KEY_PAYONE_REFERENCE ) ) {
+            return 0;
+        }
+
+        return $reference;
+    }
 }

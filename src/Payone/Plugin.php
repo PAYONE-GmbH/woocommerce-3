@@ -195,13 +195,13 @@ class Plugin {
 	 */
 	public function process_callback() {
 		$transaction_status = TransactionStatus::construct_from_post_parameters();
-
+		
 		if ( ! $transaction_status->has_valid_order() ) {
 		    if ( ! apply_filters( 'payone_do_throw_error_on_invalid_order', true ) ) {
 		        return 'TSOK';
             }
 
-			return 'Order ' . $transaction_status->get( 'reference' ) . ' not found';
+			return 'Order for reference ' . $transaction_status->get( 'reference' ) . ' not found';
 		}
 
 		$do_process_callback = true;
@@ -377,6 +377,14 @@ class Plugin {
         }
 
         return 0.0;
+    }
+
+    public static function sanitize_reference( $reference ) {
+        $sanitized = preg_replace('/[^A-Za-z0-9-\.\/_\-]+/', '-', $reference);
+        $sanitized = preg_replace('~-+~', '-', $sanitized);
+        $sanitized = trim( $sanitized, '-');
+
+        return $sanitized;
     }
 
 	/**

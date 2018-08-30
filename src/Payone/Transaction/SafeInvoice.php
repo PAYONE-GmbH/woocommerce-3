@@ -21,7 +21,7 @@ class SafeInvoice extends Base {
 	 * @return \Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
-		$this->set( 'reference', $order->get_id() );
+        $this->set_reference( $order );
 		$this->set( 'amount', $order->get_total() * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		$this->set_personal_data_from_order( $order );
