@@ -100,4 +100,8 @@ class SafeInvoice extends GatewayBase {
 	protected function add_data_to_capture( Capture $capture, \WC_Order $order ) {
 		\Payone\Transaction\SafeInvoice::add_article_list_to_transaction( $capture, $order );
 	}
+
+	public function should_submit_cart() {
+		return true; // Always need to submit cart for Safe Invoice
+	}
 }

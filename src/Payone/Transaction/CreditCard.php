@@ -2,15 +2,12 @@
 
 namespace Payone\Transaction;
 
-use Payone\Plugin;
-
-class CreditCard extends Base {
+class CreditCard extends OrderBase {
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
 	 */
 	public function __construct( $gateway ) {
-		parent::__construct( $gateway->get_authorization_method() );
-		$this->set_data_from_gateway( $gateway );
+		parent::__construct( $gateway );
 
 		$this->set( 'clearingtype', 'cc' );
 		$this->set( 'pseudocardpan', $_POST['card_pseudopan'] );
@@ -19,8 +16,8 @@ class CreditCard extends Base {
 	/**
 	 * @param \WC_Order $order
 	 *
-	 * @return \Payone\Payone\Api\Response
 	 */
+<<<<<<< HEAD
 	public function execute( \WC_Order $order ) {
 		if ($this->should_submit_cart() ) {
 			$this->add_article_list_to_transaction( $order );
@@ -34,5 +31,9 @@ class CreditCard extends Base {
 		$this->set( 'backurl', Plugin::get_callback_url('back') . '&oid=' . $order->get_id() );
 
 		return $this->submit();
+=======
+	public function add_execution_parameters_for_order( \WC_Order $order ) {
+		$this->add_callback_urls( $order );
+>>>>>>> refactor order-based transaction classes (dry code)
 	}
 }

@@ -79,4 +79,8 @@ class PrePayment extends GatewayBase {
 			$this->capture( $order );
 		}
 	}
+
+	public function get_authorization_method() {
+		return 'preauthorization';
+	}
 }
