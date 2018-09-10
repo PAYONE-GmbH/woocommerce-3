@@ -2,6 +2,7 @@
 
 namespace Payone\Transaction;
 
+use Payone\Plugin;
 
 abstract class OrderBase extends Base {
 
