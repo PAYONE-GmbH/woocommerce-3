@@ -70,6 +70,8 @@ class Plugin {
         add_filter( 'woocommerce_email_enabled_customer_processing_order' , [ $this, 'disable_capture_mail_filter' ]);
 
 		add_action( 'wp_head', [ $this, 'add_stylesheet' ] );
+
+		include_once plugin_dir_path(__FILE__) . 'Tokens/WC_Payment_Token_PayPalBillingAgreement.php';
 	}
 
     /**

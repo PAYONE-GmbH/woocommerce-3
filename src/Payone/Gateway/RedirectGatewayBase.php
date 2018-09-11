@@ -5,6 +5,17 @@ namespace Payone\Gateway;
 use Payone\Payone\Api\TransactionStatus;
 
 abstract class RedirectGatewayBase extends GatewayBase {
+
+	/**
+	 * @param $order \WC_Order
+	 */
+	protected function payment_successful($order) {}
+
+	/**
+	 * @param $order \WC_Order
+	 */
+	protected function payment_error($order) {}
+
 	/**
 	 * @param int $order_id
 	 * @param string $transaction_class
@@ -17,6 +28,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 		$is_success = false;
 		$make_redirect = false;
 		if ( $this->is_redirect( 'success' ) ) {
+			$this->payment_successful($order);
 			$make_redirect = true;
 			$is_success = $order->get_meta( '_appointed' ) > 0;
 			if ( ! $is_success ) {
@@ -26,6 +38,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 					'error' );
 			}
 		} elseif ( $this->is_redirect( 'error' ) ) {
+			$this->payment_error($order);
 			$make_redirect = true;
 			$is_success = false;
 			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Payment provider returned error',
