@@ -6,6 +6,8 @@ use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Capture;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
+    const GATEWAY_ID = "";
+
 	/**
 	 * @var array
 	 */
@@ -71,11 +73,16 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 */
 	private $text_on_booking_statement;
 
-	public function __construct( $id ) {
-		$this->id              = $id;
+	public function __construct() {
+		$this->id = static::GATEWAY_ID;
+
 		$this->has_fields      = true;
 		$this->supports        = [ 'products', 'refunds' ];
 		$this->global_settings = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+
+		$this->icon               = '';
+		$this->method_title       = 'Payone ' . $this->human_readable_name();
+		$this->method_description = '';
 
 		$this->init_settings();
 		$this->init_form_fields();
@@ -91,10 +98,27 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
 	}
 
+	protected abstract function human_readable_name();
+
 	public static function add( $methods ) {
 		$methods[] = get_called_class();
 
 		return $methods;
+	}
+
+	public function init_form_fields() {
+		$this->init_common_form_fields();
+	}
+
+	public function payment_fields() {
+		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+
+		try {
+			$refelect = new \ReflectionClass( $this );
+			include PAYONE_VIEW_PATH . '/gateway/' . strtolower( $refelect->getShortName() ) . '/payment-form.php';
+		} catch ( \ReflectionException $e ) {
+			error_log( 'error fetching payment fields template name for payment gateway' . static::GATEWAY_ID );
+		}
 	}
 
 	/**
@@ -190,7 +214,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @param string $label
 	 */
-	public function init_common_form_fields( $label ) {
+	public function init_common_form_fields() {
+		$label = $this->human_readable_name();
+
 		$default_merchant_id = $this->global_settings['merchant_id'];
 		$default_portal_id   = $this->global_settings['portal_id'];
 		$default_account_id  = $this->global_settings['account_id'];

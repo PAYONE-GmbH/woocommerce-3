@@ -8,23 +8,13 @@ use Payone\Transaction\Capture;
 class SafeInvoice extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_safeinvoice';
 
-	public function __construct() {
-		parent::__construct( self::GATEWAY_ID );
-
-		$this->icon               = '';
-		$this->method_title       = 'Payone ' . __( 'Safe Invoice', 'payone-woocommerce-3' );
-		$this->method_description = '';
+	protected function human_readable_name() {
+		return __( 'Safe Invoice', 'payone-woocommerce-3' );
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Safe Invoice', 'payone-woocommerce-3' ) );
+		parent::init_form_fields();
         $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE' ];
-	}
-
-	public function payment_fields() {
-		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-
-		include PAYONE_VIEW_PATH . '/gateway/safe-invoice/payment-form.php';
 	}
 
 	public function process_payment( $order_id ) {
