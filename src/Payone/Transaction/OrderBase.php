@@ -23,6 +23,12 @@ abstract class OrderBase extends Base {
 	 */
 	public function execute( $order ) {
 		$this->set_reference( $order );
+
+		$customer_id = $order->get_customer_id();
+		if ( $customer_id !== null ) {
+			$this->set( 'customerid', apply_filters( 'payone_customerid', $customer_id ) );
+		}
+
 		$this->set( 'amount', $order->get_total() * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		$this->set_personal_data_from_order( $order );

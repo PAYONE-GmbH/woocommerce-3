@@ -50,6 +50,7 @@ class Plugin {
 			\Payone\Gateway\SafeInvoice::class,
 			\Payone\Gateway\PayPal::class,
 			\Payone\Gateway\PayDirekt::class,
+			\Payone\Gateway\PayPalBillingAgreement::class
 		];
 
 		foreach ( $gateways as $gateway ) {
