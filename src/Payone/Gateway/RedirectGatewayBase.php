@@ -119,9 +119,12 @@ abstract class RedirectGatewayBase extends GatewayBase {
 	 *
 	 * @return array
 	 * @throws \WC_Data_Exception
+	 * @throws \ReflectionException
 	 */
 	public function process_payment( $order_id ) {
-		return $this->process_redirect( $order_id, get_class( $this ) );
+		$reflection        = new \ReflectionClass( $this );
+		$transaction_class = '\\Payone\\Transaction\\' . $reflection->getShortName();
+		return $this->process_redirect( $order_id, $transaction_class );
 	}
 
 	/**
