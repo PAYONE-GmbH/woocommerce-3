@@ -32,24 +32,19 @@ class TransactionStatus extends DataTransfer {
 	 * @return TransactionStatus
 	 */
 	public function set_order( $order_id ) {
-		if ( $order_id ) {
-			try {
-				$this->order   = new \WC_Order( $order_id );
-				$this->gateway = Plugin::get_gateway_for_order( $this->order );
+		try {
+			$this->order = wc_get_order( $order_id );
 
-				$this->order->update_meta_data( '_' . $this->get_action(), time() );
-				$this->order->save_meta_data();
-			} catch ( \Exception $e) {
-				$this->order = null;
-				$this->gateway = null;
+			if ( $this->order === false ) {
+				throw new \Exception( 'No valid order found' );
 			}
 
-            if ( ! $this->order || ! $this->gateway ) {
-                $this->order = null;
-                $this->gateway = null;
-            }
-		} else {
-			$this->order = null;
+			$this->gateway = Plugin::get_gateway_for_order( $this->order );
+
+			$this->order->update_meta_data( '_' . $this->get_action(), time() );
+			$this->order->save_meta_data();
+		} catch ( \Exception $e ) {
+			$this->order   = null;
 			$this->gateway = null;
 		}
 
