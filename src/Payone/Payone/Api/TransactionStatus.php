@@ -17,10 +17,12 @@ class TransactionStatus extends DataTransfer {
 	private $gateway;
 
 	/**
+     * @param $post_data
+     *
 	 * @return TransactionStatus
 	 */
-	public static function construct_from_post_parameters() {
-		$transaction_status = new TransactionStatus( $_POST );
+	public static function construct_from_post_parameters( $post_data ) {
+		$transaction_status = new TransactionStatus( $post_data );
 		$transaction_status->set_order( $transaction_status->get_order_id() );
 
 		return $transaction_status;
