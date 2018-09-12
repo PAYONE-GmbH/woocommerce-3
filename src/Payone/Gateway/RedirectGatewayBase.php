@@ -12,7 +12,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 	 * @throws \WC_Data_Exception
 	 */
 	public function process_redirect( $order_id, $transaction_class ) {
-		$order = new \WC_Order( $order_id );
+		$order = wc_get_order( $order_id );
 
 		$is_success = false;
 		$make_redirect = false;

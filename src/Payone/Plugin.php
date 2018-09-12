@@ -223,7 +223,7 @@ class Plugin {
 	}
 
 	public function order_status_changed( $id, $from_status, $to_status ) {
-		$order   = new \WC_Order( $id );
+		$order   = wc_get_order( $id );
 		$gateway = $this->get_gateway_for_order( $order );
 
 		if ( method_exists( $gateway, 'order_status_changed' ) ) {
@@ -268,12 +268,11 @@ class Plugin {
 	 * @return array
 	 */
 	private function process_callback_after_redirect() {
-		$order_id = (int)$_GET['oid'];
+		$order = wc_get_order( $_GET['oid'] );
 
-		$order = new \WC_Order( $order_id );
 		$gateway = self::get_gateway_for_order( $order );
 
-		return $gateway->process_payment( $order_id );
+		return $gateway->process_payment( $_GET['oid'] );
 	}
 
 	/**
@@ -288,8 +287,8 @@ class Plugin {
 	}
 
 	/**
-     * @param $post_data
-     *
+	 * @param $post_data
+	 *
 	 * @return array
 	 */
 	private function process_manage_mandate_callback( $post_data ) {

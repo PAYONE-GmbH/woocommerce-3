@@ -19,7 +19,7 @@ class SafeInvoice extends GatewayBase {
 
 	public function process_payment( $order_id ) {
 		global $woocommerce;
-		$order = new \WC_Order( $order_id );
+		$order = wc_get_order( $order_id );
 
 		$transaction = new \Payone\Transaction\SafeInvoice( $this );
 		$response    = $transaction->execute( $order );
