@@ -27,16 +27,7 @@ class PayPalBillingAgreement extends RedirectGatewayBase {
 	}
 
 	protected function payment_successful( $order ) {
-		$customer_id = $order->get_customer_id();
-		$tokens      = \WC_Payment_Tokens::get_customer_tokens( $customer_id, self::GATEWAY_ID );
-		if ( empty( $tokens ) ) {
-			$token = new \WC_Payment_Token_PayPalBillingAgreement();
-			$token->set_token( 'has_agreement' );
-			$token->set_gateway_id( self::GATEWAY_ID );
-			$token->set_user_id( $order->get_customer_id() );
-			$token->set_default( true );
-			$token->save();
-		}
+		\WC_Payment_Token_PayPalBillingAgreement::create_for_customer( $order->get_customer_id(), self::GATEWAY_ID );
 	}
 
 	protected function payment_error( $order ) {
