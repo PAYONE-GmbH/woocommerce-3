@@ -26,7 +26,7 @@ class PrePayment extends GatewayBase {
 
 		$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
 
-		wc_reduce_stock_levels( $order_id );
+		wc_maybe_reduce_stock_levels( $order_id );
 
 		$woocommerce->cart->empty_cart();
 

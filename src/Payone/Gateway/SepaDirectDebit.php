@@ -74,7 +74,7 @@ class SepaDirectDebit extends GatewayBase {
 		}
 
 		// Reduce stock levels
-		wc_reduce_stock_levels( $order_id );
+		wc_maybe_reduce_stock_levels( $order_id );
 
 		// Remove cart
 		$woocommerce->cart->empty_cart();
