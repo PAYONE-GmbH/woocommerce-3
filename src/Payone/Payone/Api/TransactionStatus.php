@@ -17,40 +17,30 @@ class TransactionStatus extends DataTransfer {
 	private $gateway;
 
 	/**
-     * @param $post_data
-     *
+	 * @param $post_data
+	 *
 	 * @return TransactionStatus
 	 */
 	public static function construct_from_post_parameters( $post_data ) {
 		$transaction_status = new TransactionStatus( $post_data );
-		$transaction_status->set_order( $transaction_status->get_order_id() );
+		$transaction_status->set_order_and_gateway( $transaction_status->get_order_id() );
 
 		return $transaction_status;
 	}
 
 	/**
 	 * @param int $order_id
-	 *
-	 * @return TransactionStatus
 	 */
-	public function set_order( $order_id ) {
-		try {
-			$this->order = wc_get_order( $order_id );
-
-			if ( $this->order === false ) {
-				throw new \Exception( 'No valid order found' );
-			}
-
-			$this->gateway = Plugin::get_gateway_for_order( $this->order );
-
-			$this->order->update_meta_data( '_' . $this->get_action(), time() );
-			$this->order->save_meta_data();
-		} catch ( \Exception $e ) {
-			$this->order   = null;
-			$this->gateway = null;
+	private function set_order_and_gateway( $order_id ) {
+		$order = wc_get_order( $order_id );
+		if ( $order === false ) {
+			return;
 		}
 
-		return $this;
+		$this->order   = $order;
+		$this->gateway = Plugin::get_gateway_for_order( $order );
+		$this->order->update_meta_data( '_' . $this->get_action(), time() );
+		$this->order->save_meta_data();
 	}
 
 	/**
