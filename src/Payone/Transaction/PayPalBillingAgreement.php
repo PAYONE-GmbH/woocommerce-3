@@ -12,14 +12,16 @@ class PayPalBillingAgreement extends PayPal {
 		$this->set( 'recurrence', 'recurring' );
 	}
 
+	private function requested_token_is_valid( $token_id_form_value ) {
+		return 'new' !== $token_id_form_value && \WC_Payment_Tokens::get( $token_id_form_value ) !== null;
+	}
+
 	public function add_execution_parameters_for_order( \WC_Order $order ) {
 		parent::add_execution_parameters_for_order( $order );
 
 		$token_field_name      = 'wc-' . \Payone\Gateway\PayPalBillingAgreement::GATEWAY_ID . '-payment-token';
-		$use_billing_agreement = isset( $_POST[ $token_field_name ] ) && 'new' !== $_POST[ $token_field_name ];
+		$use_billing_agreement = isset( $_POST[ $token_field_name ] ) && $this->requested_token_is_valid( $_POST[ $token_field_name ] );
 
-		// We do not need to load a token from the database since Payone will check if this customer has a valid
-		// billing agreement (== token) for us.
 		$this->set( 'customer_is_present', $use_billing_agreement ? 'no' : 'yes' );
 	}
 }

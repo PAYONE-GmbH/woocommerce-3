@@ -38,7 +38,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 					'error' );
 			}
 		} elseif ( $this->is_redirect( 'error' ) ) {
-			$this->payment_error($order);
+			$this->payment_error( $order );
 			$make_redirect = true;
 			$is_success = false;
 			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Payment provider returned error',
@@ -70,6 +70,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 			}
 
 			if ( $response->has_error() ) {
+				$this->payment_error( $order );
 				wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(), 'error' );
 			} else {
 				$is_success = true;
