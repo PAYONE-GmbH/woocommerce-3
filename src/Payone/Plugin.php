@@ -197,6 +197,8 @@ class Plugin {
 		$transaction_status = TransactionStatus::construct_from_post_parameters();
 		
 		if ( ! $transaction_status->has_valid_order() ) {
+			do_action( 'payone_non_order_transaction', $transaction_status );
+
 		    if ( ! apply_filters( 'payone_do_throw_error_on_invalid_order', true ) ) {
 		        return 'TSOK';
             }
