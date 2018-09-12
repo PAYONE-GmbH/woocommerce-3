@@ -175,7 +175,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	    if ( (float)$amount <= 0.0 ) {
 	        return new \WP_Error( 1, __( 'Debit amount must be greater than zero.', 'payone-woocommerce-3' ) );
         }
-		$order =wc_get_order( $order_id );
+		$order = wc_get_order( $order_id );
 
 		$transaction = new \Payone\Transaction\Debit( $this );
 

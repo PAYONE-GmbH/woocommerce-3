@@ -162,7 +162,7 @@ class Plugin {
 	public function catch_payone_callback() {
 		if ( get_query_var( self::CALLBACK_SLUG ) ) {
 
-            $post_data = self::convert_array_values_to_utf8( $_POST );
+			$post_data = self::convert_array_values_to_utf8( $_POST );
 
 			if ( $this->is_callback_after_redirect() ) {
 				return $this->process_callback_after_redirect();
@@ -178,7 +178,7 @@ class Plugin {
 
 				try {
 					$response = $this->process_callback( $post_data );
-				} catch (\Exception $e) {
+				} catch ( \Exception $e ) {
 					$response .= ' (' . $e->getMessage() . ')';
 				}
 
@@ -193,8 +193,8 @@ class Plugin {
 	}
 
 	/**
-     * @param $post_data
-     *
+	 * @param $post_data
+	 *
 	 * @return string
 	 */
 	public function process_callback( $post_data ) {
@@ -317,28 +317,29 @@ class Plugin {
 		return $gateway->process_manage_mandate_getfile( $_GET );
 	}
 
-    /**
-     * Convert PayOne response from ISO-8859-1 charset to UTF-8
-     * Allow usage of umlauts in references
-     *
-     * @param $array
-     *
-     * @return array
-     */
-    private function convert_array_values_to_utf8( $array ) {
-        array_walk_recursive( $array, function ( &$value ) {
-            if ( is_string( $value ) ) {
-                $converted_value = iconv( "ISO-8859-1", "UTF-8", $value );
+	/**
+	 * Convert PayOne response from ISO-8859-1 charset to UTF-8
+	 * Allow usage of umlauts in references
+	 *
+	 * @param $array
+	 *
+	 * @return array
+	 */
+	private function convert_array_values_to_utf8( $array ) {
+		array_walk_recursive( $array, function ( &$value ) {
+			if ( is_string( $value ) ) {
+				$converted_value = iconv( "ISO-8859-1", "UTF-8", $value );
 
-                if ( ! $converted_value ) {
-                    error_log( "iconv error converting value: { $value }" );
-                } else {
-                    $value = $converted_value;
-                }
-            }
-        } );
-        return $array;
-    }
+				if ( ! $converted_value ) {
+					error_log( "iconv error converting value: { $value }" );
+				} else {
+					$value = $converted_value;
+				}
+			}
+		} );
+
+		return $array;
+	}
 
 	/**
 	 * @param \WC_Order $order
