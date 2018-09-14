@@ -221,4 +221,13 @@ final class PluginTest extends TestCase {
 
         $this->assertEquals( \Payone\Plugin::get_tax_rate_for_item_data( $item ), 19.00 );
     }
+
+    public function test_sanitize_reference() {
+	    $this->assertEquals( '12.34-567_abc-DE/8', \Payone\Plugin::sanitize_reference( '12.34-567_abc-DE/8' ) );
+        $this->assertEquals( '1', \Payone\Plugin::sanitize_reference( '#1' ) );
+        $this->assertEquals( '1', \Payone\Plugin::sanitize_reference( '$1' ) );
+        $this->assertEquals( '8', \Payone\Plugin::sanitize_reference( '(8)' ) );
+        $this->assertEquals( '1-234-5', \Payone\Plugin::sanitize_reference( '1-(234)-5' ) );
+        $this->assertEquals( '1-234-5', \Payone\Plugin::sanitize_reference( '1(234)5' ) );
+    }
 }

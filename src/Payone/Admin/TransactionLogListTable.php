@@ -7,7 +7,7 @@ class TransactionLogListTable extends AbstractListTable {
 		$columns = array(
 			'id'             => 'ID',
 			'transaction_id' => __( 'Transaction ID', 'payone-woocommerce-3' ),
-			'order_id'       => __( 'Order ID', 'payone-woocommerce-3' ),
+			'reference'      => __( 'Reference', 'payone-woocommerce-3' ),
 			'txaction'       => __( 'Transaction action', 'payone-woocommerce-3' ),
 			'sequencenumber' => __( 'Sequencenumber', 'payone-woocommerce-3' ),
 			'mode'           => __( 'Modus', 'payone-woocommerce-3' ),
@@ -24,7 +24,7 @@ class TransactionLogListTable extends AbstractListTable {
 				return '<a href="?page=payone-transaction-log&id=' . $item->get_id() . '">' . $item->get_id() . '</a>';
 			case 'transaction_id':
 				return $item->get_transaction_id();
-			case 'order_id':
+			case 'reference':
 				return $item->get_data()->get( 'reference' );
 			case 'txaction':
 				return $item->get_data()->get( 'txaction' );
