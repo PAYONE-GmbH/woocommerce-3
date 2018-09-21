@@ -168,8 +168,7 @@ class SepaDirectDebit extends GatewayBase {
 		if ( $hash ) {
 			$url = Plugin::get_callback_url( 'manage-mandate-getfile' );
 			$url .= '&hash=' . $hash;
-
-			echo '<p><a href="' . $url . '">Ihr SEPA-Mandat als PDF herunterladen</a>';
+			echo '<p><a href="' . $url . '">' . __( 'Download your SEPA- Mandate as PDF', 'payone-woocommerce-3' ) . '</a>';
 		}
 	}
 
