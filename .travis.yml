@@ -1,0 +1,44 @@
+sudo: false
+language: php
+dist: trusty
+env:
+  global:
+  - SVN_REPO: https://plugins.svn.wordpress.org/tbd
+matrix:
+  fast_finish: true
+  include:
+  - php: '5.6'
+  - php: '7.0'
+  - php: '7.1'
+    env:
+    - DEPLOY=1
+    - SNIFF=1
+before_script:
+- export PHPCS_DIR=/tmp/phpcs
+- export SNIFFS_DIR=/tmp/sniffs
+- if [[ "$SNIFF" == "1" ]]; then git clone -b 2.9 --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git
+  $PHPCS_DIR; fi
+- if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git
+  $SNIFFS_DIR; fi
+- if [[ "$SNIFF" == "1" ]]; then git clone -b 7.1.4 --depth 1 https://github.com/wimg/PHPCompatibility.git
+  $SNIFFS_DIR/PHPCompatibility; fi
+- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs --config-set installed_paths
+  $SNIFFS_DIR; fi
+- if [[ "$SNIFF" == "1" ]]; then phpenv rehash; fi
+script:
+- mkdir -p build/logs
+- find -L . -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+- if [[ "$SNIFF" == "1" ]]; then jshint ./assets/js/*.js; fi
+- if [[ "$SNIFF" == "1" ]]; then jscs ./assets/js/*.js; fi
+- if [[ "$SNIFF" == "1" ]]; then grunt textdomain; fi
+- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n ./*.php --standard=./phpcs.ruleset.xml
+  --extensions=php; fi
+- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n ./**/*.php --standard=./phpcs.ruleset.xml
+  --extensions=php --ignore=./inc/plugin-activation.php,./node_modules/*.php; fi
+- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n ./**/**/*.php
+  --standard=./phpcs.ruleset.xml --extensions=php --ignore=./node_modules/**/*.php;fi
+notifications:
+  email: false
+  slack:
+    secure: viO6iu8C4Obu3uKQ2v36bZL4oc7Q5+Grs2+mFGtC0U0MW5fr8/V77fHm3SfTE1MqhK/JUDvy6EqGnHwV+Kxc7XWpd5GL165Fkoo4yF/F3yyKdZoCQx8YmBtVJ2p/o6XctRvB/3saQ95zwROXexI4qw5aEZvjyru0U1H30yK24a2MkJN0H+FVMvurmIJKt4Rfta6gmJTCF+eMAXhXwPKoBURYNg9+kfm7KCJn7fD1FCBUyGqOXrPx51QNB49doaHWgjW9zr7KIBHiKJKpVb8jGL/IoYb6wOyPGdwCD38JwP4U329sLVLwZ92SuLE1VgtOMUxSk/81r+BgHHegv1AdqNElwiZQVDKbL9vtTeSJCSxUdXoDkNjWSpwUErJ0o1lQImF92RIJzj0XNp4WWT8HfXeWA5UO/jkL7fX6c+Fd01gXjYTxf42XBOLTgCMkvIU/+LWD25NSS3K5p47Nh7/zd08UELviYk5iWqHjc1Jo5FQGjhsD7BHTjREET23fCJqOIqgvVrD39CgB+9ryonbaGfwc8OA3vXFbGdtn+I3V/BUQLjggy4jXfmn5y0/KYe9W2l4GRv1JUiZXQOLPhlD3WT5hF5q2KSGdNFxNi+L8o3YHdNWf38a6iqp7wwoAK5P2xoFcvT+jUwvlE34+7E4Qc86lFS+p40cZpmi8TicywoA=
+after_success: 
