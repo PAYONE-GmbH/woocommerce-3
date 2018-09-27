@@ -1,7 +1,7 @@
 <?php
 
 /*
-Plugin Name: BS PAYONE WooCommerce 3
+Plugin Name: BS PAYONE WooCommerce
 Plugin URI: https://www.bspayone.com/
 Description: BS PAYONE Payment for WooCommerce 3
 Version: 1.4.0
