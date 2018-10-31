@@ -33,6 +33,7 @@ class PayDirekt extends Base {
 		$this->set( 'shipping_street', $order->get_billing_address_1() );
 		$this->set( 'shipping_zip', $order->get_billing_postcode() );
 		$this->set( 'shipping_city', $order->get_billing_city() );
+        $this->set( 'shipping_state', $order->get_billing_state() );
 		$this->set( 'shipping_country', $order->get_billing_country() );
 		
 		$this->set_personal_data_from_order( $order );
