@@ -9,7 +9,7 @@ msgstr ""
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
-"Language: de_DE@formal\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -157,13 +157,13 @@ msgstr "Ja"
 #: src/Payone/Admin/Option/Account.php:161
 #: src/Payone/Gateway/GatewayBase.php:297
 msgid "Your order No. {{order}}"
-msgstr "Ihre Bestellung Nr. {{order}}"
+msgstr "Deine Bestellung Nr. {{order}}"
 
 #: src/Payone/Admin/Option/Account.php:157
 #: src/Payone/Gateway/GatewayBase.php:302
 #: src/Payone/Gateway/GatewayBase.php:307
 msgid "Your refund No. {{order}}"
-msgstr "Ihre Rückerstattung No. {{order}}"
+msgstr "Deine Rückerstattung No. {{order}}"
 
 #: src/Payone/Admin/Option/Account.php:168
 #: src/Payone/Admin/Option/Account.php:177
@@ -946,7 +946,7 @@ msgstr "Zahlung wurde autorisiert und belastet."
 #: src/Payone/Gateway/SepaDirectDebit.php:153
 #: src/Payone/Gateway/SepaDirectDebit.php:171
 msgid "Please check this option"
-msgstr "Sie müssen diese Checkbox ankreuzen, um fortfahren zu können"
+msgstr "Du musst diese Checkbox ankreuzen, um fortfahren zu können"
 
 #: src/Payone/Gateway/Sofort.php:14 src/Payone/Gateway/Sofort.php:19
 msgid "SOFORT.com"
