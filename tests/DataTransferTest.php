@@ -55,4 +55,12 @@ final class DataTransferTest extends TestCase {
 		$this->assertEquals( 20*32, strlen( $dataTransfer->get( '_DATA' ) ) );
 		$this->assertEquals( 212, strlen( $dataTransfer->get_serialized_parameters() ) );
 	}
+
+    public function test_removed_empty_data_in_get_postfields_from_parameters() {
+        $dataTransfer = new \Payone\Payone\Api\DataTransfer();
+        $dataTransfer->set( 'filled',  'filled-data' );
+        $dataTransfer->set( 'not-filled', '');
+
+        $this->assertFalse( strpos( $dataTransfer->get_postfields_from_parameters(), 'not-filled' ) );
+    }
 }
