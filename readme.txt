@@ -3,7 +3,7 @@ Contributors: bspayone
 Donate link: https://www.bspayone.com/
 Tags: woocommerce, payment
 Requires at least: 4.6
-Tested up to: 4.7
+Tested up to: 4.9
 Stable tag: 1.4.0
 Requires PHP: 5.6.0
 License: MIT
