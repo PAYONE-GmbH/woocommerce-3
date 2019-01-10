@@ -158,13 +158,13 @@ msgstr "Ja"
 #: src/Payone/Admin/Option/Account.php:161
 #: src/Payone/Gateway/GatewayBase.php:322
 msgid "Your order No. {{order}}"
-msgstr "Ihre Bestellung Nr. {{order}}"
+msgstr "Deine Bestell Nr. {{order}}"
 
 #: src/Payone/Admin/Option/Account.php:157
 #: src/Payone/Gateway/GatewayBase.php:327
 #: src/Payone/Gateway/GatewayBase.php:332
 msgid "Your refund No. {{order}}"
-msgstr "Ihre Rückerstattung No. {{order}}"
+msgstr "Deine Rückerstatt Nr. {{order}}"
 
 #: src/Payone/Admin/Option/Account.php:168
 #: src/Payone/Admin/Option/Account.php:177
@@ -180,7 +180,7 @@ msgstr "Aktiviert"
 #: src/Payone/Admin/Option/AddressChecks.php:191
 #: src/Payone/Admin/Option/CreditCheck.php:181
 msgid "You do not have sufficient permissions to access this page."
-msgstr ""
+msgstr "Deine Berechtigungen reichen nicht aus um diese Seite zu sehen."
 
 #: src/Payone/Admin/Option/AddressChecks.php:18
 msgid "Address validation"
@@ -335,19 +335,19 @@ msgstr ""
 
 #: src/Payone/Admin/Option/CreditCheck.php:152
 msgid "Red"
-msgstr ""
+msgstr "Rot"
 
 #: src/Payone/Admin/Option/CreditCheck.php:153
 msgid "Yellow"
-msgstr ""
+msgstr "Gelb"
 
 #: src/Payone/Admin/Option/CreditCheck.php:154
 msgid "Green"
-msgstr ""
+msgstr "Grün"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
 msgid "Abort checkout"
-msgstr ""
+msgstr "Bestellabbruch"
 
 #: src/Payone/Admin/Settings.php:29
 msgid "Payone Settings"
@@ -506,7 +506,7 @@ msgstr "Stil"
 #: src/Payone/Gateway/CreditCard.php:231 src/Payone/Gateway/CreditCard.php:275
 #: src/Payone/Gateway/CreditCard.php:416
 msgid "CSS"
-msgstr "CSS"
+msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:149
 msgid "CVC2"
@@ -667,7 +667,7 @@ msgstr "Bank"
 
 #: src/Payone/Gateway/Giropay.php:9
 msgid "Giropay"
-msgstr "Giropay"
+msgstr ""
 
 #: src/Payone/Gateway/Invoice.php:12
 msgid "Invoice"
@@ -712,7 +712,7 @@ msgstr ""
 
 #: src/Payone/Gateway/PayPal.php:9
 msgid "PayPal"
-msgstr "PayPal"
+msgstr ""
 
 #: src/Payone/Gateway/PayPalBillingAgreement.php:9
 msgid "PayPal Billing Agreement"
@@ -720,7 +720,7 @@ msgstr ""
 
 #: src/Payone/Gateway/PayPalBillingAgreement.php:43
 msgid "Connect new PayPal Account"
-msgstr ""
+msgstr "Verbinde neuen PayPal Account"
 
 #: src/Payone/Gateway/PrePayment.php:11
 msgid "Prepayment"
@@ -761,23 +761,23 @@ msgstr "SEPA Abbuchung"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:19
 msgid "Check bank data"
-msgstr ""
+msgstr "Überprüfe Bankdaten"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:23
 msgid "Check POS black list"
-msgstr ""
+msgstr "Überprüfe POS Blacklist"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:24
 msgid "None (only possible if PAYONE Mandate Management is inactive)"
-msgstr ""
+msgstr "None (Nur möglich wenn PAYONE Mandat Management inaktiv ist)"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:29
 msgid "Use PAYONE Mandate Management"
-msgstr ""
+msgstr "Nutze PAYONE Mandat Management"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:38
 msgid "Download mandate as PDF"
-msgstr ""
+msgstr "Mandat als PDF herunterladen"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:73
 msgid "Payment is authorized and captured."
@@ -786,11 +786,11 @@ msgstr "Zahlung wurde autorisiert und belastet."
 #: src/Payone/Gateway/SepaDirectDebit.php:95
 #: src/Payone/Gateway/SepaDirectDebit.php:113
 msgid "Please check this option"
-msgstr "Sie müssen diese Checkbox ankreuzen, um fortfahren zu können"
+msgstr "Du musst diese Checkbox ankreuzen, um fortfahren zu können"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:162
 msgid "Download your SEPA- Mandate as PDF"
-msgstr "Ihr SEPA-Mandat als PDF herunterladen"
+msgstr "Lade dein SEPA-Mandat als PDF herunterladen"
 
 #: src/Payone/Gateway/Sofort.php:9
 msgid "SOFORT.com"
@@ -822,39 +822,39 @@ msgstr "Rückerstattung konnte nicht bearbeitet werden: "
 
 #: src/Wordpress/WP_List_Table.php:151
 msgid "List View"
-msgstr ""
+msgstr "Listenansicht"
 
 #: src/Wordpress/WP_List_Table.php:152
 msgid "Excerpt View"
-msgstr ""
+msgstr "Gekürzte Ansicht"
 
 #: src/Wordpress/WP_List_Table.php:312
 msgid "No items found."
-msgstr ""
+msgstr "Keine Artikel gefunden"
 
 #: src/Wordpress/WP_List_Table.php:434
 msgid "Select bulk action"
-msgstr ""
+msgstr "Bulk Aktion wählen"
 
 #: src/Wordpress/WP_List_Table.php:436
 msgid "Bulk Actions"
-msgstr ""
+msgstr "Bulk Aktion"
 
 #: src/Wordpress/WP_List_Table.php:446
 msgid "Apply"
-msgstr ""
+msgstr "Anwenden"
 
 #: src/Wordpress/WP_List_Table.php:494 src/Wordpress/WP_List_Table.php:1272
 msgid "Show more details"
-msgstr ""
+msgstr "Mehr Details anzeigen"
 
 #: src/Wordpress/WP_List_Table.php:556
 msgid "Filter by date"
-msgstr ""
+msgstr "Nach Datum filtern"
 
 #: src/Wordpress/WP_List_Table.php:558
 msgid "All dates"
-msgstr ""
+msgstr "Alle Daten"
 
 #: src/Wordpress/WP_List_Table.php:571
 #, php-format
@@ -865,42 +865,42 @@ msgstr ""
 #, php-format
 msgid "%s comment"
 msgid_plural "%s comments"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s Kommentar"
+msgstr[1] "%s Kommentare"
 
 #: src/Wordpress/WP_List_Table.php:622
 #, php-format
 msgid "%s approved comment"
 msgid_plural "%s approved comments"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s akzeptierter Kommentar "
+msgstr[1] "%s akzeptierte Kommentare"
 
 #: src/Wordpress/WP_List_Table.php:623
 #, php-format
 msgid "%s pending comment"
 msgid_plural "%s pending comments"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s Kommentar in Wartestellung"
+msgstr[1] "%s Kommentare in Wartestellung"
 
 #: src/Wordpress/WP_List_Table.php:628 src/Wordpress/WP_List_Table.php:640
 #: src/Wordpress/WP_List_Table.php:653
 msgid "No comments"
-msgstr ""
+msgstr "Kein Kommentar"
 
 #: src/Wordpress/WP_List_Table.php:640
 msgid "No approved comments"
-msgstr ""
+msgstr "Kein akzeptierter Kommentar"
 
 #: src/Wordpress/WP_List_Table.php:653
 msgid "No pending comments"
-msgstr ""
+msgstr "Kein Kommentar in Wartestellung"
 
 #: src/Wordpress/WP_List_Table.php:727 src/Wordpress/WP_List_Table.php:1296
 #, php-format
 msgid "%s item"
 msgid_plural "%s items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s Produkt"
+msgstr[1] "%s Produkte"
 
 #: src/Wordpress/WP_List_Table.php:763
 msgid "First page"
@@ -918,7 +918,7 @@ msgstr "Aktuelle Seite"
 #, php-format
 msgctxt "paging"
 msgid "%1$s of %2$s"
-msgstr ""
+msgstr "%1$s von %2$s"
 
 #: src/Wordpress/WP_List_Table.php:796
 msgid "Next page"
@@ -934,11 +934,11 @@ msgstr "Alle auswählen"
 
 #: views/admin/address-checks.php:2
 msgid "Address Checks"
-msgstr ""
+msgstr "Adress Überprüfung"
 
 #: views/admin/credit-check.php:2
 msgid "Credit Check"
-msgstr ""
+msgstr "Kredit Überprüfung"
 
 #: views/gateway/creditcard/payment-form.php:31
 msgid "Card type"
@@ -968,11 +968,26 @@ msgstr "Nachname"
 msgid "direct.debit.mandate.checkbox.label"
 msgstr "Ich erteile das SEPA-Lastschriftmandat"
 
-#~ msgid "Order ID"
-#~ msgstr "Bestellnummer"
+#~ msgid "BS PAYONE Settings"
+#~ msgstr "BS PAYONE Einstellungen"
+
+#~ msgid "Credit card payment is preauthorized."
+#~ msgstr "Kreditkartenzahlung wurde vorautorisiert."
+
+#~ msgid "Credit card payment is authorized and captured."
+#~ msgstr "Kreditkartenzahlung wurde autorisiert und belastet."
+
+#~ msgid "Ask account number/bank code (for german accounts only)"
+#~ msgstr "Erfrage Kontonummer / Bankleitzahl (Nur für deutsche Kunden)"
 
 #~ msgid "List of supported bank countries"
 #~ msgstr "Liste der unterstützen Banken"
+
+#~ msgid "Awaiting cheque payment"
+#~ msgstr "Auf Zahlung warten"
+
+#~ msgid "Order ID"
+#~ msgstr "Bestellnummer"
 
 #~ msgid "Belgium"
 #~ msgstr "Belgien"
@@ -1093,12 +1108,6 @@ msgstr "Ich erteile das SEPA-Lastschriftmandat"
 
 #~ msgid "3-D Secure returned error"
 #~ msgstr "3-D Secure hat einen Fehler gemeldet"
-
-#~ msgid "Credit card payment is preauthorized."
-#~ msgstr "Kreditkartenzahlung wurde vorautorisiert."
-
-#~ msgid "Credit card payment is authorized and captured."
-#~ msgstr "Kreditkartenzahlung wurde autorisiert und belastet."
 
 #~ msgid "Giropay returned error"
 #~ msgstr "Giropay hat einen Fehler gemeldet"
