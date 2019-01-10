@@ -155,7 +155,7 @@ class DataTransfer {
 	 * @return string
 	 */
 	public function get_postfields_from_parameters() {
-		return http_build_query( $this->parameter_bag );
+		return http_build_query( self::remove_empty_parameters( $this->parameter_bag ) );
 	}
 
 	public function get_serialized_parameters() {
@@ -201,6 +201,22 @@ class DataTransfer {
 
 		return $value;
 	}
+
+    /**
+     * @param array $parameters
+     *
+     * @return array
+     */
+	private static function remove_empty_parameters($parameters) {
+	    $clearedParameters = [];
+	    foreach ($parameters as $key => $value) {
+	        if ($value !== null && $value !== '') {
+	            $clearedParameters[$key] = $value;
+            }
+        }
+
+        return $clearedParameters;
+    }
 
     /**
      * @param string $reference

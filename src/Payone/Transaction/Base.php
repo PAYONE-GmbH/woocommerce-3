@@ -68,6 +68,7 @@ class Base extends Request {
 		$this->set( 'adressaddition', $order->get_billing_address_2() );
 		$this->set( 'zip', $order->get_billing_postcode() );
 		$this->set( 'city', $order->get_billing_city() );
+        $this->set( 'state', $order->get_billing_state() );
 		$this->set( 'country', $order->get_billing_country() );
 		$this->set( 'email', $order->get_billing_email() );
 		$this->set( 'telephonenumber', $order->get_billing_phone() );
