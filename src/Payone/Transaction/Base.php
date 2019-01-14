@@ -114,7 +114,7 @@ class Base extends Request {
             $product = $item_data->get_product();
             $data = $item_data->get_data();
             $va = Plugin::get_tax_rate_for_item_data( $data );
-            $price_all = $data[ 'total' ] + $data[ 'total_tax' ];
+            $price_all = $data[ 'subtotal' ] + $data[ 'subtotal_tax' ];
             $price_one = $price_all / $item_data->get_quantity();
             $price = round( 100 * $price_one );
 			$articles[ $n ] = [
