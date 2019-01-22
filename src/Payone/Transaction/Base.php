@@ -140,7 +140,8 @@ class Base extends Request {
 			$n++;
 		}
 
-		$price = 100 * ( (float)$order->get_total_discount() + (float)$order->get_discount_tax() );
+        $discount_tax = round( (float)$order->get_discount_tax(), 2);
+        $price = round( 100 * ( (float)$order->get_total_discount() + $discount_tax ) );
 		if ($price > 0) {
 			$articles[ $n ] = [
 				'id' => -1,
