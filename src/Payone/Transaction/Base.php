@@ -108,27 +108,36 @@ class Base extends Request {
 	}
 
 	protected function get_article_list_for_transaction( \WC_Order $order ) {
-		$articles = [];
+
+	    $articles = [];
+	    $discounts = [];
         $n = 1;
 		foreach ( $order->get_items() as $item_id => $item_data ) {
             $product = $item_data->get_product();
             $data = $item_data->get_data();
-            $va = Plugin::get_tax_rate_for_item_data( $data );
+            $va = (int)round(100 * Plugin::get_tax_rate_for_item_data( $data ) );
             $price_all = $data[ 'subtotal' ] + $data[ 'subtotal_tax' ];
+            $discount = $price_all - ($data[ 'total' ] + $data[ 'total_tax']);
+            $discount = (int)round( 100 * $discount );
             $price_one = $price_all / $item_data->get_quantity();
             $price = (int)round( 100 * $price_one );
-			$articles[ $n ] = [
+            $articles[ $n ] = [
 				'id' => $item_id,
 				'pr' => $price,
 				'no' => $item_data->get_quantity(),
 				'de' => $product->get_name(),
-				'va' => 100 * $va,
+				'va' => $va,
 			];
 			$n++;
+
+			if (!isset($discounts[$va])) {
+			    $discounts[$va] = 0;
+            }
+			$discounts[$va] += $discount;
 		}
 		foreach ( $order->get_shipping_methods() as $item_id => $item_data ) {
 			$data = $item_data->get_data();
-			$va = Plugin::get_tax_rate_for_item_data( $data );
+            $va = Plugin::get_tax_rate_for_item_data( $data );
 			$price = (int)round( 100 * ( $data[ 'total' ] + $data[ 'total_tax' ] ) );
 			$articles[ $n ] = [
 				'id' => $item_id,
@@ -140,21 +149,21 @@ class Base extends Request {
 			$n++;
 		}
 
-        $discountAmount = round($order->get_total() * 100);
-		foreach ($articles as $article) {
-            $discountAmount = $discountAmount - ($article['pr'] * $article['no']);
+		$discountIdx = 1;
+		foreach ( $discounts as $discountVa => $discount ) {
+		    if ( $discount > 0 ) {
+                $articles[ $n ] = [
+                    'id' => -$discountIdx,
+                    'pr' => - $discount,
+                    'no' => 1,
+                    'de' => __( 'Discount', 'payone-woocommerce-3' ),
+                    'va' => $discountVa,
+                ];
+                $n++;
+                $discountIdx++;
+            }
         }
-        if ($discountAmount < 0) {
-			$articles[ $n ] = [
-				'id' => -1,
-				'pr' => $discountAmount,
-				'no' => 1,
-				'de' => __( 'Discount', 'payone-woocommerce-3' ),
-				'va' => 0,
-			];
-			$this->set( 'va[' . $n . ']', 0 );
-		}
-        
+
 		return $articles;
 	}
 }
