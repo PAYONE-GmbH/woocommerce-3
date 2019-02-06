@@ -365,6 +365,11 @@ class Plugin {
         foreach ( $all_tax_classes as $tax_class ) {
             $all_tax_rates[] = \WC_Tax::get_rates_for_tax_class( $tax_class );
         }
+
+        if ( $item_data[ 'total_tax' ] == 0 ) {
+            return 0.0;
+        }
+
         $calculated_tax_rate = ( int ) ( 100 * round( 100 * $item_data[ 'total_tax' ] / $item_data[ 'total' ], 0 ) );
 
         foreach ( $all_tax_rates as $tax_rates ) {
