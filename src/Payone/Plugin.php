@@ -41,15 +41,15 @@ class Plugin {
 		}
 
 		$gateways = [
-			\Payone\Gateway\CreditCard::GATEWAY_ID      => \Payone\Gateway\CreditCard::class,
-			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
-			\Payone\Gateway\PrePayment::GATEWAY_ID      => \Payone\Gateway\PrePayment::class,
-			\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
-			\Payone\Gateway\Sofort::GATEWAY_ID          => \Payone\Gateway\Sofort::class,
-			\Payone\Gateway\Giropay::GATEWAY_ID         => \Payone\Gateway\Giropay::class,
-			\Payone\Gateway\SafeInvoice::GATEWAY_ID     => \Payone\Gateway\SafeInvoice::class,
-			\Payone\Gateway\PayPal::GATEWAY_ID          => \Payone\Gateway\PayPal::class,
-			\Payone\Gateway\PayDirekt::GATEWAY_ID       => \Payone\Gateway\PayDirekt::class,
+			\Payone\Gateway\CreditCard::class,
+			\Payone\Gateway\SepaDirectDebit::class,
+			\Payone\Gateway\PrePayment::class,
+			\Payone\Gateway\Invoice::class,
+			\Payone\Gateway\Sofort::class,
+			\Payone\Gateway\Giropay::class,
+			\Payone\Gateway\SafeInvoice::class,
+			\Payone\Gateway\PayPal::class,
+			\Payone\Gateway\PayDirekt::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -197,6 +197,8 @@ class Plugin {
 		$transaction_status = TransactionStatus::construct_from_post_parameters();
 		
 		if ( ! $transaction_status->has_valid_order() ) {
+			do_action( 'payone_non_order_transaction', $transaction_status );
+
 		    if ( ! apply_filters( 'payone_do_throw_error_on_invalid_order', true ) ) {
 		        return 'TSOK';
             }
