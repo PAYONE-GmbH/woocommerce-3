@@ -114,7 +114,7 @@ class Plugin {
 	 * @return string
 	 */
 	public static function get_callback_url( $type = 'transaction' ) {
-		$url = get_site_url( null, self::CALLBACK_SLUG . '/' );
+		$url = get_home_url( null, self::CALLBACK_SLUG . '/' );
 		if ($type !== 'transaction') {
 			$url .= '?type=' . $type;
 		}
