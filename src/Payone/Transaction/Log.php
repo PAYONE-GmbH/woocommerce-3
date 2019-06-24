@@ -43,10 +43,10 @@ class Log {
 		$this->transactionLogEnabled = $options['transaction_log'] ? true : false;
 	}
 
-	public static function constructFromPostVars() {
-		$transaction_id        = isset( $_POST['txid'] ) ? $_POST['txid'] : '';
+	public static function constructFromPostVars( $post_data) {
+		$transaction_id        = isset( $post_data['txid'] ) ? $post_data['txid'] : '';
 		$transaction_log_entry = new Log();
-		$transaction_log_entry->set_data( \Payone\Payone\Api\DataTransfer::constructFromArray( $_POST ) );
+		$transaction_log_entry->set_data( \Payone\Payone\Api\DataTransfer::constructFromArray( $post_data ) );
 		$transaction_log_entry->set_transaction_id( $transaction_id );
 		$transaction_log_entry->save();
 	}

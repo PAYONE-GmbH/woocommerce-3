@@ -41,15 +41,15 @@ class Plugin {
 		}
 
 		$gateways = [
-			\Payone\Gateway\CreditCard::GATEWAY_ID      => \Payone\Gateway\CreditCard::class,
-			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
-			\Payone\Gateway\PrePayment::GATEWAY_ID      => \Payone\Gateway\PrePayment::class,
-			\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
-			\Payone\Gateway\Sofort::GATEWAY_ID          => \Payone\Gateway\Sofort::class,
-			\Payone\Gateway\Giropay::GATEWAY_ID         => \Payone\Gateway\Giropay::class,
-			\Payone\Gateway\SafeInvoice::GATEWAY_ID     => \Payone\Gateway\SafeInvoice::class,
-			\Payone\Gateway\PayPal::GATEWAY_ID          => \Payone\Gateway\PayPal::class,
-			\Payone\Gateway\PayDirekt::GATEWAY_ID       => \Payone\Gateway\PayDirekt::class,
+			\Payone\Gateway\CreditCard::class,
+			\Payone\Gateway\SepaDirectDebit::class,
+			\Payone\Gateway\PrePayment::class,
+			\Payone\Gateway\Invoice::class,
+			\Payone\Gateway\Sofort::class,
+			\Payone\Gateway\Giropay::class,
+			\Payone\Gateway\SafeInvoice::class,
+			\Payone\Gateway\PayPal::class,
+			\Payone\Gateway\PayDirekt::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -162,10 +162,12 @@ class Plugin {
 	public function catch_payone_callback() {
 		if ( get_query_var( self::CALLBACK_SLUG ) ) {
 
+			$post_data = self::convert_array_values_to_utf8( $_POST );
+
 			if ( $this->is_callback_after_redirect() ) {
 				return $this->process_callback_after_redirect();
 			} elseif ( $this->is_manage_mandate_callback() ) {
-				return $this->process_manage_mandate_callback();
+				return $this->process_manage_mandate_callback( $post_data );
 			} elseif ( $this->is_manage_mandate_getfile() ) {
 				return $this->process_manage_mandate_getfile();
 			}
@@ -175,13 +177,13 @@ class Plugin {
 				do_action( 'payone_transaction_callback' );
 
 				try {
-					$response = $this->process_callback();
-				} catch (\Exception $e) {
+					$response = $this->process_callback( $post_data );
+				} catch ( \Exception $e ) {
 					$response .= ' (' . $e->getMessage() . ')';
 				}
 
 				if ( $response === 'TSOK' ) {
-					Log::constructFromPostVars();
+					Log::constructFromPostVars( $post_data );
 				}
 			}
 
@@ -191,11 +193,12 @@ class Plugin {
 	}
 
 	/**
+	 * @param $post_data
+	 *
 	 * @return string
 	 */
-	public function process_callback() {
-		$transaction_status = TransactionStatus::construct_from_post_parameters();
-		
+	public function process_callback( $post_data ) {
+		$transaction_status = TransactionStatus::construct_from_post_parameters( $post_data );
 		if ( ! $transaction_status->has_valid_order() ) {
 		    if ( ! apply_filters( 'payone_do_throw_error_on_invalid_order', true ) ) {
 		        return 'TSOK';
@@ -220,7 +223,7 @@ class Plugin {
 	}
 
 	public function order_status_changed( $id, $from_status, $to_status ) {
-		$order   = new \WC_Order( $id );
+		$order   = wc_get_order( $id );
 		$gateway = $this->get_gateway_for_order( $order );
 
 		if ( method_exists( $gateway, 'order_status_changed' ) ) {
@@ -265,12 +268,11 @@ class Plugin {
 	 * @return array
 	 */
 	private function process_callback_after_redirect() {
-		$order_id = (int)$_GET['oid'];
+		$order = wc_get_order( $_GET['oid'] );
 
-		$order = new \WC_Order( $order_id );
 		$gateway = self::get_gateway_for_order( $order );
 
-		return $gateway->process_payment( $order_id );
+		return $gateway->process_payment( $_GET['oid'] );
 	}
 
 	/**
@@ -285,12 +287,14 @@ class Plugin {
 	}
 
 	/**
+	 * @param $post_data
+	 *
 	 * @return array
 	 */
-	private function process_manage_mandate_callback() {
+	private function process_manage_mandate_callback( $post_data ) {
 		$gateway = self::find_gateway( SepaDirectDebit::GATEWAY_ID );
 
-		return $gateway->process_manage_mandate( $_POST );
+		return $gateway->process_manage_mandate( $post_data );
 	}
 
 	/**
@@ -311,6 +315,30 @@ class Plugin {
 		$gateway = self::find_gateway( SepaDirectDebit::GATEWAY_ID );
 
 		return $gateway->process_manage_mandate_getfile( $_GET );
+	}
+
+	/**
+	 * Convert PayOne response from ISO-8859-1 charset to UTF-8
+	 * Allow usage of umlauts in references
+	 *
+	 * @param $array
+	 *
+	 * @return array
+	 */
+	private function convert_array_values_to_utf8( $array ) {
+		array_walk_recursive( $array, function ( &$value ) {
+			if ( is_string( $value ) ) {
+				$converted_value = iconv( "ISO-8859-1", "UTF-8", $value );
+
+				if ( ! $converted_value ) {
+					error_log( "iconv error converting value: { $value }" );
+				} else {
+					$value = $converted_value;
+				}
+			}
+		} );
+
+		return $array;
 	}
 
 	/**

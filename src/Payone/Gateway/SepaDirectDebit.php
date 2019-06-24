@@ -8,16 +8,13 @@ use Payone\Plugin;
 class SepaDirectDebit extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_sepa';
 
-	public function __construct() {
-		parent::__construct( self::GATEWAY_ID );
-
-		$this->icon               = '';
-		$this->method_title       = 'Payone ' . __( 'SEPA Direct Debit', 'payone-woocommerce-3' );
-		$this->method_description = '';
+	protected function human_readable_name() {
+		return __( 'SEPA Direct Debit', 'payone-woocommerce-3' );
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'SEPA Direct Debit', 'payone-woocommerce-3' ) );
+		parent::init_form_fields();
+
 		$this->form_fields['sepa_check_bank_data'] = [
 			'title'   => __( 'Check bank data', 'payone-woocommerce-3' ),
 			'type'    => 'select',
@@ -48,15 +45,9 @@ class SepaDirectDebit extends GatewayBase {
 		];
 	}
 
-	public function payment_fields() {
-		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-
-		include PAYONE_VIEW_PATH . '/gateway/sepa-direct-debit/payment-form.php';
-	}
-
 	public function process_payment( $order_id ) {
 		global $woocommerce;
-		$order = new \WC_Order( $order_id );
+		$order = wc_get_order( $order_id );
 
 		$transaction = new \Payone\Transaction\SepaDirectDebit( $this );
 		$response    = $transaction->execute( $order );
