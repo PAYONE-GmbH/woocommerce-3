@@ -27,12 +27,7 @@ class Base extends Request {
 			return false;
 		}
 
-		if ( $this->gateway->should_submit_cart() ) {
-			return true;
-		}
-
-		// Bei Sicherer Rechnung immer den Warenkorb mitsenden
-		return $this->gateway->id === \Payone\Gateway\SafeInvoice::GATEWAY_ID;
+		return $this->gateway->should_submit_cart();
 	}
 
 	/**

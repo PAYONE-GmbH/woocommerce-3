@@ -2,6 +2,8 @@
 
 namespace Payone\Gateway;
 
+use Payone\Payone\Api\TransactionStatus;
+
 abstract class RedirectGatewayBase extends GatewayBase {
 	/**
 	 * @param int $order_id
@@ -99,7 +101,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 			$order->payment_complete();
 		}
 
-		wc_reduce_stock_levels( $order->get_id() );
+		wc_maybe_reduce_stock_levels( $order->get_id() );
 		$woocommerce->cart->empty_cart();
 	}
 
@@ -110,5 +112,50 @@ abstract class RedirectGatewayBase extends GatewayBase {
 	 */
 	private function is_redirect( $type ) {
 		return isset( $_GET['type'] ) && $_GET['type'] === $type;
+	}
+
+	/**
+	 * @param int $order_id
+	 *
+	 * @return array
+	 * @throws \WC_Data_Exception
+	 * @throws \ReflectionException
+	 */
+	public function process_payment( $order_id ) {
+		$reflection        = new \ReflectionClass( $this );
+		$transaction_class = '\\Payone\\Transaction\\' . $reflection->getShortName();
+		return $this->process_redirect( $order_id, $transaction_class );
+	}
+
+	/**
+	 * @param TransactionStatus $transaction_status
+	 */
+	public function process_transaction_status( TransactionStatus $transaction_status ) {
+		parent::process_transaction_status( $transaction_status );
+
+		if ( $transaction_status->no_further_action_necessary() ) {
+			return;
+		}
+
+		$order = $transaction_status->get_order();
+		$authorization_method = $order->get_meta( '_authorization_method' );
+		if ( $authorization_method === 'authorization' && $transaction_status->is_paid() ) {
+			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			$order->payment_complete();
+		} elseif ( $authorization_method === 'preauthorization' && $transaction_status->is_capture() ) {
+			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			$order->payment_complete();
+		} elseif ( $authorization_method === 'preauthorization' && $transaction_status->is_paid() ) {
+			// Do nothing. Everything already happened.
+		} else {
+			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
+		}
+	}
+
+	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
+		$authorization_method = $order->get_meta( '_authorization_method' );
+		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
+			$this->capture( $order );
+		}
 	}
 }
