@@ -2,7 +2,20 @@
 
 namespace Payone\Gateway;
 
+use Payone\Payone\Api\TransactionStatus;
+
 abstract class RedirectGatewayBase extends GatewayBase {
+
+	/**
+	 * @param $order \WC_Order
+	 */
+	protected function payment_successful($order) {}
+
+	/**
+	 * @param $order \WC_Order
+	 */
+	protected function payment_error($order) {}
+
 	/**
 	 * @param int $order_id
 	 * @param string $transaction_class
@@ -15,6 +28,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 		$is_success = false;
 		$make_redirect = false;
 		if ( $this->is_redirect( 'success' ) ) {
+			$this->payment_successful($order);
 			$make_redirect = true;
 			$is_success = $order->get_meta( '_appointed' ) > 0;
 			if ( ! $is_success ) {
@@ -24,6 +38,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 					'error' );
 			}
 		} elseif ( $this->is_redirect( 'error' ) ) {
+			$this->payment_error( $order );
 			$make_redirect = true;
 			$is_success = false;
 			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Payment provider returned error',
@@ -55,6 +70,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 			}
 
 			if ( $response->has_error() ) {
+				$this->payment_error( $order );
 				wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(), 'error' );
 			} else {
 				$is_success = true;
@@ -110,5 +126,50 @@ abstract class RedirectGatewayBase extends GatewayBase {
 	 */
 	private function is_redirect( $type ) {
 		return isset( $_GET['type'] ) && $_GET['type'] === $type;
+	}
+
+	/**
+	 * @param int $order_id
+	 *
+	 * @return array
+	 * @throws \WC_Data_Exception
+	 * @throws \ReflectionException
+	 */
+	public function process_payment( $order_id ) {
+		$reflection        = new \ReflectionClass( $this );
+		$transaction_class = '\\Payone\\Transaction\\' . $reflection->getShortName();
+		return $this->process_redirect( $order_id, $transaction_class );
+	}
+
+	/**
+	 * @param TransactionStatus $transaction_status
+	 */
+	public function process_transaction_status( TransactionStatus $transaction_status ) {
+		parent::process_transaction_status( $transaction_status );
+
+		if ( $transaction_status->no_further_action_necessary() ) {
+			return;
+		}
+
+		$order = $transaction_status->get_order();
+		$authorization_method = $order->get_meta( '_authorization_method' );
+		if ( $authorization_method === 'authorization' && $transaction_status->is_paid() ) {
+			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			$order->payment_complete();
+		} elseif ( $authorization_method === 'preauthorization' && $transaction_status->is_capture() ) {
+			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			$order->payment_complete();
+		} elseif ( $authorization_method === 'preauthorization' && $transaction_status->is_paid() ) {
+			// Do nothing. Everything already happened.
+		} else {
+			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
+		}
+	}
+
+	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
+		$authorization_method = $order->get_meta( '_authorization_method' );
+		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
+			$this->capture( $order );
+		}
 	}
 }

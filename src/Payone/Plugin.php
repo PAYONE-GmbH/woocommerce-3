@@ -41,15 +41,16 @@ class Plugin {
 		}
 
 		$gateways = [
-			\Payone\Gateway\CreditCard::GATEWAY_ID      => \Payone\Gateway\CreditCard::class,
-			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
-			\Payone\Gateway\PrePayment::GATEWAY_ID      => \Payone\Gateway\PrePayment::class,
-			\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
-			\Payone\Gateway\Sofort::GATEWAY_ID          => \Payone\Gateway\Sofort::class,
-			\Payone\Gateway\Giropay::GATEWAY_ID         => \Payone\Gateway\Giropay::class,
-			\Payone\Gateway\SafeInvoice::GATEWAY_ID     => \Payone\Gateway\SafeInvoice::class,
-			\Payone\Gateway\PayPal::GATEWAY_ID          => \Payone\Gateway\PayPal::class,
-			\Payone\Gateway\PayDirekt::GATEWAY_ID       => \Payone\Gateway\PayDirekt::class,
+			\Payone\Gateway\CreditCard::class,
+			\Payone\Gateway\SepaDirectDebit::class,
+			\Payone\Gateway\PrePayment::class,
+			\Payone\Gateway\Invoice::class,
+			\Payone\Gateway\Sofort::class,
+			\Payone\Gateway\Giropay::class,
+			\Payone\Gateway\SafeInvoice::class,
+			\Payone\Gateway\PayPal::class,
+			\Payone\Gateway\PayDirekt::class,
+			\Payone\Gateway\PayPalBillingAgreement::class
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -69,6 +70,8 @@ class Plugin {
         add_filter( 'woocommerce_email_enabled_customer_processing_order' , [ $this, 'disable_capture_mail_filter' ]);
 
 		add_action( 'wp_head', [ $this, 'add_stylesheet' ] );
+
+		include_once plugin_dir_path(__FILE__) . 'Tokens/WC_Payment_Token_PayPalBillingAgreement.php';
 	}
 
     /**
