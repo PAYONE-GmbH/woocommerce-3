@@ -108,6 +108,27 @@ class Base extends Request {
         }
     }
 
+    /**
+     * Sets PAYONE API customer IP from the provided WooCommerce order.
+     *
+     * @author Fabian Böttcher <fabian.boettcher@payone.de>
+     * @param \WC_Order $order The WooCommerce order object.
+     * @return void
+     */
+    protected function set_customer_ip_from_order( \WC_Order $order )
+    {
+        // Get IP from order object.
+        $ip = get_post_meta($order->get_id(), '_customer_ip_address', true);
+
+        // Validate the customer IP.
+        $ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+
+        // Append a valid IP address to PAYINE API request data.
+        if ($ip) {
+            $this->set( 'ip', $ip );
+        }
+    }
+
 	/**
 	 * @param \WC_Order $order
 	 *
