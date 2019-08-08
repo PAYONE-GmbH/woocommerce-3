@@ -74,6 +74,40 @@ class Base extends Request {
 		$this->set( 'telephonenumber', $order->get_billing_phone() );
 	}
 
+    /**
+     * Sets PAYONE API shipping data from the provided WooCommerce order object.
+     *
+     * @author Fabian Böttcher <fabian.boettcher@payone.de>
+     * @param \WC_Order $order The WooCommerce order object.
+     * @return void
+     */
+	protected function set_shipping_data_from_order( \WC_Order $order ) {
+	    // Collect order shipping information.
+	    $data = [
+	        'shipping_firstname' => $order->get_shipping_first_name(),
+	        'shipping_lastname' => $order->get_shipping_first_name(),
+	        'shipping_company' => $order->get_shipping_company(),
+	        'shipping_street' => $order->get_shipping_address_1(),
+	        'shipping_zip' => $order->get_shipping_postcode(),
+	        'shipping_addressaddition' => $order->get_shipping_address_2(),
+	        'shipping_city' => $order->get_shipping_city(),
+	        'shipping_state' => $order->get_shipping_state(),
+	        'shipping_country' => $order->get_shipping_country(),
+        ];
+
+	    // Trim parameter values and set parameters null for empty strings.
+	    $data = array_map(function ($value) {
+	        return empty($value = trim($value)) ? null : $value;
+        }, $data);
+
+	    // Set valid PAYONE API shipping data.
+	    foreach ($data as $name => $value) {
+	        if ($value !== null) {
+                $this->set( $name, $value );
+            }
+        }
+    }
+
 	/**
 	 * @param \WC_Order $order
 	 *
