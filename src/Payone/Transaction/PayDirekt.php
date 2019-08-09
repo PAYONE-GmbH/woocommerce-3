@@ -28,6 +28,8 @@ class PayDirekt extends Base {
 		$this->set_reference( $order );
 		$this->set( 'amount', $order->get_total() * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
+
+		// todo: replace the following lines with $this->set_shipping_data_from_order()
 		$this->set( 'shipping_lastname', $order->get_billing_last_name() );
 		$this->set( 'shipping_firstname', $order->get_billing_first_name() );
 		$this->set( 'shipping_street', $order->get_billing_address_1() );
@@ -37,6 +39,7 @@ class PayDirekt extends Base {
 		$this->set( 'shipping_country', $order->get_billing_country() );
 		
 		$this->set_personal_data_from_order( $order );
+        $this->set_customer_ip_from_order( $order );
 
 		$this->set( 'successurl', Plugin::get_callback_url('success') . '&oid=' . $order->get_id() );
 		$this->set( 'errorurl', Plugin::get_callback_url('error') . '&oid=' . $order->get_id() );
