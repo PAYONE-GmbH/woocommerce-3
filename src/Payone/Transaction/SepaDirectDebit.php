@@ -28,6 +28,8 @@ class SepaDirectDebit extends Base {
 		$this->set( 'amount', $order->get_total() * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		$this->set_personal_data_from_order( $order );
+        $this->set_shipping_data_from_order( $order );
+        $this->set_customer_ip_from_order( $order );
 
 		return $this->submit();
 	}

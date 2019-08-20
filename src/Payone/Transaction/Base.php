@@ -74,6 +74,61 @@ class Base extends Request {
 		$this->set( 'telephonenumber', $order->get_billing_phone() );
 	}
 
+    /**
+     * Sets PAYONE API shipping data from the provided WooCommerce order object.
+     *
+     * @author Fabian Böttcher <fabian.boettcher@payone.de>
+     * @param \WC_Order $order The WooCommerce order object.
+     * @return void
+     */
+	protected function set_shipping_data_from_order( \WC_Order $order ) {
+	    // Collect order shipping information.
+	    $data = [
+	        'shipping_firstname' => $order->get_shipping_first_name(),
+	        'shipping_lastname' => $order->get_shipping_last_name(),
+	        'shipping_company' => $order->get_shipping_company(),
+	        'shipping_street' => $order->get_shipping_address_1(),
+	        'shipping_zip' => $order->get_shipping_postcode(),
+	        'shipping_addressaddition' => $order->get_shipping_address_2(),
+	        'shipping_city' => $order->get_shipping_city(),
+	        'shipping_state' => $order->get_shipping_state(),
+	        'shipping_country' => $order->get_shipping_country(),
+        ];
+
+	    // Trim parameter values and set parameters null for empty strings.
+	    $data = array_map(function ($value) {
+	        return empty($value = trim($value)) ? null : $value;
+        }, $data);
+
+	    // Set valid PAYONE API shipping data.
+	    foreach ($data as $name => $value) {
+	        if ($value !== null) {
+                $this->set( $name, $value );
+            }
+        }
+    }
+
+    /**
+     * Sets PAYONE API customer IP from the provided WooCommerce order.
+     *
+     * @author Fabian Böttcher <fabian.boettcher@payone.de>
+     * @param \WC_Order $order The WooCommerce order object.
+     * @return void
+     */
+    protected function set_customer_ip_from_order( \WC_Order $order )
+    {
+        // Get IP from order object.
+        $ip = get_post_meta($order->get_id(), '_customer_ip_address', true);
+
+        // Validate the customer IP.
+        $ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+
+        // Append a valid IP address to PAYONE API request data.
+        if ($ip) {
+            $this->set( 'ip', $ip );
+        }
+    }
+
 	/**
 	 * @param \WC_Order $order
 	 *
