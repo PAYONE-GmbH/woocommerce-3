@@ -85,7 +85,7 @@ class Base extends Request {
 	    // Collect order shipping information.
 	    $data = [
 	        'shipping_firstname' => $order->get_shipping_first_name(),
-	        'shipping_lastname' => $order->get_shipping_first_name(),
+	        'shipping_lastname' => $order->get_shipping_last_name(),
 	        'shipping_company' => $order->get_shipping_company(),
 	        'shipping_street' => $order->get_shipping_address_1(),
 	        'shipping_zip' => $order->get_shipping_postcode(),
