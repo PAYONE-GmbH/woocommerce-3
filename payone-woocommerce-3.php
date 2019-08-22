@@ -12,7 +12,7 @@ License: MIT
 
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
-define( 'PAYONE_PLUGIN_VERSION', '1.4.0' );
+define( 'PAYONE_PLUGIN_VERSION', '1.5.0' );
 define( 'PAYONE_PLUGIN_PATH', __DIR__ );
 define( 'PAYONE_VIEW_PATH', PAYONE_PLUGIN_PATH . '/views' );
 

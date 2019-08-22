@@ -3,8 +3,8 @@ Contributors: bspayone
 Donate link: https://www.bspayone.com/
 Tags: woocommerce, payment
 Requires at least: 4.6
-Tested up to: 4.9
-Stable tag: 1.4.0
+Tested up to: 5.2
+Stable tag: 1.5.0
 Requires PHP: 5.6.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -65,3 +65,24 @@ If you have found anything security related, please contact our technical suppor
 
 = 1.4.0 =
 * Initial plugin store release
+
+= 1.5.0 =
+
+New Features
+
+* more compatibility when querying order numbers
+* New translations for German (informal) and Swiss
+* Submit Customer IP and Shipping Data with every payment method
+
+Bugfixes
+
+* Discounts are now calculated correctly
+
+Maintenance
+
+* tested with Woocommerce 3.7
+* tested with Wordpress 5.2
+
+## A Word on PSD2
+
+You can configure the plugin for optimized conversion when using Credit Cards and 3-D Secure 2.0. For more info see our Remark on docs.payone.com: https://docs.payone.com/display/public/INT/WooCommerce+Plugin#WooCommercePlugin-EnsuringMaximumConversionWith3DSecure2.0
