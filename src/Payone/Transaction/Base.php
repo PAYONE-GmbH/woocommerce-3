@@ -159,6 +159,7 @@ class Base extends Request {
 			$this->set( 'no[' . $n . ']', $article[ 'no' ] );
 			$this->set( 'de[' . $n . ']', $article[ 'de' ] );
 			$this->set( 'va[' . $n . ']', $article[ 'va' ] );
+			$this->set( 'it[' . $n . ']', $article[ 'it' ] );
 		}
 	}
 
@@ -182,6 +183,7 @@ class Base extends Request {
 				'no' => $item_data->get_quantity(),
 				'de' => $product->get_name(),
 				'va' => $va,
+                'it' => 'goods',
 			];
 			$n++;
 
@@ -200,6 +202,7 @@ class Base extends Request {
 				'no' => 1,
 				'de' => $data[ 'name' ],
 				'va' => 100 * $va,
+                'it' => 'shipment',
 			];
 			$n++;
 		}
@@ -213,6 +216,7 @@ class Base extends Request {
                     'no' => 1,
                     'de' => __( 'Discount', 'payone-woocommerce-3' ),
                     'va' => $discountVa,
+                    'it' => 'voucher',
                 ];
                 $n++;
                 $discountIdx++;
