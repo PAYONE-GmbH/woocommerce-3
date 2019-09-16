@@ -155,6 +155,14 @@
         iframes.setCardType(this.value);
     };
 
+    jQuery('#place_order').on('click', function () {
+        var currentGateway = jQuery('input[name=payment_method]:checked').val();
+
+        return currentGateway === '<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>'
+            ? payone_checkout_clicked_<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>()
+            : true;
+    });
+
     var check_status = false;
 
     function payone_checkout_clicked_<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>() {
