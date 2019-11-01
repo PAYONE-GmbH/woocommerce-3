@@ -8,19 +8,19 @@
 <?php
     $cardnumber_css = '';
     if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
-	    $cardnumber_css = ' style="' . $this->get_option( 'cc_field_cardnumber_css' ) . '"';
+	    $cardnumber_css = $this->get_option( 'cc_field_cardnumber_css' );
     }
     $cvc2_css = '';
     if ( $this->get_option( 'cc_field_cvc2_style' ) === 'custom' ) {
-	    $cvc2_css = ' style="' . $this->get_option( 'cc_field_cvc2_css' ) . '"';
+	    $cvc2_css = $this->get_option( 'cc_field_cvc2_css' );
     }
     $month_css = '';
     if ( $this->get_option( 'cc_field_month_style' ) === 'custom' ) {
-	    $month_css = ' style="' . $this->get_option( 'cc_field_month_css' ) . '"';
+	    $month_css = $this->get_option( 'cc_field_month_css' );
     }
     $year_css = '';
     if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
-        $year_css = ' style="' . $this->get_option( 'cc_field_year_css' ) . '"';
+        $year_css = $this->get_option( 'cc_field_year_css' );
     }
 ?>
 <p>
@@ -40,19 +40,19 @@
 
     <p class="form-row form-row-wide">
         <label for="cardpan"><?php _e( 'Cardpan', 'payone-woocommerce-3' ) ?></label>
-        <span class="inputIframe" id="cardpan"<?php echo $cardnumber_css; ?>></span>
+        <span class="inputIframe" id="cardpan"></span>
     </p>
 
     <p class="form-row form-row-wide">
         <label for="cvcInput"><?php _e( 'CVC', 'payone-woocommerce-3' ) ?></label>
-        <span id="cardcvc2" class="inputIframe"<?php echo $cvc2_css; ?>></span>
+        <span id="cardcvc2" class="inputIframe"></span>
     </p>
 
     <p class="form-row form-row-wide">
         <label for="expireInput"><?php _e( 'Expire Date', 'payone-woocommerce-3' ) ?></label>
         <span id="expireInput" class="inputIframe">
-            <span id="cardexpiremonth"<?php echo $month_css; ?>></span>
-            <span id="cardexpireyear"<?php echo $year_css; ?>></span>
+            <span id="cardexpiremonth"></span>
+            <span id="cardexpireyear"></span>
         </span>
     </p>
 
@@ -77,7 +77,7 @@
             cardpan: {
                 selector: "cardpan",
                 type: "<?php echo $this->get_option( 'cc_field_cardnumber_type' ); ?>",
-                style: "font-size: 1em; border: 1px solid #000; width: 100%;",
+                style: "<?php echo $cardnumber_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_cardnumber_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_cardnumber_maxchars' ); ?>"
                 <?php if ($this->get_option( 'cc_field_cardnumber_iframe' ) === 'custom') { ?>
@@ -90,7 +90,7 @@
             cardcvc2: {
                 selector: "cardcvc2",
                 type: "<?php echo $this->get_option( 'cc_field_cvc2_type' ); ?>",
-                style: "font-size: 1em; border: 1px solid #000;",
+                style: "<?php echo $cvc2_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_cvc2_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_cvc2_maxchars' ); ?>"
 	            <?php if ($this->get_option( 'cc_field_cvc2_iframe' ) === 'custom') { ?>
@@ -103,6 +103,7 @@
             cardexpiremonth: {
                 selector: "cardexpiremonth",
                 type: "<?php echo $this->get_option( 'cc_field_month_type' ); ?>",
+                style: "<?php echo $month_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_month_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_month_maxchars' ); ?>"
                 <?php if ($this->get_option( 'cc_field_month_iframe' ) === 'custom') { ?>
@@ -115,6 +116,7 @@
             cardexpireyear: {
                 selector: "cardexpireyear",
                 type: "<?php echo $this->get_option( 'cc_field_year_type' ); ?>",
+                style: "<?php echo $year_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_year_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_year_maxchars' ); ?>"
 	            <?php if ($this->get_option( 'cc_field_year_iframe' ) === 'custom') { ?>
