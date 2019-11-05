@@ -176,8 +176,9 @@ class Base extends Request {
             $discount = (int)round( 100 * $discount );
             $price_one = $price_all / $item_data->get_quantity();
             $price = (int)round( 100 * $price_one );
+            $sku = $product->get_sku() ?: $product->id;
             $articles[ $n ] = [
-				'id' => $item_id,
+				'id' => $sku,
 				'pr' => $price,
 				'no' => $item_data->get_quantity(),
 				'de' => $product->get_name(),
@@ -195,7 +196,7 @@ class Base extends Request {
             $va = Plugin::get_tax_rate_for_item_data( $data );
 			$price = (int)round( 100 * ( $data[ 'total' ] + $data[ 'total_tax' ] ) );
 			$articles[ $n ] = [
-				'id' => $item_id,
+				'id' => $item_data->get_instance_id(),
 				'pr' => $price,
 				'no' => 1,
 				'de' => $data[ 'name' ],
@@ -208,7 +209,7 @@ class Base extends Request {
 		foreach ( $discounts as $discountVa => $discount ) {
 		    if ( $discount > 0 ) {
                 $articles[ $n ] = [
-                    'id' => -$discountIdx,
+                    'id' => "{$order->get_id()}-{$discountIdx}",
                     'pr' => - $discount,
                     'no' => 1,
                     'de' => __( 'Discount', 'payone-woocommerce-3' ),
