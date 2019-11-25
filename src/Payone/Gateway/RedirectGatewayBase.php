@@ -18,10 +18,11 @@ abstract class RedirectGatewayBase extends GatewayBase {
 			$make_redirect = true;
 			$is_success = $order->get_meta( '_appointed' ) > 0;
 			if ( ! $is_success ) {
-				wc_add_notice( __( 'Payment error: ',
-						'payone-woocommerce-3' ) . __( 'Did not receive "appointed" callback',
-						'payone-woocommerce-3' ),
-					'error' );
+			    error_log("No appointed flag set for order {$order->get_id()} before the customer received the checkout success page.");
+				// wc_add_notice( __( 'Payment error: ',
+				// 		'payone-woocommerce-3' ) . __( 'Did not receive "appointed" callback',
+				// 		'payone-woocommerce-3' ),
+				// 	'error' );
 			}
 		} elseif ( $this->is_redirect( 'error' ) ) {
 			$make_redirect = true;
