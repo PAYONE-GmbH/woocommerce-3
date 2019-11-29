@@ -118,7 +118,12 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		} elseif ( $transaction_status->is_cancelation() ) {
 			$order->add_order_note( __( 'Payment was canceled: ', 'payone-woocommerce-3' ) . $transaction_status->get( 'failedcause' ));
 			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
-		}
+		} elseif ( $transaction_status->is_appointed() && $order->get_status() === 'pending' ) {
+		    // Handle APPOINTED TX status for already existing orders that have a status of pending.
+            // Update order status from pending to on-hold.
+            $order->add_order_note( __( 'Received TX status APPOINTED.', 'payone-woocommerce-3' ) );
+            $order->update_status( 'on-hold', __( 'Payment received.', 'payone-woocommerce-3' ) );
+        }
 	}
 
 	/**
