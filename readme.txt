@@ -4,7 +4,7 @@ Donate link: https://www.bspayone.com/
 Tags: woocommerce, payment
 Requires at least: 4.6
 Tested up to: 5.3.2
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 Requires PHP: 5.6.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -104,3 +104,9 @@ Maintenance
 
 * tested with Wordpress 5.3.2 and Woocommerce 3.8
 * first Release which automatically syncs Github and Wordpress Store Releases
+
+= 1.6.1 =
+
+Maintenance
+
+* fixed minor bug in CI Pipeline, no alterations to actual plugin code
