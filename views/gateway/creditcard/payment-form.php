@@ -157,7 +157,7 @@
         iframes.setCardType(this.value);
     };
 
-    jQuery('#place_order').on('click', function () {
+    jQuery(document).on('click', '#place_order', function () {
         var currentGateway = jQuery('input[name=payment_method]:checked').val();
 
         return currentGateway === '<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>'
