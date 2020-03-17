@@ -137,7 +137,12 @@
             }
         },
         error: "<?php echo $this->get_option( 'cc_error_output_active' ) ? 'errorOutput' : ''; ?>",
-        language: Payone.ClientApi.Language.<?php echo $this->get_option( 'cc_error_output_language' ); ?>
+        language: Payone.ClientApi.Language.<?php echo $this->get_option( 'cc_error_output_language' ); ?>,
+        events: {
+            rendered: function () {
+                iframes.setCardType('<?php $cc_brand_choices = $this->get_option('cc_brands'); echo esc_attr( $cc_brand_choices[0] ); ?>');
+            }
+        }
     };
 
     request = {
@@ -152,7 +157,6 @@
         hash: '<?php echo esc_attr( $hash ); ?>'
     };
     var iframes = new Payone.ClientApi.HostedIFrames(config, request);
-    iframes.setCardType('<?php $cc_brand_choices = $this->get_option('cc_brands'); echo esc_attr( $cc_brand_choices[0] ); ?>');
 
     document.getElementById('cardtype').onchange = function () {
         iframes.setCardType(this.value);
