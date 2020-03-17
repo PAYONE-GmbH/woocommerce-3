@@ -4,7 +4,7 @@ Donate link: https://www.bspayone.com/
 Tags: woocommerce, payment
 Requires at least: 4.6
 Tested up to: 5.3.2
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 Requires PHP: 5.6.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -110,3 +110,13 @@ Maintenance
 Maintenance
 
 * fixed minor bug in CI Pipeline, no alterations to actual plugin code
+
+= 1.6.2 =
+
+Bugfixes
+
+* fixed a bug where creditcard checkouts could break when using Germaized Plugin
+
+Maintenance
+
+* tested with woocommerce 4.0.0 and Wordpress 5.3.2
