@@ -92,7 +92,8 @@
                 type: "<?php echo $this->get_option( 'cc_field_cvc2_type' ); ?>",
                 style: "<?php echo $cvc2_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_cvc2_length' ); ?>",
-                maxlength: "<?php echo $this->get_option( 'cc_field_cvc2_maxchars' ); ?>"
+                maxlength: "<?php echo $this->get_option( 'cc_field_cvc2_maxchars' ); ?>",
+                length: { "V": 3, "M": 3, "A": 4, "D": 3, "J": 0, "O": 3, "P": 3, "U": 3 }
 	            <?php if ($this->get_option( 'cc_field_cvc2_iframe' ) === 'custom') { ?>
                 , iframe: {
                     width: "<?php echo $this->get_option( 'cc_field_cvc2_width' ); ?>",
@@ -136,7 +137,12 @@
             }
         },
         error: "<?php echo $this->get_option( 'cc_error_output_active' ) ? 'errorOutput' : ''; ?>",
-        language: Payone.ClientApi.Language.<?php echo $this->get_option( 'cc_error_output_language' ); ?>
+        language: Payone.ClientApi.Language.<?php echo $this->get_option( 'cc_error_output_language' ); ?>,
+        events: {
+            rendered: function () {
+                iframes.setCardType('<?php $cc_brand_choices = $this->get_option('cc_brands'); echo esc_attr( $cc_brand_choices[0] ); ?>');
+            }
+        }
     };
 
     request = {
@@ -151,7 +157,6 @@
         hash: '<?php echo esc_attr( $hash ); ?>'
     };
     var iframes = new Payone.ClientApi.HostedIFrames(config, request);
-    iframes.setCardType('<?php $cc_brand_choices = $this->get_option('cc_brands'); echo esc_attr( $cc_brand_choices[0] ); ?>');
 
     document.getElementById('cardtype').onchange = function () {
         iframes.setCardType(this.value);
