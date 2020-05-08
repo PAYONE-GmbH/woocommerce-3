@@ -170,6 +170,13 @@ class TransactionStatus extends DataTransfer {
 		return $this->get_action() === 'debit';
 	}
 
+    /**
+     * @return bool
+     */
+    public function is_failed() {
+        return $this->get_action() === 'failed';
+    }
+
 	/**
 	 * All diese Status werden in der Basisklasse abgearbeitet und müssen deshalb nicht in den einzelnen
 	 * Gateways weiter verarbeitet werden.
@@ -177,6 +184,6 @@ class TransactionStatus extends DataTransfer {
 	 * @return bool
 	 */
 	public function no_further_action_necessary() {
-		return $this->is_appointed() || $this->is_refund() || $this->is_cancelation();
+		return $this->is_appointed() || $this->is_refund() || $this->is_cancelation() || $this->is_failed();
 	}
 }

@@ -94,13 +94,16 @@ abstract class RedirectGatewayBase extends GatewayBase {
 		$authorization_method = $order->get_meta( '_authorization_method' );
 
 		if ( $authorization_method === 'preauthorization' ) {
-			$order->update_status( 'on-hold', __( 'payment is preauthorized.', 'woocommerce' ) );
+			$order->update_status( 'on-hold', __( 'Payment was pre-authorized by PAYONE, please initiate a capture to complete the payment.', 'payone-woocommerce-3' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
-			$order->add_order_note( __( 'payment is authorized and captured.', 'woocommerce' ) );
+		    // todo: maybe add an option for the merchant to select if the payment should be completed at this point or later in the processing of a PAID TX status
+			$order->add_order_note( __( 'Payment was authorized by PAYONE, the payment is complete.', 'payone-woocommerce-3' ) );
 			$order->payment_complete();
 		}
 
+		// todo: maybe add an option for the merchant to select whether or not the stock should be decreased at this point for pre-authorization payments
 		wc_reduce_stock_levels( $order->get_id() );
+
 		$woocommerce->cart->empty_cart();
 	}
 
