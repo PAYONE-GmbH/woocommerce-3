@@ -464,10 +464,10 @@ class CreditCard extends RedirectGatewayBase {
 		$order = $transaction_status->get_order();
 		$authorization_method = $order->get_meta( '_authorization_method' );
 		if ( $authorization_method === 'authorization' && $transaction_status->is_paid() ) {
-			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			$order->add_order_note( __( 'Payment is authorized by PAYONE, payment is complete.', 'payone-woocommerce-3' ) );
 			$order->payment_complete();
 		} elseif ( $authorization_method === 'preauthorization' && $transaction_status->is_capture() ) {
-			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			$order->add_order_note( __( 'Payment is captured by PAYONE, payment is complete.', 'payone-woocommerce-3' ) );
 			$order->payment_complete();
 		} else {
 			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
