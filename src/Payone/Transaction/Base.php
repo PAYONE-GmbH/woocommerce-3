@@ -222,7 +222,7 @@ class Base extends Request {
             $discount = (int)round( 100 * $discount );
             $price_one = $price_all / $item_data->get_quantity();
             $price = (int)round( 100 * $price_one );
-            $sku = $product->get_sku() ?: $product->id;
+            $sku = $product->get_sku() ?: $product->get_id();
             $articles[ $n ] = [
 				'id' => $sku,
 				'pr' => $price,
