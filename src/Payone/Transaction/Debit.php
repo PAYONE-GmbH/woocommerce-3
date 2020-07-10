@@ -51,6 +51,7 @@ class Debit extends Base {
 		$va = 0;
 		if ( is_array( $tax_rates ) ) {
 			$rates = array_shift( $tax_rates );
+			$rates = is_array( $rates ) ? $rates : [];
 			$va    = round( array_shift( $rates ) );
 		}
 
