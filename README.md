@@ -1,30 +1,48 @@
-# PAYMENT FOR YOUR WOOCOMMERCE SHOP
-With the PAYONE Plugin for WooCommerce we aim to provide you with an easy to use payment plugin that supports the most relevant payment methods. This plugin is thoroughly tested but still in an early stage, so any feedback is very much appreciated.
+PAYONE Payment Plugin for WooCommerce
+=====================================
 
-## Important functions for WooCommerce
-* Seamless integration into the checkout
-* Supports simplified PCI DSS conformity in accordance with SAQ A
-* Currently supported payment methods include Credit Card, SEPA Direct Debit, PayPal, Paydirekt, Safe Invoice, Sofort, Giropay, Invoice, Prepayment
+[![Build Status](https://travis-ci.org/PAYONE-GmbH/woocommerce-3.svg?branch=master)](https://travis-ci.org/PAYONE-GmbH/woocommerce-3)
+![GitHub](https://img.shields.io/github/license/PAYONE-GmbH/woocommerce-3)
+![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/bs-payone-woocommerce)
+![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/stars/bs-payone-woocommerce)
 
-## Getting started
-* Copy the contents of this repository into your `wp-content/plugins/payone-woocommerce-3` folder
-* Activate the plugin in the Wordpress backend
-* Configure using the link to BS PAYONE in the left navigation tab
+**The official PAYONE payment integration for WooCommerce. With our plugin you can integrate
+numerous payment methods into your shop in just a few minutes.**
 
-## Contact
-BS PAYONE GmbH<br>
-Office Kiel<br>
-Fraunhoferstraße 2–4<br>
-24118 Kiel, Germany<br>
-Phone +49 431 25968-400<br>
-Fax +49 431 25968-1400<br>
-magento@payone.de<br>
-www.payone.com/magento
+Important Features
+------------------
 
-## License
-See our License Agreement at: https://www.payone.com/fileadmin/downloads/sonstiges/PAYONE_Haftungs_und_Lizenzvereinbarung_Extensions.pdf
+ - Easy integration in your current checkout
+ - Simplified PCI DSS conformity in accordance with SAQ A for credit card payments
+ - Current supported payment methods: Credit Card, SEPA Direct Debit, PayPal, Paydirekt, Safe Invoice, Sofort, Giropay, Invoice, Prepayment
 
-## About BS PAYONE
-Since the end of August 2017, the two payment specialist companies PAYONE and B+S Card Service merged to become BS PAYONE GmbH. All current partnerships will be maintained the way they are. APIs, interfaces, and other technical parameters will stay the same. Your current contact persons will continue to gladly be at your service.<br>
+How to Get Started?
+-------------------
 
-BS PAYONE GmbH is headquartered in Frankfurt am Main and is one of the leading omnichannel payment providers in Europe. In addition to providing customer support to numerous Sparkasse banks, the full-service payment service provider also provides cashless payment transactions services to more than 255,000 customers from various branches – whether that be in stationary retail or when completing e-commerce and mobile payment transactions.
+Before you can start, you should check if all minimum requirements are met, these are:
+
+ - At least PHP 5.6
+ - Recent verion of WordPress 5
+ - Recent version of the WooCommerce 3 plugin
+ - PAYONE API credentials
+
+### Stable Installation
+
+We recommend installing the plugin via the official WordPress plugin website.
+You can follow the usual installation process here:
+[PAYONE Payment for WooCommerce](https://wordpress.org/plugins/bs-payone-woocommerce/)
+
+### Development Installation
+
+If you want to test the latest development progress, you can install the current
+development state from the `master` branch of this repository.
+
+**However, we do not recommend using this state in a live environment.**
+
+ 1. Download this repository
+    ([ZIP](https://github.com/PAYONE-GmbH/woocommerce-3/archive/master.zip) /
+    [TAR](https://github.com/PAYONE-GmbH/woocommerce-3/archive/master.tar.gz))
+ 2. Extract the contents of the downloaded archive
+ 3. Rename the extracted folder from `woocommerce-3-master` to `payone-woocommerce-3`
+ 4. Move the `payone-woocommerce-3` to your WordPress plugin directory (e.g. `wp-content/plugins`)
+ 5. Activate the plugin on your WordPress admin plugin page
