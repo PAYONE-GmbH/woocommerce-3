@@ -94,6 +94,7 @@ class Base extends Request {
 
 	public function set_personal_data_from_order( \WC_Order $order ) {
 	    $country = $order->get_billing_country();
+	    $company = $order->get_billing_company();
 
 		$this->set( 'lastname', $order->get_billing_last_name() );
 		$this->set( 'firstname', $order->get_billing_first_name() );
@@ -101,6 +102,10 @@ class Base extends Request {
 		$this->set( 'adressaddition', $order->get_billing_address_2() );
 		$this->set( 'zip', $order->get_billing_postcode() );
 		$this->set( 'city', $order->get_billing_city() );
+
+		if (!empty($company)) {
+            $this->set( 'company', $company );
+        }
 
         // Remove state for selected countries.
         // See: https://docs.payone.com/display/public/PLATFORM/state+-+definition
@@ -222,7 +227,7 @@ class Base extends Request {
             $discount = (int)round( 100 * $discount );
             $price_one = $price_all / $item_data->get_quantity();
             $price = (int)round( 100 * $price_one );
-            $sku = $product->get_sku() ?: $product->id;
+            $sku = $product->get_sku() ?: $product->get_id();
             $articles[ $n ] = [
 				'id' => $sku,
 				'pr' => $price,
