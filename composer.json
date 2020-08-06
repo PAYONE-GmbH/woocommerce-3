@@ -15,7 +15,7 @@
     "support": {
         "email": "tech.support@payone.com",
         "issues": "https://github.com/PAYONE-GmbH/woocommerce-3/issues",
-        "docs": "https://docs.payone.com"
+        "docs": "https://docs.payone.com/display/public/INT/WooCommerce+Plugin"
     },
     "require": {
         "php": ">=5.6",
