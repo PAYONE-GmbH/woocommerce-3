@@ -23,7 +23,7 @@ Before you can start, you should check if all minimum requirements are met, thes
 
  - At least PHP 5.6
  - Recent verion of WordPress 5
- - Recent version of the WooCommerce 3 plugin
+ - Recent version of WooCommerce
  - PAYONE API credentials
 
 ### Stable Installation
