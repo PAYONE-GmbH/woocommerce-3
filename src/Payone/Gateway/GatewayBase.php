@@ -188,7 +188,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				$country = (string) $order->get_billing_country();
 			} elseif ( WC()->customer && WC()->customer->get_billing_country() ) {
 				$country = (string) WC()->customer->get_billing_country();
-			}
+			} else {
+			    $country = '';
+            }
 
 			$is_available = in_array( $country, $this->countries );
 		}
