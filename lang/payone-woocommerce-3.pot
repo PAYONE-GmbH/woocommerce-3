@@ -428,6 +428,18 @@ msgstr ""
 msgid "Payment failed."
 msgstr ""
 
+#: src/Payone/Gateway/GatewayBase.php:131
+msgid "The PAYONE platform has generated a receipt for this order"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php:133
+msgid "The PAYONE dunning status has changed"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php:135
+msgid "The PAYONE platform has registered a rebooking"
+msgstr ""
+
 #: src/Payone/Gateway/GatewayBase.php:144
 msgid "Enable/Disable"
 msgstr ""

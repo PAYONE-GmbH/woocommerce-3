@@ -589,6 +589,18 @@ msgstr "Zahlung eingegangen."
 msgid "Payment failed."
 msgstr "Zahlung fehlgeschlagen."
 
+#: src/Payone/Gateway/GatewayBase.php:131
+msgid "The PAYONE platform has generated a receipt for this order"
+msgstr "Die PAYONE Plattform hat zu dieser Bestellung einen Beleg generiert"
+
+#: src/Payone/Gateway/GatewayBase.php:133
+msgid "The PAYONE dunning status has changed"
+msgstr "Der PAYONE Mahnstatus hat sich geändert"
+
+#: src/Payone/Gateway/GatewayBase.php:135
+msgid "The PAYONE platform has registered a rebooking"
+msgstr "Die PAYONE Plattform hat eine Umbuchung registriert"
+
 #: src/Payone/Gateway/GatewayBase.php:114
 msgid "Debit successfull"
 msgstr "Rückerstattung erfolgreich"
