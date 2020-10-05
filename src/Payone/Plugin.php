@@ -116,8 +116,14 @@ class Plugin {
 	 */
 	public static function get_callback_url( $type = 'transaction' ) {
 		$url = get_home_url( null, self::CALLBACK_SLUG . '/' );
+
+		// Append ? character if the URL not already comes with a proper query
+		if ( parse_url( $url, PHP_URL_QUERY ) === null ) {
+		    $url = rtrim( $url, '?' ) . '?';
+        }
+
 		if ($type !== 'transaction') {
-			$url .= '?type=' . $type;
+			$url .= 'type=' . $type;
 		}
 
 		return esc_url( $url );
