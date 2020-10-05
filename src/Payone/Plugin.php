@@ -119,8 +119,8 @@ class Plugin {
 
 		// Append ? character if the URL not already comes with a proper query
 		if ( parse_url( $url, PHP_URL_QUERY ) === null ) {
-		    $url = rtrim( $url, '?' ) . '?';
-        }
+			$url = rtrim( $url, '?' ) . '?';
+		}
 
 		if ($type !== 'transaction') {
 			$url .= 'type=' . $type;
