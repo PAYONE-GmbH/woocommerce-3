@@ -1,8 +1,8 @@
 === BS PAYONE WooCommerce ===
 Contributors: bspayone
-Donate link: https://www.bspayone.com/
+Donate link: https://www.payone.com/
 Tags: woocommerce, payment
-Requires at least: 4.6
+Requires at least: 5.0
 Tested up to: 5.5
 Stable tag: 1.7.1
 Requires PHP: 5.6.0
