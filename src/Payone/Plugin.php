@@ -123,7 +123,7 @@ class Plugin {
 		}
 
 		if ($type !== 'transaction') {
-			$url .= 'type=' . $type;
+			$url = rtrim($url, '&') . "&type={$type}";
 		}
 
 		return esc_url( $url );
