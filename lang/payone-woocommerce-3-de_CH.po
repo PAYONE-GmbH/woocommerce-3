@@ -593,6 +593,22 @@ msgstr "Zahlung fehlgeschlagen."
 msgid "The PAYONE platform has generated a receipt for this order"
 msgstr "Die PAYONE Plattform hat zu dieser Bestellung einen Beleg generiert"
 
+#: src/Payone/Gateway/GatewayBase.php:116
+msgid "Received status APPOINTED from PAYONE."
+msgstr "Der Status APPOINTED wurde von PAYONE gesendet."
+
+#: src/Payone/Gateway/RedirectGatewayBase.php:104
+msgid "Payment was authorized by PAYONE, the payment is complete."
+msgstr "Die Zahlung wurde von PAYONE autorisiert, die Zahlung ist abgeschlossen."
+
+#: src/Payone/Gateway/Sofort.php:49
+#: src/Payone/Gateway/Giropay.php:50
+#: src/Payone/Gateway/CreditCard.php:467
+#: src/Payone/Gateway/PayDirekt.php:50
+#: src/Payone/Gateway/PayPal.php:49
+msgid "Payment is authorized by PAYONE, payment is complete."
+msgstr "Die Zahlung ist von PAYONE autorisiert, die Zahlung ist abgeschlossen."
+
 #: src/Payone/Gateway/GatewayBase.php:133
 msgid "The PAYONE dunning status has changed"
 msgstr "Der PAYONE Mahnstatus hat sich geändert"
