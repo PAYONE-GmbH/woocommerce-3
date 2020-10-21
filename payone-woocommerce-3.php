@@ -2,18 +2,18 @@
 
 /**
  * Plugin PAYONE Payment for WooCommerce
- * Version: 1.6.2
+ * Version: 1.7.1
  * Plugin URI: https://www.payone.com/
  * Description: Integration of PAYONE payment into your WooCommerce store.
  * Author: PAYONE GmbH
  * Author URI: https://www.payone.com/
  * Requires at least: 5.0
- * Tested up to: 5.3
+ * Tested up to: 5.5
  */
 
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
-define( 'PAYONE_PLUGIN_VERSION', '1.6.2' );
+define( 'PAYONE_PLUGIN_VERSION', '1.7.1' );
 define( 'PAYONE_PLUGIN_PATH', __DIR__ );
 define( 'PAYONE_VIEW_PATH', PAYONE_PLUGIN_PATH . '/views' );
 
