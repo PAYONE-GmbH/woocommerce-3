@@ -139,7 +139,7 @@ class Plugin {
 		// Build URL from parts
 		$url = self::unparse_url( $parsed_url );
 
-		return esc_url( $url );
+		return $url;
 	}
 
 	/**
