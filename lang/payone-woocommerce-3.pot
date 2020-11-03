@@ -592,3 +592,15 @@ msgstr ""
 msgid ""
 "Awaiting cheque payment"
 msgstr ""
+
+#: src/Payone/Gateway/PayPal.php:52
+#: src/Payone/Gateway/CreditCard.php:470
+#: src/Payone/Gateway/Giropay.php:53
+#: src/Payone/Gateway/PayDirekt.php:53
+#: src/Payone/Gateway/Sofort.php:52
+msgid "Payment is captured by PAYONE, payment is complete."
+msgstr ""
+
+#: src/Payone/Gateway/RedirectGatewayBase.php:101
+msgid "Payment was pre-authorized by PAYONE, please initiate a capture to complete the payment."
+msgstr ""

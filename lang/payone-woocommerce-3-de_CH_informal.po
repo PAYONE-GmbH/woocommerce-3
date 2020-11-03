@@ -621,6 +621,18 @@ msgstr "Die PAYONE Plattform hat eine Umbuchung registriert"
 msgid "Debit successfull"
 msgstr "Rückerstattung erfolgreich"
 
+#: src/Payone/Gateway/PayPal.php:52
+#: src/Payone/Gateway/CreditCard.php:470
+#: src/Payone/Gateway/Giropay.php:53
+#: src/Payone/Gateway/PayDirekt.php:53
+#: src/Payone/Gateway/Sofort.php:52
+msgid "Payment is captured by PAYONE, payment is complete."
+msgstr "Die Zahlung ist von PAYONE eingezogen, die Zahlung ist abgeschlossen."
+
+#: src/Payone/Gateway/RedirectGatewayBase.php:101
+msgid "Payment was pre-authorized by PAYONE, please initiate a capture to complete the payment."
+msgstr "Die Zahlung wurde von PAYONE vorab autorisiert. Bitte veranlassen Sie einen Zahlungseinzug, um die Zahlung abzuschließen."
+
 #: src/Payone/Gateway/GatewayBase.php:119
 msgid "Payment was canceled: "
 msgstr "Zahlung wurde nachträglich abgebrochen: "
