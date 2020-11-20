@@ -33,9 +33,9 @@ class Eps extends Base {
         $this->set_shipping_data_from_order( $order );
         $this->set_customer_ip_from_order( $order );
 		$this->set( 'bankcountry', 'AT'/*$this->get( 'country' )*/ );
-		$this->set( 'successurl', Plugin::get_callback_url('success') . '&oid=' . $order->get_id() );
-		$this->set( 'errorurl', Plugin::get_callback_url('error') . '&oid=' . $order->get_id() );
-		$this->set( 'backurl', Plugin::get_callback_url('back') . '&oid=' . $order->get_id() );
+		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'success', 'oid' => $order->get_id() ] ) );
+		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'error', 'oid' => $order->get_id() ] ) );
+		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'back', 'oid' => $order->get_id() ] ) );
 
 		return $this->submit();
 	}
