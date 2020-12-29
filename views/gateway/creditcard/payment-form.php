@@ -28,6 +28,11 @@
 </p>
 <fieldset>
     <p class="form-row form-row-wide">
+        <label for="card_holder" title="<?php _e( 'as printed on card', 'payone-woocommerce-3' ) ?>"><?php _e( 'Card Holder', 'payone-woocommerce-3' ) ?></label>
+        <input class="payoneInput" id="card_holder" type="text" name="card_holder" value="" maxlength="50">
+    </p>
+
+    <p class="form-row form-row-wide">
         <label for="cardtypeInput"><?php _e( 'Card type', 'payone-woocommerce-3' ) ?></label>
         <select class="payoneSelect" id="cardtype">
             <?php foreach ( $this->get_option( 'cc_brands' ) as $cc_brand ) { ?>
@@ -178,15 +183,32 @@
             return true;
         }
 
-        if (iframes.isComplete()) {
+        var cardholder_ok = check_cardholder();
+
+        if (iframes.isComplete() && cardholder_ok === true) {
             iframes.creditCardCheck('checkCallback');
         } else {
-            jQuery('#errorOutput').html('<strong style="color:red">Bitte Formular vollständig ausfüllen!</strong>');
+            var error_message = 'Bitte Formular vollständig ausfüllen!';
+            if ( cardholder_ok !== true ) {
+                error_message += '<br>' + cardholder_ok;
+            }
+
+            jQuery('#errorOutput').html('<strong style="color:red">' + error_message + '</strong>');
             payone_unblock();
         }
 
         // Bearbeitung hier abschließen. Das Submit wird dann über "checkCallback" realisiert.
         return false;
+    }
+
+    function check_cardholder() {
+        var cardholder = document.getElementById("card_holder").value;
+
+        if ( cardholder.length > 50 || cardholder.match(/[^a-zA-Z äöüÄÖÜß]/g)) {
+            return 'Bitte geben Sie maximal 50 Zeichen für den Karteninhaber ein, Sonderzeichen außer Deutsche Umlaute sind nicht erlaubt.';
+        }
+
+        return true;
     }
 
     function checkCallback(response) {
