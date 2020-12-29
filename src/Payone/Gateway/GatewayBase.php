@@ -102,23 +102,38 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		$order = $transaction_status->get_order();
+
+		// Increment sequence number of the order if any provided
+        // through the TX status notification
 		$sequencenumber = $transaction_status->get_sequencenumber();
 		if ( $sequencenumber ) {
 			$order->update_meta_data( '_sequencenumber', $sequencenumber );
 			$order->save_meta_data();
 		}
 
-		if ( $transaction_status->is_refund() ) {
-			$is_already_refunded = $order->get_meta( '_refunded' );
-			if ( ! $is_already_refunded ) {
-				$order->update_status( 'wc-refunded', __( 'Debit successfull', 'payone-woocommerce-3' ) );
-				$order->update_meta_data( '_refunded', time() );
-				$order->save_meta_data();
-			}
-		} elseif ( $transaction_status->is_cancelation() ) {
-			$order->add_order_note( __( 'Payment was canceled: ', 'payone-woocommerce-3' ) . $transaction_status->get( 'failedcause' ));
-			$order->update_status( 'wc-failed', __( 'Payment failed.', 'payone-woocommerce-3' ) );
-		}
+		if ( $transaction_status->is_appointed() ) {
+		    // Just log and flag order meta that we got an APPOINTED TX status notification
+		    $order->add_order_note( __( 'Received status APPOINTED from PAYONE.', 'payone-woocommerce-3' ) );
+            $order->update_meta_data( '_appointed', time() );
+            $order->save_meta_data();
+        } elseif ( $transaction_status->is_refund() ) {
+		    // Refund the order if not already happened and we got a DEBIT TX status notification
+            $is_already_refunded = $order->get_meta( '_refunded' );
+            if ( ! $is_already_refunded ) {
+                $order->update_status( 'wc-refunded', __( 'Received status DEBIT from PAYONE.', 'payone-woocommerce-3' ) );
+                $order->update_meta_data( '_refunded', time() );
+                $order->save_meta_data();
+            }
+        } elseif ( $transaction_status->is_cancelation() || $transaction_status->is_failed() ) {
+		    // Set order status to failed if we get a CANCELED of FAILED TX status notification
+            $order->update_status( 'wc-failed', __( 'Received status CANCELATION from PAYONE with reason: ', 'payone-woocommerce-3' ) . $transaction_status->get( 'failedcause' ) );
+        } elseif ( $transaction_status->is_invoice() ) {
+            $order->add_order_note( __( 'The PAYONE platform has generated a receipt for this order', 'payone-woocommerce-3' ) );
+        } elseif ( $transaction_status->is_reminder() ) {
+            $order->add_order_note( __( 'The PAYONE dunning status has changed', 'payone-woocommerce-3' ) );
+        } elseif ( $transaction_status->is_transfer() ) {
+            $order->add_order_note( __( 'The PAYONE platform has registered a rebooking', 'payone-woocommerce-3' ) );
+        }
 	}
 
 	/**
@@ -179,7 +194,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				$country = (string) $order->get_billing_country();
 			} elseif ( WC()->customer && WC()->customer->get_billing_country() ) {
 				$country = (string) WC()->customer->get_billing_country();
-			}
+			} else {
+			    $country = '';
+            }
 
 			$is_available = in_array( $country, $this->countries );
 		}

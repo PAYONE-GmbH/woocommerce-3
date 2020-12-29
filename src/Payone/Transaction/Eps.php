@@ -4,7 +4,7 @@ namespace Payone\Transaction;
 
 use Payone\Plugin;
 
-class Giropay extends Base {
+class Eps extends Base {
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
 	 */
@@ -13,10 +13,8 @@ class Giropay extends Base {
 		$this->set_data_from_gateway( $gateway );
 
 		$this->set( 'clearingtype', 'sb' );
-		$this->set( 'onlinebanktransfertype', 'GPY' );
-		$this->set( 'iban', isset( $_POST['giropay_iban'] ) ? $_POST['giropay_iban'] : '' );
-		$this->set( 'bic', isset( $_POST['giropay_bic'] ) ? $_POST['giropay_bic'] : '' );
-		$this->set( 'bankcountry', 'DE' ); // @todo Richtiges Land bestimmen
+		$this->set( 'onlinebanktransfertype', 'EPS' );
+        $this->set( 'bankgrouptype', $_POST['bankgrouptype'] );
 	}
 
 	/**
@@ -32,8 +30,9 @@ class Giropay extends Base {
 		$this->set( 'amount', $order->get_total() * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		$this->set_personal_data_from_order( $order );
-		$this->set_shipping_data_from_order( $order );
-		$this->set_customer_ip_from_order( $order );
+        $this->set_shipping_data_from_order( $order );
+        $this->set_customer_ip_from_order( $order );
+		$this->set( 'bankcountry', 'AT'/*$this->get( 'country' )*/ );
 		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'success', 'oid' => $order->get_id() ] ) );
 		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'error', 'oid' => $order->get_id() ] ) );
 		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'back', 'oid' => $order->get_id() ] ) );

@@ -1,10 +1,10 @@
 === BS PAYONE WooCommerce ===
 Contributors: bspayone
-Donate link: https://www.bspayone.com/
+Donate link: https://www.payone.com/
 Tags: woocommerce, payment
-Requires at least: 4.6
-Tested up to: 5.2
-Stable tag: 1.5.1
+Requires at least: 5.0
+Tested up to: 5.5
+Stable tag: 1.7.1
 Requires PHP: 5.6.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -86,3 +86,60 @@ Maintenance
 ## A Word on PSD2
 
 You can configure the plugin for optimized conversion when using Credit Cards and 3-D Secure 2.0. For more info see our Remark on docs.payone.com: https://docs.payone.com/display/public/INT/WooCommerce+Plugin#WooCommercePlugin-EnsuringMaximumConversionWith3DSecure2.0
+
+= 1.6.0 =
+
+New Features
+
+* Use SKU in cart items where possible
+
+Bugfixes
+
+* Credit Card iFrames are now stylable (not just their spans)
+* fixed a conflict with the third party amazon pay plugin
+* use correct it[n] Parameters
+* state and shipping_state only get sent when needed
+
+Maintenance
+
+* tested with Wordpress 5.3.2 and Woocommerce 3.8
+* first Release which automatically syncs Github and Wordpress Store Releases
+
+= 1.6.1 =
+
+Maintenance
+
+* fixed minor bug in CI Pipeline, no alterations to actual plugin code
+
+= 1.6.2 =
+
+Bugfixes
+
+* fixed a bug where creditcard checkouts could break when using Germaized Plugin
+
+Maintenance
+
+* tested with woocommerce 4.0.0 and Wordpress 5.3.2
+
+= 1.7.0 =
+
+New Features
+
+* New Payment Method: EPS
+* B2B Mode for PAYONE safe Invoice
+
+Bugfixes
+
+* way better handling of appointed messages should improve customer feedback after redirect payments
+* better rendering of credit card iFrames
+* fixed some log errors
+
+Maintenance
+
+* tested with wordpress 5.5 and woocommerce 4.3.2
+
+== 1.7.1 ==
+
+Bugfixes
+
+* fixed a bug where not all files of the plugin were uploaded to the wordpress store
