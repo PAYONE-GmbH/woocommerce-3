@@ -1,7 +1,5 @@
 <input type="hidden" name="card_pseudopan" id="card_pseudopan">
 <input type="hidden" name="card_truncatedpan" id="card_truncatedpan">
-<input type="hidden" name="card_firstname" id="card_firstname">
-<input type="hidden" name="card_lastname" id="card_lastname">
 <input type="hidden" name="card_type" id="card_type">
 <input type="hidden" name="card_expiredate" id="card_expiredate">
 
@@ -59,16 +57,6 @@
             <span id="cardexpiremonth"></span>
             <span id="cardexpireyear"></span>
         </span>
-    </p>
-
-    <p class="form-row form-row-wide">
-        <label for="payone_card_firstname"><?php _e( 'Firstname', 'payone-woocommerce-3' ) ?></label>
-        <input class="payoneInput" id="payone_card_firstname" type="text" name="card_firstname" value="">
-    </p>
-
-    <p class="form-row form-row-wide">
-        <label for="payone_card_lastname"><?php _e( 'Lastname', 'payone-woocommerce-3' ) ?></label>
-        <input class="payoneInput" id="payone_card_lastname" type="text" name="card_lastname" value="">
     </p>
 
     <div id="errorOutput"></div>
