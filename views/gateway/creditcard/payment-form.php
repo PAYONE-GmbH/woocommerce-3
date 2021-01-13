@@ -192,8 +192,8 @@
     function check_cardholder() {
         var cardholder = document.getElementById("card_holder").value;
 
-        if ( cardholder.length > 50 || cardholder.match(/[^a-zA-Z äöüÄÖÜß]/g)) {
-            return 'Bitte geben Sie maximal 50 Zeichen für den Karteninhaber ein, Sonderzeichen außer Deutsche Umlaute sind nicht erlaubt.';
+        if ( cardholder.length > 50 || cardholder.match(/[^a-zA-Z \-äöüÄÖÜß]/g)) {
+            return 'Bitte geben Sie maximal 50 Zeichen für den Karteninhaber ein, Sonderzeichen außer Deutsche Umlaute und einem Bindestrich sind nicht erlaubt.';
         }
 
         return true;
