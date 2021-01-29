@@ -27,6 +27,7 @@ class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterfa
 		$subscription = new \WC_Subscription( (int) $subscription_id );
 
 		//Get order that is meant to represent this transaction.
+		/** @var \WC_Order[] $orders */
 		$orders = $subscription->get_related_orders( 'all', 'renewal' );
 		$order  = reset( $orders );
 
@@ -40,7 +41,6 @@ class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterfa
 			return;
 		}
 
-		/** @var \WC_Subscription $subscription */
 		$ccTransaction = new \Payone\Transaction\CreditCard( $this );
 
 		$ccTransaction->set( 'amount', (int) ( round( $subscription->get_total(), 2 ) * 100 ) );
@@ -48,6 +48,7 @@ class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterfa
 		$ccTransaction->set( 'customer_is_present', 'no' );
 		$ccTransaction->set( 'pseudocardpan', $subscription->get_meta( '_payone_pseudocardpan' ) );
 		$ccTransaction->set( 'userid', $subscription->get_meta( '_payone_userid' ) );
+		$ccTransaction->set( 'reference', sprintf( '%d_%d', (int) $subscription->get_id(), (int) $order->get_id() ) );
 
 		$response = $ccTransaction->execute( $order );
 

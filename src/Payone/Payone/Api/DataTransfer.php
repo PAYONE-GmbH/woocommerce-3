@@ -76,22 +76,29 @@ class DataTransfer {
 		return $this;
 	}
 
-    /**
-     * @param \WC_Order $order
-     *
-     * @return $this
-     */
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return self
+	 */
 	public function set_reference( \WC_Order $order ) {
-        $reference = $order->get_meta( self::META_KEY_PAYONE_REFERENCE );
-        if ( ! $reference ) {
-            $reference = Plugin::sanitize_reference( $order->get_order_number() );
-            $order->update_meta_data( self::META_KEY_PAYONE_REFERENCE, $reference );
-        }
+		$key = 'reference';
 
-        $this->set( 'reference', $reference );
+		$reference = $this->get( $key, '' );
 
-        return $this;
-    }
+		if ( $reference === '' ) {
+			$reference = $order->get_meta( self::META_KEY_PAYONE_REFERENCE );
+		}
+
+		if ( ! $reference ) {
+			$reference = Plugin::sanitize_reference( $order->get_order_number() );
+			$order->update_meta_data( self::META_KEY_PAYONE_REFERENCE, $reference );
+		}
+
+		$this->set( $key, $reference );
+
+		return $this;
+	}
 
 	/**
 	 * @param string $key
