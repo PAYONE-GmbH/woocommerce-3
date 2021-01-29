@@ -5,7 +5,10 @@ namespace Payone\Gateway;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Plugin;
 
-class SepaDirectDebit extends GatewayBase {
+class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface {
+
+	use SubscriptionAwareTrait;
+
 	const GATEWAY_ID = 'bs_payone_sepa';
 
 	public function __construct() {
@@ -14,6 +17,11 @@ class SepaDirectDebit extends GatewayBase {
 		$this->icon               = '';
 		$this->method_title       = 'Payone ' . __( 'SEPA Direct Debit', 'payone-woocommerce-3' );
 		$this->method_description = '';
+
+		if ( $this->is_wcs_active() ) {
+			$this->append_subscription_supported_actions();
+			$this->append_subscription_hooks();
+		}
 	}
 
 	public function init_form_fields() {

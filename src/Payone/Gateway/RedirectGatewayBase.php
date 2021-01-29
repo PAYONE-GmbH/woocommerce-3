@@ -63,6 +63,25 @@ abstract class RedirectGatewayBase extends GatewayBase {
 
 			$authorization_method = $transaction->get( 'request' );
 			$order->update_meta_data( '_authorization_method', $authorization_method );
+
+			/**
+			 * https://docs.payone.com/display/public/PLATFORM/Special+remarks+-+Recurring+transactions+credit+card
+			 * If Woocommerce Subscription plugin exists and this particular order contains subscriptions, append
+			 * some data for PayOne gateway. We need PayOne user ID and PayOne pseudo PAN on WC_Subscription level.
+			 */
+			if (
+				$this instanceof SubscriptionAwareInterface &&
+				$this->is_wcs_active() &&
+				wcs_order_contains_subscription( $order )
+			) {
+				foreach ( wcs_get_subscriptions_for_order( $order ) as $subscription ) {
+					/** @var \WC_Subscription $subscription */
+					$subscription->update_meta_data( '_payone_userid', $response->get( 'userid', '' ) );
+					$subscription->update_meta_data( '_payone_pseudocardpan', (string) $_POST['card_pseudopan'] );
+					$subscription->save_meta_data();
+				}
+			}
+
 			$order->save_meta_data();
 			$order->save();
 

@@ -74,20 +74,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	public function __construct( $id ) {
 		$this->id              = $id;
 		$this->has_fields      = true;
-		$this->supports        = [
-			'products',
-			'refunds',
-			'subscriptions',
-			'subscription_cancellation',
-			'subscription_suspension',
-			'subscription_reactivation',
-			'subscription_amount_changes',
-			'subscription_date_changes',
-			'subscription_payment_method_change',
-			'subscription_payment_method_change_customer',
-			'subscription_payment_method_change_admin',
-			'multiple_subscriptions',
-		];
+		$this->supports        = [ 'products', 'refunds' ];
 		$this->global_settings = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 
 		$this->init_settings();
@@ -102,17 +89,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$this->process_global_settings();
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
-		add_action( 'woocommerce_scheduled_subscription_payment_' . $this->id, [ $this, 'process_scheduled_subscription_payment' ] );
-	}
-
-	/**
-	 * @see https://docs.woocommerce.com/document/subscriptions/develop/action-reference/
-	 *
-	 * @param float $renewal_total
-	 * @param \WC_Order|null $renewal_order
-	 */
-	public function process_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
-		//TODO: Implement request for each method.
 	}
 
 	public static function add( $methods ) {

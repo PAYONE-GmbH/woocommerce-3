@@ -4,7 +4,10 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
 
-class PayPal extends RedirectGatewayBase {
+class PayPal extends RedirectGatewayBase implements SubscriptionAwareInterface {
+
+	use SubscriptionAwareTrait;
+
 	const GATEWAY_ID = 'bs_payone_paypal';
 
 	public function __construct() {
@@ -13,6 +16,11 @@ class PayPal extends RedirectGatewayBase {
 		$this->icon               = '';
 		$this->method_title       = 'Payone ' . __( 'PayPal', 'payone-woocommerce-3' );
 		$this->method_description = '';
+
+		if ( $this->is_wcs_active() ) {
+			$this->append_subscription_supported_actions();
+			$this->append_subscription_hooks();
+		}
 	}
 
 	public function init_form_fields() {
