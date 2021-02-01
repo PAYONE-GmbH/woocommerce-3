@@ -3,6 +3,7 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Subscription\SubscriptionDispatcher;
 
 class PayPal extends RedirectGatewayBase implements SubscriptionAwareInterface {
 
@@ -16,11 +17,10 @@ class PayPal extends RedirectGatewayBase implements SubscriptionAwareInterface {
 		$this->icon               = '';
 		$this->method_title       = 'Payone ' . __( 'PayPal', 'payone-woocommerce-3' );
 		$this->method_description = '';
-
-		if ( $this->is_wcs_active() ) {
-			$this->append_subscription_supported_actions();
-			$this->append_subscription_hooks();
-		}
+		//TODO: Testing not finished.
+		//if ( SubscriptionDispatcher::is_wcs_active() ) {
+		//	$this->append_subscription_supported_actions();
+		//}
 	}
 
 	public function init_form_fields() {

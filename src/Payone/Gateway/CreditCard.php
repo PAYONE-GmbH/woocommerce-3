@@ -3,6 +3,7 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Subscription\SubscriptionDispatcher;
 
 class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterface {
 
@@ -17,58 +18,9 @@ class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterfa
 		$this->method_title       = 'Payone ' . __( 'Creditcard', 'payone-woocommerce-3' );;
 		$this->method_description = '';
 
-		if ( $this->is_wcs_active() ) {
+		if ( SubscriptionDispatcher::is_wcs_active() ) {
 			$this->append_subscription_supported_actions();
-			$this->append_subscription_hooks();
 		}
-	}
-
-	public function process_scheduled_subscription_payment( $subscription_id ) {
-		$subscription = new \WC_Subscription( (int) $subscription_id );
-
-		//Get order that is meant to represent this transaction.
-		/** @var \WC_Order[] $orders */
-		$orders = $subscription->get_related_orders( 'all', 'renewal' );
-		$order  = reset( $orders );
-
-		if ( ! $order instanceof \WC_Order ) {
-			$subscription->add_order_note( sprintf(
-				'PayOne: %s',
-				__( 'Could not get order created for renewal.', 'payone-woocommerce-3' )
-			) );
-			$subscription->payment_failed();
-
-			return;
-		}
-
-		$ccTransaction = new \Payone\Transaction\CreditCard( $this );
-
-		$ccTransaction->set( 'amount', (int) ( round( $subscription->get_total(), 2 ) * 100 ) );
-		$ccTransaction->set( 'recurrence', 'recurring' );
-		$ccTransaction->set( 'customer_is_present', 'no' );
-		$ccTransaction->set( 'pseudocardpan', $subscription->get_meta( '_payone_pseudocardpan' ) );
-		$ccTransaction->set( 'userid', $subscription->get_meta( '_payone_userid' ) );
-		$ccTransaction->set( 'reference', sprintf( '%d_%d', (int) $subscription->get_id(), (int) $order->get_id() ) );
-
-		$response = $ccTransaction->execute( $order );
-
-		if ( $response->is_approved() ) {
-			$subscription->add_order_note( sprintf(
-				'PayOne: %s (PayOne Reference: %s)',
-				__( 'Scheduled subscription payment successful.', 'payone-woocommerce-3' ),
-				$ccTransaction->get( 'reference', 'N/A' )
-			) );
-			$subscription->payment_complete( $response->get( 'txid' ) );
-
-			return;
-		}
-
-		$subscription->add_order_note( sprintf(
-			'PayOne: %s (Error: %s)',
-			__( 'Scheduled subscription payment failed.', 'payone-woocommerce-3' ),
-			$response->get_error_message()
-		) );
-		$subscription->payment_failed();
 	}
 
 	public function init_form_fields() {

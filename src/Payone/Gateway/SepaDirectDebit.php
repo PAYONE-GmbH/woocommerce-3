@@ -4,6 +4,7 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Plugin;
+use Payone\Subscription\SubscriptionDispatcher;
 
 class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface {
 
@@ -18,9 +19,8 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 		$this->method_title       = 'Payone ' . __( 'SEPA Direct Debit', 'payone-woocommerce-3' );
 		$this->method_description = '';
 
-		if ( $this->is_wcs_active() ) {
+		if ( SubscriptionDispatcher::is_wcs_active() ) {
 			$this->append_subscription_supported_actions();
-			$this->append_subscription_hooks();
 		}
 	}
 
@@ -72,6 +72,14 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 		if ( $response->has_error() ) {
 			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(), 'error' );
 			return;
+		}
+
+		if ( $this->order_contains_subscription( $order ) ) {
+			foreach ( wcs_get_subscriptions_for_order( $order ) as $subscription ) {
+				/** @var \WC_Subscription $subscription */
+				$subscription->update_meta_data( '_payone_userid', $response->get( 'userid', '' ) );
+				$subscription->save_meta_data();
+			}
 		}
 
 		$order->set_transaction_id( $response->get( 'txid' ) );

@@ -3,6 +3,7 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Subscription\SubscriptionDispatcher;
 use Payone\Transaction\Capture;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
@@ -534,5 +535,16 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			echo '<strong>' . __( 'pp.bankname', 'payone-woocommerce-3' ) . ':</strong> ';
 			echo $clearing_info['bankname'] . '<br><br>';
 		}
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return bool
+	 */
+	protected function order_contains_subscription( $order ) {
+		return $this instanceof SubscriptionAwareInterface &&
+		       SubscriptionDispatcher::is_wcs_active() &&
+		       wcs_order_contains_subscription( $order );
 	}
 }

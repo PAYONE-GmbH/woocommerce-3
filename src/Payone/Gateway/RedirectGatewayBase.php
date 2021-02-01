@@ -32,22 +32,16 @@ abstract class RedirectGatewayBase extends GatewayBase {
 
             wp_redirect( $target_url );
             exit;
-        } else if ( $this->is_redirect( 'error' ) ) {
-            // We are back in the shop via the provided errorurl
-
-            wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Payment provider returned error',
-                    'payone-woocommerce-3' ), 'error' );
-
-            wp_redirect( wc_get_checkout_url() );
-            exit;
-        } else if ( $this->is_redirect( 'back' ) ) {
-            // We are back in the shop via the provided backurl
-
-            wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Payment was canceled by user',
-                    'payone-woocommerce-3' ), 'error' );
-
-            wp_redirect( wc_get_checkout_url() );
-            exit;
+		} else if ( $this->is_redirect( 'error' ) ) {
+			// We are back in the shop via the provided errorurl
+			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Payment provider returned error', 'payone-woocommerce-3' ), 'error' );
+			wp_redirect( wc_get_checkout_url() );
+			exit;
+		} else if ( $this->is_redirect( 'back' ) ) {
+			// We are back in the shop via the provided backurl
+			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Payment was canceled by user', 'payone-woocommerce-3' ), 'error' );
+			wp_redirect( wc_get_checkout_url() );
+			exit;
         } else {
 		    // We are initiating the payment and may redirect the customer depending on the
             // PAYONE API response. Especially for credit cards sometimes redirects occur
@@ -55,6 +49,15 @@ abstract class RedirectGatewayBase extends GatewayBase {
 
 			/** @var \Payone\Transaction\Base $transaction */
 			$transaction = new $transaction_class( $this );
+
+			if ( $this->order_contains_subscription( $order ) ) {
+				//Method $this->process_redirect is called only on first payment.
+				$transaction->set( 'recurrence', 'recurring' );
+				$transaction->set( 'customer_is_present', 'yes' );
+				if ( $transaction instanceof \Payone\Transaction\PayPal ) {
+					$transaction->set( 'amount', '1' );
+				}
+			}
 
 			/** @var \Payone\Payone\Api\Response $response */
 			$response = $transaction->execute( $order );
@@ -64,16 +67,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 			$authorization_method = $transaction->get( 'request' );
 			$order->update_meta_data( '_authorization_method', $authorization_method );
 
-			/**
-			 * https://docs.payone.com/display/public/PLATFORM/Special+remarks+-+Recurring+transactions+credit+card
-			 * If Woocommerce Subscription plugin exists and this particular order contains subscriptions, append
-			 * some data for PayOne gateway. We need PayOne user ID and PayOne pseudo PAN on WC_Subscription level.
-			 */
-			if (
-				$this instanceof SubscriptionAwareInterface &&
-				$this->is_wcs_active() &&
-				wcs_order_contains_subscription( $order )
-			) {
+			if ( $this->order_contains_subscription( $order ) ) {
 				foreach ( wcs_get_subscriptions_for_order( $order ) as $subscription ) {
 					/** @var \WC_Subscription $subscription */
 					$subscription->update_meta_data( '_payone_userid', $response->get( 'userid', '' ) );

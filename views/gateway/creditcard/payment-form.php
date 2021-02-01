@@ -10,10 +10,6 @@
 <input type="hidden" name="card_lastname" id="card_lastname">
 <input type="hidden" name="card_type" id="card_type">
 <input type="hidden" name="card_expiredate" id="card_expiredate">
-<?php if ( $this->cart_contains_subscription() ): ?>
-    <input type="hidden" name="recurrence" value="recurring">
-    <input type="hidden" name="customer_is_present" value="yes">
-<?php endif; ?>
 <?php
     $cardnumber_css = '';
     if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {

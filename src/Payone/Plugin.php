@@ -141,7 +141,7 @@ class Plugin {
 		list( $range, $netmask ) = explode( '/', $range, 2 );
 		$range_decimal    = ip2long( $range );
 		$ip_decimal       = ip2long( $ip_address );
-		$wildcard_decimal = pow( 2, ( 32 - $netmask ) ) - 1;
+		$wildcard_decimal = ( 2 ** ( 32 - $netmask ) ) - 1;
 		$netmask_decimal  = ~$wildcard_decimal;
 
 		return ( $ip_decimal & $netmask_decimal ) === ( $range_decimal & $netmask_decimal );
@@ -151,6 +151,9 @@ class Plugin {
 		add_rewrite_rule( '^' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
 		add_filter( 'query_vars', [ $this, 'add_rewrite_var' ] );
 		add_action( 'template_redirect', [ $this, 'catch_payone_callback' ] );
+
+		add_action( 'wp_ajax_sepa_manage_mandate', [ $this, 'process_manage_mandate_callback' ] );
+		add_action( 'wp_ajax_nopriv_sepa_manage_mandate', [ $this, 'process_manage_mandate_callback' ] );
 	}
 
 	public function add_rewrite_var( $vars ) {
@@ -164,9 +167,13 @@ class Plugin {
 
 			if ( $this->is_callback_after_redirect() ) {
 				return $this->process_callback_after_redirect();
-			} elseif ( $this->is_manage_mandate_callback() ) {
+			}
+
+			if ( $this->is_manage_mandate_callback() ) {
 				return $this->process_manage_mandate_callback();
-			} elseif ( $this->is_manage_mandate_getfile() ) {
+			}
+
+			if ( $this->is_manage_mandate_getfile() ) {
 				return $this->process_manage_mandate_getfile();
 			}
 
@@ -176,7 +183,7 @@ class Plugin {
 
 				try {
 					$response = $this->process_callback();
-				} catch (\Exception $e) {
+				} catch ( \Exception $e ) {
 					$response .= ' (' . $e->getMessage() . ')';
 				}
 
@@ -252,22 +259,18 @@ class Plugin {
 	 */
 	private function is_callback_after_redirect() {
 		$allowed_redirect_types = [ 'success', 'error', 'back' ];
-		if ( isset( $_GET['type'] ) && in_array( $_GET['type'], $allowed_redirect_types, true)
-		     && isset( $_GET['oid'] ) && (int)$_GET['oid']
-		) {
-			return true;
-		}
 
-		return false;
+		return isset( $_GET['type'], $_GET['oid'] ) &&
+		       in_array( $_GET['type'], $allowed_redirect_types, true );
 	}
 
 	/**
 	 * @return array
 	 */
 	private function process_callback_after_redirect() {
-		$order_id = (int)$_GET['oid'];
+		$order_id = (int) $_GET['oid'];
 
-		$order = new \WC_Order( $order_id );
+		$order   = new \WC_Order( $order_id );
 		$gateway = self::get_gateway_for_order( $order );
 
 		return $gateway->process_payment( $order_id );
@@ -277,11 +280,7 @@ class Plugin {
 	 * @return bool
 	 */
 	private function is_manage_mandate_callback() {
-		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-manage-mandate') {
-			return true;
-		}
-
-		return false;
+		return isset( $_GET['type'] ) && $_GET['type'] === 'ajax-manage-mandate';
 	}
 
 	/**

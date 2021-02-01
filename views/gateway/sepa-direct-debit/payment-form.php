@@ -50,7 +50,8 @@
     }
     function payone_manage_mandate(data) {
         jQuery('#direct_debit_error').html('');
-        jQuery.post('<?php echo \Payone\Plugin::get_callback_url('ajax-manage-mandate'); ?>', data, function(result) {
+        data.action = 'sepa_manage_mandate';
+        jQuery.post(ajax_object.ajax_url, data, function (result) {
             result = jQuery.parseJSON(result);
             if (result.status === 'error') {
                 jQuery('#direct_debit_error').html('<strong style="color:red">' + result.message + '</strong>');
