@@ -23,8 +23,3 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	add_action( 'init', [ $payonePlugin, 'add_callback_url' ] );
 	add_action( 'plugins_loaded', [ $payonePlugin, 'init' ] );
 }
-
-$subscriptionDispatcher = new \Payone\Subscription\SubscriptionDispatcher();
-if ( \Payone\Subscription\SubscriptionDispatcher::is_wcs_active() ) {
-	$subscriptionDispatcher->add_actions();
-}

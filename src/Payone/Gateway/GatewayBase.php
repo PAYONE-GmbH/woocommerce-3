@@ -3,7 +3,6 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
-use Payone\Subscription\SubscriptionDispatcher;
 use Payone\Transaction\Capture;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
@@ -543,8 +542,28 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @return bool
 	 */
 	protected function order_contains_subscription( $order ) {
-		return $this instanceof SubscriptionAwareInterface &&
-		       SubscriptionDispatcher::is_wcs_active() &&
-		       wcs_order_contains_subscription( $order );
+		return $this instanceof SubscriptionAwareInterface && $this::is_wcs_active() && wcs_order_contains_subscription( $order );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function is_paypal_billing_agreements_enabled() {
+		if ( isset( $this->global_settings['paypal_billing_agreements_enabled'] ) ) {
+			return (bool) $this->global_settings['paypal_billing_agreements_enabled'];
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function is_payone_invoice_module_enabled() {
+		if ( isset( $this->global_settings['payone_invoice_module_enabled'] ) ) {
+			return (bool) $this->global_settings['payone_invoice_module_enabled'];
+		}
+
+		return false;
 	}
 }

@@ -148,53 +148,62 @@ class Plugin {
 	}
 
 	public function add_callback_url() {
-		add_rewrite_rule( '^' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
-		add_filter( 'query_vars', [ $this, 'add_rewrite_var' ] );
-		add_action( 'template_redirect', [ $this, 'catch_payone_callback' ] );
+		add_rewrite_rule(
+			sprintf( '^%s\/?\&(.*)', self::CALLBACK_SLUG ),
+			sprintf( 'index.php?%s=true&$matches[1]', self::CALLBACK_SLUG ),
+			'top'
+		);
+		add_filter( 'query_vars', function ( $query_vars ) {
+			$query_vars[] = self::CALLBACK_SLUG;
 
+			return $query_vars;
+		} );
+		add_action( 'template_redirect', [ $this, 'catch_payone_callback' ] );
 		add_action( 'wp_ajax_sepa_manage_mandate', [ $this, 'process_manage_mandate_callback' ] );
 		add_action( 'wp_ajax_nopriv_sepa_manage_mandate', [ $this, 'process_manage_mandate_callback' ] );
 	}
 
-	public function add_rewrite_var( $vars ) {
-		$vars[] = self::CALLBACK_SLUG;
-
-		return $vars;
-	}
-
 	public function catch_payone_callback() {
-		if ( get_query_var( self::CALLBACK_SLUG ) ) {
+		//TODO: Maybe find a way to "legit" make a custom route? I could not.
+		$is_payone_callback = self::string_begins_with(
+			(string) $_SERVER['REQUEST_URI'],
+			sprintf( '/%s', self::CALLBACK_SLUG )
+		);
 
-			if ( $this->is_callback_after_redirect() ) {
-				return $this->process_callback_after_redirect();
-			}
-
-			if ( $this->is_manage_mandate_callback() ) {
-				return $this->process_manage_mandate_callback();
-			}
-
-			if ( $this->is_manage_mandate_getfile() ) {
-				return $this->process_manage_mandate_getfile();
-			}
-
-			$response = 'ERROR';
-			if ( $this->request_is_from_payone() ) {
-				do_action( 'payone_transaction_callback' );
-
-				try {
-					$response = $this->process_callback();
-				} catch ( \Exception $e ) {
-					$response .= ' (' . $e->getMessage() . ')';
-				}
-
-				if ( $response === 'TSOK' ) {
-					Log::constructFromPostVars();
-				}
-			}
-
-			echo $response;
-			exit();
+		if ( ! $is_payone_callback ) {
+			//Do nothing. Let WP to do its work.
+			return;
 		}
+
+		if ( $this->is_callback_after_redirect() ) {
+			return $this->process_callback_after_redirect();
+		}
+
+		if ( $this->is_manage_mandate_callback() ) {
+			return $this->process_manage_mandate_callback();
+		}
+
+		if ( $this->is_manage_mandate_getfile() ) {
+			return $this->process_manage_mandate_getfile();
+		}
+
+		$response = 'ERROR';
+		if ( $this->request_is_from_payone() ) {
+			do_action( 'payone_transaction_callback' );
+
+			try {
+				$response = $this->process_callback();
+			} catch ( \Exception $e ) {
+				$response .= ' (' . $e->getMessage() . ')';
+			}
+
+			if ( $response === 'TSOK' ) {
+				Log::constructFromPostVars();
+			}
+		}
+
+		echo $response;
+		exit();
 	}
 
 	/**
@@ -405,5 +414,15 @@ class Plugin {
 		}
 
 		return null;
+	}
+
+	/**
+	 * @param string $string
+	 * @param string $begins_with
+	 *
+	 * @return bool
+	 */
+	public static function string_begins_with( $string, $begins_with ) {
+		return stripos( $string, $begins_with ) === 0;
 	}
 }

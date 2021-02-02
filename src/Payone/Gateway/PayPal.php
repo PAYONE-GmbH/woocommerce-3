@@ -3,7 +3,6 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
-use Payone\Subscription\SubscriptionDispatcher;
 
 class PayPal extends RedirectGatewayBase implements SubscriptionAwareInterface {
 
@@ -17,10 +16,11 @@ class PayPal extends RedirectGatewayBase implements SubscriptionAwareInterface {
 		$this->icon               = '';
 		$this->method_title       = 'Payone ' . __( 'PayPal', 'payone-woocommerce-3' );
 		$this->method_description = '';
-		//TODO: Testing not finished.
-		//if ( SubscriptionDispatcher::is_wcs_active() ) {
-		//	$this->append_subscription_supported_actions();
-		//}
+
+		if ( self::is_wcs_active() && $this->is_paypal_billing_agreements_enabled() ) {
+			$this->add_subscription_support();
+			$this->add_subscription_actions();
+		}
 	}
 
 	public function init_form_fields() {
@@ -71,5 +71,41 @@ class PayPal extends RedirectGatewayBase implements SubscriptionAwareInterface {
 		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
 			$this->capture( $order );
 		}
+	}
+
+	public function process_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
+		$subscription = $this->get_subscriptions_for_renewal_order( $renewal_order );
+
+		if ( ! $subscription instanceof \WC_Subscription ) {
+			return;
+		}
+
+		/** @var GatewayBase $this */
+		$transaction = new \Payone\Transaction\PayPal( new \Payone\Gateway\PayPal() );
+
+		$transaction->set( 'amount', (int) ( round( $subscription->get_total(), 2 ) * 100 ) );
+		$transaction->set( 'recurrence', 'recurring' );
+		$transaction->set( 'customer_is_present', 'no' );
+		$transaction->set( 'userid', $subscription->get_meta( '_payone_userid' ) );
+
+		$response = $transaction->execute( $renewal_order );
+
+		if ( $response->is_approved() ) {
+			$subscription->payment_complete( $response->get( 'txid' ) );
+			$renewal_order->add_order_note( sprintf(
+				'PayOne: %s (PayOne Reference: %s)',
+				__( 'Scheduled subscription payment successful.', 'payone-woocommerce-3' ),
+				$transaction->get( 'reference', 'N/A' )
+			) );
+
+			return;
+		}
+
+		$renewal_order->add_order_note( sprintf(
+			'PayOne: %s (Error: %s)',
+			__( 'Scheduled subscription payment failed.', 'payone-woocommerce-3' ),
+			$response->get_error_message()
+		) );
+		$subscription->payment_failed();
 	}
 }

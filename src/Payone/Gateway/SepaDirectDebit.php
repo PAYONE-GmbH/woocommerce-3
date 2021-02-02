@@ -4,7 +4,6 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Plugin;
-use Payone\Subscription\SubscriptionDispatcher;
 
 class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface {
 
@@ -19,8 +18,9 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 		$this->method_title       = 'Payone ' . __( 'SEPA Direct Debit', 'payone-woocommerce-3' );
 		$this->method_description = '';
 
-		if ( SubscriptionDispatcher::is_wcs_active() ) {
-			$this->append_subscription_supported_actions();
+		if ( self::is_wcs_active() ) {
+			$this->add_subscription_support();
+			$this->add_subscription_actions();
 		}
 	}
 
@@ -94,8 +94,7 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 		if ( $authorization_method === 'preauthorization' ) {
 			$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
-			$order->update_status( 'processing',
-				__( 'Payment is authorized and captured.', 'payone-woocommerce-3' ) );
+			$order->update_status( 'processing', __( 'Payment is authorized and captured.', 'payone-woocommerce-3' ) );
 		}
 
 		// Reduce stock levels
@@ -216,5 +215,41 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 		) {
 			$this->capture( $order );
 		}
+	}
+
+	public function process_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
+		$subscription = $this->get_subscriptions_for_renewal_order( $renewal_order );
+
+		if ( ! $subscription instanceof \WC_Subscription ) {
+			return;
+		}
+
+		/** @var GatewayBase $this */
+		$transaction = new \Payone\Transaction\SepaDirectDebit( new \Payone\Gateway\SepaDirectDebit() );
+
+		$transaction->set( 'amount', (int) ( round( $subscription->get_total(), 2 ) * 100 ) );
+		$transaction->set( 'recurrence', 'recurring' );
+		$transaction->set( 'customer_is_present', 'no' );
+		$transaction->set( 'userid', $subscription->get_meta( '_payone_userid' ) );
+
+		$response = $transaction->execute( $renewal_order );
+
+		if ( $response->is_approved() ) {
+			$subscription->payment_complete( (string) $response->get( 'txid' ) );
+			$renewal_order->add_order_note( sprintf(
+				'PayOne: %s (PayOne Reference: %s)',
+				__( 'Scheduled subscription payment successful.', 'payone-woocommerce-3' ),
+				$transaction->get( 'reference', 'N/A' )
+			) );
+
+			return;
+		}
+
+		$renewal_order->add_order_note( sprintf(
+			'PayOne: %s (Error: %s)',
+			__( 'Scheduled subscription payment failed.', 'payone-woocommerce-3' ),
+			$response->get_error_message()
+		) );
+		$subscription->payment_failed();
 	}
 }

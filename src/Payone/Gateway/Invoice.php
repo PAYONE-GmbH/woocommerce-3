@@ -2,8 +2,8 @@
 
 namespace Payone\Gateway;
 
+use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
-use Payone\Subscription\SubscriptionDispatcher;
 
 class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 
@@ -18,8 +18,9 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 		$this->method_title       = 'Payone ' . __( 'Invoice', 'payone-woocommerce-3' );
 		$this->method_description = '';
 
-		if ( SubscriptionDispatcher::is_wcs_active() ) {
-			$this->append_subscription_supported_actions();
+		if ( self::is_wcs_active() ) {
+			$this->add_subscription_support();
+			$this->add_subscription_actions();
 		}
 	}
 
@@ -91,7 +92,7 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 			$order->add_order_note( __( 'Payment received. Customer overpaid!', 'payone-woocommerce-3' ) );
 			$order->payment_complete();
 		} elseif ( $transaction_status->is_underpaid() ) {
-			$order->add_order_note(__( 'Payment received. Customer underpaid!', 'payone-woocommerce-3' ));
+			$order->add_order_note( __( 'Payment received. Customer underpaid!', 'payone-woocommerce-3' ) );
 		} elseif ( $transaction_status->is_paid() ) {
 			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
 			$order->payment_complete();
@@ -104,5 +105,72 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
 			$this->capture( $order );
 		}
+	}
+
+	public function process_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
+		$subscription = $this->get_subscriptions_for_renewal_order( $renewal_order );
+
+		if ( ! $subscription instanceof \WC_Subscription ) {
+			return;
+		}
+
+		$transaction = new \Payone\Transaction\Invoice( new \Payone\Gateway\Invoice() );
+
+		$transaction->set( 'amount', (int) ( round( $subscription->get_total(), 2 ) * 100 ) );
+		$transaction->set( 'recurrence', 'recurring' );
+		$transaction->set( 'customer_is_present', 'no' );
+		$transaction->set( 'userid', $subscription->get_meta( '_payone_userid' ) );
+
+		$response = $transaction->execute( $renewal_order );
+
+		if ( $response->is_approved() ) {
+			$subscription->payment_complete( (string) $response->get( 'txid' ) );
+			$renewal_order->add_order_note( sprintf(
+				'PayOne: %s (PayOne Reference: %s)',
+				__( 'Scheduled subscription payment successful.', 'payone-woocommerce-3' ),
+				$transaction->get( 'reference', 'N/A' )
+			) );
+
+			return;
+		}
+
+		$renewal_order->add_order_note( sprintf(
+			'PayOne: %s (Error: %s)',
+			__( 'Scheduled subscription payment failed.', 'payone-woocommerce-3' ),
+			$response->get_error_message()
+		) );
+		$subscription->payment_failed();
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return \SplFileInfo|null
+	 */
+	public function get_invoice_for_order( $order ) {
+		$transaction_id = $order->get_transaction_id();
+
+		if ( ! is_string( $transaction_id ) || empty( $transaction_id ) ) {
+			return null;
+		}
+
+		$transaction_id = trim( $transaction_id );
+
+		$request = new Request();
+		$request->set( 'request', 'getinvoice' );
+		$request->set( 'invoice_title', sprintf( 'RG-%s-0', $transaction_id ) ); //sprintf( 'GT-%s-1', $transaction_id ) for credit notes
+		$result = $request->submit();
+
+		if ( ! $result->is_approved() ) {
+			wc_add_notice( $result->get_error_message(), 'error' );
+
+			return null;
+		}
+
+		$pdfFilePath = sprintf( '%s/Invoice.%s.pdf', sys_get_temp_dir(), $transaction_id );
+
+		file_put_contents( $pdfFilePath, $result->get( 'DATA' ) );
+
+		return new \SplFileInfo( $pdfFilePath );
 	}
 }
