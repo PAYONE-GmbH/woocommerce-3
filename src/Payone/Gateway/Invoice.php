@@ -124,7 +124,7 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 		$response = $transaction->execute( $renewal_order );
 
 		if ( $response->is_approved() ) {
-			$subscription->payment_complete( (string) $response->get( 'txid' ) );
+			$renewal_order->payment_complete( (string) $response->get( 'txid' ) );
 			$renewal_order->add_order_note( sprintf(
 				'PayOne: %s (PayOne Reference: %s)',
 				__( 'Scheduled subscription payment successful.', 'payone-woocommerce-3' ),
@@ -139,7 +139,7 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 			__( 'Scheduled subscription payment failed.', 'payone-woocommerce-3' ),
 			$response->get_error_message()
 		) );
-		$subscription->payment_failed();
+		$renewal_order->payment_failed();
 	}
 
 	/**
