@@ -546,6 +546,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	}
 
 	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return bool
+	 */
+	protected function order_is_subscription( $order ) {
+		return $this instanceof SubscriptionAwareInterface && $this::is_wcs_active() && wcs_is_subscription( $order->get_id() );
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function is_paypal_billing_agreements_enabled() {

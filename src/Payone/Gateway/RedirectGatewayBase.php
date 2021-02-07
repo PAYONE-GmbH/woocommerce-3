@@ -58,8 +58,17 @@ abstract class RedirectGatewayBase extends GatewayBase {
 		/** @var \Payone\Transaction\Base $transaction */
 		$transaction = new $transaction_class( $this );
 
+		if ( $this->order_is_subscription( $order ) ) {
+			//PAYMENT METHOD CHANGE REQUEST
+			$transaction->set( 'amount', 0 );
+			$transaction->set( 'reference', sprintf( '%d-PMCR', (int) $order->get_id() ) );
+			if ( $transaction_class === \Payone\Transaction\PayPal::class ) {
+				$transaction->set( 'amount', 1 );
+			}
+		}
+
 		if ( $this->order_contains_subscription( $order ) ) {
-			//Method $this->process_redirect is called only on first payment.
+			//FIRST PAYMENT FOR SUBSCRIPTIONS
 			$transaction->set( 'recurrence', 'recurring' );
 			$transaction->set( 'customer_is_present', 'yes' );
 		}
@@ -72,7 +81,16 @@ abstract class RedirectGatewayBase extends GatewayBase {
 		$authorization_method = $transaction->get( 'request' );
 		$order->update_meta_data( '_authorization_method', $authorization_method );
 
+		if ( $this->order_is_subscription( $order ) ) {
+			//PAYMENT METHOD CHANGE REQUEST
+			$order->update_meta_data( '_payone_userid', $response->get( 'userid', '' ) );
+			$order->update_meta_data( '_payone_pseudocardpan', (string) $_POST['card_pseudopan'] );
+			$order->update_meta_data( '_payone_payment_method_change_request_reference', (string) $transaction->get( 'reference' ) );
+			$order->save_meta_data();
+		}
+
 		if ( $this->order_contains_subscription( $order ) ) {
+			//FIRST PAYMENT FOR SUBSCRIPTIONS
 			foreach ( wcs_get_subscriptions_for_order( $order ) as $subscription ) {
 				/** @var \WC_Subscription $subscription */
 				$subscription->update_meta_data( '_payone_userid', $response->get( 'userid', '' ) );

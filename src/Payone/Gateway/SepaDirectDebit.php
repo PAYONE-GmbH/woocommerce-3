@@ -67,14 +67,35 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 		$order = new \WC_Order( $order_id );
 
 		$transaction = new \Payone\Transaction\SepaDirectDebit( $this );
-		$response    = $transaction->execute( $order );
+
+		if ( $this->order_is_subscription( $order ) ) {
+			//PAYMENT METHOD CHANGE REQUEST
+			$transaction->set( 'amount', 0 );
+			$transaction->set( 'reference', sprintf( '%d-PMCR', (int) $order->get_id() ) );
+		}
+
+		if ( $this->order_contains_subscription( $order ) ) {
+			//FIRST PAYMENT FOR SUBSCRIPTIONS
+			$transaction->set( 'recurrence', 'recurring' );
+			$transaction->set( 'customer_is_present', 'yes' );
+		}
+
+		$response = $transaction->execute( $order );
 
 		if ( $response->has_error() ) {
 			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(), 'error' );
 			return;
 		}
 
+		if ( $this->order_is_subscription( $order ) ) {
+			//PAYMENT METHOD CHANGE REQUEST
+			$order->update_meta_data( '_payone_userid', $response->get( 'userid', '' ) );
+			$order->update_meta_data( '_payone_payment_method_change_request_reference', (string) $transaction->get( 'reference' ) );
+			$order->save_meta_data();
+		}
+
 		if ( $this->order_contains_subscription( $order ) ) {
+			//FIRST PAYMENT FOR SUBSCRIPTIONS
 			foreach ( wcs_get_subscriptions_for_order( $order ) as $subscription ) {
 				/** @var \WC_Subscription $subscription */
 				$subscription->update_meta_data( '_payone_userid', $response->get( 'userid', '' ) );
@@ -235,7 +256,7 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 		$response = $transaction->execute( $renewal_order );
 
 		if ( $response->is_approved() ) {
-			$renewal_order->payment_complete( (string) $response->get( 'txid' ) );
+			$subscription->payment_complete( (string) $response->get( 'txid' ) );
 			$renewal_order->add_order_note( sprintf(
 				'PayOne: %s (PayOne Reference: %s)',
 				__( 'Scheduled subscription payment successful.', 'payone-woocommerce-3' ),
@@ -250,6 +271,6 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 			__( 'Scheduled subscription payment failed.', 'payone-woocommerce-3' ),
 			$response->get_error_message()
 		) );
-		$renewal_order->payment_failed();
+		$subscription->payment_failed();
 	}
 }

@@ -525,7 +525,7 @@ class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterfa
 		$response = $transaction->execute( $renewal_order );
 
 		if ( $response->is_approved() ) {
-			$renewal_order->payment_complete( (string) $response->get( 'txid' ) );
+			$subscription->payment_complete( (string) $response->get( 'txid' ) );
 			$renewal_order->add_order_note( sprintf(
 				'PayOne: %s (PayOne Reference: %s)',
 				__( 'Scheduled subscription payment successful.', 'payone-woocommerce-3' ),
@@ -540,6 +540,6 @@ class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterfa
 			__( 'Scheduled subscription payment failed.', 'payone-woocommerce-3' ),
 			$response->get_error_message()
 		) );
-		$renewal_order->payment_failed();
+		$subscription->payment_failed();
 	}
 }
