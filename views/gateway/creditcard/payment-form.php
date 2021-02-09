@@ -1,15 +1,10 @@
-<?php
-/**
- * @var \Payone\Gateway\CreditCard $this
- */
-?>
-
 <input type="hidden" name="card_pseudopan" id="card_pseudopan">
 <input type="hidden" name="card_truncatedpan" id="card_truncatedpan">
 <input type="hidden" name="card_firstname" id="card_firstname">
 <input type="hidden" name="card_lastname" id="card_lastname">
 <input type="hidden" name="card_type" id="card_type">
 <input type="hidden" name="card_expiredate" id="card_expiredate">
+
 <?php
     $cardnumber_css = '';
     if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
