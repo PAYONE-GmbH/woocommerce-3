@@ -141,69 +141,53 @@ class Plugin {
 		list( $range, $netmask ) = explode( '/', $range, 2 );
 		$range_decimal    = ip2long( $range );
 		$ip_decimal       = ip2long( $ip_address );
-		$wildcard_decimal = ( 2 ** ( 32 - $netmask ) ) - 1;
+		$wildcard_decimal = pow( 2, ( 32 - $netmask ) ) - 1;
 		$netmask_decimal  = ~$wildcard_decimal;
 
 		return ( $ip_decimal & $netmask_decimal ) === ( $range_decimal & $netmask_decimal );
 	}
 
 	public function add_callback_url() {
-		add_rewrite_rule(
-			sprintf( '^%s\/?\&(.*)', self::CALLBACK_SLUG ),
-			sprintf( 'index.php?%s=true&$matches[1]', self::CALLBACK_SLUG ),
-			'top'
-		);
-		add_filter( 'query_vars', function ( $query_vars ) {
-			$query_vars[] = self::CALLBACK_SLUG;
-
-			return $query_vars;
-		} );
+		add_rewrite_rule( '^' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
+		add_filter( 'query_vars', [ $this, 'add_rewrite_var' ] );
 		add_action( 'template_redirect', [ $this, 'catch_payone_callback' ] );
-		add_action( 'wp_ajax_sepa_manage_mandate', [ $this, 'process_manage_mandate_callback' ] );
-		add_action( 'wp_ajax_nopriv_sepa_manage_mandate', [ $this, 'process_manage_mandate_callback' ] );
+	}
+
+	public function add_rewrite_var( $vars ) {
+		$vars[] = self::CALLBACK_SLUG;
+
+		return $vars;
 	}
 
 	public function catch_payone_callback() {
-		//TODO: Maybe find a way to "legit" make a custom route? I could not.
-		$is_payone_callback = self::string_begins_with(
-			(string) $_SERVER['REQUEST_URI'],
-			sprintf( '/%s', self::CALLBACK_SLUG )
-		);
+		if ( get_query_var( self::CALLBACK_SLUG ) ) {
 
-		if ( ! $is_payone_callback ) {
-			//Do nothing. Let WP to do its work.
-			return;
-		}
-
-		if ( $this->is_callback_after_redirect() ) {
-			return $this->process_callback_after_redirect();
-		}
-
-		if ( $this->is_manage_mandate_callback() ) {
-			return $this->process_manage_mandate_callback();
-		}
-
-		if ( $this->is_manage_mandate_getfile() ) {
-			return $this->process_manage_mandate_getfile();
-		}
-
-		$response = 'ERROR';
-		if ( $this->request_is_from_payone() ) {
-			do_action( 'payone_transaction_callback' );
-
-			try {
-				$response = $this->process_callback();
-			} catch ( \Exception $e ) {
-				$response .= ' (' . $e->getMessage() . ')';
+			if ( $this->is_callback_after_redirect() ) {
+				return $this->process_callback_after_redirect();
+			} elseif ( $this->is_manage_mandate_callback() ) {
+				return $this->process_manage_mandate_callback();
+			} elseif ( $this->is_manage_mandate_getfile() ) {
+				return $this->process_manage_mandate_getfile();
 			}
 
-			if ( $response === 'TSOK' ) {
-				Log::constructFromPostVars();
-			}
-		}
+			$response = 'ERROR';
+			if ( $this->request_is_from_payone() ) {
+				do_action( 'payone_transaction_callback' );
 
-		echo $response;
-		exit();
+				try {
+					$response = $this->process_callback();
+				} catch (\Exception $e) {
+					$response .= ' (' . $e->getMessage() . ')';
+				}
+
+				if ( $response === 'TSOK' ) {
+					Log::constructFromPostVars();
+				}
+			}
+
+			echo $response;
+			exit();
+		}
 	}
 
 	/**
@@ -211,7 +195,7 @@ class Plugin {
 	 */
 	public function process_callback() {
 		$transaction_status = TransactionStatus::construct_from_post_parameters();
-		
+
 		if ( ! $transaction_status->has_valid_order() ) {
 		    if ( ! apply_filters( 'payone_do_throw_error_on_invalid_order', true ) ) {
 		        return 'TSOK';
@@ -268,18 +252,22 @@ class Plugin {
 	 */
 	private function is_callback_after_redirect() {
 		$allowed_redirect_types = [ 'success', 'error', 'back' ];
+		if ( isset( $_GET['type'] ) && in_array( $_GET['type'], $allowed_redirect_types, true)
+		     && isset( $_GET['oid'] ) && (int)$_GET['oid']
+		) {
+			return true;
+		}
 
-		return isset( $_GET['type'], $_GET['oid'] ) &&
-		       in_array( $_GET['type'], $allowed_redirect_types, true );
+		return false;
 	}
 
 	/**
 	 * @return array
 	 */
 	private function process_callback_after_redirect() {
-		$order_id = (int) $_GET['oid'];
+		$order_id = (int)$_GET['oid'];
 
-		$order   = new \WC_Order( $order_id );
+		$order = new \WC_Order( $order_id );
 		$gateway = self::get_gateway_for_order( $order );
 
 		return $gateway->process_payment( $order_id );
@@ -289,7 +277,11 @@ class Plugin {
 	 * @return bool
 	 */
 	private function is_manage_mandate_callback() {
-		return isset( $_GET['type'] ) && $_GET['type'] === 'ajax-manage-mandate';
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-manage-mandate') {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -414,15 +406,5 @@ class Plugin {
 		}
 
 		return null;
-	}
-
-	/**
-	 * @param string $string
-	 * @param string $begins_with
-	 *
-	 * @return bool
-	 */
-	public static function string_begins_with( $string, $begins_with ) {
-		return stripos( $string, $begins_with ) === 0;
 	}
 }
