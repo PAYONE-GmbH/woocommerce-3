@@ -162,36 +162,4 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 		) );
 		$subscription->payment_failed();
 	}
-
-	/**
-	 * @param \WC_Order $order
-	 *
-	 * @return \SplFileInfo|null
-	 */
-	public function get_invoice_for_order( $order ) {
-		$transaction_id = $order->get_transaction_id();
-
-		if ( ! is_string( $transaction_id ) || empty( $transaction_id ) ) {
-			return null;
-		}
-
-		$transaction_id = trim( $transaction_id );
-
-		$request = new Request();
-		$request->set( 'request', 'getinvoice' );
-		$request->set( 'invoice_title', sprintf( 'RG-%s-0', $transaction_id ) ); //sprintf( 'GT-%s-1', $transaction_id ) for credit notes
-		$result = $request->submit();
-
-		if ( ! $result->is_approved() ) {
-			wc_add_notice( $result->get_error_message(), 'error' );
-
-			return null;
-		}
-
-		$pdfFilePath = sprintf( '%s/Invoice.%s.pdf', sys_get_temp_dir(), $transaction_id );
-
-		file_put_contents( $pdfFilePath, $result->get( 'DATA' ) );
-
-		return new \SplFileInfo( $pdfFilePath );
-	}
 }

@@ -69,6 +69,23 @@ class Plugin {
         add_filter( 'woocommerce_email_enabled_customer_processing_order' , [ $this, 'disable_capture_mail_filter' ]);
 
 		add_action( 'wp_head', [ $this, 'add_stylesheet' ] );
+
+		add_action( 'woocommerce_order_details_after_order_table', [
+			$this,
+			'handle_woocommerce_order_details_after_order_table'
+		] );
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 */
+	public function handle_woocommerce_order_details_after_order_table( $order ) {
+		$gateway = self::get_gateway_for_order( $order );
+
+		if ( $gateway instanceof GatewayBase && $gateway->is_payone_invoice_module_enabled() ) {
+			//Show only if PayOne was used.
+			include PAYONE_VIEW_PATH . '/order/order-download-invoice.php';
+		}
 	}
 
     /**
@@ -160,34 +177,44 @@ class Plugin {
 	}
 
 	public function catch_payone_callback() {
-		if ( get_query_var( self::CALLBACK_SLUG ) ) {
-
-			if ( $this->is_callback_after_redirect() ) {
-				return $this->process_callback_after_redirect();
-			} elseif ( $this->is_manage_mandate_callback() ) {
-				return $this->process_manage_mandate_callback();
-			} elseif ( $this->is_manage_mandate_getfile() ) {
-				return $this->process_manage_mandate_getfile();
-			}
-
-			$response = 'ERROR';
-			if ( $this->request_is_from_payone() ) {
-				do_action( 'payone_transaction_callback' );
-
-				try {
-					$response = $this->process_callback();
-				} catch (\Exception $e) {
-					$response .= ' (' . $e->getMessage() . ')';
-				}
-
-				if ( $response === 'TSOK' ) {
-					Log::constructFromPostVars();
-				}
-			}
-
-			echo $response;
-			exit();
+		if ( ! get_query_var( self::CALLBACK_SLUG ) ) {
+			//Just do nothing.
+			return;
 		}
+
+		if ( $this->is_download_invoice_request() ) {
+			return $this->process_callback_download_invoice();
+		}
+
+		if ( $this->is_callback_after_redirect() ) {
+			return $this->process_callback_after_redirect();
+		}
+
+		if ( $this->is_manage_mandate_callback() ) {
+			return $this->process_manage_mandate_callback();
+		}
+
+		if ( $this->is_manage_mandate_getfile() ) {
+			return $this->process_manage_mandate_getfile();
+		}
+
+		$response = 'ERROR';
+		if ( $this->request_is_from_payone() ) {
+			do_action( 'payone_transaction_callback' );
+
+			try {
+				$response = $this->process_callback();
+			} catch ( \Exception $e ) {
+				$response .= ' (' . $e->getMessage() . ')';
+			}
+
+			if ( $response === 'TSOK' ) {
+				Log::constructFromPostVars();
+			}
+		}
+
+		echo $response;
+		exit();
 	}
 
 	/**
@@ -250,6 +277,13 @@ class Plugin {
 	/**
 	 * @return bool
 	 */
+	private function is_download_invoice_request() {
+		return isset( $_GET['type'], $_GET['oid'] ) && $_GET['type'] === 'download-invoice' && ! empty( $_GET['oid'] );
+	}
+
+	/**
+	 * @return bool
+	 */
 	private function is_callback_after_redirect() {
 		$allowed_redirect_types = [ 'success', 'error', 'back' ];
 		if ( isset( $_GET['type'] ) && in_array( $_GET['type'], $allowed_redirect_types, true)
@@ -271,6 +305,64 @@ class Plugin {
 		$gateway = self::get_gateway_for_order( $order );
 
 		return $gateway->process_payment( $order_id );
+	}
+
+	/**
+	 * @return array{status:string,message:string}
+	 */
+	private function process_callback_download_invoice() {
+		$order_id = (int) ( isset( $_GET['oid'] ) ? $_GET['oid'] : 0 );
+
+		$order   = new \WC_Order( $order_id );
+		$gateway = self::get_gateway_for_order( $order );
+
+		if ( ! $gateway instanceof GatewayBase ) {
+			return [
+				'status'  => 'error',
+				'message' => __( 'Could not get payment method for order.', 'payone-woocommerce-3' ),
+			];
+		}
+
+		$splFileInfo = $gateway->get_invoice_for_order( $order );
+
+		if ( ! $splFileInfo instanceof \SplFileInfo ) {
+			return [
+				'status'  => 'error',
+				'message' => __( 'Could not get invoice from PayOne gateway.', 'payone-woocommerce-3' ),
+			];
+		}
+
+		$filePath = (string) $splFileInfo->getRealPath();
+
+		if ( ! file_exists( $filePath ) ) {
+			return [
+				'status'  => 'error',
+				'message' => __( 'Could not find a file on server.', 'payone-woocommerce-3' ),
+			];
+		}
+
+		if ( ! is_readable( $filePath ) ) {
+			return [
+				'status'  => 'error',
+				'message' => __( 'Could not read a file from server.', 'payone-woocommerce-3' ),
+			];
+		}
+
+		$finfo = finfo_open( FILEINFO_MIME_TYPE );
+		header( sprintf( 'Content-Type: %s', (string) finfo_file( $finfo, $filePath ) ) );
+		finfo_close( $finfo );
+
+		header( sprintf( 'Content-Disposition: attachment; filename=%s', (string) basename( $filePath ) ) );
+		header( 'Expires: 0' );
+		header( 'Cache-Control: must-revalidate' );
+		header( 'Pragma: public' );
+		header( sprintf( 'Content-Length: %s', (string) filesize( $filePath ) ) );
+
+		ob_clean();
+		flush();
+
+		readfile( $filePath );
+		exit;
 	}
 
 	/**
