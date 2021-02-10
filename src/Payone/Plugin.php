@@ -82,7 +82,11 @@ class Plugin {
 	public function handle_woocommerce_order_details_after_order_table( $order ) {
 		$gateway = self::get_gateway_for_order( $order );
 
-		if ( $gateway instanceof GatewayBase && $gateway->is_payone_invoice_module_enabled() ) {
+		if (
+			$gateway instanceof GatewayBase &&
+			$gateway->is_payone_invoice_module_enabled() &&
+			$order->get_transaction_id() !== ''
+		) {
 			//Show only if PayOne was used.
 			include PAYONE_VIEW_PATH . '/order/order-download-invoice.php';
 		}
