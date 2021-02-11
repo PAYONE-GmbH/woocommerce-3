@@ -41,6 +41,35 @@ trait SubscriptionAwareTrait {
 			10,
 			2
 		);
+
+		add_action(
+			'woocommerce_subscription_renewal_payment_failed',
+			[ $this, 'process_woocommerce_subscription_renewal_payment_failed' ],
+			10,
+			2
+		);
+	}
+
+	/**
+	 * @param \WC_Subscription $subscription
+	 *
+	 * @return void
+	 */
+	public function process_woocommerce_subscription_renewal_payment_failed( $subscription ) {
+		if ( ! $this instanceof GatewayBase ) {
+			return;
+		}
+
+		$payone_renewal_payment_fails = (int) $subscription->get_meta( '_payone_renewal_payment_fails' );
+		$payone_renewal_payment_fails ++;
+
+		$subscription->update_meta_data( '_payone_renewal_payment_fails', $payone_renewal_payment_fails );
+
+		if ( ! $this->is_payone_subscription_auto_failover_enabled() ) {
+			return;
+		}
+
+		$subscription->set_payment_method( new Invoice() );
 	}
 
 	public function process_scheduled_subscription_payment( $renewal_total, $renewal_order ) {

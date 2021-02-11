@@ -79,6 +79,13 @@ class Account extends Helper {
 			'payone-settings-account',
 			'payone_account_settings' );
 		add_settings_field(
+			'payone_subscription_auto_failover',
+			__( 'Enable WooCommerce Subscriptions automatic failover?', 'payone-woocommerce-3' ),
+			[ $this, 'payone_subscription_auto_failover' ],
+			'payone-settings-account',
+			'payone_account_settings'
+		);
+		add_settings_field(
 			'paypal_billing_agreements_enabled',
 			__( 'Are PayPal Billing Agreements enabled?', 'payone-woocommerce-3' ),
 			[ $this, 'paypal_billing_agreements_enabled' ],
@@ -191,6 +198,13 @@ class Account extends Helper {
 				'0' => __( 'Deactivated', 'payone-woocommerce-3' ),
 				'1' => __( 'Activated', 'payone-woocommerce-3' ),
 			] );
+	}
+
+	public function payone_subscription_auto_failover() {
+		$this->selectField( self::OPTION_NAME, 'payone_subscription_auto_failover', [
+			'0' => __( 'No', 'payone-woocommerce-3' ),
+			'1' => __( 'Yes', 'payone-woocommerce-3' ),
+		] );
 	}
 
 	public function payone_invoice_module_enabled() {

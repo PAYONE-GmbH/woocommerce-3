@@ -29,6 +29,13 @@ interface SubscriptionAwareInterface {
 	public function process_scheduled_subscription_payment( $renewal_total, $renewal_order );
 
 	/**
+	 * @param \WC_Subscription $subscription
+	 *
+	 * @return void
+	 */
+	public function process_woocommerce_subscription_renewal_payment_failed( $subscription );
+
+	/**
 	 * @param \WC_Order $renewal_order
 	 *
 	 * @return \WC_Subscription|null
