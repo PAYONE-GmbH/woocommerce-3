@@ -178,12 +178,19 @@ class TransactionStatus extends DataTransfer {
     }
 
 	/**
+	 * @return bool
+	 */
+	public function is_invoice() {
+		return $this->get_action() === 'invoice';
+	}
+
+	/**
 	 * All diese Status werden in der Basisklasse abgearbeitet und müssen deshalb nicht in den einzelnen
 	 * Gateways weiter verarbeitet werden.
 	 *
 	 * @return bool
 	 */
 	public function no_further_action_necessary() {
-		return $this->is_appointed() || $this->is_refund() || $this->is_cancelation() || $this->is_failed();
+		return $this->is_appointed() || $this->is_refund() || $this->is_cancelation() || $this->is_failed() || $this->is_invoice();
 	}
 }

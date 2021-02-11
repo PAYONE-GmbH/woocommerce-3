@@ -112,6 +112,13 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			$order->save_meta_data();
 		}
 
+		if ( $transaction_status->is_invoice() ) {
+			$invoice_id = $transaction_status->get_string( 'invoiceid' );
+			$order->add_order_note( sprintf( '%s (Invoice ID: %s)', __( 'Order is invoiced on PAYONE.', 'payone-woocommerce-3' ), $invoice_id ) );
+			$order->update_meta_data( '_invoiceid', $invoice_id );
+			$order->save_meta_data();
+		}
+
 		if ( $transaction_status->is_appointed() ) {
 		    // Just log and flag order meta that we got an APPOINTED TX status notification
 		    $order->add_order_note( __( 'Received status APPOINTED from PAYONE.', 'payone-woocommerce-3' ) );
@@ -583,28 +590,27 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @return \SplFileInfo|null
 	 */
 	public function get_invoice_for_order( $order ) {
-		$transaction_id = $order->get_transaction_id();
+		$invoice_id = (string) $order->get_meta( '_invoiceid' );
+		$invoice_id = trim( $invoice_id );
 
-		if ( ! is_string( $transaction_id ) || empty( $transaction_id ) ) {
+		if ( empty( $invoice_id ) ) {
 			return null;
 		}
 
-		$transaction_id = trim( $transaction_id );
-
 		$request = new Request();
 		$request->set( 'request', 'getinvoice' );
-		$request->set( 'invoice_title', sprintf( 'RG-%s-0', $transaction_id ) ); //sprintf( 'GT-%s-1', $transaction_id ) for credit notes
+		$request->set( 'invoice_title', $invoice_id );
 		$result = $request->submit();
 
-		if ( ! $result->is_approved() ) {
+		if ( ! $result->is_ok() ) {
 			wc_add_notice( $result->get_error_message(), 'error' );
 
 			return null;
 		}
 
-		$pdfFilePath = sprintf( '%s/Invoice.%s.pdf', sys_get_temp_dir(), $transaction_id );
+		$pdfFilePath = sprintf( '%s/Invoice.%s.pdf', sys_get_temp_dir(), $invoice_id );
 
-		file_put_contents( $pdfFilePath, $result->get( 'DATA' ) );
+		file_put_contents( $pdfFilePath, $result->get( '_DATA' ) );
 
 		return new \SplFileInfo( $pdfFilePath );
 	}
