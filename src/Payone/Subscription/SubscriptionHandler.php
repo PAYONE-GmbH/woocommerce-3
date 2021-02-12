@@ -2,6 +2,8 @@
 
 namespace Payone\Subscription;
 
+use DateInterval;
+use DateTimeImmutable;
 use Payone\Admin\Option\Account;
 use Payone\Gateway\Invoice;
 use Payone\Gateway\SubscriptionAwareInterface;
@@ -49,7 +51,8 @@ class SubscriptionHandler {
 	 * @return void
 	 */
 	public function init() {
-		add_action( 'woocommerce_subscription_renewal_payment_failed',
+		add_action(
+			'woocommerce_subscription_renewal_payment_failed',
 			[ $this, 'process_woocommerce_subscription_renewal_payment_failed' ],
 			10,
 			2
@@ -67,7 +70,7 @@ class SubscriptionHandler {
 			return;
 		}
 
-		//Do not handle anything else except our subscription aware payment methods.
+		//Do not handle anything else except our payment gateways that are aware of subscriptions.
 		if ( ! $this->is_payone_gateway_is_available_and_subscritpion_aware( $last_order->get_payment_method() ) ) {
 			return;
 		}
@@ -76,6 +79,11 @@ class SubscriptionHandler {
 		$payone_renewal_payment_fails ++;
 
 		$subscription->update_meta_data( '_payone_renewal_payment_fails', $payone_renewal_payment_fails );
+
+		//If order already uses Invoice, just skip it.
+		if ( $last_order->get_payment_method() === Invoice::GATEWAY_ID ) {
+			return;
+		}
 
 		//Do we need to do anything at all (is the option selected)?
 		if ( ! $this->is_payone_subscription_auto_failover_enabled() ) {
@@ -88,6 +96,9 @@ class SubscriptionHandler {
 		}
 
 		//Are there any retries left, if retry manager is turned on? If yes, do nothing.
+		//At the time of writing this, there are total of 5 (by default, without plugins) tries.
+		//See \WCS_Retry_Rules::__construct and https://docs.woocommerce.com/document/subscriptions/develop/failed-payment-retry/ for more info.
+		//Once there are no more retries (mandated by Subscriptions Plugin or by other plugins), we add our own business logic.
 		if ( WCS_Retry_Manager::is_retry_enabled() ) {
 			/** @var WCS_Retry_Store $retry_store */
 			$retry_store = WCS_Retry_Manager::store();
@@ -95,13 +106,20 @@ class SubscriptionHandler {
 			$retry_rules = WCS_Retry_Manager::rules();
 			/** @var int $retry_count */
 			$retry_count = $retry_store->get_retry_count_for_order( $last_order->get_id() );
-
 			if ( (bool) $retry_rules->has_rule( $retry_count, $last_order->get_id() ) ) {
 				return;
 			}
 		}
 
+		//Leave the old order as failed, we do not care about it. But update subscription status back to active,
+		//and update next_payment to run again in 10 minutes.
+		$subscription->update_status( 'active' );
 		$subscription->set_payment_method( new Invoice() );
+		$subscription->save();
+		$subscription->add_order_note( __( 'Subscription payment method is changed to Invoice.', 'payone-woocommerce-3' ) );
+
+		$dateTime = ( new DateTimeImmutable() )->add( new DateInterval( 'PT10M' ) );
+		$subscription->update_dates( array( 'next_payment' => $dateTime->format( 'Y-m-d H:i:s' ) ) );
 	}
 
 	/**
