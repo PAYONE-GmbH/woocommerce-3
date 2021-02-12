@@ -85,7 +85,7 @@ class Plugin {
 		if (
 			$gateway instanceof GatewayBase &&
 			$gateway->is_payone_invoice_module_enabled() &&
-			$order->get_transaction_id() !== ''
+			$order->get_meta( '_invoiceid' ) !== ''
 		) {
 			//Show only if PayOne was used.
 			include PAYONE_VIEW_PATH . '/order/order-download-invoice.php';
