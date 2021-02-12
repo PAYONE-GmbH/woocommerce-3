@@ -69,6 +69,11 @@ trait SubscriptionAwareTrait {
 			return;
 		}
 
+		$available_payment_gateways = \WC()->payment_gateways()->get_available_payment_gateways();
+		if ( ! array_key_exists( Invoice::GATEWAY_ID, $available_payment_gateways ) ) {
+			return;
+		}
+
 		$subscription->set_payment_method( new Invoice() );
 	}
 
