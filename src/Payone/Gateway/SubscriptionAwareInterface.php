@@ -4,12 +4,6 @@ namespace Payone\Gateway;
 
 interface SubscriptionAwareInterface {
 	/**
-	 * Is Woocommerce Subscription Plugin installed and active?
-	 * @return bool
-	 */
-	public static function is_wcs_active();
-
-	/**
 	 * @return void
 	 */
 	public function add_subscription_support();
@@ -26,14 +20,7 @@ interface SubscriptionAwareInterface {
 	 *
 	 * @return void
 	 */
-	public function process_scheduled_subscription_payment( $renewal_total, $renewal_order );
-
-	/**
-	 * @param \WC_Subscription $subscription
-	 *
-	 * @return void
-	 */
-	public function process_woocommerce_subscription_renewal_payment_failed( $subscription );
+	public function process_woocommerce_scheduled_subscription_payment( $renewal_total, $renewal_order );
 
 	/**
 	 * @param \WC_Order $renewal_order

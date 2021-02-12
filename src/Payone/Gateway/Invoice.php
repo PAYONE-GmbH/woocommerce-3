@@ -4,6 +4,7 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Subscription\SubscriptionHandler;
 
 class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 
@@ -18,7 +19,7 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 		$this->method_title       = 'Payone ' . __( 'Invoice', 'payone-woocommerce-3' );
 		$this->method_description = '';
 
-		if ( self::is_wcs_active() ) {
+		if ( SubscriptionHandler::is_wcs_active() ) {
 			$this->add_subscription_support();
 			$this->add_subscription_actions();
 		}
@@ -128,7 +129,7 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 		}
 	}
 
-	public function process_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
+	public function process_woocommerce_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
 		$subscription = $this->get_subscriptions_for_renewal_order( $renewal_order );
 
 		if ( ! $subscription instanceof \WC_Subscription ) {

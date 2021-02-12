@@ -3,6 +3,7 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Subscription\SubscriptionHandler;
 
 class PayPal extends RedirectGatewayBase implements SubscriptionAwareInterface {
 
@@ -17,7 +18,7 @@ class PayPal extends RedirectGatewayBase implements SubscriptionAwareInterface {
 		$this->method_title       = 'Payone ' . __( 'PayPal', 'payone-woocommerce-3' );
 		$this->method_description = '';
 
-		if ( self::is_wcs_active() && $this->is_paypal_billing_agreements_enabled() ) {
+		if ( SubscriptionHandler::is_wcs_active() && $this->are_paypal_billing_agreements_enabled() ) {
 			$this->add_subscription_support();
 			$this->add_subscription_actions();
 		}
@@ -73,7 +74,7 @@ class PayPal extends RedirectGatewayBase implements SubscriptionAwareInterface {
 		}
 	}
 
-	public function process_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
+	public function process_woocommerce_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
 		$subscription = $this->get_subscriptions_for_renewal_order( $renewal_order );
 
 		if ( ! $subscription instanceof \WC_Subscription ) {

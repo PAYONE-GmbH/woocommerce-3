@@ -4,6 +4,7 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Subscription\SubscriptionHandler;
 use Payone\Transaction\Capture;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
@@ -550,7 +551,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @return bool
 	 */
 	protected function order_contains_subscription( $order ) {
-		return $this instanceof SubscriptionAwareInterface && $this::is_wcs_active() && wcs_order_contains_subscription( $order );
+		return $this instanceof SubscriptionAwareInterface && SubscriptionHandler::is_wcs_active() && wcs_order_contains_subscription( $order );
 	}
 
 	/**
@@ -559,13 +560,13 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @return bool
 	 */
 	protected function order_is_subscription( $order ) {
-		return $this instanceof SubscriptionAwareInterface && $this::is_wcs_active() && wcs_is_subscription( $order->get_id() );
+		return $this instanceof SubscriptionAwareInterface && SubscriptionHandler::is_wcs_active() && wcs_is_subscription( $order->get_id() );
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function is_paypal_billing_agreements_enabled() {
+	public function are_paypal_billing_agreements_enabled() {
 		if ( isset( $this->global_settings['paypal_billing_agreements_enabled'] ) ) {
 			return (bool) $this->global_settings['paypal_billing_agreements_enabled'];
 		}

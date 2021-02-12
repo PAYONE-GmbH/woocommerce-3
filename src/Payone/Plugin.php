@@ -6,6 +6,7 @@ use Payone\Database\Migration;
 use Payone\Gateway\GatewayBase;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Subscription\SubscriptionHandler;
 use Payone\Transaction\Log;
 
 class Plugin {
@@ -70,10 +71,15 @@ class Plugin {
 
 		add_action( 'wp_head', [ $this, 'add_stylesheet' ] );
 
-		add_action( 'woocommerce_order_details_after_order_table', [
-			$this,
-			'handle_woocommerce_order_details_after_order_table'
-		] );
+		add_action(
+			'woocommerce_order_details_after_order_table',
+			[ $this, 'handle_woocommerce_order_details_after_order_table' ]
+		);
+
+		if ( SubscriptionHandler::is_wcs_active() ) {
+			$subscription_handler = SubscriptionHandler::getInstance();
+			$subscription_handler->init();
+		}
 	}
 
 	/**
@@ -82,12 +88,8 @@ class Plugin {
 	public function handle_woocommerce_order_details_after_order_table( $order ) {
 		$gateway = self::get_gateway_for_order( $order );
 
-		if (
-			$gateway instanceof GatewayBase &&
-			$gateway->is_payone_invoice_module_enabled() &&
-			$order->get_meta( '_invoiceid' ) !== ''
-		) {
-			//Show only if PayOne was used.
+		//Show only if PayOne Gateway was used, Subscription Plugin is active and there is non empty _invoiceid.
+		if ( $gateway instanceof GatewayBase && SubscriptionHandler::is_wcs_active() && $order->get_meta( '_invoiceid' ) !== '' ) {
 			include PAYONE_VIEW_PATH . '/order/order-download-invoice.php';
 		}
 	}
@@ -145,7 +147,7 @@ class Plugin {
 
 	/**
 	 * https://gist.github.com/tott/7684443
-	 * 
+	 *
 	 * @param string $ip_address
 	 * @param string $range
 	 *
