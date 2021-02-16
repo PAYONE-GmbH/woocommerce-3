@@ -360,7 +360,36 @@ class Plugin {
 	private function process_callback_download_invoice() {
 		$order_id = (int) ( isset( $_GET['oid'] ) ? $_GET['oid'] : 0 );
 
-		$order   = new \WC_Order( $order_id );
+		if ( $order_id < 1 ) {
+			return [
+				'status'  => 'error',
+				'message' => __( 'Could not find order.', 'payone-woocommerce-3' ),
+			];
+		}
+
+		/** @var \WP_User|null $logged_in_user */
+		$logged_in_user = wp_get_current_user();
+
+		//User must be logged in.
+		if ( ! $logged_in_user instanceof \WP_User ) {
+			return [
+				'status'  => 'error',
+				'message' => __( 'Could not find logged in user.', 'payone-woocommerce-3' ),
+			];
+		}
+
+		$order = new \WC_Order( $order_id );
+		/** @var \WP_User|false $order_user */
+		$order_user = $order->get_user();
+
+		//Check if this order actually belongs to logged in user. Behave like order could not be found. Do not give out any info.
+		if ( ! $order_user instanceof \WP_User || (int) $order_user->get( 'id' ) !== (int) $logged_in_user->get( 'id' ) ) {
+			return [
+				'status'  => 'error',
+				'message' => __( 'Could not find order.', 'payone-woocommerce-3' ),
+			];
+		}
+
 		$gateway = self::get_gateway_for_order( $order );
 
 		if ( ! $gateway instanceof GatewayBase ) {
