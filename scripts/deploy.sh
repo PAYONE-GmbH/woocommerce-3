@@ -15,7 +15,14 @@ mv ./assets/ ../assets/
 # 5. Clean up unnecessary files
 rm -rf .git/
 rm -rf scripts/
+rm -rf tests/
+rm README.md
+rm phpunit.xml
+rm phpcs.ruleset.xml
 # rm .travis.yml
+
+# add new files in trunk
+svn add --force .
 
 # 6. Go to SVN repository root
 cd ../

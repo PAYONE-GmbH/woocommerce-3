@@ -177,12 +177,26 @@ class TransactionStatus extends DataTransfer {
         return $this->get_action() === 'failed';
     }
 
-	/**
-	 * @return bool
-	 */
-	public function is_invoice() {
-		return $this->get_action() === 'invoice';
-	}
+    /**
+     * @return bool
+     */
+    public function is_invoice() {
+        return $this->get_action() === 'invoice';
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_reminder() {
+        return $this->get_action() === 'reminder';
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_transfer() {
+        return $this->get_action() === 'transfer';
+    }
 
 	/**
 	 * All diese Status werden in der Basisklasse abgearbeitet und müssen deshalb nicht in den einzelnen
@@ -191,6 +205,6 @@ class TransactionStatus extends DataTransfer {
 	 * @return bool
 	 */
 	public function no_further_action_necessary() {
-		return $this->is_appointed() || $this->is_refund() || $this->is_cancelation() || $this->is_failed() || $this->is_invoice();
+		return $this->is_appointed() || $this->is_refund() || $this->is_cancelation() || $this->is_failed() || $this->is_invoice() || $this->is_reminder() || $this->is_transfer();
 	}
 }

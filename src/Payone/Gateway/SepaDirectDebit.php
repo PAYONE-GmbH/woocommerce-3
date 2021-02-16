@@ -203,7 +203,7 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 	public function add_content_to_thankyou_page( \WC_Order $order ) {
 		$hash = $order->get_meta( '_mandate_identification_hash' );
 		if ( $hash ) {
-			$url = Plugin::get_callback_url( 'manage-mandate-getfile' );
+			$url = Plugin::get_callback_url( [ 'type' => 'manage-mandate-getfile' ] );
 			$url .= '&hash=' . $hash;
 
 			echo '<p><a href="' . $url . '">Ihr SEPA-Mandat als PDF herunterladen</a>';

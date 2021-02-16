@@ -1,10 +1,10 @@
 === BS PAYONE WooCommerce ===
 Contributors: bspayone
-Donate link: https://www.bspayone.com/
+Donate link: https://www.payone.com/
 Tags: woocommerce, payment
-Requires at least: 4.6
-Tested up to: 5.3.2
-Stable tag: 1.6.2
+Requires at least: 5.0
+Tested up to: 5.5
+Stable tag: 1.7.1
 Requires PHP: 5.6.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -120,3 +120,26 @@ Bugfixes
 Maintenance
 
 * tested with woocommerce 4.0.0 and Wordpress 5.3.2
+
+= 1.7.0 =
+
+New Features
+
+* New Payment Method: EPS
+* B2B Mode for PAYONE safe Invoice
+
+Bugfixes
+
+* way better handling of appointed messages should improve customer feedback after redirect payments
+* better rendering of credit card iFrames
+* fixed some log errors
+
+Maintenance
+
+* tested with wordpress 5.5 and woocommerce 4.3.2
+
+== 1.7.1 ==
+
+Bugfixes
+
+* fixed a bug where not all files of the plugin were uploaded to the wordpress store

@@ -45,6 +45,7 @@ class Plugin {
 			\Payone\Gateway\CreditCard::GATEWAY_ID      => \Payone\Gateway\CreditCard::class,
 			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
 			\Payone\Gateway\PrePayment::GATEWAY_ID      => \Payone\Gateway\PrePayment::class,
+            \Payone\Gateway\Eps::GATEWAY_ID             => \Payone\Gateway\Eps::class,
 			\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
 			\Payone\Gateway\Sofort::GATEWAY_ID          => \Payone\Gateway\Sofort::class,
 			\Payone\Gateway\Giropay::GATEWAY_ID         => \Payone\Gateway\Giropay::class,
@@ -132,17 +133,57 @@ class Plugin {
 	}
 
 	/**
-	 * @param string $type
-	 *
+	 * @param array $query
 	 * @return string
 	 */
-	public static function get_callback_url( $type = 'transaction' ) {
+	public static function get_callback_url( array $query ) {
+		// Get shop URL with appended callback slug
 		$url = get_home_url( null, self::CALLBACK_SLUG . '/' );
-		if ($type !== 'transaction') {
-			$url .= '?type=' . $type;
+
+		// Parse shop URL to operate on it
+		$parsed_url = parse_url( $url );
+
+		// Check if the shop URL could be parsed, return $url as fallback
+		if ( !is_array( $parsed_url ) ) {
+			error_log('Cannot build PAYONE callback URL, parse_url() fails to parse shop URL.');
+			return $url;
 		}
 
-		return esc_url( $url );
+		$query_data = [];
+
+		// If the shop URL contains a query string, parse it too
+		if ( isset( $parsed_url['query'] ) ) {
+			parse_str( $parsed_url['query'], $query_data );
+		}
+
+		// Make new query string from combined query data
+		$parsed_url['query'] = http_build_query( array_merge( $query_data, $query ) );
+
+		// Build URL from parts
+		$url = self::unparse_url( $parsed_url );
+
+		return $url;
+	}
+
+	/**
+	 * Makes URL from parse_url data.
+	 * @see https://www.php.net/manual/en/function.parse-url.php
+	 *
+	 * @param array $parsed_url Data as returned from parse_url.
+	 * @return string The URL.
+	 */
+	private static function unparse_url( array $parsed_url ) {
+		$scheme   = isset( $parsed_url['scheme'] ) ? $parsed_url['scheme'] . '://' : '';
+		$host     = isset( $parsed_url['host'] ) ? $parsed_url['host'] : '';
+		$port     = isset( $parsed_url['port'] ) ? ':' . $parsed_url['port'] : '';
+		$user     = isset( $parsed_url['user'] ) ? $parsed_url['user'] : '';
+		$pass     = isset( $parsed_url['pass'] ) ? ':' . $parsed_url['pass']  : '';
+		$pass     = ( $user || $pass ) ? "$pass@" : '';
+		$path     = isset( $parsed_url['path'] ) ? $parsed_url['path'] : '';
+		$query    = isset( $parsed_url['query'] ) ? '?' . $parsed_url['query'] : '';
+		$fragment = isset( $parsed_url['fragment'] ) ? '#' . $parsed_url['fragment'] : '';
+
+		return "{$scheme}{$user}{$pass}{$host}{$port}{$path}{$query}{$fragment}";
 	}
 
 	/**
