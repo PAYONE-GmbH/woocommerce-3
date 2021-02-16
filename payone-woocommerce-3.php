@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin PAYONE Payment for WooCommerce
+ * Plugin Name: PAYONE Payment for WooCommerce
  * Version: 1.7.1
  * Plugin URI: https://www.payone.com/
  * Description: Integration of PAYONE payment into your WooCommerce store.
