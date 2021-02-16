@@ -89,7 +89,7 @@ class Plugin {
 	public function handle_woocommerce_order_details_after_order_table( $order ) {
 		$gateway = self::get_gateway_for_order( $order );
 
-		//Show only if PayOne Gateway was used, Subscription Plugin is active and there is non empty _invoiceid.
+		// Show only if PayOne Gateway was used, Subscription Plugin is active and there is non empty _invoiceid.
 		if ( $gateway instanceof GatewayBase && SubscriptionHandler::is_wcs_active() && $order->get_meta( '_invoiceid' ) !== '' ) {
 			include PAYONE_VIEW_PATH . '/order/order-download-invoice.php';
 		}
@@ -225,7 +225,7 @@ class Plugin {
 
 	public function catch_payone_callback() {
 		if ( ! get_query_var( self::CALLBACK_SLUG ) ) {
-			//Just do nothing.
+			// Just do nothing.
 			return;
 		}
 
@@ -370,7 +370,7 @@ class Plugin {
 		/** @var \WP_User|null $logged_in_user */
 		$logged_in_user = wp_get_current_user();
 
-		//User must be logged in.
+		// User must be logged in.
 		if ( ! $logged_in_user instanceof \WP_User ) {
 			return [
 				'status'  => 'error',
@@ -382,7 +382,7 @@ class Plugin {
 		/** @var \WP_User|false $order_user */
 		$order_user = $order->get_user();
 
-		//Check if this order actually belongs to logged in user. Behave like order could not be found. Do not give out any info.
+		// Check if this order actually belongs to logged in user. Behave like order could not be found. Do not give out any info.
 		if ( ! $order_user instanceof \WP_User || (int) $order_user->get( 'id' ) !== (int) $logged_in_user->get( 'id' ) ) {
 			return [
 				'status'  => 'error',

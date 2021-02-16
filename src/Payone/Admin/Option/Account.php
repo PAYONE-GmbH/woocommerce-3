@@ -80,7 +80,7 @@ class Account extends Helper {
 			'payone_account_settings' );
 		add_settings_field(
 			'payone_subscription_auto_failover',
-			__( 'Enable WooCommerce Subscriptions automatic failover?', 'payone-woocommerce-3' ),
+			__( 'Enable automatic failover for WooCommerce Subscriptions?', 'payone-woocommerce-3' ),
 			[ $this, 'payone_subscription_auto_failover' ],
 			'payone-settings-account',
 			'payone_account_settings'
