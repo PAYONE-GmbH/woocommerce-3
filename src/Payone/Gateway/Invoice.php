@@ -41,14 +41,19 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 
 		$transaction = new \Payone\Transaction\Invoice( $this );
 
+		//According to https://docs.woocommerce.com/document/subscriptions/develop/payment-gateway-integration/
+		//If order passed to process_redirect() is actual subscription itself, that means that this is a payment method change request.
+		//We need to set some specific parameters for PayOne request that are described in //https://docs.payone.com/display/public/PLATFORM/Special+remarks+-+PayPal
 		if ( $this->order_is_subscription( $order ) ) {
-			//PAYMENT METHOD CHANGE REQUEST
 			$transaction->set( 'amount', 0 );
+			//PMCR stands for (P)ayment (M)ethod (C)hange (R)equest
+			//There is a possibility that this particular order ID was already used and failed. If that is
+			//the case, PayOne would always return that "Reference ID already exists" error.
 			$transaction->set( 'reference', sprintf( '%d-PMCR', (int) $order->get_id() ) );
 		}
 
 		if ( $this->order_contains_subscription( $order ) ) {
-			//FIRST PAYMENT FOR SUBSCRIPTIONS
+			//This is initial payment for (possibly multiple) subscription.
 			$transaction->set( 'recurrence', 'recurring' );
 			$transaction->set( 'customer_is_present', 'yes' );
 		}
@@ -64,14 +69,14 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 		// @todo Bei Kauf auf Rechnung anderer Status und Order abschließen?
 
 		if ( $this->order_is_subscription( $order ) ) {
-			//PAYMENT METHOD CHANGE REQUEST
+			//We need to get and save some data from PayOne response if this is payment method change request.
+			//See comment above, on the first "if ( $this->order_is_subscription( $order ) )" clause.
 			$order->update_meta_data( '_payone_userid', $response->get( 'userid', '' ) );
-			$order->update_meta_data( '_payone_payment_method_change_request_reference', (string) $transaction->get( 'reference' ) );
 			$order->save_meta_data();
 		}
 
 		if ( $this->order_contains_subscription( $order ) ) {
-			//FIRST PAYMENT FOR SUBSCRIPTIONS
+			//Set necessary data for (possible multiple) subscription, so we can charge recurring payments.
 			foreach ( wcs_get_subscriptions_for_order( $order ) as $subscription ) {
 				/** @var \WC_Subscription $subscription */
 				$subscription->update_meta_data( '_payone_userid', $response->get( 'userid', '' ) );
