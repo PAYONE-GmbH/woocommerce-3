@@ -213,66 +213,84 @@ class Base extends Request {
 		}
 	}
 
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return array<int,array<string,string>>
+	 */
 	protected function get_article_list_for_transaction( \WC_Order $order ) {
+		$articles = [];
+		$discounts = [];
+		$n = 1;
 
-	    $articles = [];
-	    $discounts = [];
-        $n = 1;
 		foreach ( $order->get_items() as $item_id => $item_data ) {
-            $product = $item_data->get_product();
-            $data = $item_data->get_data();
-            $va = (int)round(100 * Plugin::get_tax_rate_for_item_data( $data ) );
-            $price_all = $data[ 'subtotal' ] + $data[ 'subtotal_tax' ];
-            $discount = $price_all - ($data[ 'total' ] + $data[ 'total_tax']);
-            $discount = (int)round( 100 * $discount );
-            $price_one = $price_all / $item_data->get_quantity();
-            $price = (int)round( 100 * $price_one );
-            $sku = $product->get_sku() ?: $product->get_id();
-            $articles[ $n ] = [
+			$product = $item_data->get_product();
+			$data = $item_data->get_data();
+			$va = (int) round( 100 * Plugin::get_tax_rate_for_item_data( $data ) );
+			$price_all = $data['subtotal'] + $data['subtotal_tax'];
+			$discount = $price_all - ( $data['total'] + $data['total_tax'] );
+			$discount = (int) round( 100 * $discount );
+
+			$price_one = $price_all / $item_data->get_quantity();
+			$price_one_cents = Plugin::convert_to_cents( $price_one );
+			if ( $price_one_cents < 2 ) {
+				$price_one_cents = 1;
+			}
+
+			$sku = $product->get_sku() ?: $product->get_id();
+			$articles[ $n ] = [
 				'id' => $sku,
-				'pr' => $price,
+				'pr' => $price_one_cents,
 				'no' => $item_data->get_quantity(),
 				'de' => $product->get_name(),
 				'va' => $va,
-                'it' => 'goods',
+				'it' => 'goods',
 			];
-			$n++;
+			$n ++;
 
-			if (!isset($discounts[$va])) {
-			    $discounts[$va] = 0;
-            }
-			$discounts[$va] += $discount;
+			if ( ! isset( $discounts[ $va ] ) ) {
+				$discounts[ $va ] = 0;
+			}
+
+			$discounts[ $va ] += $discount;
 		}
+
 		foreach ( $order->get_shipping_methods() as $item_id => $item_data ) {
 			$data = $item_data->get_data();
-            $va = Plugin::get_tax_rate_for_item_data( $data );
-			$price = (int)round( 100 * ( $data[ 'total' ] + $data[ 'total_tax' ] ) );
+			$va = Plugin::get_tax_rate_for_item_data( $data );
+
+			$price_one = (int) ( $data['total'] + $data['total_tax'] );
+			$price_one_cents = Plugin::convert_to_cents( $price_one );
+			if ( $price_one_cents < 2 ) {
+				$price_one_cents = 1;
+			}
+
 			$articles[ $n ] = [
 				'id' => $item_data->get_instance_id(),
-				'pr' => $price,
+				'pr' => $price_one_cents,
 				'no' => 1,
-				'de' => $data[ 'name' ],
+				'de' => $data['name'],
 				'va' => 100 * $va,
-                'it' => 'shipment',
+				'it' => 'shipment',
 			];
-			$n++;
+			$n ++;
 		}
 
 		$discountIdx = 1;
 		foreach ( $discounts as $discountVa => $discount ) {
-		    if ( $discount > 0 ) {
-                $articles[ $n ] = [
-                    'id' => "{$order->get_id()}-{$discountIdx}",
-                    'pr' => - $discount,
-                    'no' => 1,
-                    'de' => __( 'Discount', 'payone-woocommerce-3' ),
-                    'va' => $discountVa,
-                    'it' => 'voucher',
-                ];
-                $n++;
-                $discountIdx++;
-            }
-        }
+			if ( $discount > 0 ) {
+				$articles[ $n ] = [
+					'id' => "{$order->get_id()}-{$discountIdx}",
+					'pr' => - $discount,
+					'no' => 1,
+					'de' => __( 'Discount', 'payone-woocommerce-3' ),
+					'va' => $discountVa,
+					'it' => 'voucher',
+				];
+				$n ++;
+				$discountIdx ++;
+			}
+		}
 
 		return $articles;
 	}

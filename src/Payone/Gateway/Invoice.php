@@ -2,8 +2,8 @@
 
 namespace Payone\Gateway;
 
-use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Plugin;
 use Payone\Subscription\SubscriptionHandler;
 
 class Invoice extends GatewayBase implements SubscriptionAwareInterface {
@@ -45,11 +45,8 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 		//If order passed to process_redirect() is actual subscription itself, that means that this is a payment method change request.
 		//We need to set some specific parameters for PayOne request that are described in //https://docs.payone.com/display/public/PLATFORM/Special+remarks+-+PayPal
 		if ( $this->order_is_subscription( $order ) ) {
-			$transaction->set( 'amount', 0 );
-			//PMCR stands for (P)ayment (M)ethod (C)hange (R)equest
-			//There is a possibility that this particular order ID was already used and failed. If that is
-			//the case, PayOne would always return that "Reference ID already exists" error.
-			$transaction->set( 'reference', sprintf( '%d-PMCR', (int) $order->get_id() ) );
+			$transaction->set( 'amount', 1 );
+			$transaction->set( 'reference', sprintf( '%d-%d', (int) $order->get_id(), date( 'Ymd-His' ) ) );
 		}
 
 		if ( $this->order_contains_subscription( $order ) ) {
@@ -143,7 +140,7 @@ class Invoice extends GatewayBase implements SubscriptionAwareInterface {
 
 		$transaction = new \Payone\Transaction\Invoice( new \Payone\Gateway\Invoice() );
 
-		$transaction->set( 'amount', (int) ( round( $subscription->get_total(), 2 ) * 100 ) );
+		$transaction->set( 'amount', Plugin::convert_to_cents( $renewal_total ) );
 		$transaction->set( 'recurrence', 'recurring' );
 		$transaction->set( 'customer_is_present', 'no' );
 		$transaction->set( 'userid', $subscription->get_meta( '_payone_userid' ) );

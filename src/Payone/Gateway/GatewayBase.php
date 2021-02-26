@@ -630,7 +630,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
 		$pdfFilePath = sprintf( '%s/Invoice.%s.pdf', sys_get_temp_dir(), $invoice_id );
 
-		file_put_contents( $pdfFilePath, $result->get( '_DATA' ) );
+		$bytes = file_put_contents( $pdfFilePath, $result->get( '_DATA' ) );
+
+		if ( $bytes === false || $bytes < 1 ) {
+			return null;
+		}
 
 		return new \SplFileInfo( $pdfFilePath );
 	}

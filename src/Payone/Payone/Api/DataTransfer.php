@@ -101,6 +101,28 @@ class DataTransfer {
 	}
 
 	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return self
+	 */
+	public function set_amount( \WC_Order $order ) {
+		$total = $this->get( 'amount', $order->get_total() );
+
+		$total_cents = Plugin::convert_to_cents( $total );
+
+		//According to https://docs.payone.com/pages/releaseview.action?pageId=1213939
+		//In general, across whole API, allowed format for "amount" is NUMERIC(1..10). Note,
+		//that there is no 0.
+		if ( $total_cents < 2 ) {
+			$total_cents = 1;
+		}
+
+		$this->set( 'amount', $total_cents );
+
+		return $this;
+	}
+
+	/**
 	 * @param string $key
 	 *
 	 * @return mixed

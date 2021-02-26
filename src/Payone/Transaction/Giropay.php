@@ -29,7 +29,7 @@ class Giropay extends Base {
 			$this->add_article_list_to_transaction( $order );
 		}
 		$this->set_reference( $order );
-		$this->set( 'amount', $order->get_total() * 100 );
+		$this->set_amount( $order );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		$this->set_personal_data_from_order( $order );
 		$this->set_shipping_data_from_order( $order );

@@ -77,6 +77,11 @@ class Plugin {
 			[ $this, 'handle_woocommerce_order_details_after_order_table' ]
 		);
 
+		add_action(
+			'woocommerce_admin_order_data_after_order_details',
+			[ $this, 'handle_woocommerce_admin_order_data_after_order_details' ]
+		);
+
 		if ( SubscriptionHandler::is_wcs_active() ) {
 			$subscription_handler = SubscriptionHandler::getInstance();
 			$subscription_handler->init();
@@ -86,12 +91,28 @@ class Plugin {
 	/**
 	 * @param \WC_Order $order
 	 */
-	public function handle_woocommerce_order_details_after_order_table( $order ) {
+	public function handle_woocommerce_order_details_after_order_table( \WC_Order $order ) {
 		$gateway = self::get_gateway_for_order( $order );
 
-		//Show only if PayOne Gateway was used, Subscription Plugin is active and there is non empty _invoiceid.
-		if ( $gateway instanceof GatewayBase && SubscriptionHandler::is_wcs_active() && $order->get_meta( '_invoiceid' ) !== '' ) {
+		//Show only if PayOne Gateway was used and there is non empty _invoiceid.
+		if ( $gateway instanceof GatewayBase && $order->get_meta( '_invoiceid' ) !== '' ) {
 			include PAYONE_VIEW_PATH . '/order/order-download-invoice.php';
+		}
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 */
+	public function handle_woocommerce_admin_order_data_after_order_details( \WC_Order $order ) {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
+		$gateway = self::get_gateway_for_order( $order );
+
+		//Show only if PayOne Gateway was used and there is non empty _invoiceid.
+		if ( $gateway instanceof GatewayBase && $order->get_meta( '_invoiceid' ) !== '' ) {
+			include PAYONE_VIEW_PATH . '/admin/meta-boxes/order-download-invoice.php';
 		}
 	}
 
@@ -382,12 +403,15 @@ class Plugin {
 		/** @var \WP_User|false $order_user */
 		$order_user = $order->get_user();
 
-		//Check if this order actually belongs to logged in user. Behave like order could not be found. Do not give out any info.
-		if ( ! $order_user instanceof \WP_User || (int) $order_user->get( 'id' ) !== (int) $logged_in_user->get( 'id' ) ) {
-			return [
-				'status'  => 'error',
-				'message' => __( 'Could not find order.', 'payone-woocommerce-3' ),
-			];
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			//Unless this was requested by a user that has 'manage_woocommerce' capability, check if this order
+			//actually belongs to logged in user. Behave like order could not be found. Do not give out any info.
+			if ( ! $order_user instanceof \WP_User || (int) $order_user->get( 'id' ) !== (int) $logged_in_user->get( 'id' ) ) {
+				return [
+					'status'  => 'error',
+					'message' => __( 'Could not find order.', 'payone-woocommerce-3' ),
+				];
+			}
 		}
 
 		$gateway = self::get_gateway_for_order( $order );
@@ -581,5 +605,14 @@ class Plugin {
 		}
 
 		return null;
+	}
+
+	/**
+	 * @param float $float
+	 *
+	 * @return int
+	 */
+	public static function convert_to_cents( $float ) {
+		return (int) ( round( (float) $float, 2 ) * 100 );
 	}
 }

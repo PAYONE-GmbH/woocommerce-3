@@ -26,7 +26,7 @@ class PayDirekt extends Base {
 			$this->add_article_list_to_transaction( $order );
 		}
 		$this->set_reference( $order );
-		$this->set( 'amount', $order->get_total() * 100 );
+		$this->set_amount( $order );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 
 		// todo: replace the following lines with $this->set_shipping_data_from_order()

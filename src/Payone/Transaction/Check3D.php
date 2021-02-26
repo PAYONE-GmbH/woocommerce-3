@@ -13,7 +13,7 @@ class Check3D extends Base {
 
 	public function execute( \WC_Order $order, $amount ) {
 		$this->set( 'txid', $order->get_transaction_id() );
-		$this->set( 'amount', $amount * 100 );
+		$this->set_amount( $order );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 
 		return $this->submit();

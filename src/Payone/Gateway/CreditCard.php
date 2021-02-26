@@ -3,6 +3,7 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Plugin;
 use Payone\Subscription\SubscriptionHandler;
 
 class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterface {
@@ -518,7 +519,7 @@ class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterfa
 
 		/** @var GatewayBase $this */
 		$transaction = new \Payone\Transaction\CreditCard( new \Payone\Gateway\CreditCard() );
-		$transaction->set( 'amount', (int) ( round( $renewal_total, 2 ) * 100 ) );
+		$transaction->set( 'amount', Plugin::convert_to_cents( $renewal_total ) );
 		$transaction->set( 'recurrence', 'recurring' );
 		$transaction->set( 'customer_is_present', 'no' );
 		$transaction->set( 'userid', $subscription->get_meta( '_payone_userid' ) );
