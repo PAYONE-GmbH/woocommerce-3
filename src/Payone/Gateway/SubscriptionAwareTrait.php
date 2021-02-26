@@ -36,7 +36,7 @@ trait SubscriptionAwareTrait {
 	}
 
 	public function process_woocommerce_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
-		//Dummy method. Please implement for each payment method.
+		// Dummy method. Please implement for each payment method.
 	}
 
 	public function get_subscriptions_for_renewal_order( $renewal_order ) {

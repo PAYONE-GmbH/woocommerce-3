@@ -94,7 +94,7 @@ class Plugin {
 	public function handle_woocommerce_order_details_after_order_table( \WC_Order $order ) {
 		$gateway = self::get_gateway_for_order( $order );
 
-		//Show only if PayOne Gateway was used and there is non empty _invoiceid.
+		// Show only if PayOne Gateway was used and there is non empty _invoiceid.
 		if ( $gateway instanceof GatewayBase && $order->get_meta( '_invoiceid' ) !== '' ) {
 			include PAYONE_VIEW_PATH . '/order/order-download-invoice.php';
 		}
@@ -246,7 +246,7 @@ class Plugin {
 
 	public function catch_payone_callback() {
 		if ( ! get_query_var( self::CALLBACK_SLUG ) ) {
-			//Just do nothing.
+			// Just do nothing.
 			return;
 		}
 
@@ -391,7 +391,7 @@ class Plugin {
 		/** @var \WP_User|null $logged_in_user */
 		$logged_in_user = wp_get_current_user();
 
-		//User must be logged in.
+		// User must be logged in.
 		if ( ! $logged_in_user instanceof \WP_User ) {
 			return [
 				'status'  => 'error',
