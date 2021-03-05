@@ -294,4 +294,13 @@ class Base extends Request {
 
 		return $articles;
 	}
+
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return \Payone\Payone\Api\Response
+	 */
+	public function execute( \WC_Order $order ) {
+		//Dummy method. Please implement for each transaction.
+	}
 }

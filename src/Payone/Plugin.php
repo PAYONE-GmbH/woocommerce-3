@@ -7,6 +7,7 @@ use Payone\Gateway\GatewayBase;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Subscription\SubscriptionHandler;
+use Payone\Transaction\Base;
 use Payone\Transaction\Log;
 
 class Plugin {
@@ -602,6 +603,36 @@ class Plugin {
 			if ( $gateway_id === $payment_gateway_id ) {
 				return $payment_gateway;
 			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param GatewayBase $gateway
+	 *
+	 * @return null|Base
+	 */
+	public static function get_transaction_for_gateway( GatewayBase $gateway ) {
+		/** @var array<class-string,class-string> $map */
+		$map = [
+			\Payone\Gateway\CreditCard::class      => \Payone\Transaction\CreditCard::class,
+			\Payone\Gateway\Invoice::class         => \Payone\Transaction\Invoice::class,
+			\Payone\Gateway\PayPal::class          => \Payone\Transaction\PayPal::class,
+			\Payone\Gateway\SepaDirectDebit::class => \Payone\Transaction\SepaDirectDebit::class,
+			\Payone\Gateway\Eps::class             => \Payone\Transaction\Eps::class,
+			\Payone\Gateway\Giropay::class         => \Payone\Transaction\Giropay::class,
+			\Payone\Gateway\PayDirekt::class       => \Payone\Transaction\PayDirekt::class,
+			\Payone\Gateway\PrePayment::class      => \Payone\Transaction\PrePayment::class,
+			\Payone\Gateway\SafeInvoice::class     => \Payone\Transaction\SafeInvoice::class,
+			\Payone\Gateway\Sofort::class          => \Payone\Transaction\Sofort::class,
+		];
+
+		$gateway_class = get_class( $gateway );
+		if ( array_key_exists( $gateway_class, $map ) ) {
+			$transaction_class = $map[ get_class( $gateway ) ];
+
+			return new $transaction_class( $gateway );
 		}
 
 		return null;

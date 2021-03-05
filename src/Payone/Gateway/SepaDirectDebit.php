@@ -21,7 +21,6 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 
 		if ( SubscriptionHandler::is_wcs_active() ) {
 			$this->add_subscription_support();
-			$this->add_subscription_actions();
 		}
 	}
 
@@ -76,7 +75,7 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
         // https://docs.payone.com/display/public/PLATFORM/Special+remarks+-+PayPal
 		if ( $this->order_is_subscription( $order ) ) {
 			$transaction->set( 'amount', 1 );
-			$transaction->set( 'reference', sprintf( '%d-%d', (int) $order->get_id(), date( 'Ymd-His' ) ) );
+			$transaction->set( 'reference', sprintf( '%d_%d', (int) $order->get_id(), (int) time() ) );
 		}
 
 		if ( $this->order_contains_subscription( $order ) ) {
@@ -241,41 +240,5 @@ class SepaDirectDebit extends GatewayBase implements SubscriptionAwareInterface 
 		) {
 			$this->capture( $order );
 		}
-	}
-
-	public function process_woocommerce_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
-		$subscription = $this->get_subscriptions_for_renewal_order( $renewal_order );
-
-		if ( ! $subscription instanceof \WC_Subscription ) {
-			return;
-		}
-
-		/** @var GatewayBase $this */
-		$transaction = new \Payone\Transaction\SepaDirectDebit( new \Payone\Gateway\SepaDirectDebit() );
-
-		$transaction->set( 'amount', Plugin::convert_to_cents( $renewal_total ) );
-		$transaction->set( 'recurrence', 'recurring' );
-		$transaction->set( 'customer_is_present', 'no' );
-		$transaction->set( 'userid', $subscription->get_meta( '_payone_userid' ) );
-
-		$response = $transaction->execute( $renewal_order );
-
-		if ( $response->is_approved() ) {
-			$subscription->payment_complete( (string) $response->get( 'txid' ) );
-			$renewal_order->add_order_note( sprintf(
-				'PayOne: %s (PayOne Reference: %s)',
-				__( 'Scheduled subscription payment successful.', 'payone-woocommerce-3' ),
-				$transaction->get( 'reference', 'N/A' )
-			) );
-
-			return;
-		}
-
-		$renewal_order->add_order_note( sprintf(
-			'PayOne: %s (Error: %s)',
-			__( 'Scheduled subscription payment failed.', 'payone-woocommerce-3' ),
-			$response->get_error_message()
-		) );
-		$subscription->payment_failed();
 	}
 }

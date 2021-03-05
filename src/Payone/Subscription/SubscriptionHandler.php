@@ -5,8 +5,14 @@ namespace Payone\Subscription;
 use DateInterval;
 use DateTimeImmutable;
 use Payone\Admin\Option\Account;
+use Payone\Gateway\CreditCard;
+use Payone\Gateway\GatewayBase;
 use Payone\Gateway\Invoice;
+use Payone\Gateway\PayPal;
+use Payone\Gateway\SepaDirectDebit;
 use Payone\Gateway\SubscriptionAwareInterface;
+use Payone\Plugin;
+use Payone\Transaction\Capture;
 use WC_Order;
 use WC_Payment_Gateway;
 use WC_Subscription;
@@ -16,8 +22,17 @@ use WCS_Retry_Store;
 use function WC;
 
 class SubscriptionHandler {
+	/** @var string[] $subscription_supported_gateways */
+	public static $subscription_supported_gateways = [
+		CreditCard::GATEWAY_ID,
+		PayPal::GATEWAY_ID,
+		SepaDirectDebit::GATEWAY_ID,
+		Invoice::GATEWAY_ID,
+	];
 	/** @var SubscriptionHandler $self */
 	private static $self;
+	/** @var boolean $is_initialized */
+	private static $is_initialized = false;
 	/** @var array<string,string> $options */
 	private $options = [];
 
@@ -51,12 +66,46 @@ class SubscriptionHandler {
 	 * @return void
 	 */
 	public function init() {
+		if ( self::$is_initialized === true ) {
+			return;
+		}
+
 		add_action(
 			'woocommerce_subscription_renewal_payment_failed',
 			[ $this, 'process_woocommerce_subscription_renewal_payment_failed' ],
 			10,
 			2
 		);
+
+		add_action(
+			'woocommerce_subscription_status_on-hold_to_active',
+			[ $this, 'process_woocommerce_subscription_status_on_hold_to_active' ],
+			10,
+			1
+		);
+
+		foreach ( self::$subscription_supported_gateways as $supported_gateway ) {
+			add_action(
+				sprintf( 'woocommerce_scheduled_subscription_payment_%s', (string) $supported_gateway ),
+				[ $this, 'process_woocommerce_scheduled_subscription_payment' ],
+				10,
+				2
+			);
+		}
+
+		self::$is_initialized = true;
+	}
+
+	public function process_woocommerce_subscription_status_on_hold_to_active( \WC_Subscription $subscription ) {
+		if ( $subscription->get_meta( '_authorization_method' ) === 'preauthorization' ) {
+			//Most likely, there was a payment method change. We need to do a capture here.
+			$gateway = Plugin::get_gateway_for_order( $subscription );
+			if ( ! $gateway instanceof GatewayBase ) {
+				return;
+			}
+			$capture = new Capture( $gateway );
+			$capture->execute( $subscription );
+		}
 	}
 
 	/**
@@ -154,5 +203,61 @@ class SubscriptionHandler {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param float $renewal_total
+	 * @param \WC_Order $renewal_order
+	 *
+	 * @return void
+	 */
+	public function process_woocommerce_scheduled_subscription_payment( $renewal_total, \WC_Order $renewal_order ) {
+		if ( $renewal_order->get_status() !== 'pending' || ! $renewal_order->needs_payment() ) {
+			return;
+		}
+
+		/** @var \WC_Subscription[] $subscriptions */
+		$subscriptions = wcs_get_subscriptions_for_renewal_order( $renewal_order );
+
+		if ( ! is_array( $subscriptions ) ) {
+			return;
+		}
+
+		$subscription = array_pop( $subscriptions );
+
+		if ( ! $subscription instanceof \WC_Subscription ) {
+			return;
+		}
+
+		$transaction = Plugin::get_transaction_for_gateway( Plugin::get_gateway_for_order( $subscription ) );
+
+		if ( ! $transaction instanceof \Payone\Transaction\Base ) {
+			return;
+		}
+
+		$transaction->set( 'amount', Plugin::convert_to_cents( $renewal_total ) );
+		$transaction->set( 'recurrence', 'recurring' );
+		$transaction->set( 'customer_is_present', 'no' );
+		$transaction->set( 'userid', $subscription->get_meta( '_payone_userid' ) );
+
+		$response = $transaction->execute( $renewal_order );
+
+		if ( $response->is_approved() ) {
+			$subscription->payment_complete( (string) $response->get( 'txid' ) );
+			$renewal_order->add_order_note( sprintf(
+				'PayOne: %s (PayOne Reference: %s)',
+				__( 'Scheduled subscription payment successful.', 'payone-woocommerce-3' ),
+				$transaction->get( 'reference', 'N/A' )
+			) );
+
+			return;
+		}
+
+		$renewal_order->add_order_note( sprintf(
+			'PayOne: %s (Error: %s)',
+			__( 'Scheduled subscription payment failed.', 'payone-woocommerce-3' ),
+			$response->get_error_message()
+		) );
+		$subscription->payment_failed();
 	}
 }

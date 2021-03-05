@@ -3,7 +3,6 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
-use Payone\Plugin;
 use Payone\Subscription\SubscriptionHandler;
 
 class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterface {
@@ -21,7 +20,6 @@ class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterfa
 
 		if ( SubscriptionHandler::is_wcs_active() ) {
 			$this->add_subscription_support();
-			$this->add_subscription_actions();
 		}
 	}
 
@@ -508,40 +506,5 @@ class CreditCard extends RedirectGatewayBase implements SubscriptionAwareInterfa
 			. 'yes'
 			. $options['key']
 		);
-	}
-
-	public function process_woocommerce_scheduled_subscription_payment( $renewal_total, $renewal_order ) {
-		$subscription = $this->get_subscriptions_for_renewal_order( $renewal_order );
-
-		if ( ! $subscription instanceof \WC_Subscription ) {
-			return;
-		}
-
-		/** @var GatewayBase $this */
-		$transaction = new \Payone\Transaction\CreditCard( new \Payone\Gateway\CreditCard() );
-		$transaction->set( 'amount', Plugin::convert_to_cents( $renewal_total ) );
-		$transaction->set( 'recurrence', 'recurring' );
-		$transaction->set( 'customer_is_present', 'no' );
-		$transaction->set( 'userid', $subscription->get_meta( '_payone_userid' ) );
-
-		$response = $transaction->execute( $renewal_order );
-
-		if ( $response->is_approved() ) {
-			$subscription->payment_complete( (string) $response->get( 'txid' ) );
-			$renewal_order->add_order_note( sprintf(
-				'PayOne: %s (PayOne Reference: %s)',
-				__( 'Scheduled subscription payment successful.', 'payone-woocommerce-3' ),
-				$transaction->get( 'reference', 'N/A' )
-			) );
-
-			return;
-		}
-
-		$renewal_order->add_order_note( sprintf(
-			'PayOne: %s (Error: %s)',
-			__( 'Scheduled subscription payment failed.', 'payone-woocommerce-3' ),
-			$response->get_error_message()
-		) );
-		$subscription->payment_failed();
 	}
 }

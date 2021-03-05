@@ -65,7 +65,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
         // https://docs.payone.com/display/public/PLATFORM/Special+remarks+-+PayPal
 		if ( $this->order_is_subscription( $order ) ) {
 			$transaction->set( 'amount', 1 );
-			$transaction->set( 'reference', sprintf( '%d-%d', (int) $order->get_id(), date( 'Ymd-His' ) ) );
+			$transaction->set( 'reference', sprintf( '%d_%d', (int) $order->get_id(), (int) time() ) );
 		}
 
 		if ( $this->order_contains_subscription( $order ) ) {
