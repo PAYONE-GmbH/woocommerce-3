@@ -24,6 +24,34 @@ class Plugin {
      */
 	public static $send_mail_after_capture = true;
 
+	/** @var array<class-string,class-string> $gateway_id_gateway_map */
+	private static $gateway_id_gateway_map = [
+		\Payone\Gateway\CreditCard::GATEWAY_ID      => \Payone\Gateway\CreditCard::class,
+		\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
+		\Payone\Gateway\PrePayment::GATEWAY_ID      => \Payone\Gateway\PrePayment::class,
+		\Payone\Gateway\Eps::GATEWAY_ID             => \Payone\Gateway\Eps::class,
+		\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
+		\Payone\Gateway\Sofort::GATEWAY_ID          => \Payone\Gateway\Sofort::class,
+		\Payone\Gateway\Giropay::GATEWAY_ID         => \Payone\Gateway\Giropay::class,
+		\Payone\Gateway\SafeInvoice::GATEWAY_ID     => \Payone\Gateway\SafeInvoice::class,
+		\Payone\Gateway\PayPal::GATEWAY_ID          => \Payone\Gateway\PayPal::class,
+		\Payone\Gateway\PayDirekt::GATEWAY_ID       => \Payone\Gateway\PayDirekt::class,
+	];
+
+	/** @var array<class-string,class-string> $gateway_transaction_map */
+	private static $gateway_transaction_map = [
+		\Payone\Gateway\CreditCard::class      => \Payone\Transaction\CreditCard::class,
+		\Payone\Gateway\Invoice::class         => \Payone\Transaction\Invoice::class,
+		\Payone\Gateway\PayPal::class          => \Payone\Transaction\PayPal::class,
+		\Payone\Gateway\SepaDirectDebit::class => \Payone\Transaction\SepaDirectDebit::class,
+		\Payone\Gateway\Eps::class             => \Payone\Transaction\Eps::class,
+		\Payone\Gateway\Giropay::class         => \Payone\Transaction\Giropay::class,
+		\Payone\Gateway\PayDirekt::class       => \Payone\Transaction\PayDirekt::class,
+		\Payone\Gateway\PrePayment::class      => \Payone\Transaction\PrePayment::class,
+		\Payone\Gateway\SafeInvoice::class     => \Payone\Transaction\SafeInvoice::class,
+		\Payone\Gateway\Sofort::class          => \Payone\Transaction\Sofort::class,
+	];
+
 	/**
 	 * @todo Evtl. Zugriff über file_get_contents('php://input') realisieren, wenn der Server file_get_contents zulässt
 	 *
@@ -42,20 +70,7 @@ class Plugin {
 			$settings->init();
 		}
 
-		$gateways = [
-			\Payone\Gateway\CreditCard::GATEWAY_ID      => \Payone\Gateway\CreditCard::class,
-			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
-			\Payone\Gateway\PrePayment::GATEWAY_ID      => \Payone\Gateway\PrePayment::class,
-            \Payone\Gateway\Eps::GATEWAY_ID             => \Payone\Gateway\Eps::class,
-			\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
-			\Payone\Gateway\Sofort::GATEWAY_ID          => \Payone\Gateway\Sofort::class,
-			\Payone\Gateway\Giropay::GATEWAY_ID         => \Payone\Gateway\Giropay::class,
-			\Payone\Gateway\SafeInvoice::GATEWAY_ID     => \Payone\Gateway\SafeInvoice::class,
-			\Payone\Gateway\PayPal::GATEWAY_ID          => \Payone\Gateway\PayPal::class,
-			\Payone\Gateway\PayDirekt::GATEWAY_ID       => \Payone\Gateway\PayDirekt::class,
-		];
-
-		foreach ( $gateways as $gateway ) {
+		foreach ( self::$gateway_id_gateway_map as $gateway ) {
 			add_filter( 'woocommerce_payment_gateways', [ $gateway, 'add' ] );
 		}
 
@@ -614,23 +629,10 @@ class Plugin {
 	 * @return null|Base
 	 */
 	public static function get_transaction_for_gateway( GatewayBase $gateway ) {
-		/** @var array<class-string,class-string> $map */
-		$map = [
-			\Payone\Gateway\CreditCard::class      => \Payone\Transaction\CreditCard::class,
-			\Payone\Gateway\Invoice::class         => \Payone\Transaction\Invoice::class,
-			\Payone\Gateway\PayPal::class          => \Payone\Transaction\PayPal::class,
-			\Payone\Gateway\SepaDirectDebit::class => \Payone\Transaction\SepaDirectDebit::class,
-			\Payone\Gateway\Eps::class             => \Payone\Transaction\Eps::class,
-			\Payone\Gateway\Giropay::class         => \Payone\Transaction\Giropay::class,
-			\Payone\Gateway\PayDirekt::class       => \Payone\Transaction\PayDirekt::class,
-			\Payone\Gateway\PrePayment::class      => \Payone\Transaction\PrePayment::class,
-			\Payone\Gateway\SafeInvoice::class     => \Payone\Transaction\SafeInvoice::class,
-			\Payone\Gateway\Sofort::class          => \Payone\Transaction\Sofort::class,
-		];
-
 		$gateway_class = get_class( $gateway );
-		if ( array_key_exists( $gateway_class, $map ) ) {
-			$transaction_class = $map[ get_class( $gateway ) ];
+
+		if ( array_key_exists( $gateway_class, self::$gateway_transaction_map ) ) {
+			$transaction_class = self::$gateway_transaction_map[ $gateway_class ];
 
 			return new $transaction_class( $gateway );
 		}
