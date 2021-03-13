@@ -19,8 +19,8 @@ define( 'PAYONE_VIEW_PATH', PAYONE_PLUGIN_PATH . '/views' );
 
 require_once 'src/autoload.php';
 
-if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+add_action( 'woocommerce_loaded', function () {
 	$payonePlugin = new \Payone\Plugin();
 	add_action( 'init', [ $payonePlugin, 'add_callback_url' ] );
 	add_action( 'plugins_loaded', [ $payonePlugin, 'init' ] );
-}
+} );
