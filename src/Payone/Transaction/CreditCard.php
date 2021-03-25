@@ -14,6 +14,7 @@ class CreditCard extends Base {
 
 		$this->set( 'clearingtype', 'cc' );
 		$this->set( 'pseudocardpan', $_POST['card_pseudopan'] );
+        $this->set( 'cardholder', $_POST['card_holder'] );
 	}
 
 	/**
