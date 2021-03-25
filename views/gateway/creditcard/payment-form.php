@@ -1,7 +1,5 @@
 <input type="hidden" name="card_pseudopan" id="card_pseudopan">
 <input type="hidden" name="card_truncatedpan" id="card_truncatedpan">
-<input type="hidden" name="card_firstname" id="card_firstname">
-<input type="hidden" name="card_lastname" id="card_lastname">
 <input type="hidden" name="card_type" id="card_type">
 <input type="hidden" name="card_expiredate" id="card_expiredate">
 
@@ -27,6 +25,11 @@
 	<?php echo nl2br( $this->get_option( 'description' ) ); ?>
 </p>
 <fieldset>
+    <p class="form-row form-row-wide">
+        <label for="card_holder" title="<?php _e( 'as printed on card', 'payone-woocommerce-3' ) ?>"><?php _e( 'Card Holder', 'payone-woocommerce-3' ) ?></label>
+        <input class="payoneInput" id="card_holder" type="text" name="card_holder" value="" maxlength="50">
+    </p>
+
     <p class="form-row form-row-wide">
         <label for="cardtypeInput"><?php _e( 'Card type', 'payone-woocommerce-3' ) ?></label>
         <select class="payoneSelect" id="cardtype">
@@ -54,16 +57,6 @@
             <span id="cardexpiremonth"></span>
             <span id="cardexpireyear"></span>
         </span>
-    </p>
-
-    <p class="form-row form-row-wide">
-        <label for="payone_card_firstname"><?php _e( 'Firstname', 'payone-woocommerce-3' ) ?></label>
-        <input class="payoneInput" id="payone_card_firstname" type="text" name="card_firstname" value="">
-    </p>
-
-    <p class="form-row form-row-wide">
-        <label for="payone_card_lastname"><?php _e( 'Lastname', 'payone-woocommerce-3' ) ?></label>
-        <input class="payoneInput" id="payone_card_lastname" type="text" name="card_lastname" value="">
     </p>
 
     <div id="errorOutput"></div>
@@ -178,15 +171,32 @@
             return true;
         }
 
-        if (iframes.isComplete()) {
+        var cardholder_ok = check_cardholder();
+
+        if (iframes.isComplete() && cardholder_ok === true) {
             iframes.creditCardCheck('checkCallback');
         } else {
-            jQuery('#errorOutput').html('<strong style="color:red">Bitte Formular vollständig ausfüllen!</strong>');
+            var error_message = 'Bitte Formular vollständig ausfüllen!';
+            if ( cardholder_ok !== true ) {
+                error_message += '<br>' + cardholder_ok;
+            }
+
+            jQuery('#errorOutput').html('<strong style="color:red">' + error_message + '</strong>');
             payone_unblock();
         }
 
         // Bearbeitung hier abschließen. Das Submit wird dann über "checkCallback" realisiert.
         return false;
+    }
+
+    function check_cardholder() {
+        var cardholder = document.getElementById("card_holder").value;
+
+        if ( cardholder.length > 50 || cardholder.match(/[^a-zA-Z \-äöüÄÖÜß]/g)) {
+            return 'Bitte geben Sie maximal 50 Zeichen für den Karteninhaber ein, Sonderzeichen außer Deutsche Umlaute und einem Bindestrich sind nicht erlaubt.';
+        }
+
+        return true;
     }
 
     function checkCallback(response) {
