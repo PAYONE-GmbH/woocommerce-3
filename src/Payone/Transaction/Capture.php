@@ -3,6 +3,7 @@
 namespace Payone\Transaction;
 
 use Payone\Plugin;
+use Payone\WooCommerceSubscription\WCSHandler;
 
 class Capture extends Base {
 	/**
@@ -19,6 +20,12 @@ class Capture extends Base {
 	 * @return null|\Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
+	    if ( WCSHandler::is_subscription( $order ) && (int)$order->get_total() === 0 ) {
+	        // No capture neccessary. The preauthorization of 1 cent for the subscription
+            // ist just a way to get the payment through.
+	        return null;
+        }
+
 		if ($this->should_submit_cart() ) {
 			$this->add_article_list_to_transaction( $order );
 		}

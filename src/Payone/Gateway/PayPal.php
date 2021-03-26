@@ -3,12 +3,21 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\WooCommerceSubscription\WCSAwareGatewayTrait;
+use Payone\WooCommerceSubscription\WCSHandler;
 
 class PayPal extends RedirectGatewayBase {
+
+    use WCSAwareGatewayTrait;
+
 	const GATEWAY_ID = 'bs_payone_paypal';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
+
+        if ( WCSHandler::is_wcs_active() ) {
+            $this->add_wcs_support();
+        }
 
 		$this->icon               = '';
 		$this->method_title       = 'Payone ' . __( 'PayPal', 'payone-woocommerce-3' );
@@ -32,6 +41,26 @@ class PayPal extends RedirectGatewayBase {
 	public function process_payment( $order_id ) {
 		return $this->process_redirect( $order_id, \Payone\Transaction\PayPal::class );
 	}
+
+    /**
+     * @param \WC_Order $order
+     * @return \Payone\Transaction\PayPal
+     */
+    public function wcs_get_transaction_for_subscription_signup( \WC_Order $order ) {
+        $transaction = new \Payone\Transaction\PayPal( $this, 'preauthorization' );
+
+        if ( (int)$order->get_total() === 0 ) {
+            // The user does not need to pay anything right now, but we need to set the amount to 1 cent.
+            // This is not going to be captured. We just need the preauthorization;
+            $transaction->set('amount', 1);
+        }
+
+        $transaction->set( 'reference', $order->get_id() );
+        $transaction->set( 'recurrence', 'recurring' );
+        $transaction->set( 'customer_is_present', 'yes' );
+
+        return $transaction;
+    }
 
 	/**
 	 * @param TransactionStatus $transaction_status

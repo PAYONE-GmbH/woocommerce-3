@@ -68,13 +68,29 @@ class DataTransfer {
 	 * @param mixed $value
 	 * @param DataTransfer
 	 *
-	 * @return mixed
+	 * @return $this
 	 */
 	public function set( $key, $value ) {
 		$this->parameter_bag[ $key ] = $value;
 
 		return $this;
 	}
+
+    /**
+     * If the key is already used, no new value is set.
+     *
+     * @param string $key
+     * @param mixed $value
+     *
+     * @return $this
+     */
+    public function set_once( $key, $value ) {
+        if ( ! isset( $this->parameter_bag[$key] ) ) {
+            $this->parameter_bag[$key] = $value;
+        }
+
+        return $this;
+    }
 
     /**
      * @param \WC_Order $order
