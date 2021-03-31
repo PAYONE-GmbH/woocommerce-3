@@ -7,6 +7,7 @@ use Payone\Plugin;
 class CreditCard extends Base {
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
+     * @param string $authorization_method
 	 */
 	public function __construct( $gateway, $authorization_method = null ) {
 	    // We want to be able to overide the default setting for subscription handling
