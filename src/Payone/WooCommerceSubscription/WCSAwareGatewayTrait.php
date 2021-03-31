@@ -5,6 +5,7 @@ namespace Payone\WooCommerceSubscription;
 use Payone\Gateway\CreditCard;
 use Payone\Gateway\Invoice;
 use Payone\Gateway\PayPal;
+use Payone\Gateway\SepaDirectDebit;
 
 trait WCSAwareGatewayTrait {
     public function add_wcs_support() {
@@ -50,6 +51,8 @@ trait WCSAwareGatewayTrait {
             $transaction = new \Payone\Transaction\PayPal( $this, 'authorization' );
         } elseif ( $this instanceof Invoice ) {
             $transaction = new \Payone\Transaction\Invoice( $this, 'authorization' );
+        } elseif ( $this instanceof SepaDirectDebit ) {
+            $transaction = new \Payone\Transaction\SepaDirectDebit( $this, 'authorization' );
         } else {
             wp_die( sprintf( __( 'Unsupported payment gateway for subscription: %s', 'payone-woocommerce-3' ), get_class( $this ) ) );
         }
