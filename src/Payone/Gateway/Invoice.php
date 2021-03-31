@@ -3,12 +3,21 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\WooCommerceSubscription\WCSAwareGatewayTrait;
+use Payone\WooCommerceSubscription\WCSHandler;
 
 class Invoice extends GatewayBase {
+
+    use WCSAwareGatewayTrait;
+
 	const GATEWAY_ID = 'bs_payone_invoice';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
+
+        if ( WCSHandler::is_wcs_active() ) {
+            $this->add_wcs_support();
+        }
 
 		$this->icon               = '';
 		$this->method_title       = 'Payone ' . __( 'Invoice', 'payone-woocommerce-3' );
@@ -28,6 +37,18 @@ class Invoice extends GatewayBase {
 	public function process_payment( $order_id ) {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
+
+        if ( WCSHandler::is_wcs_active() && WCSHandler::is_subscription($order) && (int)$order->get_total() === 0) {
+            // We don't need to do anything. This is just the start of the trial period without any upfront cost.
+            $order->add_order_note( __('Subscription started. No invoice necessary at the moment.', 'payone-woocommerce-3' ) );
+            $order->payment_complete();
+
+            // Return thankyou redirect
+            return array(
+                'result'   => 'success',
+                'redirect' => $this->get_return_url( $order ),
+            );
+        }
 
 		$transaction = new \Payone\Transaction\Invoice( $this );
 		$response    = $transaction->execute( $order );
