@@ -163,7 +163,17 @@ class DataTransfer {
 		return (int) $this->get( $key, $default );
 	}
 
-	public function get_all() {
+    /**
+     * @param string $key
+     * @param string $default
+     *
+     * @return string
+     */
+    public function get_string( $key, $default = '' ) {
+        return (string) $this->get( $key, $default );
+    }
+
+    public function get_all() {
 		return $this->parameter_bag;
 	}
 

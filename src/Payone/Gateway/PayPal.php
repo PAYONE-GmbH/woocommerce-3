@@ -15,7 +15,7 @@ class PayPal extends RedirectGatewayBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-        if ( WCSHandler::is_wcs_active() ) {
+        if ( WCSHandler::is_wcs_active() && $this->are_paypal_billing_agreements_enabled() ) {
             $this->add_wcs_support();
         }
 
@@ -93,4 +93,15 @@ class PayPal extends RedirectGatewayBase {
 			$this->capture( $order );
 		}
 	}
+
+    /**
+     * @return bool
+     */
+    protected function are_paypal_billing_agreements_enabled() {
+        if ( isset( $this->global_settings['paypal_billing_agreements_enabled'] ) ) {
+            return (bool) $this->global_settings['paypal_billing_agreements_enabled'];
+        }
+
+        return false;
+    }
 }

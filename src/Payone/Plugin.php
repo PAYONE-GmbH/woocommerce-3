@@ -70,7 +70,39 @@ class Plugin {
         add_filter( 'woocommerce_email_enabled_customer_processing_order' , [ $this, 'disable_capture_mail_filter' ]);
 
 		add_action( 'wp_head', [ $this, 'add_stylesheet' ] );
+
+        add_action( 'woocommerce_order_details_after_order_table', [ $this, 'handle_woocommerce_order_details_after_order_table' ] );
+
+        add_action( 'woocommerce_admin_order_data_after_order_details', [ $this, 'handle_woocommerce_admin_order_data_after_order_details' ] );
 	}
+
+    /**
+     * @param \WC_Order $order
+     */
+    public function handle_woocommerce_order_details_after_order_table( $order ) {
+        $gateway = self::get_gateway_for_order( $order );
+
+        // Show only if PayOne Gateway was used and there is non empty _invoiceid.
+        if ( $gateway instanceof GatewayBase && $order->get_meta( '_invoiceid' ) !== '' ) {
+            include PAYONE_VIEW_PATH . '/order/order-download-invoice.php';
+        }
+    }
+
+    /**
+     * @param \WC_Order $order
+     */
+    public function handle_woocommerce_admin_order_data_after_order_details( $order ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        $gateway = self::get_gateway_for_order( $order );
+
+        // Show only if PayOne Gateway was used and there is non empty _invoiceid.
+        if ( $gateway instanceof GatewayBase && $order->get_meta( '_invoiceid' ) !== '' ) {
+            include PAYONE_VIEW_PATH . '/admin/meta-boxes/order-download-invoice.php';
+        }
+    }
 
     /**
      * Wenn die Bestellung den Status zu "processing" ändert und es sich um eine Bestellung mit "preauthorization"
@@ -203,11 +235,16 @@ class Plugin {
 	public function catch_payone_callback() {
 		if ( get_query_var( self::CALLBACK_SLUG ) ) {
 
-			if ( $this->is_callback_after_redirect() ) {
+            if ( $this->is_download_invoice_request() ) {
+                return $this->process_callback_download_invoice();
+            }
+            if ( $this->is_callback_after_redirect() ) {
 				return $this->process_callback_after_redirect();
-			} elseif ( $this->is_manage_mandate_callback() ) {
+			}
+            if ( $this->is_manage_mandate_callback() ) {
 				return $this->process_manage_mandate_callback();
-			} elseif ( $this->is_manage_mandate_getfile() ) {
+			}
+            if ( $this->is_manage_mandate_getfile() ) {
 				return $this->process_manage_mandate_getfile();
 			}
 
@@ -288,7 +325,14 @@ class Plugin {
 		return apply_filters( 'payone_request_is_from_payone',  $result );
 	}
 
-	/**
+    /**
+     * @return bool
+     */
+    private function is_download_invoice_request() {
+        return isset( $_GET['type'], $_GET['oid'] ) && $_GET['type'] === 'download-invoice' && ! empty( $_GET['oid'] );
+    }
+
+    /**
 	 * @return bool
 	 */
 	private function is_callback_after_redirect() {
@@ -314,7 +358,104 @@ class Plugin {
 		return $gateway->process_payment( $order_id );
 	}
 
-	/**
+    /**
+     * @return array{status:string,message:string}
+     */
+    private function process_callback_download_invoice() {
+        $order_id = (int) ( isset( $_GET['oid'] ) ? $_GET['oid'] : 0 );
+
+        if ( $order_id < 1 ) {
+            return [
+                'status'  => 'error',
+                'message' => __( 'Could not find order.', 'payone-woocommerce-3' ),
+            ];
+        }
+
+        /** @var \WP_User|null $logged_in_user */
+        $logged_in_user = wp_get_current_user();
+
+        // User must be logged in.
+        if ( ! $logged_in_user instanceof \WP_User ) {
+            return [
+                'status'  => 'error',
+                'message' => __( 'User is not logged in.', 'payone-woocommerce-3' ),
+            ];
+        }
+
+        $order = new \WC_Order( $order_id );
+        /** @var \WP_User|false $order_user */
+        $order_user = $order->get_user();
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            // Unless this was requested by a user that has 'manage_woocommerce' capability, check if this order
+            // actually belongs to logged in user. Behave like order could not be found. Do not give out any info.
+            if ( ! $order_user instanceof \WP_User || (int) $order_user->get( 'id' ) !== (int) $logged_in_user->get( 'id' ) ) {
+                return [
+                    'status'  => 'error',
+                    'message' => __( 'Could not find order.', 'payone-woocommerce-3' ),
+                ];
+            }
+        }
+
+        $gateway = self::get_gateway_for_order( $order );
+
+        if ( ! $gateway instanceof GatewayBase ) {
+            return [
+                'status'  => 'error',
+                'message' => __( 'Could not get payment method for order.', 'payone-woocommerce-3' ),
+            ];
+        }
+
+        if ( ! $gateway->is_payone_invoice_module_enabled() ) {
+            return [
+                'status'  => 'error',
+                'message' => __( 'Invoice module is not enabled.', 'payone-woocommerce-3' ),
+            ];
+        }
+
+        $splFileInfo = $gateway->get_invoice_for_order( $order );
+
+        if ( ! $splFileInfo instanceof \SplFileInfo ) {
+            return [
+                'status'  => 'error',
+                'message' => __( 'Could not get invoice from PayOne gateway.', 'payone-woocommerce-3' ),
+            ];
+        }
+
+        $filePath = (string) $splFileInfo->getRealPath();
+
+        if ( ! file_exists( $filePath ) ) {
+            return [
+                'status'  => 'error',
+                'message' => __( 'Could not find a file on server.', 'payone-woocommerce-3' ),
+            ];
+        }
+
+        if ( ! is_readable( $filePath ) ) {
+            return [
+                'status'  => 'error',
+                'message' => __( 'Could not read a file from server.', 'payone-woocommerce-3' ),
+            ];
+        }
+
+        $finfo = finfo_open( FILEINFO_MIME_TYPE );
+        header( sprintf( 'Content-Type: %s', (string) finfo_file( $finfo, $filePath ) ) );
+        finfo_close( $finfo );
+
+        header( sprintf( 'Content-Disposition: attachment; filename=%s', (string) basename( $filePath ) ) );
+        header( 'Expires: 0' );
+        header( 'Cache-Control: must-revalidate' );
+        header( 'Pragma: public' );
+        header( sprintf( 'Content-Length: %s', (string) filesize( $filePath ) ) );
+
+        ob_clean();
+        flush();
+
+        readfile( $filePath );
+        exit;
+    }
+
+    /**
 	 * @return bool
 	 */
 	private function is_manage_mandate_callback() {

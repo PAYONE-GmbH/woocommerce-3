@@ -2,6 +2,7 @@
 
 namespace Payone\Gateway;
 
+use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Capture;
 
@@ -9,7 +10,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @var array
 	 */
-	private $global_settings;
+	protected $global_settings;
 
 	/**
 	 * @var string 0 or 1
@@ -111,7 +112,14 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			$order->save_meta_data();
 		}
 
-		if ( $transaction_status->is_appointed() ) {
+        if ( $transaction_status->is_invoice() ) {
+            $invoice_id = $transaction_status->get_string( 'invoiceid' );
+            $order->add_order_note( sprintf( '%s (Invoice ID: %s)', __( 'Order is invoiced on PAYONE.', 'payone-woocommerce-3' ), $invoice_id ) );
+            $order->update_meta_data( '_invoiceid', $invoice_id );
+            $order->save_meta_data();
+        }
+
+        if ( $transaction_status->is_appointed() ) {
 		    // Just log and flag order meta that we got an APPOINTED TX status notification
 		    $order->add_order_note( __( 'Received status APPOINTED from PAYONE.', 'payone-woocommerce-3' ) );
             $order->update_meta_data( '_appointed', time() );
@@ -406,7 +414,29 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 	}
 
-	private function process_global_settings() {
+    /**
+     * @return bool
+     */
+    public function is_payone_invoice_module_enabled() {
+        if ( isset( $this->global_settings['payone_invoice_module_enabled'] ) ) {
+            return (bool) $this->global_settings['payone_invoice_module_enabled'];
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_payone_subscription_auto_failover_enabled() {
+        if ( isset( $this->global_settings['payone_subscription_auto_failover'] ) ) {
+            return (bool) $this->global_settings['payone_subscription_auto_failover'];
+        }
+
+        return false;
+    }
+
+    private function process_global_settings() {
 		$this->use_global_settings = $this->settings['use_global_settings'];
 		if ( $this->use_global_settings ) {
 			unset (
@@ -444,7 +474,42 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 	}
 
-	/**
+    /**
+     * @param \WC_Order $order
+     *
+     * @return \SplFileInfo|null
+     */
+    public function get_invoice_for_order( $order ) {
+        $invoice_id = (string) $order->get_meta( '_invoiceid' );
+        $invoice_id = trim( $invoice_id );
+
+        if ( empty( $invoice_id ) ) {
+            return null;
+        }
+
+        $request = new Request();
+        $request->set( 'request', 'getinvoice' );
+        $request->set( 'invoice_title', $invoice_id );
+        $result = $request->submit();
+
+        if ( ! $result->is_ok() ) {
+            wc_add_notice( $result->get_error_message(), 'error' );
+
+            return null;
+        }
+
+        $pdfFilePath = sprintf( '%s/Invoice.%s.pdf', sys_get_temp_dir(), $invoice_id );
+
+        $bytes = file_put_contents( $pdfFilePath, $result->get( '_DATA' ) );
+
+        if ( $bytes === false || $bytes < 1 ) {
+            return null;
+        }
+
+        return new \SplFileInfo( $pdfFilePath );
+    }
+
+    /**
 	 * This is a copy of $this->generate_select_html(), but without the table_markup
 	 *
 	 * @param string $key
