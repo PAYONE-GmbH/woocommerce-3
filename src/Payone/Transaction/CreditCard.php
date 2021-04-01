@@ -17,9 +17,11 @@ class CreditCard extends Base {
 		parent::__construct( $authorization_method );
 		$this->set_data_from_gateway( $gateway );
 
-		$this->set( 'clearingtype', 'cc' );
-		$this->set( 'pseudocardpan', $_POST['card_pseudopan'] );
-        $this->set( 'cardholder', $_POST['card_holder'] );
+        $this->set( 'clearingtype', 'cc' );
+		$card_pseudopan = isset( $_POST['card_pseudopan'] ) ? $_POST['card_pseudopan'] : '';
+		$this->set( 'pseudocardpan', $card_pseudopan );
+        $card_holder = isset( $_POST['card_holder'] ) ? $_POST['card_holder'] : '';
+        $this->set( 'cardholder', $card_holder );
 	}
 
 	/**

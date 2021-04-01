@@ -425,17 +425,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public function is_payone_subscription_auto_failover_enabled() {
-        if ( isset( $this->global_settings['payone_subscription_auto_failover'] ) ) {
-            return (bool) $this->global_settings['payone_subscription_auto_failover'];
-        }
-
-        return false;
-    }
-
     private function process_global_settings() {
 		$this->use_global_settings = $this->settings['use_global_settings'];
 		if ( $this->use_global_settings ) {

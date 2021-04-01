@@ -4,9 +4,11 @@ namespace Payone;
 
 use Payone\Database\Migration;
 use Payone\Gateway\GatewayBase;
+use Payone\Gateway\Invoice;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
+use Payone\WooCommerceSubscription\WCSHandler;
 
 class Plugin {
 	const CALLBACK_SLUG = 'payone-callback';
@@ -74,7 +76,19 @@ class Plugin {
         add_action( 'woocommerce_order_details_after_order_table', [ $this, 'handle_woocommerce_order_details_after_order_table' ] );
 
         add_action( 'woocommerce_admin_order_data_after_order_details', [ $this, 'handle_woocommerce_admin_order_data_after_order_details' ] );
-	}
+
+        if ( WCSHandler::is_wcs_active()
+             && WCSHandler::is_payone_subscription_auto_failover_enabled()
+             && WCSHandler::is_payone_gateway_is_available_and_subscritpion_aware( Invoice::GATEWAY_ID )
+        ) {
+            add_action(
+                'woocommerce_subscription_renewal_payment_failed',
+                [WCSHandler::class, 'process_woocommerce_subscription_renewal_payment_failed'],
+                10,
+                2
+            );
+        }
+    }
 
     /**
      * @param \WC_Order $order
