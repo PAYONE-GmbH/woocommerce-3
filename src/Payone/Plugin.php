@@ -42,6 +42,8 @@ class Plugin {
 			$settings->init();
 		}
 
+        add_action( 'init', [ $this, 'add_callback_url' ] );
+
 		$gateways = [
 			\Payone\Gateway\CreditCard::GATEWAY_ID      => \Payone\Gateway\CreditCard::class,
 			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
