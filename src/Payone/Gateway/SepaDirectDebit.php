@@ -94,7 +94,14 @@ class SepaDirectDebit extends GatewayBase {
 		$order->save_meta_data();
 		$order->save();
 
-		if ( $authorization_method === 'preauthorization' ) {
+        if ( $authorization_method === 'preauthorization'
+            && $this->get_authorization_method() === 'authorization'
+            && WCSHandler::is_wcs_active()
+            && wcs_order_contains_subscription( $order )
+            && (int)$order->get_total() === 0
+        ) {
+            $order->update_status( 'processing', __( 'Recurring payment authorized by PAYONE.', 'payone-woocommerce-3' ) );
+        } elseif ( $authorization_method === 'preauthorization' ) {
 			$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
 			$order->update_status( 'processing',
@@ -119,12 +126,13 @@ class SepaDirectDebit extends GatewayBase {
      * @return \Payone\Transaction\SepaDirectDebit
      */
     public function wcs_get_transaction_for_subscription_signup( \WC_Order $order ) {
-        $transaction = new \Payone\Transaction\SepaDirectDebit( $this, 'preauthorization' );
-
         if ( (int)$order->get_total() === 0 ) {
+            $transaction = new \Payone\Transaction\SepaDirectDebit( $this, 'preauthorization' );
             // The user does not need to pay anything right now, but we need to set the amount to 1 cent.
             // This is not going to be captured. We just need the preauthorization;
             $transaction->set('amount', 1);
+        } else {
+            $transaction = new \Payone\Transaction\SepaDirectDebit( $this );
         }
 
         $transaction->set( 'reference', $order->get_id() );

@@ -38,20 +38,27 @@ class Invoice extends GatewayBase {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-        if ( WCSHandler::is_wcs_active() && WCSHandler::is_subscription($order) && (int)$order->get_total() === 0) {
-            // We don't need to do anything. This is just the start of the trial period without any upfront cost.
-            $order->add_order_note( __('Subscription started. No invoice necessary at the moment.', 'payone-woocommerce-3' ) );
-            $order->payment_complete();
+        if ( WCSHandler::is_wcs_active() && WCSHandler::is_subscription($order)) {
+            if ( (int)$order->get_total() === 0 ) {
+                // We don't need to do anything. This is just the start of the trial period without any upfront cost.
+                $order->add_order_note(__('Subscription started. No invoice necessary at the moment.', 'payone-woocommerce-3'));
+                $order->payment_complete();
 
-            // Return thankyou redirect
-            return array(
-                'result'   => 'success',
-                'redirect' => $this->get_return_url( $order ),
-            );
+                // Return thankyou redirect
+                return array(
+                    'result' => 'success',
+                    'redirect' => $this->get_return_url($order),
+                );
+            }
+
+            if ( method_exists( $this, 'wcs_get_transaction_for_subscription_signup' ) ) {
+                $transaction = $this->wcs_get_transaction_for_subscription_signup( $order );
+            }
+        } else {
+            $transaction = new \Payone\Transaction\Invoice($this);
         }
 
-		$transaction = new \Payone\Transaction\Invoice( $this );
-		$response    = $transaction->execute( $order );
+		$response = $transaction->execute( $order );
 
 		if ( $response->has_error() ) {
 			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(),
@@ -62,6 +69,7 @@ class Invoice extends GatewayBase {
 		// @todo Bei Kauf auf Rechnung anderer Status und Order abschließen?
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
+        $order->add_meta_data('_payone_userid', $response->get( 'userid', '' ) );
 		$response->store_clearing_info( $order );
 		$this->add_email_meta_hook( [ $this, 'email_meta_action' ] );
 		$order->update_meta_data( '_authorization_method', $transaction->get( 'request' ) );
@@ -79,6 +87,20 @@ class Invoice extends GatewayBase {
 			'redirect' => $this->get_return_url( $order ),
 		);
 	}
+
+    /**
+     * @param \WC_Order $order
+     * @return \Payone\Transaction\Invoice
+     */
+    public function wcs_get_transaction_for_subscription_signup( \WC_Order $order ) {
+        $transaction = new \Payone\Transaction\Invoice( $this );
+
+        $transaction->set( 'reference', $order->get_id() );
+        $transaction->set( 'recurrence', 'recurring' );
+        $transaction->set( 'customer_is_present', 'yes' );
+
+        return $transaction;
+    }
 
 	/**
 	 * @param TransactionStatus $transaction_status

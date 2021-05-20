@@ -56,7 +56,10 @@ abstract class RedirectGatewayBase extends GatewayBase {
             // sometimes not.
 
             // Depending on the Gateway, we might need to set up a special transaction for subscriptions
-            if ( WCSHandler::is_wcs_active() && method_exists( $this, 'wcs_get_transaction_for_subscription_signup' ) ) {
+            if ( WCSHandler::is_wcs_active()
+                && wcs_order_contains_subscription( $order_id )
+                && method_exists( $this, 'wcs_get_transaction_for_subscription_signup' )
+            ) {
                 /** @var \Payone\Transaction\Base $transaction */
                 $transaction = $this->wcs_get_transaction_for_subscription_signup( $order );
             } else {
@@ -105,14 +108,16 @@ abstract class RedirectGatewayBase extends GatewayBase {
 		global $woocommerce;
 
 		$authorization_method = $order->get_meta( '_authorization_method' );
-
-		if ( $authorization_method === 'preauthorization' ) {
-		    if ( WCSHandler::is_subscription( $order ) ) {
-                $order->add_order_note( __( 'Subscription was pre-authorized by PAYONE. Waiting for first scheduled subscription payment.', 'payone-woocommerce-3' ) );
-                $order->payment_complete();
-            } else {
-                $order->update_status('on-hold', __('Payment was pre-authorized by PAYONE, please initiate a capture to complete the payment.', 'payone-woocommerce-3'));
-            }
+		if ( $authorization_method === 'preauthorization'
+            && $this->get_authorization_method() === 'authorization'
+            && WCSHandler::is_wcs_active()
+            && wcs_order_contains_subscription( $order )
+            && (int)$order->get_total() === 0
+        ) {
+            $order->add_order_note( __( 'Recurring payment authorized by PAYONE.', 'payone-woocommerce-3' ) );
+            $order->payment_complete();
+        } elseif ( $authorization_method === 'preauthorization' ) {
+            $order->update_status( 'on-hold', __( 'Payment was pre-authorized by PAYONE, please initiate a capture to complete the payment.', 'payone-woocommerce-3' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
 		    // todo: maybe add an option for the merchant to select if the payment should be completed at this point or later in the processing of a PAID TX status
 			$order->add_order_note( __( 'Payment was authorized by PAYONE, the payment is complete.', 'payone-woocommerce-3' ) );

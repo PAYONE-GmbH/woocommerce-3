@@ -466,12 +466,13 @@ class CreditCard extends RedirectGatewayBase {
      * @return \Payone\Transaction\CreditCard
      */
 	public function wcs_get_transaction_for_subscription_signup( \WC_Order $order ) {
-        $transaction = new \Payone\Transaction\CreditCard( $this, 'preauthorization' );
-
         if ( (int)$order->get_total() === 0 ) {
+            $transaction = new \Payone\Transaction\CreditCard( $this, 'preauthorization' );
             // The user does not need to pay anything right now, but we need to set the amount to 1 cent.
             // This is not going to be captured. We just need the preauthorization;
             $transaction->set('amount', 1);
+        } else {
+            $transaction = new \Payone\Transaction\CreditCard( $this );
         }
 
         $transaction->set( 'reference', $order->get_id() );
