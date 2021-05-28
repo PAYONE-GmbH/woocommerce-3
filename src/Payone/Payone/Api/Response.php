@@ -10,7 +10,14 @@ class Response extends DataTransfer {
 		return $this->get( 'status' ) === 'APPROVED';
 	}
 
-	/**
+    /**
+     * @return bool
+     */
+    public function is_ok() {
+        return $this->get( 'status' ) === 'OK';
+    }
+
+    /**
 	 * @return bool
 	 */
 	public function has_error() {
