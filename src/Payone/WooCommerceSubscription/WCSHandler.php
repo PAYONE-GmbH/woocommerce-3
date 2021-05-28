@@ -57,15 +57,20 @@ trait WCSHandler {
             }
         }
 
-        // Leave the old order as failed, we do not care about it. But update subscription status back to active,
-        // and update next_payment to run again in 10 minutes.
-        $subscription->update_status( 'active' );
-        $subscription->set_payment_method( new Invoice() );
-        $subscription->save();
-        $subscription->add_order_note( __( 'Subscription payment method is changed to Invoice.', 'payone-woocommerce-3' ) );
+        $payment_gateway_invoice = new Invoice();
+        if ( $payment_gateway_invoice->get_option( 'enabled' ) === 'yes'
+             && $payment_gateway_invoice->supports( 'subscriptions' )
+        ) {
+            // Leave the old order as failed, we do not care about it. But update subscription status back to active,
+            // and update next_payment to run again in 10 minutes.
+            $subscription->update_status('active');
+            $subscription->set_payment_method($payment_gateway_invoice);
+            $subscription->save();
+            $subscription->add_order_note(__('Subscription payment method is changed to Invoice.', 'payone-woocommerce-3'));
 
-        $dateTime = ( new \DateTimeImmutable() )->add( new \DateInterval( 'PT10M' ) );
-        $subscription->update_dates( [ 'next_payment' => $dateTime->format( 'Y-m-d H:i:s' ) ] );
+            $dateTime = (new \DateTimeImmutable())->add(new \DateInterval('PT10M'));
+            $subscription->update_dates(['next_payment' => $dateTime->format('Y-m-d H:i:s')]);
+        }
     }
 
     /**
