@@ -193,10 +193,10 @@ class Plugin {
 	public function add_callback_url() {
 		if( is_multisite() ) {
 			if(! defined( 'SUBDOMAIN_INSTALL' ) ) {
-				add_rewrite_rule( '^(/[^/]+)' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
+				add_rewrite_rule( '^(/[^/]+)/' . self::CALLBACK_SLUG . '/(.*)?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
 			}
 		} else {
-			add_rewrite_rule( '^' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
+			add_rewrite_rule( '^/' . self::CALLBACK_SLUG . '/(.*)?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
 		}
 		add_filter( 'query_vars', [ $this, 'add_rewrite_var' ] );
 		add_action( 'template_redirect', [ $this, 'catch_payone_callback' ] );
