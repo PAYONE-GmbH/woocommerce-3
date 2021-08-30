@@ -46,7 +46,7 @@ class Plugin {
 			\Payone\Gateway\CreditCard::GATEWAY_ID      => \Payone\Gateway\CreditCard::class,
 			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
 			\Payone\Gateway\PrePayment::GATEWAY_ID      => \Payone\Gateway\PrePayment::class,
-            \Payone\Gateway\Eps::GATEWAY_ID             => \Payone\Gateway\Eps::class,
+			\Payone\Gateway\Eps::GATEWAY_ID             => \Payone\Gateway\Eps::class,
 			\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
 			\Payone\Gateway\Sofort::GATEWAY_ID          => \Payone\Gateway\Sofort::class,
 			\Payone\Gateway\Giropay::GATEWAY_ID         => \Payone\Gateway\Giropay::class,
@@ -68,8 +68,8 @@ class Plugin {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enque_javascript' ] );
 		add_action( 'woocommerce_thankyou', [$this, 'add_content_to_thankyou_page'] );
 
-        add_action( 'woocommerce_order_status_processing', [ $this, 'pre_disable_capture_mail_filter' ], 10, 2 );
-        add_filter( 'woocommerce_email_enabled_customer_processing_order' , [ $this, 'disable_capture_mail_filter' ]);
+		add_action( 'woocommerce_order_status_processing', [ $this, 'pre_disable_capture_mail_filter' ], 10, 2 );
+		add_filter( 'woocommerce_email_enabled_customer_processing_order' , [ $this, 'disable_capture_mail_filter' ]);
 
 		add_action( 'wp_head', [ $this, 'add_stylesheet' ] );
 	}
@@ -86,7 +86,7 @@ class Plugin {
     public function pre_disable_capture_mail_filter( $order_id, $order ) {
 	    if ( ! $order ) {
 	        $order = wc_get_order( $order_id );
-        }
+	    }
 
         $authorization_method = $order->get_meta( '_authorization_method' );
         if ( $authorization_method === 'preauthorization' ) {
@@ -174,9 +174,9 @@ class Plugin {
 	 * @return bool
 	 */
 	public static function ip_address_is_in_range( $ip_address, $range ) {
-	    if ( strpos( $ip_address, '::ffff:' ) === 0 ) {
-	        $ip_address = substr( $ip_address, 7 );
-        }
+		if ( strpos( $ip_address, '::ffff:' ) === 0 ) {
+			$ip_address = substr( $ip_address, 7 );
+		}
 
 		if ( strpos( $range, '/' ) === false ) {
 			$range .= '/32';
@@ -191,7 +191,13 @@ class Plugin {
 	}
 
 	public function add_callback_url() {
-		add_rewrite_rule( '^' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
+		if( is_multisite() ) {
+			if(! defined( 'SUBDOMAIN_INSTALL' ) ) {
+				add_rewrite_rule( '^(/[^/]+)' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
+			}
+		} else {
+			add_rewrite_rule( '^' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
+		}
 		add_filter( 'query_vars', [ $this, 'add_rewrite_var' ] );
 		add_action( 'template_redirect', [ $this, 'catch_payone_callback' ] );
 	}
