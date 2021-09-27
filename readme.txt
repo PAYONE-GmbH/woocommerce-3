@@ -1,5 +1,5 @@
-=== BS PAYONE WooCommerce ===
-Contributors: bspayone
+=== PAYONE WooCommerce ===
+Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
@@ -28,9 +28,9 @@ Currently supported payment methods include:
 * Invoice
 * Prepayment
 
-BS PAYONE GmbH is headquartered in Frankfurt am Main and is one of the leading omnichannel-payment providers in Europe. In addition to providing customer support to numerous Savings Banks (Sparkasse) the full-service payment service provider also provides cashless payment transaction services to more than 255,000 customers from stationary trade to the automated and holistic processing of e-commerce and mobile payments.
+PAYONE GmbH is headquartered in Frankfurt am Main and is one of the leading omnichannel-payment providers in Europe. In addition to providing customer support to numerous Savings Banks (Sparkasse) the full-service payment service provider also provides cashless payment transaction services to more than 255,000 customers from stationary trade to the automated and holistic processing of e-commerce and mobile payments.
 
-*To use this extension, a separate account with BS PAYONE is required. Additional costs incur. To create the account, please contact us through https://www.payone.com/en/contact/request-a-quote/.*
+*To use this extension, a separate account with PAYONE is required. Additional costs incur. To create the account, please contact us through https://www.payone.com/en/contact/request-a-quote/.*
 
 You are very welcome to contribute to this plugin on Github: https://github.com/PAYONE-GmbH/woocommerce-3
 
@@ -38,9 +38,9 @@ You are very welcome to contribute to this plugin on Github: https://github.com/
 
 1. Upload the plugin files to the `/wp-content/plugins/bs-payone-woocommerce` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress
-1. Configure using the "BS PAYONE" Link in the left navigation tab
+1. Configure using the "PAYONE" Link in the left navigation tab
 
-To successfully configure this plugin, you will need API credentials from BS PAYONE. Contact us through https://www.payone.com/en/contact/request-a-quote/ to get you set up.
+To successfully configure this plugin, you will need API credentials from PAYONE. Contact us through https://www.payone.com/en/contact/request-a-quote/ to get you set up.
 
 All configuration steps are explained in our documentation that can be found at https://github.com/PAYONE-GmbH/docs.
 
@@ -56,7 +56,7 @@ Please report all bugs on our Github repository at https://github.com/PAYONE-Gmb
 
 = I have found a really, really bad bug that shouldn't be publicly disclosed! =
 
-If you have found anything security related, please contact our technical support team, or integrations@bspayone.com. Please bear in mind that support requests cannot be handled through that email address. We appreciate your cooperation.
+If you have found anything security related, please contact our technical support team, or integrations@payone.com. Please bear in mind that support requests cannot be handled through that email address. We appreciate your cooperation.
 
 == Screenshots ==
 
