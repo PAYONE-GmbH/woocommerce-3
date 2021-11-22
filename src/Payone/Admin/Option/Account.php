@@ -78,7 +78,22 @@ class Account extends Helper {
 			[ $this, 'field_transaction_log' ],
 			'payone-settings-account',
 			'payone_account_settings' );
-	}
+        add_settings_field( 'payone_subscription_auto_failover',
+            __( 'Enable automatic failover for WooCommerce Subscriptions?', 'payone-woocommerce-3' ),
+            [ $this, 'payone_subscription_auto_failover' ],
+            'payone-settings-account',
+            'payone_account_settings' );
+        add_settings_field( 'paypal_billing_agreements_enabled',
+            __( 'Are PayPal Billing Agreements enabled?', 'payone-woocommerce-3' ),
+            [ $this, 'paypal_billing_agreements_enabled' ],
+            'payone-settings-account',
+            'payone_account_settings' );
+        add_settings_field( 'payone_invoice_module_enabled',
+            __( 'Is PayOne Invoice module enabled?', 'payone-woocommerce-3' ),
+            [ $this, 'payone_invoice_module_enabled' ],
+            'payone-settings-account',
+            'payone_account_settings' );
+    }
 
 	/**
 	 * Sanitize each setting field as needed
@@ -179,7 +194,28 @@ class Account extends Helper {
 			] );
 	}
 
-	public function render() {
+    public function payone_subscription_auto_failover() {
+        $this->selectField( self::OPTION_NAME, 'payone_subscription_auto_failover', [
+            '0' => __( 'No', 'payone-woocommerce-3' ),
+            '1' => __( 'Yes', 'payone-woocommerce-3' ),
+        ] );
+    }
+
+    public function payone_invoice_module_enabled() {
+        $this->selectField( self::OPTION_NAME, 'payone_invoice_module_enabled', [
+            '0' => __( 'No', 'payone-woocommerce-3' ),
+            '1' => __( 'Yes', 'payone-woocommerce-3' ),
+        ] );
+    }
+
+    public function paypal_billing_agreements_enabled() {
+        $this->selectField( self::OPTION_NAME, 'paypal_billing_agreements_enabled', [
+            '0' => __( 'No', 'payone-woocommerce-3' ),
+            '1' => __( 'Yes', 'payone-woocommerce-3' ),
+        ] );
+    }
+
+    public function render() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
