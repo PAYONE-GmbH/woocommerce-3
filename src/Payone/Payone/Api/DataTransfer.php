@@ -31,7 +31,7 @@ class DataTransfer {
 	public function __construct( $parameter_bag = null ) {
 		$this->clear();
 
-		if ( $parameter_bag !== null && is_array( $parameter_bag ) ) {
+		if ( is_array( $parameter_bag ) ) {
 			$this->parameter_bag = $parameter_bag;
 		}
 	}
@@ -85,8 +85,8 @@ class DataTransfer {
      * @return $this
      */
     public function set_once( $key, $value ) {
-        if ( ! isset( $this->parameter_bag[$key] ) ) {
-            $this->parameter_bag[$key] = $value;
+        if ( ! isset( $this->parameter_bag[ $key ] ) ) {
+            $this->parameter_bag[ $key ] = $value;
         }
 
         return $this;
@@ -127,7 +127,7 @@ class DataTransfer {
 	 * @return mixed|null
 	 */
 	public function get( $key, $default = null ) {
-		if ( array_key_exists( $key, $this->parameter_bag ) ) {
+		if ( is_array( $this->parameter_bag ) && array_key_exists( $key, $this->parameter_bag ) ) {
 			return $this->parameter_bag[ $key ];
 		}
 
@@ -140,7 +140,7 @@ class DataTransfer {
 	 * @return bool
 	 */
 	public function has( $key ) {
-		return array_key_exists( $key, $this->parameter_bag );
+		return is_array( $this->parameter_bag ) && array_key_exists( $key, $this->parameter_bag );
 	}
 
 	/**
@@ -174,7 +174,7 @@ class DataTransfer {
     }
 
     public function get_all() {
-		return $this->parameter_bag;
+		return is_array( $this->parameter_bag ) ? $this->parameter_bag : [];
 	}
 
 	/**
@@ -199,12 +199,18 @@ class DataTransfer {
 
 	public function unserialize_parameters( $serialized ) {
 		$this->parameter_bag = json_decode( $serialized, true );
+
+        if ( ! is_array( $this->parameter_bag ) ) {
+            $this->parameter_bag = [];
+        }
 	}
 
 	public function anonymize_parameters() {
-		foreach ( $this->parameter_bag as $key => $value ) {
-			$this->parameter_bag[ $key ] = $this->anonymize( $key, $value );
-		}
+        if ( is_array( $this->parameter_bag ) ) {
+            foreach ($this->parameter_bag as $key => $value) {
+                $this->parameter_bag[$key] = $this->anonymize($key, $value);
+            }
+        }
 	}
 
 	/**

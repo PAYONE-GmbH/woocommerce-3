@@ -314,10 +314,10 @@ class Plugin {
 	}
 
 	public function order_status_changed( $id, $from_status, $to_status ) {
-		$order   = new \WC_Order( $id );
+		$order = new \WC_Order( $id );
 		$gateway = $this->get_gateway_for_order( $order );
 
-		if ( method_exists( $gateway, 'order_status_changed' ) ) {
+		if ( $gateway && method_exists( $gateway, 'order_status_changed' ) ) {
 			$gateway->order_status_changed( $order, $from_status, $to_status );
 		}
 	}
