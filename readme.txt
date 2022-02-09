@@ -9,7 +9,7 @@ Requires PHP: 5.6.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
-This plugin connects your WooCommerce shop to the PAYONE payment API. You can receive payments through Credit Card, SEPA Direct Debit, and many more.
+This plugin connects your WooCommerce shop to the PAYONE payment API. You can receive payments through Credit Card, Direct Debit and many more.
 
 == Description ==
 
@@ -19,10 +19,10 @@ This plugin is thoroughly tested but still in an early stage, so any feedback is
 Seamless integration into the checkout. Supports simplified PCI DSS conformity in accordance with SAQ A.
 Currently supported payment methods include:
 * Credit Card
-* SEPA Direct Debit
+* Direct Debit
 * PayPal
-* Paydirekt
-* Safe Invoice
+* paydirekt
+* Secure Invoice
 * Sofort
 * Giropay
 * Invoice
