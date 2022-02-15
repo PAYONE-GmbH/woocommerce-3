@@ -11,19 +11,17 @@ class SafeInvoice extends GatewayBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon               = '';
-		$this->method_title       = 'Payone ' . __( 'Safe Invoice', 'payone-woocommerce-3' );
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';
+		$this->method_title       = 'PAYONE ' . __( 'Secure Invoice', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Safe Invoice', 'payone-woocommerce-3' ) );
+		$this->init_common_form_fields( __( 'Secure Invoice', 'payone-woocommerce-3' ) );
         $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE' ];
 	}
 
 	public function payment_fields() {
-		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-
 		include PAYONE_VIEW_PATH . '/gateway/safe-invoice/payment-form.php';
 	}
 

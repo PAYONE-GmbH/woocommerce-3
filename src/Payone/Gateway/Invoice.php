@@ -19,8 +19,8 @@ class Invoice extends GatewayBase {
             $this->add_wcs_support();
         }
 
-		$this->icon               = '';
-		$this->method_title       = 'Payone ' . __( 'Invoice', 'payone-woocommerce-3' );
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';;
+		$this->method_title       = 'PAYONE ' . __( 'Invoice', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 
@@ -29,8 +29,6 @@ class Invoice extends GatewayBase {
 	}
 
 	public function payment_fields() {
-		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-
 		include PAYONE_VIEW_PATH . '/gateway/invoice/payment-form.php';
 	}
 

@@ -89,7 +89,7 @@ class Account extends Helper {
             'payone-settings-account',
             'payone_account_settings' );
         add_settings_field( 'payone_invoice_module_enabled',
-            __( 'Is PayOne Invoice module enabled?', 'payone-woocommerce-3' ),
+            __( 'Is PAYONE Invoice module enabled?', 'payone-woocommerce-3' ),
             [ $this, 'payone_invoice_module_enabled' ],
             'payone-settings-account',
             'payone_account_settings' );
