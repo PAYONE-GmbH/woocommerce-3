@@ -16,7 +16,7 @@ class Sofort extends RedirectGatewayBase {
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Sofort', 'payone-woocommerce-3' ) );
+		$this->init_common_form_fields( 'PAYONE ' . __( 'Sofort', 'payone-woocommerce-3' ) );
 	}
 
 	public function payment_fields() {

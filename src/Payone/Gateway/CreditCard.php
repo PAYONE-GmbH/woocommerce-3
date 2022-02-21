@@ -26,7 +26,7 @@ class CreditCard extends RedirectGatewayBase {
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Credit Card', 'payone-woocommerce-3' ) );
+		$this->init_common_form_fields( 'PAYONE ' . __( 'Credit Card', 'payone-woocommerce-3' ) );
 		$yesno_options = [
 			'0' => __( 'No', 'payone-woocommerce-3' ),
 			'1' => __( 'Yes', 'payone-woocommerce-3' ),

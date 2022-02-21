@@ -16,7 +16,7 @@ class PrePayment extends GatewayBase {
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Prepayment', 'payone-woocommerce-3' ) );
+		$this->init_common_form_fields( 'PAYONE ' . __( 'Prepayment', 'payone-woocommerce-3' ) );
 	}
 
 	public function payment_fields() {

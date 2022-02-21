@@ -16,7 +16,7 @@ class Eps extends RedirectGatewayBase {
     }
 
     public function init_form_fields() {
-        $this->init_common_form_fields( __( 'eps', 'payone-woocommerce-3' ) );
+        $this->init_common_form_fields( 'PAYONE ' . __( 'eps', 'payone-woocommerce-3' ) );
         $this->form_fields[ 'countries' ][ 'default' ] = [ 'AT' ];
     }
 
