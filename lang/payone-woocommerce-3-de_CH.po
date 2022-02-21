@@ -723,7 +723,7 @@ msgstr "Giropay"
 
 #: src/Payone/Gateway/Invoice.php:14 src/Payone/Gateway/Invoice.php:19
 msgid "Invoice"
-msgstr "Rechnung"
+msgstr "Rechnungskauf"
 
 #: src/Payone/Gateway/Invoice.php:36
 #: src/Payone/Gateway/RedirectGatewayBase.php:38
