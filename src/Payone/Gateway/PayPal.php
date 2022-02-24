@@ -19,13 +19,13 @@ class PayPal extends RedirectGatewayBase {
             $this->add_wcs_support();
         }
 
-		$this->icon               = '';
-		$this->method_title       = 'Payone ' . __( 'PayPal', 'payone-woocommerce-3' );
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-paypal.png';;
+		$this->method_title       = 'PAYONE ' . __( 'PayPal', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
-	    $this->init_common_form_fields( __( 'PayPal', 'payone-woocommerce-3' ) );
+	    $this->init_common_form_fields( 'PAYONE ' . __( 'PayPal', 'payone-woocommerce-3' ) );
 	}
 
 	public function payment_fields() {

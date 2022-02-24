@@ -3,7 +3,7 @@
 # This file is distributed under the GNU General Public License v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: BS PAYONE v1.0.0\n"
+"Project-Id-Version: PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
 "POT-Creation-Date: 2020-12-29 14:04+0100\n"
 "PO-Revision-Date: \n"
@@ -20,8 +20,11 @@ msgstr ""
 "esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
 "_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SearchPath-0: .\n"
+
+msgid "eps"
+msgstr "eps Überweisung"
 
 #: src/Payone/Admin/ApiLogListTable.php:9
 msgid "Request"
@@ -353,8 +356,8 @@ msgid "Payone Settings"
 msgstr "Payone Einstellungen"
 
 #: src/Payone/Admin/Settings.php:30
-msgid "BS PAYONE"
-msgstr "BS PAYONE"
+msgid "PAYONE"
+msgstr "PAYONE"
 
 #: src/Payone/Admin/TransactionLogListTable.php:9
 msgid "Transaction ID"
@@ -375,7 +378,7 @@ msgid "Sequencenumber"
 msgstr "Sequenznummer"
 
 #: src/Payone/Gateway/CreditCard.php:14 src/Payone/Gateway/CreditCard.php:19
-msgid "Creditcard"
+msgid "Credit Card"
 msgstr "Kreditkarte"
 
 #: src/Payone/Gateway/CreditCard.php:25
@@ -720,7 +723,7 @@ msgstr "Giropay"
 
 #: src/Payone/Gateway/Invoice.php:14 src/Payone/Gateway/Invoice.php:19
 msgid "Invoice"
-msgstr "Rechnung"
+msgstr "Rechnungskauf"
 
 #: src/Payone/Gateway/Invoice.php:36
 #: src/Payone/Gateway/RedirectGatewayBase.php:38
@@ -736,8 +739,8 @@ msgid "Invoice has been sent"
 msgstr "Rechnung wurde verschickt"
 
 #: src/Payone/Gateway/PayDirekt.php:14 src/Payone/Gateway/PayDirekt.php:19
-msgid "PayDirekt"
-msgstr ""
+msgid "paydirekt"
+msgstr "paydirekt"
 
 #: src/Payone/Gateway/PayPal.php:14 src/Payone/Gateway/PayPal.php:19
 msgid "PayPal"
@@ -774,13 +777,13 @@ msgstr ""
 "Die Zahlung wurde von PAYONE autorisiert, die Zahlung ist abgeschlossen."
 
 #: src/Payone/Gateway/SafeInvoice.php:15 src/Payone/Gateway/SafeInvoice.php:20
-msgid "Safe Invoice"
-msgstr "Sichere Rechnung"
+msgid "Secure Invoice"
+msgstr "Gesicherter Rechnungskauf"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:15
 #: src/Payone/Gateway/SepaDirectDebit.php:20
-msgid "SEPA Direct Debit"
-msgstr "SEPA Abbuchung"
+msgid "Direct Debit"
+msgstr "Lastschrift"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:22
 msgid "Check bank data"
@@ -812,8 +815,8 @@ msgid "Please check this option"
 msgstr "Sie müssen diese Checkbox ankreuzen, um fortfahren zu können"
 
 #: src/Payone/Gateway/Sofort.php:14 src/Payone/Gateway/Sofort.php:19
-msgid "SOFORT.com"
-msgstr "Sofort-Überweisung"
+msgid "Sofort"
+msgstr "Sofort Überweisung"
 
 #: src/Payone/Transaction/Base.php:268
 msgid "Discount"

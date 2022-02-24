@@ -10,13 +10,13 @@ class Giropay extends RedirectGatewayBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon               = '';
-		$this->method_title       = 'Payone ' . __( 'Giropay', 'payone-woocommerce-3' );
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-giropay.png';;
+		$this->method_title       = 'PAYONE ' . __( 'Giropay', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Giropay', 'payone-woocommerce-3' ) );
+		$this->init_common_form_fields( 'PAYONE ' . __( 'Giropay', 'payone-woocommerce-3' ) );
         $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE' ];
 	}
 

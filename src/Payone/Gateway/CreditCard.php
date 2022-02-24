@@ -20,13 +20,13 @@ class CreditCard extends RedirectGatewayBase {
             $this->add_wcs_support();
         }
 
-		$this->icon               = '';
-		$this->method_title       = 'Payone ' . __( 'Creditcard', 'payone-woocommerce-3' );;
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-creditcard.png';
+		$this->method_title       = 'PAYONE ' . __( 'Credit Card', 'payone-woocommerce-3' );;
 		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Creditcard', 'payone-woocommerce-3' ) );
+		$this->init_common_form_fields( 'PAYONE ' . __( 'Credit Card', 'payone-woocommerce-3' ) );
 		$yesno_options = [
 			'0' => __( 'No', 'payone-woocommerce-3' ),
 			'1' => __( 'Yes', 'payone-woocommerce-3' ),
@@ -445,8 +445,15 @@ class CreditCard extends RedirectGatewayBase {
 	}
 
 	public function payment_fields() {
-		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-		$hash    = $this->calculate_hash( $options );
+        $global_settings = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+		$options = [
+            'mode' => $global_settings['mode'],
+            'merchant_id' => $this->get_merchant_id(),
+            'account_id' => $this->get_account_id(),
+            'portal_id' => $this->get_portal_id(),
+            'key' => $this->get_key(),
+        ];
+		$hash = $this->calculate_hash( $options );
 
 		include PAYONE_VIEW_PATH . '/gateway/creditcard/payment-form.php';
 	}

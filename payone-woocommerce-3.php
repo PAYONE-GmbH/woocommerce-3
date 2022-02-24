@@ -14,6 +14,7 @@
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
 define( 'PAYONE_PLUGIN_VERSION', '1.7.1' );
+define( 'PAYONE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PAYONE_PLUGIN_PATH', __DIR__ );
 define( 'PAYONE_VIEW_PATH', PAYONE_PLUGIN_PATH . '/views' );
 

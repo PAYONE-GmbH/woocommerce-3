@@ -4,7 +4,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: BS "
+"Project-Id-Version: "
 "PAYONE v1.0.0\n"
 "POT-Creation-Date: "
 "2018-02-27 13:27+0100\n"
@@ -49,6 +49,9 @@ msgstr ""
 "2.0.6\n"
 "X-Poedit-"
 "SearchPath-0: .\n"
+
+msgid "eps"
+msgstr "eps Überweisung"
 
 #: src/Payone/Admin/Option/Account.php:18
 msgid "Global Settings"
@@ -379,11 +382,11 @@ msgid "Abort checkout"
 msgstr ""
 
 #: src/Payone/Admin/Settings.php:29
-msgid "BS PAYONE Settings"
+msgid "PAYONE Settings"
 msgstr ""
 
 #: src/Payone/Admin/Settings.php:30
-msgid "BS PAYONE"
+msgid "PAYONE"
 msgstr ""
 
 #: src/Payone/Admin/Settings.php:35
@@ -399,8 +402,8 @@ msgid "Credit Check"
 msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:20
-msgid "Creditcard"
-msgstr ""
+msgid "Credit Card"
+msgstr "Kreditkarte"
 
 #: src/Payone/Gateway/CreditCard.php:38
 #: src/Payone/Gateway/Invoice.php:48
@@ -545,7 +548,7 @@ msgid ""
 msgstr ""
 
 #: src/Payone/Gateway/SepaDirectDebit.php:19
-msgid "SEPA Direct Debit"
+msgid "Direct Debit"
 msgstr ""
 
 #: src/Payone/Gateway/SepaDirectDebit.php:21

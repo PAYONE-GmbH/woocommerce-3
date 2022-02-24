@@ -98,7 +98,7 @@ class Plugin {
     public function handle_woocommerce_order_details_after_order_table( $order ) {
         $gateway = self::get_gateway_for_order( $order );
 
-        // Show only if PayOne Gateway was used and there is non empty _invoiceid.
+        // Show only if PAYONE Gateway was used and there is non empty _invoiceid.
         if ( $gateway instanceof GatewayBase && $order->get_meta( '_invoiceid' ) !== '' ) {
             include PAYONE_VIEW_PATH . '/order/order-download-invoice.php';
         }
@@ -114,7 +114,7 @@ class Plugin {
 
         $gateway = self::get_gateway_for_order( $order );
 
-        // Show only if PayOne Gateway was used and there is non empty _invoiceid.
+        // Show only if PAYONE Gateway was used and there is non empty _invoiceid.
         if ( $gateway instanceof GatewayBase && $order->get_meta( '_invoiceid' ) !== '' ) {
             include PAYONE_VIEW_PATH . '/admin/meta-boxes/order-download-invoice.php';
         }
@@ -434,7 +434,7 @@ class Plugin {
         if ( ! $splFileInfo instanceof \SplFileInfo ) {
             return [
                 'status'  => 'error',
-                'message' => __( 'Could not get invoice from PayOne gateway.', 'payone-woocommerce-3' ),
+                'message' => __( 'Could not get invoice from PAYONE gateway.', 'payone-woocommerce-3' ),
             ];
         }
 

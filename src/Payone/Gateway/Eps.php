@@ -10,19 +10,17 @@ class Eps extends RedirectGatewayBase {
     public function __construct() {
         parent::__construct(self::GATEWAY_ID);
 
-        $this->icon               = '';
-        $this->method_title       = 'Payone ' . __( 'EPS', 'payone-woocommerce-3' );
+        $this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-eps.png';
+        $this->method_title       = 'PAYONE ' . __( 'eps', 'payone-woocommerce-3' );
         $this->method_description = '';
     }
 
     public function init_form_fields() {
-        $this->init_common_form_fields( __( 'EPS', 'payone-woocommerce-3' ) );
+        $this->init_common_form_fields( 'PAYONE ' . __( 'eps', 'payone-woocommerce-3' ) );
         $this->form_fields[ 'countries' ][ 'default' ] = [ 'AT' ];
     }
 
     public function payment_fields() {
-        $options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-
         $bankgroups = [
             'ARZ_OAB' => 'Apothekerbank',
             'ARZ_BAF' => 'Ärztebank',
