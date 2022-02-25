@@ -201,8 +201,16 @@ class Base extends Request {
 		$order->save_meta_data();
 	}
 
-	public function add_article_list_to_transaction( \WC_Order $order ) {
-		$article_list = $this->get_article_list_for_transaction( $order );
+    /**
+     * @param \WC_Order|\WC_Cart $orderOrCart
+     */
+	public function add_article_list_to_transaction( $orderOrCart ) {
+        if ( $orderOrCart instanceof \WC_Order) {
+            $article_list = $this->get_article_list_for_transaction_from_order( $orderOrCart );
+        } else {
+            $article_list = $this->get_article_list_for_transaction_from_cart( $orderOrCart );
+        }
+
 		foreach ( $article_list as $n => $article) {
 			$this->set( 'id[' . $n . ']', $article[ 'id' ] );
 			$this->set( 'pr[' . $n . ']', $article[ 'pr' ] );
@@ -213,8 +221,7 @@ class Base extends Request {
 		}
 	}
 
-	protected function get_article_list_for_transaction( \WC_Order $order ) {
-
+	protected function get_article_list_for_transaction_from_order( \WC_Order $order ) {
 	    $articles = [];
 	    $discounts = [];
         $n = 1;
@@ -276,4 +283,90 @@ class Base extends Request {
 
 		return $articles;
 	}
+
+    protected function get_article_list_for_transaction_from_cart( \WC_Cart $cart ) {
+        $articles = [];
+        $discounts = [];
+        $n = 1;
+
+        foreach ( $cart->get_cart_contents() as $item_data ) {
+            $product = $item_data[ 'data' ];
+            $data = [
+                'subtotal' => $item_data[ 'line_subtotal' ],
+                'subtotal_tax' => $item_data[ 'line_subtotal_tax' ],
+                'total' => $item_data[ 'line_total' ],
+                'total_tax' => $item_data[ 'line_tax' ],
+            ];
+            $va = (int)round(100 * Plugin::get_tax_rate_for_item_data( $data ) );
+            $price_all = $data[ 'subtotal' ] + $data[ 'subtotal_tax' ];
+            $discount = $price_all - ($data[ 'total' ] + $data[ 'total_tax']);
+            $discount = (int)round( 100 * $discount );
+            $price_one = $price_all / $item_data[ 'quantity' ];
+            $price = (int)round( 100 * $price_one );
+            $sku = $product->get_sku() ?: $product->get_id();
+            $articles[ $n ] = [
+                'id' => $sku,
+                'pr' => $price,
+                'no' => $item_data[ 'quantity' ],
+                'de' => $product->get_name(),
+                'va' => $va,
+                'it' => 'goods',
+            ];
+            $n++;
+
+            if (!isset($discounts[$va])) {
+                $discounts[$va] = 0;
+            }
+            $discounts[$va] += $discount;
+        }
+
+        foreach ( $cart->calculate_shipping() as $item_data ) {
+            /** @var \WC_Shipping_Rate $item_data */
+            $taxes = $item_data->get_taxes();
+            if ( $taxes ) {
+                $tax = array_shift( $taxes );
+            }
+
+            $data = [
+                'subtotal' => $item_data->get_cost(),
+                'subtotal_tax' => $tax,
+                'total' => $item_data->get_cost(),
+                'total_tax' => $tax,
+            ];
+            $va = Plugin::get_tax_rate_for_item_data( $data );
+            $price = (int)round( 100 * ( $data[ 'total' ] + $data[ 'total_tax' ] ) );
+            $articles[ $n ] = [
+                'id' => $item_data->get_instance_id(),
+                'pr' => $price,
+                'no' => 1,
+                'de' => $item_data->get_label(),
+                'va' => 100 * $va,
+                'it' => 'shipment',
+            ];
+            $n++;
+        }
+
+        // Just use the sum of all discounts as one position
+        if ( $cart->has_discount() ) {
+            $discount = round( $cart->get_discount_total() + $cart->get_discount_tax(), 2 );
+            $data = [
+                'subtotal' => $cart->get_discount_total(),
+                'subtotal_tax' => $cart->get_discount_tax(),
+                'total' => $cart->get_discount_total(),
+                'total_tax' => $cart->get_discount_tax(),
+            ];
+            $va = Plugin::get_tax_rate_for_item_data( $data );
+            $articles[ $n ] = [
+                'id' => 'd-' . $n,
+                'pr' => - 100 * $discount,
+                'no' => 1,
+                'de' => __( 'Discount', 'payone-woocommerce-3' ),
+                'va' => 100 * $va,
+                'it' => 'voucher',
+            ];
+        }
+        $n++;
+
+        return $articles;
+    }
 }

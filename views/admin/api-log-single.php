@@ -1,6 +1,11 @@
 <div class="wrap">
-    <h1>API-Logeintrag <?php echo $id; ?></h1>
-    <h2>REQUEST</h2>
+    <h1>
+        API-Logeintrag <?php echo $id; ?>
+    </h1>
+    <h2>
+        REQUEST
+        <small>(<?php echo $entry->get_created_at()->format('d.m.Y H:i')?> Uhr)</small>
+    </h2>
     <table class="widefat fixed" cellspacing="0">
         <thead>
             <tr>

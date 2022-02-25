@@ -1,6 +1,9 @@
 <div class="wrap">
     <h1>Transaction Status Logeintrag <?php echo $id; ?></h1>
-    <h2>DATA (Transaktion <?php echo $entry->get_transaction_id(); ?>)</h2>
+    <h2>
+        DATA (Transaktion <?php echo $entry->get_transaction_id(); ?>)
+        <small>(<?php echo $entry->get_created_at()->format('d.m.Y H:i')?> Uhr)</small>
+    </h2>
     <table class="widefat fixed" cellspacing="0">
         <thead>
             <tr>

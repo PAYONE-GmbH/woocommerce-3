@@ -5,6 +5,7 @@ namespace Payone\Gateway;
 use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Capture;
+use Payone\Transaction\Debit;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
@@ -175,11 +176,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	        return new \WP_Error( 1, __( 'Debit amount must be greater than zero.', 'payone-woocommerce-3' ) );
         }
 		$order = new \WC_Order( $order_id );
+        $order->add_order_note( __( 'Refund is issued through PAYONE', 'payone-woocommerce-3' ) );
 
-		$transaction = new \Payone\Transaction\Debit( $this );
+		$debit = new Debit( $this );
+        $this->add_data_to_debit( $debit, $order );
 
-		return $transaction->execute( $order, - $amount );
+		return $debit->execute( $order, - $amount );
 	}
+
+    protected function add_data_to_debit( Debit $capture, \WC_Order $order ) { }
 
 	/**
 	 * @todo Es ist nicht klar, warum das nicht ohne eigenen Code funktioniert. Die Doku zu $this->countries sieht
