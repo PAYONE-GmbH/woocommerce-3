@@ -36,16 +36,27 @@
             addressaddition: jQuery('#billing_address_2').val(),
             email: jQuery('#billing_email').val(),
             telephonenumber: jQuery('#billing_phone').val(),
-            shipping_firstname: jQuery('#shipping_first_name').val(),
-            shipping_lastname: jQuery('#shipping_last_name').val(),
-            shipping_company: jQuery('#shipping_company').val(),
-            shipping_street: jQuery('#shipping_address_1').val(),
-            shipping_addressaddition: jQuery('#shipping_address_2').val(),
-            shipping_zip: jQuery('#shipping_postcode').val(),
-            shipping_city: jQuery('#shipping_city').val(),
-            shipping_country: jQuery('#shipping_country').val(),
             'shipping_telephonenumber': jQuery('#billing_phone').val(),
             'shipping_email': jQuery('#billing_email').val(),
+        }
+        if (jQuery('#ship-to-different-address-checkbox').prop('checked') === true) {
+            data.shipping_firstname = jQuery('#shipping_first_name').val();
+            data.shipping_lastname = jQuery('#shipping_last_name').val();
+            data.shipping_company = jQuery('#shipping_company').val();
+            data.shipping_street = jQuery('#shipping_address_1').val();
+            data.shipping_addressaddition = jQuery('#shipping_address_2').val();
+            data.shipping_zip = jQuery('#shipping_postcode').val();
+            data.shipping_city = jQuery('#shipping_city').val();
+            data.shipping_country = jQuery('#shipping_country').val();
+        } else {
+            data.shipping_firstname = data.firstname;
+            data.shipping_lastname = data.lastname;
+            data.shipping_company = data.company;
+            data.shipping_street = data.street;
+            data.shipping_addressaddition = data.addressaddition;
+            data.shipping_zip = data.zip;
+            data.shipping_city = data.city;
+            data.shipping_country = data.country;
         }
 
         if (klarna_vars[payment_category].widget_shown === false) {
