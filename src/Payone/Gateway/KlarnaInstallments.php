@@ -12,12 +12,12 @@ class KlarnaInstallments extends KlarnaBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->method_title       = 'PAYONE ' . __( 'Klarna Payments', 'payone-woocommerce-3' );;
+		$this->method_title       = 'PAYONE ' . __( 'Klarna Ratenkauf', 'payone-woocommerce-3' );;
 		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( __( 'Klarna Payments', 'payone-woocommerce-3' ) );
+		$this->init_common_form_fields( __( 'Klarna Ratenkauf', 'payone-woocommerce-3' ) );
         $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE' ];
 	}
 
