@@ -16,7 +16,7 @@
             result_start_session: null,
             finished: false,
         },
-        pay_now: {
+        direct_debit: {
             widget_shown: false,
             result_start_session: null,
             finished: false,

@@ -31,7 +31,7 @@
                     break;
                 case '<?php echo \Payone\Gateway\KlarnaSofort::GATEWAY_ID; ?>':
                     payone_block();
-                    result = payone_checkout_clicked_klarna_generic( 'pay_now' );
+                    result = payone_checkout_clicked_klarna_generic( 'direct_debit' );
                     break;
                 default:
                     payone_unblock();

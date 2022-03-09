@@ -543,7 +543,7 @@ class Plugin {
             $gateway_id = KlarnaInvoice::GATEWAY_ID;
         } elseif ( $payment_category === 'pay_over_time' ) {
             $gateway_id = KlarnaInstallments::GATEWAY_ID;
-        } elseif ( $payment_category === 'pay_now' ) {
+        } elseif ( $payment_category === 'direct_debit' ) {
             $gateway_id = KlarnaSofort::GATEWAY_ID;
         }
 
