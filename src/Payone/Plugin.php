@@ -55,6 +55,7 @@ class Plugin {
 			\Payone\Gateway\SafeInvoice::GATEWAY_ID     => \Payone\Gateway\SafeInvoice::class,
 			\Payone\Gateway\PayPal::GATEWAY_ID          => \Payone\Gateway\PayPal::class,
 			\Payone\Gateway\PayDirekt::GATEWAY_ID       => \Payone\Gateway\PayDirekt::class,
+            \Payone\Gateway\Alipay::GATEWAY_ID          => \Payone\Gateway\Alipay::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
