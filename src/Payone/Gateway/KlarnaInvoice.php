@@ -37,4 +37,8 @@ class KlarnaInvoice extends KlarnaBase {
     public function process_payment( $order_id ) {
         return $this->process_redirect( $order_id, \Payone\Transaction\KlarnaAuthorizeInvoice::class );
     }
+
+    public function get_financingtype() {
+        return 'KIV';
+    }
 }

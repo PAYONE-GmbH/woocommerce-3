@@ -16,7 +16,8 @@ abstract class KlarnaBase extends RedirectGatewayBase {
     }
 
     public function process_start_session( $data ) {
-        $transaction = new \Payone\Transaction\KlarnaStartSession( $this, $data );
+        $transaction = new \Payone\Transaction\KlarnaStartSession( $this );
+
         $transaction
             ->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'success' ] ) )
             ->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'error' ] ) )

@@ -5,7 +5,9 @@ namespace Payone;
 use Payone\Database\Migration;
 use Payone\Gateway\GatewayBase;
 use Payone\Gateway\Invoice;
+use Payone\Gateway\KlarnaInstallments;
 use Payone\Gateway\KlarnaInvoice;
+use Payone\Gateway\KlarnaSofort;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
@@ -533,9 +535,26 @@ class Plugin {
      * @return array
      */
     private function process_klarna_start_session_callback() {
-        $gateway = self::find_gateway( KlarnaInvoice::GATEWAY_ID );
+        $payment_category = isset($_POST['category']) ? $_POST['category'] : null;
+        unset($_POST['category']);
 
-        return $gateway->process_start_session( $_POST );
+        $gateway_id = null;
+        if ( $payment_category === 'pay_later' ) {
+            $gateway_id = KlarnaInvoice::GATEWAY_ID;
+        } elseif ( $payment_category === 'pay_over_time' ) {
+            $gateway_id = KlarnaInstallments::GATEWAY_ID;
+        } elseif ( $payment_category === 'pay_now' ) {
+            $gateway_id = KlarnaSofort::GATEWAY_ID;
+        }
+
+        if ( $gateway_id ) {
+            $gateway = self::find_gateway( $gateway_id );
+            if ( $gateway ) {
+                return $gateway->process_start_session($_POST);
+            }
+        }
+
+        return null;
     }
 
 	/**

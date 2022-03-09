@@ -25,6 +25,7 @@
 
     function payone_checkout_clicked_klarna_generic( payment_category ) {
         var data = {
+            category: payment_category,
             currency: '<?php echo get_woocommerce_currency(); ?>',
             country: jQuery('#billing_country').val(),
             firstname: jQuery('#billing_first_name').val(),
@@ -79,7 +80,8 @@
                         }
                     });
                 } else {
-                    jQuery('#klarna_' + payment_category + '_error').html('<strong style="color:red">' + klarna_vars[payment_category].result_start_session.message + '</strong>');
+                    jQuery('#klarna_'  + payment_category + '_error').html('<strong style="color:red">' + klarna_vars[payment_category].result_start_session.message + '</strong>');
+                    payone_unblock();
                 }
             });
         } else if (klarna_vars[payment_category].widget_shown === true && klarna_vars[payment_category].finished === false) {

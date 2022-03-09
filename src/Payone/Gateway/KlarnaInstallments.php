@@ -37,4 +37,8 @@ class KlarnaInstallments extends KlarnaBase {
     public function process_payment( $order_id ) {
         return $this->process_redirect( $order_id, \Payone\Transaction\KlarnaAuthorizeInstallments::class );
     }
+
+    public function get_financingtype() {
+        return 'KIS';
+    }
 }

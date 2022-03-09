@@ -37,4 +37,8 @@ class KlarnaSofort extends KlarnaBase {
     public function process_payment( $order_id ) {
         return $this->process_redirect( $order_id, \Payone\Transaction\KlarnaAuthorizeSofort::class );
     }
+
+    public function get_financingtype() {
+        return 'KDD';
+    }
 }

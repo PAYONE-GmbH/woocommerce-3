@@ -14,7 +14,7 @@ class KlarnaStartSession extends Base {
 		$this->set_data_from_gateway( $gateway );
 
         $this->set( 'clearingtype', 'fnc' );
-        $this->set( 'financingtype', 'KIV' );
+        $this->set( 'financingtype', $gateway->get_financingtype() );
         $this->set( 'add_paydata[action]', 'start_session' );
 	}
 

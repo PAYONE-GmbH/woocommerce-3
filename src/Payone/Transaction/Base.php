@@ -323,6 +323,7 @@ class Base extends Request {
         foreach ( $cart->calculate_shipping() as $item_data ) {
             /** @var \WC_Shipping_Rate $item_data */
             $taxes = $item_data->get_taxes();
+            $tax = 0.0;
             if ( $taxes ) {
                 $tax = array_shift( $taxes );
             }
