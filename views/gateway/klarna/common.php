@@ -22,6 +22,7 @@
             finished: false,
         }
     };
+    var payone_klarna_actively_chosen = false;
 
     function payone_checkout_clicked_klarna_generic( payment_category ) {
         var data = {
