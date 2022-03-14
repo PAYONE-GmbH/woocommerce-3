@@ -13,6 +13,7 @@ abstract class KlarnaBase extends RedirectGatewayBase {
 		parent::__construct( $id );
 
         $this->icon = PAYONE_PLUGIN_URL . 'assets/icon-klarna.png';
+        $this->hide_when_no_shipping = true;
     }
 
     public function process_start_session( $data ) {

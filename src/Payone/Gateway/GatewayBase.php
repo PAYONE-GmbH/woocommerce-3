@@ -13,6 +13,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 */
 	protected $global_settings;
 
+    /**
+     * @var bool
+     */
+    protected $hide_when_no_shipping;
+
 	/**
 	 * @var string 0 or 1
 	 */
@@ -74,10 +79,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	private $text_on_booking_statement;
 
 	public function __construct( $id ) {
-		$this->id              = $id;
-		$this->has_fields      = true;
-		$this->supports        = [ 'products', 'refunds' ];
-		$this->global_settings = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+		$this->id                    = $id;
+		$this->has_fields            = true;
+		$this->supports              = [ 'products', 'refunds' ];
+		$this->global_settings       = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+        $this->hide_when_no_shipping = false;
 
 		$this->init_settings();
 		$this->init_form_fields();
@@ -198,6 +204,12 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
         if ( $is_available && WC()->cart && $this->min_amount > $this->get_order_total() ) {
 			$is_available = false;
 		}
+
+        if ( $is_available && $this->hide_when_no_shipping ) {
+            if ( ! wc_shipping_enabled() || wc_get_shipping_method_count() < 1 ) {
+                $is_available = false;
+            }
+        }
 
 		if ( $is_available ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
