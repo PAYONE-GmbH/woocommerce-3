@@ -22,10 +22,10 @@
             finished: false,
         }
     };
-    var payone_klarna_actively_chosen = false;
+    var klarna_data = {};
 
     function payone_checkout_clicked_klarna_generic( payment_category ) {
-        var data = {
+        klarna_data = {
             category: payment_category,
             currency: '<?php echo get_woocommerce_currency(); ?>',
             country: jQuery('#billing_country').val(),
@@ -42,27 +42,27 @@
             'shipping_email': jQuery('#billing_email').val(),
         }
         if (jQuery('#ship-to-different-address-checkbox').prop('checked') === true) {
-            data.shipping_firstname = jQuery('#shipping_first_name').val();
-            data.shipping_lastname = jQuery('#shipping_last_name').val();
-            data.shipping_company = jQuery('#shipping_company').val();
-            data.shipping_street = jQuery('#shipping_address_1').val();
-            data.shipping_addressaddition = jQuery('#shipping_address_2').val();
-            data.shipping_zip = jQuery('#shipping_postcode').val();
-            data.shipping_city = jQuery('#shipping_city').val();
-            data.shipping_country = jQuery('#shipping_country').val();
+            klarna_data.shipping_firstname = jQuery('#shipping_first_name').val();
+            klarna_data.shipping_lastname = jQuery('#shipping_last_name').val();
+            klarna_data.shipping_company = jQuery('#shipping_company').val();
+            klarna_data.shipping_street = jQuery('#shipping_address_1').val();
+            klarna_data.shipping_addressaddition = jQuery('#shipping_address_2').val();
+            klarna_data.shipping_zip = jQuery('#shipping_postcode').val();
+            klarna_data.shipping_city = jQuery('#shipping_city').val();
+            klarna_data.shipping_country = jQuery('#shipping_country').val();
         } else {
-            data.shipping_firstname = data.firstname;
-            data.shipping_lastname = data.lastname;
-            data.shipping_company = data.company;
-            data.shipping_street = data.street;
-            data.shipping_addressaddition = data.addressaddition;
-            data.shipping_zip = data.zip;
-            data.shipping_city = data.city;
-            data.shipping_country = data.country;
+            klarna_data.shipping_firstname = klarna_data.firstname;
+            klarna_data.shipping_lastname = klarna_data.lastname;
+            klarna_data.shipping_company = klarna_data.company;
+            klarna_data.shipping_street = klarna_data.street;
+            klarna_data.shipping_addressaddition = klarna_data.addressaddition;
+            klarna_data.shipping_zip = klarna_data.zip;
+            klarna_data.shipping_city = klarna_data.city;
+            klarna_data.shipping_country = klarna_data.country;
         }
 
         if (klarna_vars[payment_category].widget_shown === false) {
-            jQuery.post('<?php echo \Payone\Plugin::get_callback_url(['type' => 'ajax-klarna-start-session']); ?>', data, function (result) {
+            jQuery.post('<?php echo \Payone\Plugin::get_callback_url(['type' => 'ajax-klarna-start-session']); ?>', klarna_data, function (result) {
                 klarna_vars[payment_category].result_start_session = jQuery.parseJSON(result);
                 if (klarna_vars[payment_category].result_start_session.status === 'ok') {
                     document.getElementById("klarna_workorderid").value = klarna_vars[payment_category].result_start_session.workorderid;
@@ -78,6 +78,7 @@
                             jQuery('#klarna_' + payment_category + '_error').html('<strong style="color:red">PAYONE Klarna Rechnung kann nicht genutzt werden!</strong>');
                         } else {
                             klarna_vars[payment_category].widget_shown = true;
+                            payone_klarna_actively_chosen = true;
                         }
                     });
                 } else {
