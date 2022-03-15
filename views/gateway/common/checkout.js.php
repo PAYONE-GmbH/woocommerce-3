@@ -115,7 +115,7 @@
 
 
         jQuery('form.woocommerce-checkout').on('checkout_place_order', function (event) {
-            if ( jQuery('input#terms').is(':checked') ) {
+            if ( jQuery('input#terms').length === 0 || jQuery('input#terms').is(':checked') ) {
                 var current_gateway = jQuery('input[name=payment_method]:checked').val();
 
                 var result = true;
