@@ -91,10 +91,6 @@
                 || current_gateway === '<?php echo \Payone\Gateway\KlarnaInstallments::GATEWAY_ID; ?>'
                 || current_gateway === '<?php echo \Payone\Gateway\KlarnaSofort::GATEWAY_ID; ?>';
 
-            if (!is_klarna_gateway) {
-                return;
-            }
-
             if (payone_payment_methods_initialized === false) {
                 payone_payment_methods_initialized = true;
             } else {
