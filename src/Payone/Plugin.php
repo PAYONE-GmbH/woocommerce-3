@@ -5,6 +5,7 @@ namespace Payone;
 use Payone\Database\Migration;
 use Payone\Gateway\GatewayBase;
 use Payone\Gateway\Invoice;
+use Payone\Gateway\KlarnaBase;
 use Payone\Gateway\KlarnaInstallments;
 use Payone\Gateway\KlarnaInvoice;
 use Payone\Gateway\KlarnaSofort;
@@ -551,6 +552,8 @@ class Plugin {
         if ( $gateway_id ) {
             $gateway = self::find_gateway( $gateway_id );
             if ( $gateway ) {
+                set_transient( KlarnaBase::TRANSIENT_KEY_SESSION_STARTED, true, 60 * 20 );
+
                 return $gateway->process_start_session($_POST);
             }
         }

@@ -1,3 +1,4 @@
+<?php use Payone\Gateway\KlarnaBase; ?>
 <script type="text/javascript">
     function payone_block() {
         jQuery( '.woocommerce-checkout-payment, .woocommerce-checkout-review-order-table' ).block({
@@ -73,7 +74,7 @@
         }
     });
 
-    var payone_klarna_actively_chosen = false;
+    var payone_klarna_actively_chosen = <?php echo get_transient( KlarnaBase::TRANSIENT_KEY_SESSION_STARTED ) ? 'true' : 'false'; ?>;
 
     jQuery(document).ready(function() {
         var payone_payment_methods_initialized = false;
@@ -86,14 +87,18 @@
 
         jQuery('body').on('payment_method_selected', function (event) {
             var current_gateway = jQuery('input[name=payment_method]:checked').val();
+            var is_klarna_gateway = current_gateway === '<?php echo \Payone\Gateway\KlarnaInvoice::GATEWAY_ID; ?>'
+                || current_gateway === '<?php echo \Payone\Gateway\KlarnaInstallments::GATEWAY_ID; ?>'
+                || current_gateway === '<?php echo \Payone\Gateway\KlarnaSofort::GATEWAY_ID; ?>';
+
+            if (!is_klarna_gateway) {
+                return;
+            }
 
             if (payone_payment_methods_initialized === false) {
                 payone_payment_methods_initialized = true;
             } else {
-                if (current_gateway === '<?php echo \Payone\Gateway\KlarnaInvoice::GATEWAY_ID; ?>'
-                    || current_gateway === '<?php echo \Payone\Gateway\KlarnaInstallments::GATEWAY_ID; ?>'
-                    || current_gateway === '<?php echo \Payone\Gateway\KlarnaSofort::GATEWAY_ID; ?>'
-                ) {
+                if (is_klarna_gateway) {
                     payone_klarna_actively_chosen = true;
                 }
             }
