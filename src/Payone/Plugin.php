@@ -5,6 +5,10 @@ namespace Payone;
 use Payone\Database\Migration;
 use Payone\Gateway\GatewayBase;
 use Payone\Gateway\Invoice;
+use Payone\Gateway\KlarnaBase;
+use Payone\Gateway\KlarnaInstallments;
+use Payone\Gateway\KlarnaInvoice;
+use Payone\Gateway\KlarnaSofort;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
@@ -45,17 +49,20 @@ class Plugin {
         add_action( 'init', [ $this, 'add_callback_url' ] );
 
 		$gateways = [
-			\Payone\Gateway\CreditCard::GATEWAY_ID      => \Payone\Gateway\CreditCard::class,
-			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID => \Payone\Gateway\SepaDirectDebit::class,
-			\Payone\Gateway\PrePayment::GATEWAY_ID      => \Payone\Gateway\PrePayment::class,
-            \Payone\Gateway\Eps::GATEWAY_ID             => \Payone\Gateway\Eps::class,
-			\Payone\Gateway\Invoice::GATEWAY_ID         => \Payone\Gateway\Invoice::class,
-			\Payone\Gateway\Sofort::GATEWAY_ID          => \Payone\Gateway\Sofort::class,
-			\Payone\Gateway\Giropay::GATEWAY_ID         => \Payone\Gateway\Giropay::class,
-			\Payone\Gateway\SafeInvoice::GATEWAY_ID     => \Payone\Gateway\SafeInvoice::class,
-			\Payone\Gateway\PayPal::GATEWAY_ID          => \Payone\Gateway\PayPal::class,
-			\Payone\Gateway\PayDirekt::GATEWAY_ID       => \Payone\Gateway\PayDirekt::class,
-            \Payone\Gateway\Alipay::GATEWAY_ID          => \Payone\Gateway\Alipay::class,
+			\Payone\Gateway\CreditCard::GATEWAY_ID         => \Payone\Gateway\CreditCard::class,
+			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID    => \Payone\Gateway\SepaDirectDebit::class,
+			\Payone\Gateway\PrePayment::GATEWAY_ID         => \Payone\Gateway\PrePayment::class,
+            \Payone\Gateway\Eps::GATEWAY_ID                => \Payone\Gateway\Eps::class,
+			\Payone\Gateway\Invoice::GATEWAY_ID            => \Payone\Gateway\Invoice::class,
+			\Payone\Gateway\Sofort::GATEWAY_ID             => \Payone\Gateway\Sofort::class,
+			\Payone\Gateway\Giropay::GATEWAY_ID            => \Payone\Gateway\Giropay::class,
+			\Payone\Gateway\SafeInvoice::GATEWAY_ID        => \Payone\Gateway\SafeInvoice::class,
+			\Payone\Gateway\PayPal::GATEWAY_ID             => \Payone\Gateway\PayPal::class,
+			\Payone\Gateway\PayDirekt::GATEWAY_ID          => \Payone\Gateway\PayDirekt::class,
+			\Payone\Gateway\Alipay::GATEWAY_ID             => \Payone\Gateway\Alipay::class,
+            \Payone\Gateway\KlarnaInvoice::GATEWAY_ID      => \Payone\Gateway\KlarnaInvoice::class,
+            \Payone\Gateway\KlarnaInstallments::GATEWAY_ID => \Payone\Gateway\KlarnaInstallments::class,
+            \Payone\Gateway\KlarnaSofort::GATEWAY_ID       => \Payone\Gateway\KlarnaSofort::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -264,6 +271,9 @@ class Plugin {
             if ( $this->is_manage_mandate_getfile() ) {
 				return $this->process_manage_mandate_getfile();
 			}
+            if ( $this->is_klarna_start_session_callback() ) {
+                return $this->process_klarna_start_session_callback();
+            }
 
 			$response = 'ERROR';
 			if ( $this->request_is_from_payone() ) {
@@ -290,8 +300,8 @@ class Plugin {
 	 */
 	public function process_callback() {
 		$transaction_status = TransactionStatus::construct_from_post_parameters();
-		
-		if ( ! $transaction_status->has_valid_order() ) {
+
+        if ( ! $transaction_status->has_valid_order() ) {
 		    if ( ! apply_filters( 'payone_do_throw_error_on_invalid_order', true ) ) {
 		        return 'TSOK';
             }
@@ -316,9 +326,9 @@ class Plugin {
 
 	public function order_status_changed( $id, $from_status, $to_status ) {
 		$order = new \WC_Order( $id );
-		$gateway = $this->get_gateway_for_order( $order );
+		$gateway = self::get_gateway_for_order( $order );
 
-		if ( $gateway && method_exists( $gateway, 'order_status_changed' ) ) {
+        if ( $gateway && method_exists( $gateway, 'order_status_changed' ) ) {
 			$gateway->order_status_changed( $order, $from_status, $to_status );
 		}
 	}
@@ -511,6 +521,45 @@ class Plugin {
 
 		return $gateway->process_manage_mandate_getfile( $_GET );
 	}
+
+    /**
+     * @return bool
+     */
+    private function is_klarna_start_session_callback() {
+        if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-klarna-start-session') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    private function process_klarna_start_session_callback() {
+        $payment_category = isset($_POST['category']) ? $_POST['category'] : null;
+        unset($_POST['category']);
+
+        $gateway_id = null;
+        if ( $payment_category === 'pay_later' ) {
+            $gateway_id = KlarnaInvoice::GATEWAY_ID;
+        } elseif ( $payment_category === 'pay_over_time' ) {
+            $gateway_id = KlarnaInstallments::GATEWAY_ID;
+        } elseif ( $payment_category === 'direct_debit' ) {
+            $gateway_id = KlarnaSofort::GATEWAY_ID;
+        }
+
+        if ( $gateway_id ) {
+            $gateway = self::find_gateway( $gateway_id );
+            if ( $gateway ) {
+                set_transient( KlarnaBase::TRANSIENT_KEY_SESSION_STARTED, true, 60 * 20 );
+
+                return $gateway->process_start_session($_POST);
+            }
+        }
+
+        return null;
+    }
 
 	/**
 	 * @param \WC_Order $order

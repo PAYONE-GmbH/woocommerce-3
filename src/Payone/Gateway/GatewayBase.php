@@ -5,12 +5,18 @@ namespace Payone\Gateway;
 use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Capture;
+use Payone\Transaction\Debit;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @var array
 	 */
 	protected $global_settings;
+
+    /**
+     * @var bool
+     */
+    protected $hide_when_no_shipping;
 
 	/**
 	 * @var string 0 or 1
@@ -73,10 +79,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	private $text_on_booking_statement;
 
 	public function __construct( $id ) {
-		$this->id              = $id;
-		$this->has_fields      = true;
-		$this->supports        = [ 'products', 'refunds' ];
-		$this->global_settings = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+		$this->id                    = $id;
+		$this->has_fields            = true;
+		$this->supports              = [ 'products', 'refunds' ];
+		$this->global_settings       = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+        $this->hide_when_no_shipping = false;
 
 		$this->init_settings();
 		$this->init_form_fields();
@@ -175,11 +182,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	        return new \WP_Error( 1, __( 'Debit amount must be greater than zero.', 'payone-woocommerce-3' ) );
         }
 		$order = new \WC_Order( $order_id );
+        $order->add_order_note( __( 'Refund is issued through PAYONE', 'payone-woocommerce-3' ) );
 
-		$transaction = new \Payone\Transaction\Debit( $this );
+		$debit = new Debit( $this );
+        $this->add_data_to_debit( $debit, $order );
 
-		return $transaction->execute( $order, - $amount );
+		return $debit->execute( $order, - $amount );
 	}
+
+    protected function add_data_to_debit( Debit $capture, \WC_Order $order ) { }
 
 	/**
 	 * @todo Es ist nicht klar, warum das nicht ohne eigenen Code funktioniert. Die Doku zu $this->countries sieht
@@ -193,6 +204,12 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
         if ( $is_available && WC()->cart && $this->min_amount > $this->get_order_total() ) {
 			$is_available = false;
 		}
+
+        if ( $is_available && $this->hide_when_no_shipping ) {
+            if ( ! wc_shipping_enabled() || wc_get_shipping_method_count() < 1 ) {
+                $is_available = false;
+            }
+        }
 
 		if ( $is_available ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
