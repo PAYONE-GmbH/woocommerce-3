@@ -15,6 +15,7 @@ use Payone\Transaction\Log;
 use Payone\WooCommerceSubscription\WCSHandler;
 
 class Plugin {
+    // @deprecated
 	const CALLBACK_SLUG = 'payone-callback';
 
 	const PAYONE_IP_RANGES = [
@@ -46,6 +47,9 @@ class Plugin {
 			$settings->init();
 		}
 
+        add_action( 'woocommerce_api_payoneplugin', [ $this, 'handle_callback' ] );
+
+        // @deprecated
         add_action( 'init', [ $this, 'add_callback_url' ] );
 
 		$gateways = [
@@ -170,8 +174,11 @@ class Plugin {
 	 * @return string
 	 */
 	public static function get_callback_url( array $query ) {
-		// Get shop URL with appended callback slug
-		$url = get_home_url( null, self::CALLBACK_SLUG . '/' );
+        if ( get_option( 'permalink_structure' ) === '' ) {
+            $url = site_url() . '/?wc-api=payoneplugin';
+        } else {
+            $url = site_url() . '/wc-api/payoneplugin/';
+        }
 
 		// Parse shop URL to operate on it
 		$parsed_url = parse_url( $url );
@@ -244,58 +251,64 @@ class Plugin {
 		return ( $ip_decimal & $netmask_decimal ) === ( $range_decimal & $netmask_decimal );
 	}
 
+    // @deprecated
 	public function add_callback_url() {
 		add_rewrite_rule( '^' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
 		add_filter( 'query_vars', [ $this, 'add_rewrite_var' ] );
 		add_action( 'template_redirect', [ $this, 'catch_payone_callback' ] );
 	}
 
+    // @deprecated
 	public function add_rewrite_var( $vars ) {
 		$vars[] = self::CALLBACK_SLUG;
 
 		return $vars;
 	}
 
+    // @deprecated
 	public function catch_payone_callback() {
 		if ( get_query_var( self::CALLBACK_SLUG ) ) {
-
-            if ( $this->is_download_invoice_request() ) {
-                return $this->process_callback_download_invoice();
-            }
-            if ( $this->is_callback_after_redirect() ) {
-				return $this->process_callback_after_redirect();
-			}
-            if ( $this->is_manage_mandate_callback() ) {
-				return $this->process_manage_mandate_callback();
-			}
-            if ( $this->is_manage_mandate_getfile() ) {
-				return $this->process_manage_mandate_getfile();
-			}
-            if ( $this->is_klarna_start_session_callback() ) {
-                return $this->process_klarna_start_session_callback();
-            }
-
-			$response = 'ERROR';
-			if ( $this->request_is_from_payone() ) {
-				do_action( 'payone_transaction_callback' );
-
-				try {
-					$response = $this->process_callback();
-				} catch (\Exception $e) {
-					$response .= ' (' . $e->getMessage() . ')';
-				}
-
-				if ( $response === 'TSOK' ) {
-					Log::constructFromPostVars();
-				}
-			}
-
-			echo $response;
-			exit();
+            $this->handle_callback();
 		}
 	}
 
-	/**
+    public function handle_callback() {
+        if ( $this->is_download_invoice_request() ) {
+            return $this->process_callback_download_invoice();
+        }
+        if ( $this->is_callback_after_redirect() ) {
+            return $this->process_callback_after_redirect();
+        }
+        if ( $this->is_manage_mandate_callback() ) {
+            return $this->process_manage_mandate_callback();
+        }
+        if ( $this->is_manage_mandate_getfile() ) {
+            return $this->process_manage_mandate_getfile();
+        }
+        if ( $this->is_klarna_start_session_callback() ) {
+            return $this->process_klarna_start_session_callback();
+        }
+
+        $response = 'ERROR';
+        if ( $this->request_is_from_payone() ) {
+            do_action( 'payone_transaction_callback' );
+
+            try {
+                $response = $this->process_callback();
+            } catch (\Exception $e) {
+                $response .= ' (' . $e->getMessage() . ')';
+            }
+
+            if ( $response === 'TSOK' ) {
+                Log::constructFromPostVars();
+            }
+        }
+
+        echo $response;
+        exit();
+    }
+
+    /**
 	 * @return string
 	 */
 	public function process_callback() {
