@@ -2,6 +2,7 @@ name: Deploy to WordPress.org
 on:
   release:
     types: [published]
+  workflow_dispatch:
 jobs:
   tag:
     name: New release
@@ -17,6 +18,7 @@ jobs:
       env:
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        SLUG: bs-payone-woocommerce
     - name: Upload release asset
       uses: actions/upload-release-asset@v1
       env:
