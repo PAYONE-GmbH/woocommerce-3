@@ -4,7 +4,7 @@ Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
 Tested up to: 5.9.2
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 Requires PHP: 5.6.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -143,3 +143,34 @@ Maintenance
 Bugfixes
 
 * fixed a bug where not all files of the plugin were uploaded to the wordpress store
+
+== 2.0.0 ==
+
+New Features
+
+	* New payment method: Klarna (pay later, direct debit, slice it)
+	* New payment method: Alipay
+	* Payment Logos for every payment method in checkout
+	* Cardholder field for creditcard
+	* Experimental Support for WC subscribtions
+
+Bugfixes
+
+	* fixed translations
+	* fixed txstatus handling
+	* fixed error message handling
+	* fixed broken plugin header
+	* fixed credit card settings
+
+Maintenance
+
+	* Update names of the payment methods
+	* Update readme.txt
+	* PHP8 compatibility
+	* Rework PAYONE callback URL
+	* Rework creditcard fields
+	* Change activation hooks
+
+Tested with:
+wordpress version: 5.9.2
+woocommerce version: 6.3.1
