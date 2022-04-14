@@ -3,9 +3,9 @@ Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
-Tested up to: 5.9.2
+Tested up to: 5.9.3
 Stable tag: 2.0.2
-Requires PHP: 5.6.0
+Requires PHP: 7.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -25,7 +25,7 @@ Currently supported payment methods include:
 * Secure Invoice
 * Sofort
 * Giropay
-* Invoice
+* Open Invoice
 * Prepayment
 
 PAYONE GmbH is headquartered in Frankfurt am Main and is one of the leading omnichannel-payment providers in Europe. In addition to providing customer support to numerous Savings Banks (Sparkasse) the full-service payment service provider also provides cashless payment transaction services to more than 255,000 customers from stationary trade to the automated and holistic processing of e-commerce and mobile payments.
@@ -148,28 +148,28 @@ Bugfixes
 
 New Features
 
-	* New payment method: Klarna (pay later, direct debit, slice it)
-	* New payment method: Alipay
-	* Payment Logos for every payment method in checkout
-	* Cardholder field for creditcard
-	* Experimental Support for WC subscribtions
+* New payment method: Klarna (pay later, direct debit, slice it)
+* New payment method: Alipay
+* Payment Logos for every payment method in checkout
+* Cardholder field for creditcard
+* Experimental Support for WC subscribtions
 
 Bugfixes
 
-	* fixed translations
-	* fixed txstatus handling
-	* fixed error message handling
-	* fixed broken plugin header
-	* fixed credit card settings
+* fixed translations
+* fixed txstatus handling
+* fixed error message handling
+* fixed broken plugin header
+* fixed credit card settings
 
 Maintenance
 
-	* Update names of the payment methods
-	* Update readme.txt
-	* PHP8 compatibility
-	* Rework PAYONE callback URL
-	* Rework creditcard fields
-	* Change activation hooks
+* Update names of the payment methods
+* Update readme.txt
+* PHP8 compatibility
+* Rework PAYONE callback URL
+* Rework creditcard fields
+* Change activation hooks
 
 Tested with:
 wordpress version: 5.9.2
