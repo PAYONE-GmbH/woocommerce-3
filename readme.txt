@@ -4,7 +4,7 @@ Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
 Tested up to: 5.9.3
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 Requires PHP: 7.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -174,3 +174,9 @@ Maintenance
 Tested with:
 wordpress version: 5.9.2
 woocommerce version: 6.3.1
+
+== 2.0.3 ==
+
+Bugfixes
+
+* payment method logos are now shown correctly in checkout
