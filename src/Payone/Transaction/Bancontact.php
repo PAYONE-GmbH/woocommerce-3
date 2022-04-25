@@ -14,9 +14,7 @@ class Bancontact extends Base {
 
 		$this->set( 'clearingtype', 'sb' );
 		$this->set( 'onlinebanktransfertype', 'BCT' );
-		$this->set( 'iban', isset( $_POST['bancontact_iban'] ) ? $_POST['bancontact_iban'] : '' );
-		$this->set( 'bic', isset( $_POST['bancontact_bic'] ) ? $_POST['bancontact_bic'] : '' );
-		$this->set( 'bankcountry', 'BE' ); // @todo Richtiges Land bestimmen
+		$this->set( 'bankcountry', 'BE' );
 	}
 
 	/**
