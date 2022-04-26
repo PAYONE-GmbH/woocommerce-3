@@ -74,10 +74,27 @@
         }
     });
 
+    <?php
+        $gateway_to_select = get_transient( \Payone\Gateway\GatewayBase::TRANSIENT_KEY_SELECT_GATEWAY );
+        if ( $gateway_to_select ) {
+            delete_transient( \Payone\Gateway\GatewayBase::TRANSIENT_KEY_SELECT_GATEWAY );
+        } else {
+            $gateway_to_select = '';
+        }
+    ?>
+    var select_gateway_after_redirect = '<?php echo $gateway_to_select; ?>';
+
     var payone_klarna_actively_chosen = <?php echo get_transient( KlarnaBase::TRANSIENT_KEY_SESSION_STARTED ) ? 'true' : 'false'; ?>;
 
     jQuery(document).ready(function() {
         var payone_payment_methods_initialized = false;
+
+        if (select_gateway_after_redirect) {
+            var current_gateway = jQuery('input[name=payment_method]:checked').val();
+            if (current_gateway !== select_gateway_after_redirect) {
+                jQuery('#payment_method_' + select_gateway_after_redirect).click();
+            }
+        }
 
         jQuery('body').on('updated_checkout', function (event) {
             if (payone_payment_methods_initialized && payone_klarna_actively_chosen) {

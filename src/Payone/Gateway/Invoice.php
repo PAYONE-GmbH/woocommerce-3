@@ -19,7 +19,7 @@ class Invoice extends GatewayBase {
             $this->add_wcs_support();
         }
 
-		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';;
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';
 		$this->method_title       = 'PAYONE ' . __( 'Invoice', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
