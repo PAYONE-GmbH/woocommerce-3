@@ -10,7 +10,7 @@ class Ideal extends RedirectGatewayBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-ideal.png';
+		$this->icon               = 'https://cdn.pay1.de/clearingtypes/sb/idl/default.svg';
 		$this->method_title       = 'PAYONE ' . __( 'iDEAL', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
