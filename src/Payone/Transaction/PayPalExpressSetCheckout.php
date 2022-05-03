@@ -22,6 +22,8 @@ class PayPalExpressSetCheckout extends Base {
 	 * @return \Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Cart $cart ) {
+        $this->add_article_list_to_transaction( $cart );
+        
 		$this->set_once( 'amount', $cart->get_total( 'non-view' ) * 100 );
         $this->set( 'currency', strtoupper( get_woocommerce_currency() ) );
 

@@ -195,9 +195,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
     protected function add_data_to_debit( Debit $capture, \WC_Order $order ) { }
 
 	/**
-	 * @todo Es ist nicht klar, warum das nicht ohne eigenen Code funktioniert. Die Doku zu $this->countries sieht
-	 *       eigentlich so aus, als ob es funktionieren müsste.
-	 *
 	 * @return bool
 	 */
 	public function is_available() {

@@ -19,6 +19,19 @@ class PayPalExpress extends PayPalBase {
         $this->supports[] = 'pay_button';
 	}
 
+    /**
+     * @return bool
+     */
+    public function is_available() {
+        $is_available = parent::is_available();
+
+        if ( $is_available && ! is_cart()) {
+            $is_available = get_transient( self::TRANSIENT_KEY_WORKORDERID ) !== false;
+        }
+
+        return $is_available;
+    }
+
     public function init_form_fields() {
         $this->init_common_form_fields( 'PAYONE ' . __( 'PayPal Express', 'payone-woocommerce-3' ) );
     }
