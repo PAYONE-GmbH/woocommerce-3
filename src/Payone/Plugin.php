@@ -287,7 +287,7 @@ class Plugin {
 				}
 
 				if ( $response === 'TSOK' ) {
-					Log::constructFromPostVars();
+					Log::construct_from_post_vars();
 				}
 			}
 
