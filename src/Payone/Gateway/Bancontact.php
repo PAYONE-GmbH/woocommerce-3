@@ -17,6 +17,7 @@ class Bancontact extends RedirectGatewayBase {
 
 	public function init_form_fields() {
 		$this->init_common_form_fields( 'PAYONE ' . __( 'Bancontact', 'payone-woocommerce-3' ) );
+        $this->form_fields[ 'countries' ][ 'default' ] = [ 'BE' ];
 	}
 
 	public function payment_fields() {
