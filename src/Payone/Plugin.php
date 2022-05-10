@@ -277,49 +277,49 @@ class Plugin {
 		}
 	}
 
-    public function handle_callback() {
-        if ( $this->is_download_invoice_request() ) {
-            return $this->process_callback_download_invoice();
-        }
-        if ( $this->is_callback_after_redirect() ) {
-            return $this->process_callback_after_redirect();
-        }
-        if ( $this->is_manage_mandate_callback() ) {
-            return $this->process_manage_mandate_callback();
-        }
-        if ( $this->is_manage_mandate_getfile() ) {
-            return $this->process_manage_mandate_getfile();
-        }
-        if ( $this->is_klarna_start_session_callback() ) {
-            return $this->process_klarna_start_session_callback();
-        }
-        if ( $this->is_paypal_express_set_checkout_callback() ) {
-            return $this->process_paypal_express_set_checkout_callback();
-        }
-        if ( $this->is_paypal_express_get_checkout() ) {
-            return $this->process_paypal_express_get_checkout();
-        }
+  public function handle_callback() {
+      if ( $this->is_download_invoice_request() ) {
+          return $this->process_callback_download_invoice();
+      }
+      if ( $this->is_callback_after_redirect() ) {
+          return $this->process_callback_after_redirect();
+      }
+      if ( $this->is_manage_mandate_callback() ) {
+          return $this->process_manage_mandate_callback();
+      }
+      if ( $this->is_manage_mandate_getfile() ) {
+          return $this->process_manage_mandate_getfile();
+      }
+      if ( $this->is_klarna_start_session_callback() ) {
+          return $this->process_klarna_start_session_callback();
+      }
+      if ( $this->is_paypal_express_set_checkout_callback() ) {
+          return $this->process_paypal_express_set_checkout_callback();
+      }
+      if ( $this->is_paypal_express_get_checkout() ) {
+          return $this->process_paypal_express_get_checkout();
+      }
 
-        $response = 'ERROR';
-        if ( $this->request_is_from_payone() ) {
-            do_action( 'payone_transaction_callback' );
+      $response = 'ERROR';
+      if ( $this->request_is_from_payone() ) {
+          do_action( 'payone_transaction_callback' );
 
-            try {
-                $response = $this->process_callback();
-            } catch (\Exception $e) {
-                $response .= ' (' . $e->getMessage() . ')';
-            }
+          try {
+              $response = $this->process_callback();
+          } catch (\Exception $e) {
+              $response .= ' (' . $e->getMessage() . ')';
+          }
 
-            if ( $response === 'TSOK' ) {
-                Log::construct_from_post_vars();
-            }
-        }
+			    if ( $response === 'TSOK' ) {
+					    Log::construct_from_post_vars();
+			    }
+	    }
 
-        echo $response;
-        exit();
-    }
+      echo $response;
+      exit();
+  }
 
-    /**
+  /**
 	 * @return string
 	 */
 	public function process_callback() {
