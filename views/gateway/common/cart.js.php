@@ -1,6 +1,8 @@
 <?php
-    $paypal_express_button_image = PAYONE_PLUGIN_URL . 'assets/' . __( 'checkout-paypal-en.png', 'payone-woocommerce-3' );
-    $paypal_express_button_image = apply_filters( 'payone_paypal_express_button_image_url', $paypal_express_button_image );
+delete_transient( \Payone\Gateway\PayPalExpress::TRANSIENT_KEY_WORKORDERID );
+
+$paypal_express_button_image = PAYONE_PLUGIN_URL . 'assets/' . __( 'checkout-paypal-en.png', 'payone-woocommerce-3' );
+$paypal_express_button_image = apply_filters( 'payone_paypal_express_button_image_url', $paypal_express_button_image );
 ?>
 <script type="text/javascript">
 jQuery('#payone-paypal-express-button').html('<button style="text-align:center;width:100%" title="PayPal Express"><img style="margin:auto; text-align:left;" src="<?php echo $paypal_express_button_image; ?>" alt="PayPal Express"></button>');

@@ -53,7 +53,7 @@ class PayPalExpress extends PayPalBase {
                 'workorderid' => $response->get( 'workorderid' ),
                 'url' => $response->get( 'redirecturl' ),
             ];
-            set_transient( self::TRANSIENT_KEY_WORKORDERID, $result['workorderid'], 60 * 20 );
+            set_transient( self::TRANSIENT_KEY_WORKORDERID, $result['workorderid'], 60 * 10 );
         } else {
             $result = [
                 'status' => 'error',

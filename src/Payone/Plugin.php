@@ -65,6 +65,7 @@ class Plugin {
             \Payone\Gateway\KlarnaInvoice::GATEWAY_ID      => \Payone\Gateway\KlarnaInvoice::class,
             \Payone\Gateway\KlarnaInstallments::GATEWAY_ID => \Payone\Gateway\KlarnaInstallments::class,
             \Payone\Gateway\KlarnaSofort::GATEWAY_ID       => \Payone\Gateway\KlarnaSofort::class,
+            \Payone\Gateway\Ideal::GATEWAY_ID              => \Payone\Gateway\Ideal::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -295,7 +296,7 @@ class Plugin {
 				}
 
 				if ( $response === 'TSOK' ) {
-					Log::constructFromPostVars();
+					Log::construct_from_post_vars();
 				}
 			}
 
@@ -647,11 +648,7 @@ class Plugin {
 			echo "\n<style>\n";
 			include PAYONE_VIEW_PATH . '/gateway/common/checkout.css';
 			echo "\n</style>\n";
-		} elseif ( is_cart() ) {
-            echo "\n<style>\n";
-            include PAYONE_VIEW_PATH . '/gateway/common/cart.css';
-            echo "\n</style>\n";
-        }
+		}
 	}
 
 	public function add_content_to_thankyou_page( $order_id ) {

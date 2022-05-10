@@ -53,7 +53,7 @@ class DataTransfer {
 	 *
 	 * @return DataTransfer
 	 */
-	public static function constructFromArray( $data ) {
+	public static function construct_from_array( $data ) {
 		return new DataTransfer( $data );
 	}
 
