@@ -2,6 +2,7 @@
 
 namespace Payone\Transaction;
 
+use Payone\Gateway\PayPalBase;
 use Payone\Plugin;
 
 class PayPal extends Base {
@@ -19,6 +20,11 @@ class PayPal extends Base {
 
 		$this->set( 'clearingtype', 'wlt' );
 		$this->set( 'wallettype', 'PPE' );
+
+        $workorderid = get_transient( PayPalBase::TRANSIENT_KEY_WORKORDERID );
+        if ( $workorderid ) {
+            $this->set( 'workorderid', $workorderid );
+        }
 	}
 
 	/**
