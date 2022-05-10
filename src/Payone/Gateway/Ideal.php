@@ -4,24 +4,40 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
 
-class PayDirekt extends RedirectGatewayBase {
-	const GATEWAY_ID = 'bs_payone_paydirekt';
+class Ideal extends RedirectGatewayBase {
+	const GATEWAY_ID = 'payone_ideal';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-paydirekt.png';
-		$this->method_title       = 'PAYONE ' . __( 'paydirekt', 'payone-woocommerce-3' );
+		$this->icon               = 'https://cdn.pay1.de/clearingtypes/sb/idl/default.svg';
+		$this->method_title       = 'PAYONE ' . __( 'iDEAL', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( 'PAYONE ' . __( 'paydirekt', 'payone-woocommerce-3' ) );
-        $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE' ];
+		$this->init_common_form_fields( 'PAYONE ' . __( 'iDEAL', 'payone-woocommerce-3' ) );
+        $this->form_fields[ 'countries' ][ 'default' ] = [ 'NL' ];
 	}
 
 	public function payment_fields() {
-		include PAYONE_VIEW_PATH . '/gateway/paydirekt/payment-form.php';
+        $bankgroups = [
+            'ABN_AMRO_BANK' => 'ABN Amro',
+            'BUNQ_BANK' => 'Bunq',
+            'RABOBANK' => 'Rabobank',
+            'ASN_BANK' => 'ASN Bank',
+            'SNS_BANK' => 'SNS Bank',
+            'TRIODOS_BANK' => 'Triodos Bank',
+            'SNS_REGIO_BANK' => 'Regio Bank',
+            'ING_BANK' => 'ING Bank',
+            'KNAB_BANK' => 'Knab',
+            'VAN_LANSCHOT_BANKIERS' => 'van Lanschot',
+            'HANDELSBANKEN' => 'Handelsbanken',
+            'FRIESLAND_BANK' => 'Friesland Bank',
+            'REVOLUT' => 'Revolut',
+        ];
+
+		include PAYONE_VIEW_PATH . '/gateway/ideal/payment-form.php';
 	}
 
 	/**
@@ -31,7 +47,7 @@ class PayDirekt extends RedirectGatewayBase {
 	 * @throws \WC_Data_Exception
 	 */
 	public function process_payment( $order_id ) {
-		return $this->process_redirect( $order_id, \Payone\Transaction\PayDirekt::class );
+		return $this->process_redirect( $order_id, \Payone\Transaction\Ideal::class );
 	}
 
 	/**

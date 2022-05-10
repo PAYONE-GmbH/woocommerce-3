@@ -34,7 +34,7 @@ class TransactionLog implements ListTableInterface  {
 
 		$entries = [];
 		foreach ( $rows as $row ) {
-			$entries[] = \Payone\Transaction\Log::constructFromDatabase( $row );
+			$entries[] = \Payone\Transaction\Log::construct_from_database( $row );
 		}
 
 		return $entries;
@@ -65,6 +65,6 @@ class TransactionLog implements ListTableInterface  {
                   WHERE id=' . (int) $id;
 		$row   = $wpdb->get_row( $query, ARRAY_A );
 
-		return \Payone\Transaction\Log::constructFromDatabase( $row );
+		return \Payone\Transaction\Log::construct_from_database( $row );
 	}
 }
