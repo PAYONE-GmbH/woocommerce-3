@@ -133,7 +133,7 @@ class SepaDirectDebit extends GatewayBase {
             $transaction = new \Payone\Transaction\SepaDirectDebit( $this );
         }
 
-        $transaction->set( 'reference', $order->get_id() );
+        $transaction->set_reference( $order );
         $transaction->set( 'recurrence', 'recurring' );
         $transaction->set( 'customer_is_present', 'yes' );
 
