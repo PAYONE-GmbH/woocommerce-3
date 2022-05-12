@@ -20,7 +20,7 @@ class SepaDirectDebit extends GatewayBase {
             $this->add_wcs_support();
         }
 
-		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-lastschrift.png';;
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-lastschrift.png';
 		$this->method_title       = 'PAYONE ' . __( 'Direct Debit', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
@@ -133,7 +133,7 @@ class SepaDirectDebit extends GatewayBase {
             $transaction = new \Payone\Transaction\SepaDirectDebit( $this );
         }
 
-        $transaction->set( 'reference', $order->get_id() );
+        $transaction->set_reference( $order );
         $transaction->set( 'recurrence', 'recurring' );
         $transaction->set( 'customer_is_present', 'yes' );
 

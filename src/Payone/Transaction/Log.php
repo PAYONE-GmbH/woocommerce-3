@@ -43,10 +43,19 @@ class Log {
 		$this->transactionLogEnabled = $options['transaction_log'] ? true : false;
 	}
 
-	public static function constructFromPostVars() {
-		$transaction_id        = isset( $_POST['txid'] ) ? $_POST['txid'] : '';
+	public static function construct_from_post_vars() {
+        $post_data = $_POST;
+
+        $encode_to_utf8 = apply_filters( 'payone_tx_log_encode_to_utf8', true );
+        if ( $encode_to_utf8 ) {
+            array_walk_recursive( $post_data, function ( &$entry ) {
+                $entry = mb_convert_encoding( $entry, 'UTF-8' );
+            });
+        }
+
+		$transaction_id        = isset( $post_data['txid'] ) ? $post_data['txid'] : '';
 		$transaction_log_entry = new Log();
-		$transaction_log_entry->set_data( \Payone\Payone\Api\DataTransfer::constructFromArray( $_POST ) );
+		$transaction_log_entry->set_data( \Payone\Payone\Api\DataTransfer::construct_from_array( $post_data ) );
 		$transaction_log_entry->set_transaction_id( $transaction_id );
 		$transaction_log_entry->save();
 	}
@@ -56,8 +65,8 @@ class Log {
 	 *
 	 * @return Log
 	 */
-	public static function constructFromDatabase( $row ) {
-		return self::constructFromArray($row);
+	public static function construct_from_database( $row ) {
+		return self::construct_from_array( $row );
 	}
 
 	/**
@@ -65,7 +74,7 @@ class Log {
 	 *
 	 * @return Log
 	 */
-	public static function constructFromArray( $array ) {
+	public static function construct_from_array( $array ) {
 		$id = isset($array['id']) ? $array['id'] : null;
 		$data = isset($array['data']) ? $array['data'] : [];
 		$transaction_id = isset($array['transaction_id']) ? $array['transaction_id'] : '';

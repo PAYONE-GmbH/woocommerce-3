@@ -10,7 +10,7 @@ class Giropay extends RedirectGatewayBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-giropay.png';;
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-giropay.png';
 		$this->method_title       = 'PAYONE ' . __( 'Giropay', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}

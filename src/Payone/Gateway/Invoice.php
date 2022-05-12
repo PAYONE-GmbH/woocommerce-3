@@ -19,7 +19,7 @@ class Invoice extends GatewayBase {
             $this->add_wcs_support();
         }
 
-		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';;
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';
 		$this->method_title       = 'PAYONE ' . __( 'Invoice', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
@@ -93,7 +93,7 @@ class Invoice extends GatewayBase {
     public function wcs_get_transaction_for_subscription_signup( \WC_Order $order ) {
         $transaction = new \Payone\Transaction\Invoice( $this );
 
-        $transaction->set( 'reference', $order->get_id() );
+        $transaction->set_reference( $order );
         $transaction->set( 'recurrence', 'recurring' );
         $transaction->set( 'customer_is_present', 'yes' );
 

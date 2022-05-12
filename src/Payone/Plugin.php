@@ -9,12 +9,14 @@ use Payone\Gateway\KlarnaBase;
 use Payone\Gateway\KlarnaInstallments;
 use Payone\Gateway\KlarnaInvoice;
 use Payone\Gateway\KlarnaSofort;
+use Payone\Gateway\PayPalExpress;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
 use Payone\WooCommerceSubscription\WCSHandler;
 
 class Plugin {
+    // @deprecated
 	const CALLBACK_SLUG = 'payone-callback';
 
 	const PAYONE_IP_RANGES = [
@@ -46,6 +48,9 @@ class Plugin {
 			$settings->init();
 		}
 
+        add_action( 'woocommerce_api_payoneplugin', [ $this, 'handle_callback' ] );
+
+        // @deprecated
         add_action( 'init', [ $this, 'add_callback_url' ] );
 
 		$gateways = [
@@ -58,11 +63,14 @@ class Plugin {
 			\Payone\Gateway\Giropay::GATEWAY_ID            => \Payone\Gateway\Giropay::class,
 			\Payone\Gateway\SafeInvoice::GATEWAY_ID        => \Payone\Gateway\SafeInvoice::class,
 			\Payone\Gateway\PayPal::GATEWAY_ID             => \Payone\Gateway\PayPal::class,
+            \Payone\Gateway\PayPalExpress::GATEWAY_ID      => \Payone\Gateway\PayPalExpress::class,
 			\Payone\Gateway\PayDirekt::GATEWAY_ID          => \Payone\Gateway\PayDirekt::class,
 			\Payone\Gateway\Alipay::GATEWAY_ID             => \Payone\Gateway\Alipay::class,
             \Payone\Gateway\KlarnaInvoice::GATEWAY_ID      => \Payone\Gateway\KlarnaInvoice::class,
             \Payone\Gateway\KlarnaInstallments::GATEWAY_ID => \Payone\Gateway\KlarnaInstallments::class,
             \Payone\Gateway\KlarnaSofort::GATEWAY_ID       => \Payone\Gateway\KlarnaSofort::class,
+            \Payone\Gateway\Bancontact::GATEWAY_ID         => \Payone\Gateway\Bancontact::class,
+            \Payone\Gateway\Ideal::GATEWAY_ID              => \Payone\Gateway\Ideal::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -75,6 +83,7 @@ class Plugin {
 		load_plugin_textdomain( 'payone-woocommerce-3', false, $plugin_rel_path);
 
 		add_action( 'woocommerce_after_checkout_form', [ $this, 'add_javascript' ] );
+        add_action( 'woocommerce_after_cart', [ $this, 'add_javascript' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enque_javascript' ] );
 		add_action( 'woocommerce_thankyou', [$this, 'add_content_to_thankyou_page'] );
 
@@ -170,8 +179,11 @@ class Plugin {
 	 * @return string
 	 */
 	public static function get_callback_url( array $query ) {
-		// Get shop URL with appended callback slug
-		$url = get_home_url( null, self::CALLBACK_SLUG . '/' );
+        if ( get_option( 'permalink_structure' ) === '' ) {
+            $url = site_url() . '/?wc-api=payoneplugin';
+        } else {
+            $url = site_url() . '/wc-api/payoneplugin/';
+        }
 
 		// Parse shop URL to operate on it
 		$parsed_url = parse_url( $url );
@@ -244,58 +256,70 @@ class Plugin {
 		return ( $ip_decimal & $netmask_decimal ) === ( $range_decimal & $netmask_decimal );
 	}
 
+    // @deprecated
 	public function add_callback_url() {
 		add_rewrite_rule( '^' . self::CALLBACK_SLUG . '/?$', 'index.php?' . self::CALLBACK_SLUG . '=true', 'top' );
 		add_filter( 'query_vars', [ $this, 'add_rewrite_var' ] );
 		add_action( 'template_redirect', [ $this, 'catch_payone_callback' ] );
 	}
 
+    // @deprecated
 	public function add_rewrite_var( $vars ) {
 		$vars[] = self::CALLBACK_SLUG;
 
 		return $vars;
 	}
 
+    // @deprecated
 	public function catch_payone_callback() {
 		if ( get_query_var( self::CALLBACK_SLUG ) ) {
-
-            if ( $this->is_download_invoice_request() ) {
-                return $this->process_callback_download_invoice();
-            }
-            if ( $this->is_callback_after_redirect() ) {
-				return $this->process_callback_after_redirect();
-			}
-            if ( $this->is_manage_mandate_callback() ) {
-				return $this->process_manage_mandate_callback();
-			}
-            if ( $this->is_manage_mandate_getfile() ) {
-				return $this->process_manage_mandate_getfile();
-			}
-            if ( $this->is_klarna_start_session_callback() ) {
-                return $this->process_klarna_start_session_callback();
-            }
-
-			$response = 'ERROR';
-			if ( $this->request_is_from_payone() ) {
-				do_action( 'payone_transaction_callback' );
-
-				try {
-					$response = $this->process_callback();
-				} catch (\Exception $e) {
-					$response .= ' (' . $e->getMessage() . ')';
-				}
-
-				if ( $response === 'TSOK' ) {
-					Log::constructFromPostVars();
-				}
-			}
-
-			echo $response;
-			exit();
+            $this->handle_callback();
 		}
 	}
 
-	/**
+  public function handle_callback() {
+      if ( $this->is_download_invoice_request() ) {
+          return $this->process_callback_download_invoice();
+      }
+      if ( $this->is_callback_after_redirect() ) {
+          return $this->process_callback_after_redirect();
+      }
+      if ( $this->is_manage_mandate_callback() ) {
+          return $this->process_manage_mandate_callback();
+      }
+      if ( $this->is_manage_mandate_getfile() ) {
+          return $this->process_manage_mandate_getfile();
+      }
+      if ( $this->is_klarna_start_session_callback() ) {
+          return $this->process_klarna_start_session_callback();
+      }
+      if ( $this->is_paypal_express_set_checkout_callback() ) {
+          return $this->process_paypal_express_set_checkout_callback();
+      }
+      if ( $this->is_paypal_express_get_checkout() ) {
+          return $this->process_paypal_express_get_checkout();
+      }
+
+      $response = 'ERROR';
+      if ( $this->request_is_from_payone() ) {
+          do_action( 'payone_transaction_callback' );
+
+          try {
+              $response = $this->process_callback();
+          } catch (\Exception $e) {
+              $response .= ' (' . $e->getMessage() . ')';
+          }
+
+			    if ( $response === 'TSOK' ) {
+					    Log::construct_from_post_vars();
+			    }
+	    }
+
+      echo $response;
+      exit();
+  }
+
+  /**
 	 * @return string
 	 */
 	public function process_callback() {
@@ -561,6 +585,54 @@ class Plugin {
         return null;
     }
 
+    /**
+     * @return bool
+     */
+    private function is_paypal_express_set_checkout_callback() {
+        if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-paypal-express-set-checkout') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    private function process_paypal_express_set_checkout_callback() {
+        $gateway = self::find_gateway( PayPalExpress::GATEWAY_ID );
+        if ( $gateway ) {
+            return $gateway->process_set_checkout();
+        }
+
+        return null;
+    }
+
+    /**
+     * @return bool
+     */
+    private function is_paypal_express_get_checkout() {
+        if ( isset( $_GET['type'] ) && $_GET['type'] === 'paypal-express-get-checkout') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    private function process_paypal_express_get_checkout() {
+        $gateway = self::find_gateway( PayPalExpress::GATEWAY_ID );
+        if ( $gateway ) {
+            $workorderid = get_transient( PayPalExpress::TRANSIENT_KEY_WORKORDERID );
+
+            return $gateway->process_get_checkout( $workorderid );
+        }
+
+        return null;
+    }
+
 	/**
 	 * @param \WC_Order $order
 	 *
@@ -574,7 +646,9 @@ class Plugin {
 	public function add_javascript() {
 		if ( is_checkout() ) {
 			include PAYONE_VIEW_PATH . '/gateway/common/checkout.js.php';
-		}
+		} elseif ( is_cart() ) {
+            include PAYONE_VIEW_PATH . '/gateway/common/cart.js.php';
+        }
 	}
 
 	public function enque_javascript() {
@@ -585,7 +659,7 @@ class Plugin {
 
 	public function add_stylesheet() {
 		if ( is_checkout() ) {
-			echo "\n<style type='text/css'>\n";
+			echo "\n<style>\n";
 			include PAYONE_VIEW_PATH . '/gateway/common/checkout.css';
 			echo "\n</style>\n";
 		}

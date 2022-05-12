@@ -1,0 +1,12 @@
+/.wordpress-org
+/.git
+/.github
+/ci
+/tests
+/scripts
+
+.distignore
+.README.md
+.phpunit.xml
+.phpcs.ruleset.xml
+.gitlab-ci.yml

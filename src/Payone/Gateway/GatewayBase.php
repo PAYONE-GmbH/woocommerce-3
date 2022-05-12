@@ -8,7 +8,9 @@ use Payone\Transaction\Capture;
 use Payone\Transaction\Debit;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
-	/**
+    const TRANSIENT_KEY_SELECT_GATEWAY = 'payone_select_gateway';
+
+    /**
 	 * @var array
 	 */
 	protected $global_settings;
@@ -193,9 +195,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
     protected function add_data_to_debit( Debit $capture, \WC_Order $order ) { }
 
 	/**
-	 * @todo Es ist nicht klar, warum das nicht ohne eigenen Code funktioniert. Die Doku zu $this->countries sieht
-	 *       eigentlich so aus, als ob es funktionieren müsste.
-	 *
 	 * @return bool
 	 */
 	public function is_available() {
@@ -425,7 +424,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $this->text_on_booking_statement;
 	}
 
-	protected function add_email_meta_hook($callable = null) {
+    protected function add_email_meta_hook($callable = null) {
 		if ( $callable ) {
 			add_action( 'woocommerce_email_order_meta', $callable, 10, 3 );
 		}

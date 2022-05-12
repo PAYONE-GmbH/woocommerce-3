@@ -482,7 +482,7 @@ class CreditCard extends RedirectGatewayBase {
             $transaction = new \Payone\Transaction\CreditCard( $this );
         }
 
-        $transaction->set( 'reference', $order->get_id() );
+        $transaction->set_reference( $order );
         $transaction->set( 'recurrence', 'recurring' );
         $transaction->set( 'customer_is_present', 'yes' );
 
