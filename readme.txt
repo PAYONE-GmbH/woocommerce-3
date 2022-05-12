@@ -37,8 +37,8 @@ You are very welcome to contribute to this plugin on Github: https://github.com/
 == Installation ==
 
 1. Upload the plugin files to the `/wp-content/plugins/payone-woocommerce` directory, or install the plugin through the WordPress plugins screen directly.
-1. Activate the plugin through the 'Plugins' screen in WordPress
-1. Configure using the "PAYONE" Link in the left navigation tab
+2. Activate the plugin through the 'Plugins' screen in WordPress
+3. Configure using the "PAYONE" Link in the left navigation tab
 
 To successfully configure this plugin, you will need API credentials from PAYONE. Contact us through https://www.payone.com/en/contact/request-a-quote/ to get you set up.
 
@@ -63,86 +63,11 @@ If you have found anything security related, please contact our technical suppor
 
 == Changelog ==
 
-= 1.4.0 =
-* Initial plugin store release
-
-= 1.5.0 =
-
-New Features
-
-* more compatibility when querying order numbers
-* New translations for German (informal) and Swiss
-* Submit Customer IP and Shipping Data with every payment method
+== 2.0.3 ==
 
 Bugfixes
 
-* Discounts are now calculated correctly
-
-Maintenance
-
-* tested with Woocommerce 3.7
-* tested with Wordpress 5.2
-
-## A Word on PSD2
-
-You can configure the plugin for optimized conversion when using Credit Cards and 3-D Secure 2.0. For more info see our Remark on docs.payone.com: https://docs.payone.com/display/public/INT/WooCommerce+Plugin#WooCommercePlugin-EnsuringMaximumConversionWith3DSecure2.0
-
-= 1.6.0 =
-
-New Features
-
-* Use SKU in cart items where possible
-
-Bugfixes
-
-* Credit Card iFrames are now stylable (not just their spans)
-* fixed a conflict with the third party amazon pay plugin
-* use correct it[n] Parameters
-* state and shipping_state only get sent when needed
-
-Maintenance
-
-* tested with Wordpress 5.3.2 and Woocommerce 3.8
-* first Release which automatically syncs Github and Wordpress Store Releases
-
-= 1.6.1 =
-
-Maintenance
-
-* fixed minor bug in CI Pipeline, no alterations to actual plugin code
-
-= 1.6.2 =
-
-Bugfixes
-
-* fixed a bug where creditcard checkouts could break when using Germaized Plugin
-
-Maintenance
-
-* tested with woocommerce 4.0.0 and Wordpress 5.3.2
-
-= 1.7.0 =
-
-New Features
-
-* New Payment Method: EPS
-* B2B Mode for PAYONE safe Invoice
-
-Bugfixes
-
-* way better handling of appointed messages should improve customer feedback after redirect payments
-* better rendering of credit card iFrames
-* fixed some log errors
-
-Maintenance
-
-* tested with wordpress 5.5 and woocommerce 4.3.2
-
-== 1.7.1 ==
-
-Bugfixes
-
-* fixed a bug where not all files of the plugin were uploaded to the wordpress store
+* payment method logos are now shown correctly in checkout
 
 == 2.0.0 ==
 
@@ -175,8 +100,83 @@ Tested with:
 wordpress version: 5.9.2
 woocommerce version: 6.3.1
 
-== 2.0.3 ==
+== 1.7.1 ==
 
 Bugfixes
 
-* payment method logos are now shown correctly in checkout
+* fixed a bug where not all files of the plugin were uploaded to the wordpress store
+
+= 1.7.0 =
+
+New Features
+
+* New Payment Method: EPS
+* B2B Mode for PAYONE safe Invoice
+
+Bugfixes
+
+* way better handling of appointed messages should improve customer feedback after redirect payments
+* better rendering of credit card iFrames
+* fixed some log errors
+
+Maintenance
+
+* tested with wordpress 5.5 and woocommerce 4.3.2
+
+= 1.6.1 =
+
+Maintenance
+
+* fixed minor bug in CI Pipeline, no alterations to actual plugin code
+
+= 1.6.2 =
+
+Bugfixes
+
+* fixed a bug where creditcard checkouts could break when using Germaized Plugin
+
+Maintenance
+
+* tested with woocommerce 4.0.0 and Wordpress 5.3.2
+
+= 1.6.0 =
+
+New Features
+
+* Use SKU in cart items where possible
+
+Bugfixes
+
+* Credit Card iFrames are now stylable (not just their spans)
+* fixed a conflict with the third party amazon pay plugin
+* use correct it[n] Parameters
+* state and shipping_state only get sent when needed
+
+Maintenance
+
+* tested with Wordpress 5.3.2 and Woocommerce 3.8
+* first Release which automatically syncs Github and Wordpress Store Releases
+
+= 1.5.0 =
+
+New Features
+
+* more compatibility when querying order numbers
+* New translations for German (informal) and Swiss
+* Submit Customer IP and Shipping Data with every payment method
+
+Bugfixes
+
+* Discounts are now calculated correctly
+
+Maintenance
+
+* tested with Woocommerce 3.7
+* tested with Wordpress 5.2
+
+## A Word on PSD2
+
+You can configure the plugin for optimized conversion when using Credit Cards and 3-D Secure 2.0. For more info see our Remark on docs.payone.com: https://docs.payone.com/display/public/INT/WooCommerce+Plugin#WooCommercePlugin-EnsuringMaximumConversionWith3DSecure2.0
+
+= 1.4.0 =
+* Initial plugin store release
