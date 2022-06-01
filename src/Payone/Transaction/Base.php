@@ -7,14 +7,6 @@ use Payone\Payone\Api\Request;
 use Payone\Plugin;
 
 class Base extends Request {
-    /**
-     * Define list of country codes for which state and shipping_state
-     * parameters are required to be transmitted to PAYONE.
-     *
-     * @see https://docs.payone.com/display/public/PLATFORM/state+-+definition
-     */
-    const STATE_REQUIRED_COUNTRIES = 'US,CA,CN,JP,MX,BR,AR,ID,TH,IN';
-
 	/**
 	 * @var GatewayBase
 	 */
@@ -26,29 +18,6 @@ class Base extends Request {
 		$this->gateway = null;
 		$this->set( 'request', $type );
 	}
-
-    /**
-     * Returns country codes for which the
-     * state parameters are required.
-     *
-     * @return string[] List of country codes.
-     */
-	protected function get_state_required_countries()
-    {
-        return array_map('trim', explode(',', static::STATE_REQUIRED_COUNTRIES));
-    }
-
-    /**
-     * Checks whether or not the provided country
-     * code indicates state parameters requirement.
-     *
-     * @param string $country The country code to check.
-     * @return bool True if the provided country indicates that state parameters are required.
-     */
-    protected function is_state_required($country)
-    {
-        return in_array($country, $this->get_state_required_countries(), true);
-    }
 
 	/**
 	 * @return bool
@@ -103,14 +72,8 @@ class Base extends Request {
 		$this->set( 'zip', $order->get_billing_postcode() );
 		$this->set( 'city', $order->get_billing_city() );
 
-		if (!empty($company)) {
+		if ( ! empty( $company ) ) {
             $this->set( 'company', $company );
-        }
-
-        // Remove state for selected countries.
-        // See: https://docs.payone.com/display/public/PLATFORM/state+-+definition
-		if ($this->is_state_required($country)) {
-            $this->set( 'state', $order->get_billing_state() );
         }
 
 		$this->set( 'country', $country );
@@ -143,12 +106,6 @@ class Base extends Request {
 	    $data = array_map(function ($value) {
 	        return empty($value = trim($value)) ? null : $value;
         }, $data);
-
-	    // Remove shipping_state for selected countries.
-        // See: https://docs.payone.com/display/public/PLATFORM/state+-+definition
-        if (!$this->is_state_required($data['shipping_country'])) {
-            unset($data['shipping_state']);
-        }
 
 	    // Set valid PAYONE API shipping data.
 	    foreach ($data as $name => $value) {

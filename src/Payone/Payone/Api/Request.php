@@ -3,9 +3,18 @@
 namespace Payone\Payone\Api;
 
 class Request extends DataTransfer {
-	const API_URL = 'https://api.pay1.de/post-gateway/';
+    const API_URL = 'https://api.pay1.de/post-gateway/';
 	const SOLUTION_NAME = 'payone-woocommerce-3';
 	const INTEGRATOR_NAME = 'woocommerce';
+
+    /**
+     * Define list of country codes for which state and shipping_state
+     * parameters are required to be transmitted to PAYONE.
+     *
+     * @see https://docs.payone.com/display/public/PLATFORM/state+-+definition
+     * @see https://docs.payone.com/display/public/PLATFORM/shipping_state+-+definition
+     */
+    const STATE_REQUIRED_COUNTRIES = ['US', 'CA', 'CN', 'JP', 'MX', 'BR', 'AR', 'ID', 'TH', 'IN'];
 
 	private $api_log_enabled = false;
 
@@ -49,6 +58,8 @@ class Request extends DataTransfer {
 	 * @return Response
 	 */
 	public function submit() {
+        $this->maybe_remove_state_parameter();
+
 		$ch = curl_init( self::API_URL );
 		curl_setopt_array( $ch,
 			[
@@ -262,4 +273,32 @@ class Request extends DataTransfer {
 
 		return null;
 	}
+
+    /**
+     * Remove state and shipping_date for selected countries.
+     * @see https://docs.payone.com/display/public/PLATFORM/state+-+definition
+     * @see https://docs.payone.com/display/public/PLATFORM/shipping_state+-+definition
+     *
+     * @return void
+     */
+    private function maybe_remove_state_parameter() {
+        if ( ! $this->is_state_required( $this->get('shipping_country', '' ) ) ) {
+            $this->remove( 'shipping_state' );
+        }
+        if ( ! $this->is_state_required( $this->get('country', '' ) ) ) {
+            $this->remove( 'state' );
+        }
+    }
+
+    /**
+     * Checks whether or not the provided country
+     * code indicates state parameters requirement.
+     *
+     * @param string $country The country code to check.
+     * @return bool True if the provided country indicates that state parameters are required.
+     */
+    private function is_state_required( $country )
+    {
+        return in_array( $country, self::STATE_REQUIRED_COUNTRIES, true );
+    }
 }
