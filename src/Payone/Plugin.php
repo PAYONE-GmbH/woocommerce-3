@@ -71,7 +71,9 @@ class Plugin {
             \Payone\Gateway\KlarnaSofort::GATEWAY_ID       => \Payone\Gateway\KlarnaSofort::class,
             \Payone\Gateway\Bancontact::GATEWAY_ID         => \Payone\Gateway\Bancontact::class,
             \Payone\Gateway\Ideal::GATEWAY_ID              => \Payone\Gateway\Ideal::class,
-		];
+            \Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID => \Payone\Gateway\RatepayOpenInvoice::class,
+            \Payone\Gateway\RatepayDirectDebit::GATEWAY_ID => \Payone\Gateway\RatepayDirectDebit::class,
+        ];
 
 		foreach ( $gateways as $gateway ) {
 			add_filter( 'woocommerce_payment_gateways', [ $gateway, 'add' ] );
