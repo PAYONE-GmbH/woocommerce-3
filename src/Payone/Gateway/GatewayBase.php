@@ -244,7 +244,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				'title'   => __( 'Enable/Disable', 'woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Enable this payment method', 'payone-woocommerce-3' ),
-				'default' => 'yes',
+				'default' => 'no',
 			],
 			'title'                     => [
 				'title'       => __( 'Title', 'woocommerce' ),
