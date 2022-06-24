@@ -18,8 +18,59 @@ abstract class RatepayBase extends RedirectGatewayBase {
         $this->hide_when_no_shipping = true;
     }
 
-    public function determine_shop_id( \WC_Order $order ) {
-        return '88880103'; // @todo
+    /**
+     * @param \WC_Order|\WC_Cart $order_or_cart
+     *
+     * @return null|string
+     */
+    public function determine_shop_id( $order_or_cart ) {
+        if ( $order_or_cart instanceof \WC_Order ) {
+            $currency = $order_or_cart->get_currency();
+            $country_code_billing = strtoupper( $order_or_cart->get_billing_country() );
+            $country_code_delivery = strtoupper( $order_or_cart->get_shipping_country() );
+            $amount = (float) $order_or_cart->get_total( 'non-view' );
+        } elseif ( $order_or_cart instanceof \WC_Cart ) {
+            $currency = get_woocommerce_currency();
+            $country_code_billing = strtoupper( WC()->customer->get_billing_country() );
+            $country_code_delivery = strtoupper( WC()->customer->get_shipping_country() );
+            $amount = (float) $order_or_cart->get_total( 'non-view' );
+        } else {
+            return null;
+        }
+
+        $shop_ids_data = (array) $this->get_option( 'shop_ids_data', [] );
+        foreach ( $shop_ids_data as $shop_id => $data ) {
+            $basket_min_max = $this->get_basket_min_max( $shop_id );
+            if ( $data['currency'] === $currency
+                && $data['country_code_billing'] === $country_code_billing
+                && $data['country_code_delivery'] === $country_code_delivery
+                && $amount >= $basket_min_max['min']
+                && $amount <= $basket_min_max['max']
+            ) {
+                return $shop_id;
+            }
+
+        }
+
+        return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_available() {
+        $is_available = parent::is_available();
+
+        if ( $is_available ) {
+            $shop_id = $this->determine_shop_id( WC()->cart );
+
+            if ( ! $shop_id ) {
+                return false;
+            }
+        }
+        return true; // @todo Abhängigkeit von shop_id und min/max amount
+
+        return $is_available;
     }
 
     protected function add_data_to_capture( Capture $capture, \WC_Order $order ) {
@@ -134,14 +185,14 @@ abstract class RatepayBase extends RedirectGatewayBase {
             $shop_id_currency = isset( $shop_id_data['currency'] ) ? $shop_id_data['currency'] : '-';
             $shop_id_country_code_billing = isset( $shop_id_data['country_code_billing'] ) ? $shop_id_data['country_code_billing'] : '-';
             $shop_id_country_code_delivery = isset( $shop_id_data['country_code_delivery'] ) ? $shop_id_data['country_code_delivery'] : '-';
-            $shop_id_invoice_sum_min = isset( $shop_id_data['invoice_sum_min'] ) ? $shop_id_data['invoice_sum_min'] : '-';
+            $sum_min_max = $this->get_basket_min_max( $shop_id );
             $shop_id_invoice_sum_max = isset( $shop_id_data['invoice_sum_max'] ) ? $shop_id_data['invoice_sum_max'] : '-';
             $out .= '<tr><td><input type="text" name="' . $key . '" value="' . esc_attr( $shop_id ) . '"></td>';
             $out .= '<td>' . $shop_id_currency
                  . '</td><td>' . $shop_id_country_code_billing
                  . '</td><td>' . $shop_id_country_code_delivery
-                 . '</td><td>' . number_format_i18n( $shop_id_invoice_sum_min )
-                 . '</td><td>' . number_format_i18n( $shop_id_invoice_sum_max )
+                 . '</td><td>' . number_format_i18n( $sum_min_max['min'] )
+                 . '</td><td>' . number_format_i18n( $sum_min_max['max'] )
                  . '</td></tr>';
         }
         $out .= '<tr><td><input type="text" name="' . $key . '" value="" placeholder="' . __( 'Add Shop-ID', 'payone-woocommerce-3' ) .'"></td>';
@@ -170,6 +221,11 @@ abstract class RatepayBase extends RedirectGatewayBase {
                         'country_code_delivery' => $response->get( 'add_paydata[country-code-delivery]' ),
                         'invoice_sum_min' => $response->get( 'add_paydata[tx-limit-invoice-min]' ),
                         'invoice_sum_max' => $response->get( 'add_paydata[tx-limit-invoice-max]' ),
+                        'direct_debit_sum_min' => $response->get( 'add_paydata[tx-limit-elv-min]' ),
+                        'direct_debit_sum_max' => $response->get( 'add_paydata[tx-limit-elv-max]' ),
+                        'month_allowed' => $response->get( 'add_paydata[month-allowed]' ),
+                        'installments_sum_min' => $response->get( 'add_paydata[tx-limit-installment-min]' ),
+                        'installments_sum_max' => $response->get( 'add_paydata[tx-limit-installment-max]' ),
                     ];
 
                     $shop_ids_data = (array) $this->get_option( 'shop_ids_data', [] );
@@ -180,6 +236,30 @@ abstract class RatepayBase extends RedirectGatewayBase {
         }
 
         return implode( ',', $shop_ids );
+    }
+
+    public function get_basket_min_max( $shop_id ) {
+        $shop_ids_data = (array) $this->get_option( 'shop_ids_data', [] );
+        $shop_id_data = isset( $shop_ids_data[$shop_id] ) ? $shop_ids_data[$shop_id] : [];
+
+        $min = -1;
+        $max = -1;
+
+        if ( $this instanceof RatepayInstallments ) {
+            $min = isset( $shop_id_data['installments_sum_min'] ) ? $shop_id_data['installments_sum_min'] : -1;
+            $max = isset( $shop_id_data['installments_sum_max'] ) ? $shop_id_data['installments_sum_max'] : -1;
+        } elseif ( $this instanceof RatepayOpenInvoice ) {
+            $min = isset( $shop_id_data['invoice_sum_min'] ) ? $shop_id_data['invoice_sum_min'] : -1;
+            $max = isset( $shop_id_data['invoice_sum_max'] ) ? $shop_id_data['invoice_sum_max'] : -1;
+        } elseif ( $this instanceof RatepayDirectDebit ) {
+            $min = isset( $shop_id_data['direct_debit_sum_min'] ) ? $shop_id_data['direct_debit_sum_min'] : -1;
+            $max = isset( $shop_id_data['direct_debit_sum_max'] ) ? $shop_id_data['direct_debit_sum_max'] : -1;
+        }
+
+        return [
+            'min' => $min,
+            'max' => $max,
+        ];
     }
 
     /**

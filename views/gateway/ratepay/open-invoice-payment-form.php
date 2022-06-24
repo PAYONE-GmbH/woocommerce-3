@@ -12,3 +12,5 @@
         </span>
     </p>
 </fieldset>
+
+<?php include( '_disclaimer.php' );
