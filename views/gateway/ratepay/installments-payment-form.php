@@ -103,62 +103,64 @@
     <p class="form-row form-row-full form-row-last">
         <label>&nbsp;</label>
         <span class="woocommerce-input-wrapper">
-            <button id="ratepay_installments_calculate_button">Berechnen</button>
+            <button id="ratepay_installments_calculate_button">
+                <?php _e( 'Calculate', 'payone-woocommerce-3' ); ?>
+            </button>
         </span>
 </fieldset>
 </fieldset>
 <div id="ratepay-installments-plan">
-    <h3>Persönliche Ratenberechnung</h3>
+    <h3><?php _e( 'Personal calculation', 'payone-woocommerce-3' ); ?></h3>
     <div id="ratepay-installments-plan-short">
         <table class="table">
             <tr>
-                <th><span id="ratepay-installments-plan-short-rates"></span> monatliche Raten</th>
+                <th><span id="ratepay-installments-plan-short-rates"></span> <?php _e( 'monthly installments', 'payone-woocommerce-3' ); ?></th>
                 <td><span id="ratepay-installments-plan-short-rate"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
             <tr>
-                <th>Gesamtbetrag</th>
+                <th><?php _e( 'Total amount', 'payone-woocommerce-3' ); ?></th>
                 <td><span id="ratepay-installments-plan-short-total-amount"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
         </table>
-        <small><a href="#" id="ratepay-installments-show-details">Zeige Details</a></small>
+        <small><a href="#" id="ratepay-installments-show-details"><?php _e( 'Show details', 'payone-woocommerce-3' ); ?></a></small>
     </div>
     <div id="ratepay-installments-plan-long">
         <table class="table">
             <tr>
-                <th>Warenwert</th>
+                <th><?php _e( 'Basket amount', 'payone-woocommerce-3' ); ?></th>
                 <td><span id="ratepay-installments-plan-amount">&nbsp;<?php echo $currency; ?></td>
             </tr>
             <tr>
-                <th>Vertragsabschlussgebühr</th>
+                <th><?php _e( 'Servicecharge', 'payone-woocommerce-3' ); ?></th>
                 <td><span id="ratepay-installments-plan-interest-service-charge"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
             <tr>
-                <th>Effektiver Jahreszins</th>
+                <th><?php _e( 'Annual percentage rate', 'payone-woocommerce-3' ); ?></th>
                 <td><span id="ratepay-installments-plan-annual-percentage-rate"></span>&nbsp;%</td>
             </tr>
             <tr>
-                <th>Sollzins p.a. (gebunden)</th>
+                <th><?php _e( 'Interest rate', 'payone-woocommerce-3' ); ?></th>
                 <td><span id="ratepay-installments-plan-interest-rate"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
             <tr>
-                <th>Zinsbetrag</th>
+                <th><?php _e( 'Interest amount', 'payone-woocommerce-3' ); ?></th>
                 <td><span id="ratepay-installments-plan-interest-amount"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
             <tr></tr>
             <tr>
-                <th><span id="ratepay-installments-plan-rates"></span> monatliche Raten à</th>
+                <th><span id="ratepay-installments-plan-rates"></span> <?php _e( 'monthly installments', 'payone-woocommerce-3' ); ?> à</th>
                 <td><span id="ratepay-installments-plan-rate"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
             <tr>
-                <th>zzgl. einer Abschlussrate</th>
+                <th><?php _e( 'incl. one final installment', 'payone-woocommerce-3' ); ?></th>
                 <td><span id="ratepay-installments-plan-last-rate"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
             <tr>
-                <th>Gesamtbetrag</th>
+                <th><?php _e( 'Total amount', 'payone-woocommerce-3' ); ?></th>
                 <td><span id="ratepay-installments-plan-total-amount"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
         </table>
-        <small><a href="#" id="ratepay-installments-hide-details">Schließe Details</a></small>
+        <small><a href="#" id="ratepay-installments-hide-details"><?php _e( 'Hide details', 'payone-woocommerce-3' ); ?></a></small>
     </div>
 </div>
 <fieldset>

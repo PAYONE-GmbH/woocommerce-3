@@ -1,3 +1,3 @@
 <p>
-    <?php _e( 'Mit Klicken auf Zahlungspflichtig bestellen erklären Sie sich mit den <a href="https://www.ratepay.com/legal-payment-terms/" target="_blank" rel="noopener">Ratepay Zahlungsbedingungen</a> sowie mit der Durchführung einer <a href="https://www.ratepay.com/legal-payment-dataprivacy/" target="_blank" rel="noopener">Risikoprüfung durch Ratepay</a> einverstanden.', 'payone-woocommerce-3' ); ?>
+    <?php _e( 'With clicking on Place Order you agree to <a href="https://www.ratepay.com/legal-payment-terms/" target="_blank" rel="noopener">Ratepay Terms of Payment</a> as well as to the performance of a <a href="https://www.ratepay.com/legal-payment-dataprivacy/" target="_blank" rel="noopener">risk check by Ratepay</a>.', 'payone-woocommerce-3' ); ?>
 </p>

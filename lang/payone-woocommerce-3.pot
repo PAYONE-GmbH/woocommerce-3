@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PAYONE v1.0.0\n"
-"POT-Creation-Date: 2022-04-26 07:41+0000\n"
+"POT-Creation-Date: 2022-07-21 09:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Your Name <you@example.com>\n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -28,11 +28,11 @@ msgstr ""
 msgid "Abort checkout"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:310
+#: src/Payone/Gateway/GatewayBase.php:307
 msgid "Account ID"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:329
+#: src/Payone/Gateway/GatewayBase.php:326
 #: src/Payone/Admin/Option/Account.php:52
 msgid "Activate PDF download"
 msgstr ""
@@ -47,8 +47,12 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:284
+#: src/Payone/Gateway/GatewayBase.php:281
 msgid "Active Countries"
+msgstr ""
+
+#: src/Payone/Gateway/RatepayBase.php:198
+msgid "Add Shop-ID"
 msgstr ""
 
 #: src/Payone/Admin/Option/AddressChecks.php:32
@@ -75,6 +79,10 @@ msgstr ""
 msgid "AmEX"
 msgstr ""
 
+#: views/gateway/ratepay/installments-payment-form.php:138
+msgid "Annual percentage rate"
+msgstr ""
+
 #: src/Payone/Admin/Option/Account.php:72
 msgid "API-Log"
 msgstr ""
@@ -96,11 +104,15 @@ msgstr ""
 msgid "Austria"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:278
+#: src/Payone/Gateway/GatewayBase.php:275
 msgid "Authorization"
 msgstr ""
 
-#: views/gateway/eps/payment-form.php:6
+#: src/Payone/Gateway/Bancontact.php:14 src/Payone/Gateway/Bancontact.php:19
+msgid "Bancontact"
+msgstr ""
+
+#: views/gateway/ideal/payment-form.php:6 views/gateway/eps/payment-form.php:6
 msgid "Bank group"
 msgstr ""
 
@@ -109,14 +121,28 @@ msgstr ""
 msgid "Basic"
 msgstr ""
 
+#: views/gateway/ratepay/installments-payment-form.php:130
+msgid "Basket amount"
+msgstr ""
+
 #: src/Payone/Admin/Option/CreditCheck.php:133
 msgid "Before choosing payment method"
 msgstr ""
 
 #: views/gateway/giropay/payment-form.php:11
 #: views/gateway/sepa-direct-debit/payment-form.php:11
-#: src/Payone/Gateway/GatewayBase.php:607
+#: src/Payone/Gateway/GatewayBase.php:604
 msgid "BIC"
+msgstr ""
+
+#: views/gateway/ratepay/open-invoice-payment-form.php:8
+#: views/gateway/ratepay/installments-payment-form.php:169
+#: views/gateway/ratepay/direct-debit-payment-form.php:8
+msgid "Birthday"
+msgstr ""
+
+#: views/gateway/ratepay/installments-payment-form.php:107
+msgid "Calculate"
 msgstr ""
 
 #: src/Payone/Admin/Option/AddressChecks.php:166
@@ -163,12 +189,16 @@ msgstr ""
 msgid "Check POS black list"
 msgstr ""
 
-#: views/gateway/common/cart.js.php:2
+#: views/gateway/common/cart.js.php:4
 msgid "checkout-paypal-en.png"
 msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:62
 msgid "China Union Pay"
+msgstr ""
+
+#: views/gateway/ratepay/installments-payment-form.php:85
+msgid "Choose"
 msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:115
@@ -184,23 +214,23 @@ msgstr ""
 msgid "Correct automatically"
 msgstr ""
 
-#: src/Payone/Plugin.php:466
+#: src/Payone/Plugin.php:488
 msgid "Could not find a file on server."
 msgstr ""
 
-#: src/Payone/Plugin.php:406 src/Payone/Plugin.php:431
+#: src/Payone/Plugin.php:428 src/Payone/Plugin.php:453
 msgid "Could not find order."
 msgstr ""
 
-#: src/Payone/Plugin.php:457
+#: src/Payone/Plugin.php:479
 msgid "Could not get invoice from PAYONE gateway."
 msgstr ""
 
-#: src/Payone/Plugin.php:441
+#: src/Payone/Plugin.php:463
 msgid "Could not get payment method for order."
 msgstr ""
 
-#: src/Payone/Plugin.php:473
+#: src/Payone/Plugin.php:495
 msgid "Could not read a file from server."
 msgstr ""
 
@@ -243,6 +273,10 @@ msgstr ""
 msgid "CSS"
 msgstr ""
 
+#: src/Payone/Gateway/RatepayBase.php:177
+msgid "Currency"
+msgstr ""
+
 #: src/Payone/Gateway/CreditCard.php:42
 msgid "Custom"
 msgstr ""
@@ -251,7 +285,7 @@ msgstr ""
 msgid "Customer decides"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:260
+#: src/Payone/Gateway/GatewayBase.php:257
 msgid "Customer Message"
 msgstr ""
 
@@ -301,7 +335,7 @@ msgstr ""
 msgid "direct.debit.mandate.checkbox.label"
 msgstr ""
 
-#: src/Payone/Transaction/Base.php:275 src/Payone/Transaction/Base.php:364
+#: src/Payone/Transaction/Base.php:232 src/Payone/Transaction/Base.php:321
 msgid "Discount"
 msgstr ""
 
@@ -318,12 +352,12 @@ msgstr ""
 msgid "Download mandate as PDF"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:338
+#: src/Payone/Gateway/GatewayBase.php:335
 #: src/Payone/Admin/Option/Account.php:57
 msgid "Dynamic invoice text"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:343
+#: src/Payone/Gateway/GatewayBase.php:340
 #: src/Payone/Admin/Option/Account.php:62
 msgid "Dynamic refund text"
 msgstr ""
@@ -332,7 +366,7 @@ msgstr ""
 msgid "Enable automatic failover for WooCommerce Subscriptions?"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:249
+#: src/Payone/Gateway/GatewayBase.php:246
 msgid "Enable this payment method"
 msgstr ""
 
@@ -387,15 +421,25 @@ msgstr ""
 msgid "Height"
 msgstr ""
 
+#: views/gateway/ratepay/installments-payment-form.php:163
+msgid "Hide details"
+msgstr ""
+
 #. URI of the plugin
 #. Author URI of the plugin
 msgid "https://www.payone.com/"
 msgstr ""
 
+#: views/gateway/ratepay/installments-payment-form.php:177
+#: views/gateway/ratepay/direct-debit-payment-form.php:16
 #: views/gateway/giropay/payment-form.php:7
 #: views/gateway/sepa-direct-debit/payment-form.php:7
-#: src/Payone/Gateway/GatewayBase.php:605
+#: src/Payone/Gateway/GatewayBase.php:602
 msgid "IBAN"
+msgstr ""
+
+#: src/Payone/Gateway/Ideal.php:14 src/Payone/Gateway/Ideal.php:19
+msgid "iDEAL"
 msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:136 src/Payone/Gateway/CreditCard.php:180
@@ -410,6 +454,10 @@ msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:311
 msgid "Iframe width"
+msgstr ""
+
+#: views/gateway/ratepay/installments-payment-form.php:155
+msgid "incl. one final installment"
 msgstr ""
 
 #: src/Payone/Admin/Option/CreditCheck.php:142
@@ -428,6 +476,14 @@ msgstr ""
 msgid "Integration of PAYONE payment into your WooCommerce store."
 msgstr ""
 
+#: views/gateway/ratepay/installments-payment-form.php:146
+msgid "Interest amount"
+msgstr ""
+
+#: views/gateway/ratepay/installments-payment-form.php:142
+msgid "Interest rate"
+msgstr ""
+
 #: views/order/order-download-invoice.php:15
 #: views/admin/meta-boxes/order-download-invoice.php:14
 #: src/Payone/Gateway/Invoice.php:23 src/Payone/Gateway/Invoice.php:28
@@ -438,11 +494,15 @@ msgstr ""
 msgid "Invoice address"
 msgstr ""
 
+#: src/Payone/Gateway/RatepayBase.php:178
+msgid "Invoice country"
+msgstr ""
+
 #: src/Payone/Gateway/SafeInvoice.php:49 src/Payone/Gateway/Invoice.php:74
 msgid "Invoice has been sent"
 msgstr ""
 
-#: src/Payone/Plugin.php:448
+#: src/Payone/Plugin.php:470
 msgid "Invoice module is not enabled."
 msgstr ""
 
@@ -454,7 +514,7 @@ msgstr ""
 msgid "JCB"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:315
+#: src/Payone/Gateway/GatewayBase.php:312
 #: src/Payone/Admin/Option/Account.php:37
 msgid "Key"
 msgstr ""
@@ -494,6 +554,10 @@ msgstr ""
 msgid "Mastercard"
 msgstr ""
 
+#: src/Payone/Gateway/RatepayBase.php:181
+msgid "Max. basket"
+msgstr ""
+
 #: src/Payone/Gateway/CreditCard.php:400
 msgid "Max. Chars"
 msgstr ""
@@ -508,11 +572,11 @@ msgstr ""
 msgid "Maximum cart value"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:270
+#: src/Payone/Gateway/GatewayBase.php:267
 msgid "Maximum order value"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:300
+#: src/Payone/Gateway/GatewayBase.php:297
 #: src/Payone/Admin/Option/Account.php:22
 msgid "Merchant ID"
 msgstr ""
@@ -521,8 +585,12 @@ msgstr ""
 msgid "Merchant-ID"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:275
+#: src/Payone/Gateway/GatewayBase.php:272
 msgid "Method of Authorization"
+msgstr ""
+
+#: src/Payone/Gateway/RatepayBase.php:180
+msgid "Min. basket"
 msgstr ""
 
 #: src/Payone/Admin/Option/AddressChecks.php:57
@@ -530,7 +598,7 @@ msgstr ""
 msgid "Minimum cart value"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:265
+#: src/Payone/Gateway/GatewayBase.php:262
 msgid "Minimum order value"
 msgstr ""
 
@@ -553,11 +621,20 @@ msgstr ""
 msgid "Moment of assessment"
 msgstr ""
 
+#: views/gateway/ratepay/installments-payment-form.php:117
+#: views/gateway/ratepay/installments-payment-form.php:151
+msgid "monthly installments"
+msgstr ""
+
+#: views/gateway/ratepay/installments-payment-form.php:97
+msgid "Monthly rate"
+msgstr ""
+
 #: src/Payone/Gateway/SepaDirectDebit.php:44
 #: src/Payone/Gateway/SepaDirectDebit.php:53
-#: src/Payone/Gateway/CreditCard.php:31 src/Payone/Gateway/GatewayBase.php:294
-#: src/Payone/Gateway/GatewayBase.php:323
-#: src/Payone/Gateway/GatewayBase.php:332
+#: src/Payone/Gateway/CreditCard.php:31 src/Payone/Gateway/GatewayBase.php:291
+#: src/Payone/Gateway/GatewayBase.php:320
+#: src/Payone/Gateway/GatewayBase.php:329
 #: src/Payone/Admin/Option/AddressChecks.php:108
 #: src/Payone/Admin/Option/AddressChecks.php:156
 #: src/Payone/Admin/Option/CreditCheck.php:103
@@ -571,6 +648,10 @@ msgstr ""
 
 #: src/Payone/Gateway/SepaDirectDebit.php:36
 msgid "None (only possible if PAYONE Mandate Management is inactive)"
+msgstr ""
+
+#: views/gateway/ratepay/installments-payment-form.php:80
+msgid "Number of monthly installments"
 msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:35
@@ -602,10 +683,11 @@ msgstr ""
 msgid "Payment error: "
 msgstr ""
 
-#: src/Payone/Gateway/PayDirekt.php:58 src/Payone/Gateway/CreditCard.php:511
-#: src/Payone/Gateway/Sofort.php:57 src/Payone/Gateway/Alipay.php:60
-#: src/Payone/Gateway/Giropay.php:58 src/Payone/Gateway/PayPalBase.php:50
-#: src/Payone/Gateway/KlarnaBase.php:87
+#: src/Payone/Gateway/Bancontact.php:58 src/Payone/Gateway/PayDirekt.php:58
+#: src/Payone/Gateway/CreditCard.php:511 src/Payone/Gateway/Sofort.php:57
+#: src/Payone/Gateway/Ideal.php:74 src/Payone/Gateway/Alipay.php:60
+#: src/Payone/Gateway/RatepayBase.php:144 src/Payone/Gateway/Giropay.php:58
+#: src/Payone/Gateway/PayPalBase.php:50 src/Payone/Gateway/KlarnaBase.php:87
 msgid "Payment failed."
 msgstr ""
 
@@ -613,17 +695,19 @@ msgstr ""
 msgid "Payment is authorized and captured."
 msgstr ""
 
-#: src/Payone/Gateway/PayDirekt.php:50 src/Payone/Gateway/CreditCard.php:505
-#: src/Payone/Gateway/Sofort.php:49 src/Payone/Gateway/Alipay.php:52
-#: src/Payone/Gateway/Giropay.php:50 src/Payone/Gateway/PayPalBase.php:42
-#: src/Payone/Gateway/KlarnaBase.php:81
+#: src/Payone/Gateway/Bancontact.php:50 src/Payone/Gateway/PayDirekt.php:50
+#: src/Payone/Gateway/CreditCard.php:505 src/Payone/Gateway/Sofort.php:49
+#: src/Payone/Gateway/Ideal.php:66 src/Payone/Gateway/Alipay.php:52
+#: src/Payone/Gateway/RatepayBase.php:138 src/Payone/Gateway/Giropay.php:50
+#: src/Payone/Gateway/PayPalBase.php:42 src/Payone/Gateway/KlarnaBase.php:81
 msgid "Payment is authorized by PAYONE, payment is complete."
 msgstr ""
 
-#: src/Payone/Gateway/PayDirekt.php:53 src/Payone/Gateway/CreditCard.php:508
-#: src/Payone/Gateway/Sofort.php:52 src/Payone/Gateway/Alipay.php:55
-#: src/Payone/Gateway/Giropay.php:53 src/Payone/Gateway/PayPalBase.php:45
-#: src/Payone/Gateway/KlarnaBase.php:84
+#: src/Payone/Gateway/Bancontact.php:53 src/Payone/Gateway/PayDirekt.php:53
+#: src/Payone/Gateway/CreditCard.php:508 src/Payone/Gateway/Sofort.php:52
+#: src/Payone/Gateway/Ideal.php:69 src/Payone/Gateway/Alipay.php:55
+#: src/Payone/Gateway/RatepayBase.php:141 src/Payone/Gateway/Giropay.php:53
+#: src/Payone/Gateway/PayPalBase.php:45 src/Payone/Gateway/KlarnaBase.php:84
 msgid "Payment is captured by PAYONE, payment is complete."
 msgstr ""
 
@@ -675,7 +759,7 @@ msgid "PayPal"
 msgstr ""
 
 #: src/Payone/Gateway/PayPalExpress.php:15
-#: src/Payone/Gateway/PayPalExpress.php:23
+#: src/Payone/Gateway/PayPalExpress.php:36
 msgid "PayPal Express"
 msgstr ""
 
@@ -685,6 +769,10 @@ msgstr ""
 
 #: src/Payone/Admin/Option/AddressChecks.php:136
 msgid "Person (only available in Germany)"
+msgstr ""
+
+#: views/gateway/ratepay/installments-payment-form.php:113
+msgid "Personal calculation"
 msgstr ""
 
 #: src/Payone/Gateway/SepaDirectDebit.php:149
@@ -706,33 +794,48 @@ msgstr ""
 
 #: src/Payone/Admin/TransactionLogListTable.php:14
 #: src/Payone/Admin/ApiLogListTable.php:13
-#: src/Payone/Gateway/GatewayBase.php:305
+#: src/Payone/Gateway/GatewayBase.php:302
 #: src/Payone/Admin/Option/Account.php:27
 msgid "Portal ID"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:609
+#: src/Payone/Gateway/GatewayBase.php:606
 msgid "pp.bankaccount"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:611
+#: src/Payone/Gateway/GatewayBase.php:608
 msgid "pp.bankaccountholder"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:615
+#: src/Payone/Gateway/GatewayBase.php:612
 msgid "pp.bankname"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:613
+#: src/Payone/Gateway/GatewayBase.php:610
 msgid "pp.reference"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:279
+#: src/Payone/Gateway/GatewayBase.php:276
 msgid "Preauthorization"
 msgstr ""
 
 #: src/Payone/Gateway/PrePayment.php:14 src/Payone/Gateway/PrePayment.php:19
 msgid "Prepayment"
+msgstr ""
+
+#: src/Payone/Gateway/RatepayDirectDebit.php:15
+#: src/Payone/Gateway/RatepayDirectDebit.php:20
+msgid "Ratepay Direct Debit"
+msgstr ""
+
+#: src/Payone/Gateway/RatepayInstallments.php:15
+#: src/Payone/Gateway/RatepayInstallments.php:20
+msgid "Ratepay Installments"
+msgstr ""
+
+#: src/Payone/Gateway/RatepayOpenInvoice.php:15
+#: src/Payone/Gateway/RatepayOpenInvoice.php:20
+msgid "Ratepay Open Invoice"
 msgstr ""
 
 #: src/Payone/Gateway/GatewayBase.php:133
@@ -800,6 +903,26 @@ msgstr ""
 msgid "Sequencenumber"
 msgstr ""
 
+#: views/gateway/ratepay/installments-payment-form.php:134
+msgid "Servicecharge"
+msgstr ""
+
+#: src/Payone/Gateway/RatepayBase.php:179
+msgid "Shipping country"
+msgstr ""
+
+#: src/Payone/Gateway/RatepayBase.php:176
+msgid "Shop-ID"
+msgstr ""
+
+#: src/Payone/Gateway/RatepayBase.php:158
+msgid "Shop-IDs"
+msgstr ""
+
+#: views/gateway/ratepay/installments-payment-form.php:125
+msgid "Show details"
+msgstr ""
+
 #: src/Payone/Gateway/Sofort.php:14 src/Payone/Gateway/Sofort.php:19
 msgid "Sofort"
 msgstr ""
@@ -830,7 +953,7 @@ msgstr ""
 msgid "Subaccount ID"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:320
+#: src/Payone/Gateway/GatewayBase.php:317
 #: src/Payone/Admin/Option/Account.php:47
 msgid "Submit cart"
 msgstr ""
@@ -862,7 +985,7 @@ msgstr ""
 msgid "Text input"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:348
+#: src/Payone/Gateway/GatewayBase.php:345
 #: src/Payone/Admin/Option/Account.php:67
 msgid "Text on booking statement"
 msgstr ""
@@ -877,6 +1000,11 @@ msgstr ""
 
 #: src/Payone/Gateway/GatewayBase.php:152
 msgid "The PAYONE platform has registered a rebooking"
+msgstr ""
+
+#: views/gateway/ratepay/installments-payment-form.php:121
+#: views/gateway/ratepay/installments-payment-form.php:159
+msgid "Total amount"
 msgstr ""
 
 #: src/Payone/Admin/TransactionLogListTable.php:11
@@ -905,7 +1033,7 @@ msgstr ""
 msgid "Unsupported payment gateway for subscription: %s"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:291
+#: src/Payone/Gateway/GatewayBase.php:288
 msgid "Use global settings"
 msgstr ""
 
@@ -913,7 +1041,7 @@ msgstr ""
 msgid "Use PAYONE Mandate Management"
 msgstr ""
 
-#: src/Payone/Plugin.php:417
+#: src/Payone/Plugin.php:439
 msgid "User is not logged in."
 msgstr ""
 
@@ -944,15 +1072,24 @@ msgstr ""
 msgid "Width"
 msgstr ""
 
+#: views/gateway/ratepay/_disclaimer.php:2
+msgid ""
+"With clicking on Place Order you agree to <a href=\"https://www.ratepay."
+"com/legal-payment-terms/\" target=\"_blank\" rel=\"noopener\">Ratepay Terms "
+"of Payment</a> as well as to the performance of a <a href=\"https://www."
+"ratepay.com/legal-payment-dataprivacy/\" target=\"_blank\" rel=\"noopener\">"
+"risk check by Ratepay</a>."
+msgstr ""
+
 #: src/Payone/Admin/Option/CreditCheck.php:153
 msgid "Yellow"
 msgstr ""
 
 #: src/Payone/Gateway/SepaDirectDebit.php:45
 #: src/Payone/Gateway/SepaDirectDebit.php:54
-#: src/Payone/Gateway/CreditCard.php:32 src/Payone/Gateway/GatewayBase.php:295
-#: src/Payone/Gateway/GatewayBase.php:324
-#: src/Payone/Gateway/GatewayBase.php:333
+#: src/Payone/Gateway/CreditCard.php:32 src/Payone/Gateway/GatewayBase.php:292
+#: src/Payone/Gateway/GatewayBase.php:321
+#: src/Payone/Gateway/GatewayBase.php:330
 #: src/Payone/Admin/Option/AddressChecks.php:109
 #: src/Payone/Admin/Option/AddressChecks.php:157
 #: src/Payone/Admin/Option/CreditCheck.php:104
@@ -964,11 +1101,11 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:340
+#: src/Payone/Gateway/GatewayBase.php:337
 msgid "Your order No. {{order}}"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:345
-#: src/Payone/Gateway/GatewayBase.php:350
+#: src/Payone/Gateway/GatewayBase.php:342
+#: src/Payone/Gateway/GatewayBase.php:347
 msgid "Your refund No. {{order}}"
 msgstr ""
