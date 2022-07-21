@@ -87,8 +87,6 @@ abstract class RatepayBase extends RedirectGatewayBase {
             }
         }
 
-        return true; // @todo Abhängigkeit von shop_id und min/max amount
-
         return $is_available;
     }
 
