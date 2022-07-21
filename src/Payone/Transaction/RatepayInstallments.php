@@ -22,6 +22,7 @@ class RatepayInstallments extends Base {
         $this->set( 'financingtype', $gateway->get_financingtype() );
         $this->set( 'add_paydata[debit_paytype]', 'DIRECT-DEBIT' );
         $this->set( 'add_paydata[customer_allow_credit_inquiry]', 'yes' );
+        $this->set( 'add_paydata[merchant_consumer_id]',  WC()->customer->get_id() );
         $this->set( 'birthday', RatepayBase::convert_birthday( $_POST['ratepay_installments_birthday'] ) );
         $this->set( 'iban', $_POST['ratepay_installments_iban'] );
 
