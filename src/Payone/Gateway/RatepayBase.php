@@ -61,6 +61,7 @@ abstract class RatepayBase extends RedirectGatewayBase {
     public function is_available() {
         $is_available = parent::is_available();
 
+        // Shop-ID suchen
         if ( $is_available ) {
             $shop_id = $this->determine_shop_id( WC()->cart );
 
@@ -68,6 +69,24 @@ abstract class RatepayBase extends RedirectGatewayBase {
                 return false;
             }
         }
+
+        // Unterschied Rechnungs-/Versandadresse bestimmen
+        if ( $is_available && $this->get_option( 'allow_different_shopping_address', 'no' ) === 'no' ) {
+            $customer_billing = WC()->customer->get_billing();
+            $customer_shipping = WC()->customer->get_shipping();
+
+            if ( $customer_billing['first_name'] !== $customer_shipping['first_name']
+                 || $customer_billing['last_name'] !== $customer_shipping['last_name']
+                 || $customer_billing['address_1'] !== $customer_shipping['address_1']
+                 || $customer_billing['address_2'] !== $customer_shipping['address_2']
+                 || $customer_billing['city'] !== $customer_shipping['city']
+                 || $customer_billing['postcode'] !== $customer_shipping['postcode']
+                 || $customer_billing['country'] !== $customer_shipping['country']
+            )  {
+                return false;
+            }
+        }
+
         return true; // @todo Abhängigkeit von shop_id und min/max amount
 
         return $is_available;
@@ -152,6 +171,15 @@ abstract class RatepayBase extends RedirectGatewayBase {
 			$this->capture( $order );
 		}
 	}
+
+    protected function add_allow_different_shipping_address_field() {
+        $this->form_fields[ 'allow_different_shopping_address'] = [
+            'title'   => __( 'Different shipping address', 'payone-woocommerce-3' ),
+            'label'   => __( 'Allow', 'payone-woocommerce-3' ),
+            'type'    => 'checkbox',
+            'default' => false,
+        ];
+    }
 
     protected function add_shop_ids_field() {
         $this->form_fields[ 'shop_ids[]'] = [

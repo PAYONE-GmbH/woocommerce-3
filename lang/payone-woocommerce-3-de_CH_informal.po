@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
 "POT-Creation-Date: 2020-12-29 14:03+0100\n"
-"PO-Revision-Date: 2022-07-21 09:36+0000\n"
+"PO-Revision-Date: 2022-07-21 12:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch (Schweiz, Du)\n"
 "Language: de_CH_informal\n"
@@ -50,7 +50,7 @@ msgstr "Aktiv"
 msgid "Active Countries"
 msgstr "Aktive Länder"
 
-#: src/Payone/Gateway/RatepayBase.php:198
+#: src/Payone/Gateway/RatepayBase.php:226
 msgid "Add Shop-ID"
 msgstr "Shop-ID hinzufügen"
 
@@ -73,6 +73,10 @@ msgstr ""
 #: src/Payone/Gateway/Alipay.php:15 src/Payone/Gateway/Alipay.php:20
 msgid "Alipay"
 msgstr ""
+
+#: src/Payone/Gateway/RatepayBase.php:178
+msgid "Allow"
+msgstr "Erlauben"
 
 #: src/Payone/Gateway/CreditCard.php:56
 msgid "AmEX"
@@ -272,7 +276,7 @@ msgstr ""
 msgid "CSS"
 msgstr "CSS"
 
-#: src/Payone/Gateway/RatepayBase.php:177
+#: src/Payone/Gateway/RatepayBase.php:205
 msgid "Currency"
 msgstr "Währung"
 
@@ -320,6 +324,10 @@ msgstr "Standard Style"
 #: src/Payone/Admin/Option/AddressChecks.php:127
 msgid "Delivery address"
 msgstr "Lieferadresse"
+
+#: src/Payone/Gateway/RatepayBase.php:177
+msgid "Different shipping address"
+msgstr "Abweichende Lieferadresse"
 
 #: src/Payone/Gateway/CreditCard.php:57
 msgid "Diners"
@@ -493,7 +501,7 @@ msgstr "Rechnungskauf"
 msgid "Invoice address"
 msgstr "Rechnungsadresse"
 
-#: src/Payone/Gateway/RatepayBase.php:178
+#: src/Payone/Gateway/RatepayBase.php:206
 msgid "Invoice country"
 msgstr ""
 
@@ -553,7 +561,7 @@ msgstr "Maestro"
 msgid "Mastercard"
 msgstr "Mastercard"
 
-#: src/Payone/Gateway/RatepayBase.php:181
+#: src/Payone/Gateway/RatepayBase.php:209
 msgid "Max. basket"
 msgstr ""
 
@@ -588,7 +596,7 @@ msgstr "Merchant-ID"
 msgid "Method of Authorization"
 msgstr "Methode der Autorisierung"
 
-#: src/Payone/Gateway/RatepayBase.php:180
+#: src/Payone/Gateway/RatepayBase.php:208
 msgid "Min. basket"
 msgstr ""
 
@@ -685,7 +693,7 @@ msgstr "Fehler bei Zahlung: "
 #: src/Payone/Gateway/Bancontact.php:58 src/Payone/Gateway/PayDirekt.php:58
 #: src/Payone/Gateway/CreditCard.php:511 src/Payone/Gateway/Sofort.php:57
 #: src/Payone/Gateway/Ideal.php:74 src/Payone/Gateway/Alipay.php:60
-#: src/Payone/Gateway/RatepayBase.php:144 src/Payone/Gateway/Giropay.php:58
+#: src/Payone/Gateway/RatepayBase.php:163 src/Payone/Gateway/Giropay.php:58
 #: src/Payone/Gateway/PayPalBase.php:50 src/Payone/Gateway/KlarnaBase.php:87
 msgid "Payment failed."
 msgstr "Zahlung fehlgeschlagen."
@@ -697,7 +705,7 @@ msgstr "Zahlung wurde autorisiert und belastet."
 #: src/Payone/Gateway/Bancontact.php:50 src/Payone/Gateway/PayDirekt.php:50
 #: src/Payone/Gateway/CreditCard.php:505 src/Payone/Gateway/Sofort.php:49
 #: src/Payone/Gateway/Ideal.php:66 src/Payone/Gateway/Alipay.php:52
-#: src/Payone/Gateway/RatepayBase.php:138 src/Payone/Gateway/Giropay.php:50
+#: src/Payone/Gateway/RatepayBase.php:157 src/Payone/Gateway/Giropay.php:50
 #: src/Payone/Gateway/PayPalBase.php:42 src/Payone/Gateway/KlarnaBase.php:81
 msgid "Payment is authorized by PAYONE, payment is complete."
 msgstr "Die Zahlung ist von PAYONE autorisiert, die Zahlung ist abgeschlossen."
@@ -705,7 +713,7 @@ msgstr "Die Zahlung ist von PAYONE autorisiert, die Zahlung ist abgeschlossen."
 #: src/Payone/Gateway/Bancontact.php:53 src/Payone/Gateway/PayDirekt.php:53
 #: src/Payone/Gateway/CreditCard.php:508 src/Payone/Gateway/Sofort.php:52
 #: src/Payone/Gateway/Ideal.php:69 src/Payone/Gateway/Alipay.php:55
-#: src/Payone/Gateway/RatepayBase.php:141 src/Payone/Gateway/Giropay.php:53
+#: src/Payone/Gateway/RatepayBase.php:160 src/Payone/Gateway/Giropay.php:53
 #: src/Payone/Gateway/PayPalBase.php:45 src/Payone/Gateway/KlarnaBase.php:84
 msgid "Payment is captured by PAYONE, payment is complete."
 msgstr "Die Zahlung ist von PAYONE eingezogen, die Zahlung ist abgeschlossen."
@@ -911,15 +919,15 @@ msgstr "Sequenznummer"
 msgid "Servicecharge"
 msgstr "Vertragsabschlussgebühr"
 
-#: src/Payone/Gateway/RatepayBase.php:179
+#: src/Payone/Gateway/RatepayBase.php:207
 msgid "Shipping country"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:176
+#: src/Payone/Gateway/RatepayBase.php:204
 msgid "Shop-ID"
 msgstr "Shop-ID"
 
-#: src/Payone/Gateway/RatepayBase.php:158
+#: src/Payone/Gateway/RatepayBase.php:186
 msgid "Shop-IDs"
 msgstr "Shop-IDs"
 

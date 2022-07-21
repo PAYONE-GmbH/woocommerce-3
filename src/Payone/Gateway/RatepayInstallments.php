@@ -18,6 +18,7 @@ class RatepayInstallments extends RatepayBase {
 
 	public function init_form_fields() {
 		$this->init_common_form_fields( __( 'Ratepay Installments', 'payone-woocommerce-3' ) );
+        $this->add_allow_different_shipping_address_field();
         $this->add_shop_ids_field();
 	}
 
