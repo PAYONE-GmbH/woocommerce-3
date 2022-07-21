@@ -10,6 +10,7 @@ use Payone\Gateway\KlarnaInstallments;
 use Payone\Gateway\KlarnaInvoice;
 use Payone\Gateway\KlarnaSofort;
 use Payone\Gateway\PayPalExpress;
+use Payone\Gateway\RatepayInstallments;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
@@ -54,24 +55,27 @@ class Plugin {
         add_action( 'init', [ $this, 'add_callback_url' ] );
 
 		$gateways = [
-			\Payone\Gateway\CreditCard::GATEWAY_ID         => \Payone\Gateway\CreditCard::class,
-			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID    => \Payone\Gateway\SepaDirectDebit::class,
-			\Payone\Gateway\PrePayment::GATEWAY_ID         => \Payone\Gateway\PrePayment::class,
-            \Payone\Gateway\Eps::GATEWAY_ID                => \Payone\Gateway\Eps::class,
-			\Payone\Gateway\Invoice::GATEWAY_ID            => \Payone\Gateway\Invoice::class,
-			\Payone\Gateway\Sofort::GATEWAY_ID             => \Payone\Gateway\Sofort::class,
-			\Payone\Gateway\Giropay::GATEWAY_ID            => \Payone\Gateway\Giropay::class,
-			\Payone\Gateway\SafeInvoice::GATEWAY_ID        => \Payone\Gateway\SafeInvoice::class,
-			\Payone\Gateway\PayPal::GATEWAY_ID             => \Payone\Gateway\PayPal::class,
-            \Payone\Gateway\PayPalExpress::GATEWAY_ID      => \Payone\Gateway\PayPalExpress::class,
-			\Payone\Gateway\PayDirekt::GATEWAY_ID          => \Payone\Gateway\PayDirekt::class,
-			\Payone\Gateway\Alipay::GATEWAY_ID             => \Payone\Gateway\Alipay::class,
-            \Payone\Gateway\KlarnaInvoice::GATEWAY_ID      => \Payone\Gateway\KlarnaInvoice::class,
-            \Payone\Gateway\KlarnaInstallments::GATEWAY_ID => \Payone\Gateway\KlarnaInstallments::class,
-            \Payone\Gateway\KlarnaSofort::GATEWAY_ID       => \Payone\Gateway\KlarnaSofort::class,
-            \Payone\Gateway\Bancontact::GATEWAY_ID         => \Payone\Gateway\Bancontact::class,
-            \Payone\Gateway\Ideal::GATEWAY_ID              => \Payone\Gateway\Ideal::class,
-		];
+			\Payone\Gateway\CreditCard::GATEWAY_ID          => \Payone\Gateway\CreditCard::class,
+			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID     => \Payone\Gateway\SepaDirectDebit::class,
+			\Payone\Gateway\PrePayment::GATEWAY_ID          => \Payone\Gateway\PrePayment::class,
+            \Payone\Gateway\Eps::GATEWAY_ID                 => \Payone\Gateway\Eps::class,
+			\Payone\Gateway\Invoice::GATEWAY_ID             => \Payone\Gateway\Invoice::class,
+			\Payone\Gateway\Sofort::GATEWAY_ID              => \Payone\Gateway\Sofort::class,
+			\Payone\Gateway\Giropay::GATEWAY_ID             => \Payone\Gateway\Giropay::class,
+			\Payone\Gateway\SafeInvoice::GATEWAY_ID         => \Payone\Gateway\SafeInvoice::class,
+			\Payone\Gateway\PayPal::GATEWAY_ID              => \Payone\Gateway\PayPal::class,
+            \Payone\Gateway\PayPalExpress::GATEWAY_ID       => \Payone\Gateway\PayPalExpress::class,
+			\Payone\Gateway\PayDirekt::GATEWAY_ID           => \Payone\Gateway\PayDirekt::class,
+			\Payone\Gateway\Alipay::GATEWAY_ID              => \Payone\Gateway\Alipay::class,
+            \Payone\Gateway\KlarnaInvoice::GATEWAY_ID       => \Payone\Gateway\KlarnaInvoice::class,
+            \Payone\Gateway\KlarnaInstallments::GATEWAY_ID  => \Payone\Gateway\KlarnaInstallments::class,
+            \Payone\Gateway\KlarnaSofort::GATEWAY_ID        => \Payone\Gateway\KlarnaSofort::class,
+            \Payone\Gateway\Bancontact::GATEWAY_ID          => \Payone\Gateway\Bancontact::class,
+            \Payone\Gateway\Ideal::GATEWAY_ID               => \Payone\Gateway\Ideal::class,
+            \Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID  => \Payone\Gateway\RatepayOpenInvoice::class,
+            \Payone\Gateway\RatepayDirectDebit::GATEWAY_ID  => \Payone\Gateway\RatepayDirectDebit::class,
+            \Payone\Gateway\RatepayInstallments::GATEWAY_ID => \Payone\Gateway\RatepayInstallments::class,
+        ];
 
 		foreach ( $gateways as $gateway ) {
 			add_filter( 'woocommerce_payment_gateways', [ $gateway, 'add' ] );
@@ -298,6 +302,9 @@ class Plugin {
       }
       if ( $this->is_paypal_express_get_checkout() ) {
           return $this->process_paypal_express_get_checkout();
+      }
+      if ( $this->is_ratepay_calculate_callback() ) {
+          return $this->process_ratepay_calculate();
       }
 
       $response = 'ERROR';
@@ -628,6 +635,29 @@ class Plugin {
             $workorderid = get_transient( PayPalExpress::TRANSIENT_KEY_WORKORDERID );
 
             return $gateway->process_get_checkout( $workorderid );
+        }
+
+        return null;
+    }
+
+    /**
+     * @return bool
+     */
+    private function is_ratepay_calculate_callback() {
+        if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-ratepay-calculate') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    private function process_ratepay_calculate() {
+        $gateway = self::find_gateway( RatepayInstallments::GATEWAY_ID );
+        if ( $gateway ) {
+            return $gateway->process_calculate( $_POST );
         }
 
         return null;
