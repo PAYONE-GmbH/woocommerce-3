@@ -118,7 +118,7 @@ class Account extends Helper {
 	}
 
 	public function account_info() {
-		_e( 'plugin.settings.info', 'payone-woocommerce-3' );
+		_e( 'Don\'t have a PAYONE Account yet? Click <a href="https://www.payone.com/DE-de/kampagne/ecom-testaccount" target="_blank" rel="noopener">here</a> to apply for test credentials.', 'payone-woocommerce-3' );
 	}
 
 	public function field_account_id() {
