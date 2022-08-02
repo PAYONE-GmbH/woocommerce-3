@@ -20,6 +20,8 @@ class RatepayOpenInvoice extends RatepayBase {
 		$this->init_common_form_fields( __( 'Ratepay Open Invoice', 'payone-woocommerce-3' ) );
         $this->add_allow_different_shipping_address_field();
         $this->add_shop_ids_field();
+
+        $this->form_fields['authorization_method']['default'] = 'preauthorization';
 	}
 
 	public function payment_fields() {
