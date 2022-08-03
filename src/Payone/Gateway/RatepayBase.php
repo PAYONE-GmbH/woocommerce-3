@@ -35,7 +35,7 @@ abstract class RatepayBase extends RedirectGatewayBase {
             $country_code_delivery = strtoupper( WC()->customer->get_shipping_country() );
             $amount = (float) $order_or_cart->get_total( 'non-view' );
         } else {
-            return null;
+            return get_class($order_or_cart) . '-1'; //null;
         }
 
         $shop_ids_data = (array) $this->get_option( 'shop_ids_data', [] );
@@ -49,10 +49,9 @@ abstract class RatepayBase extends RedirectGatewayBase {
             ) {
                 return $shop_id;
             }
-
         }
 
-        return null;
+        return get_class($order_or_cart) . '-2-' . $currency . '-' . $country_code_billing . '-' . $country_code_delivery . '-' . $basket_min_max['min'] . '-' .$basket_min_max['max']; //null;
     }
 
     /**
