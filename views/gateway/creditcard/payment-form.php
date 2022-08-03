@@ -76,7 +76,7 @@
                 <?php if ($this->get_option( 'cc_field_cardnumber_iframe' ) === 'custom') { ?>
                 , iframe: {
                     width: "<?php echo $this->get_option( 'cc_field_cardnumber_width' ); ?>",
-                    height: "<?php echo $this->get_option( 'cc_field_cardnumber_width' ); ?>"
+                    height: "<?php echo $this->get_option( 'cc_field_cardnumber_height' ); ?>"
                 }
                 <?php } ?>
             },
@@ -90,7 +90,7 @@
 	            <?php if ($this->get_option( 'cc_field_cvc2_iframe' ) === 'custom') { ?>
                 , iframe: {
                     width: "<?php echo $this->get_option( 'cc_field_cvc2_width' ); ?>",
-                    height: "<?php echo $this->get_option( 'cc_field_cvc2_width' ); ?>"
+                    height: "<?php echo $this->get_option( 'cc_field_cvc2_height' ); ?>"
                 }
 	            <?php } ?>
             },
@@ -103,7 +103,7 @@
                 <?php if ($this->get_option( 'cc_field_month_iframe' ) === 'custom') { ?>
                 , iframe: {
                     width: "<?php echo $this->get_option( 'cc_field_month_width' ); ?>",
-                    height: "<?php echo $this->get_option( 'cc_field_month_width' ); ?>"
+                    height: "<?php echo $this->get_option( 'cc_field_month_height' ); ?>"
                 }
                 <?php } ?>
             },
@@ -116,7 +116,7 @@
 	            <?php if ($this->get_option( 'cc_field_year_iframe' ) === 'custom') { ?>
                 , iframe: {
                     width: "<?php echo $this->get_option( 'cc_field_year_width' ); ?>",
-                    height: "<?php echo $this->get_option( 'cc_field_year_width' ); ?>"
+                    height: "<?php echo $this->get_option( 'cc_field_year_height' ); ?>"
                 }
 	            <?php } ?>
             }
