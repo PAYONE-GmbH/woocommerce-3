@@ -38,9 +38,11 @@ abstract class RatepayBase extends RedirectGatewayBase {
             return get_class($order_or_cart) . '-1'; //null;
         }
 
+        $out = '';
         $shop_ids_data = (array) $this->get_option( 'shop_ids_data', [] );
         foreach ( $shop_ids_data as $shop_id => $data ) {
             $basket_min_max = $this->get_basket_min_max( $shop_id );
+            $out .= '--' . $shop_id . '-' . $basket_min_max['min'] . '-' .$basket_min_max['max'] . '-' . $data['currency']  . '-' . $data['country_code_billing'] . '-' . $data['country_code_delivery'];
             if ( $data['currency'] === $currency
                 && $data['country_code_billing'] === $country_code_billing
                 && $data['country_code_delivery'] === $country_code_delivery
@@ -51,7 +53,7 @@ abstract class RatepayBase extends RedirectGatewayBase {
             }
         }
 
-        return get_class($order_or_cart) . '-2-' . $currency . '-' . $country_code_billing . '-' . $country_code_delivery . '-' . $basket_min_max['min'] . '-' .$basket_min_max['max']; //null;
+        return get_class($order_or_cart) . '-2-' . $currency . '-' . $country_code_billing . '-' . $country_code_delivery . '-' . $amount . '-' . count($shop_ids_data) . $out; //null;
     }
 
     /**
