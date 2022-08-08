@@ -10,6 +10,8 @@ use Payone\Transaction\Debit;
 abstract class RatepayBase extends RedirectGatewayBase {
 
     const TRANSIENT_KEY_SESSION_STARTED = 'payone_sssion_started';
+    const DEVICE_FINGERPRINT_FIELD = 'device_fingerprint';
+    const DEFAULT_DEVICE_FINGERPRINT = 'ratepay';
 
     public function __construct( $id ) {
 		parent::__construct( $id );
@@ -103,6 +105,14 @@ abstract class RatepayBase extends RedirectGatewayBase {
         return $is_available;
     }
 
+    /**
+     * @return string
+     */
+    public function get_device_fingerprint()
+    {
+        return $this->get_option( self::DEVICE_FINGERPRINT_FIELD, self::DEFAULT_DEVICE_FINGERPRINT );
+    }
+
     protected function add_data_to_capture( Capture $capture, \WC_Order $order ) {
         $capture->set( 'add_paydata[shop_id]', $this->determine_shop_id( $order ) );
         $capture->add_article_list_to_transaction( $order );
@@ -192,6 +202,15 @@ abstract class RatepayBase extends RedirectGatewayBase {
         ];
     }
 
+    protected function add_device_fingerprint_field() {
+        $this->form_fields[self::DEVICE_FINGERPRINT_FIELD] = [
+            'title'   => __( 'Device Fingerprint Snippet-Id', 'payone-woocommerce-3' ),
+            'label'   => '',
+            'type'    => 'text',
+            'default' => self::DEFAULT_DEVICE_FINGERPRINT,
+        ];
+    }
+
     protected function add_shop_ids_field() {
         $this->form_fields[ 'shop_ids[]'] = [
             'title'   => __( 'Shop-IDs', 'payone-woocommerce-3' ),
@@ -211,7 +230,7 @@ abstract class RatepayBase extends RedirectGatewayBase {
 
         $shop_ids_data = (array) $this->get_option( 'shop_ids_data', [] );
 
-        $out = '<table class="table">';
+        $out = '<tr valign="top"><td><table class="table">';
         $out .= '<tr><th>' . __( 'Shop-ID', 'payone-woocommerce-3' )
             . '</th><th>' . __( 'Currency', 'payone-woocommerce-3' )
             . '</th><th>' . __( 'Invoice country', 'payone-woocommerce-3' )
@@ -236,7 +255,7 @@ abstract class RatepayBase extends RedirectGatewayBase {
         }
         $out .= '<tr><td><input type="text" name="' . $key . '" value="" placeholder="' . __( 'Add Shop-ID', 'payone-woocommerce-3' ) .'"></td>';
         $out .= '<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
-        $out .= '</table>';
+        $out .= '</table></td></tr>';
 
         return $out;
     }

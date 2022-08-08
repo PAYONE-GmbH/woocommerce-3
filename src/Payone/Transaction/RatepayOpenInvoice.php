@@ -34,8 +34,9 @@ class RatepayOpenInvoice extends Base {
 	 */
 	public function execute( \WC_Order $order ) {
         $this->set( 'add_paydata[shop_id]', $this->gateway->determine_shop_id( $order ) );
+        $this->set( 'add_paydata[device_token]', $this->gateway->get_device_fingerprint() );
 
-		$this->set_reference( $order );
+        $this->set_reference( $order );
         $this->set( 'amount', $order->get_total() * 100 );
         $this->set( 'currency', strtoupper( $order->get_currency() ) );
         $this->set_personal_data_from_order( $order );
