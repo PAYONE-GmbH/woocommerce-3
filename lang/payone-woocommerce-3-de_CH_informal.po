@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
 "POT-Creation-Date: 2018-07-26 10:03+0200\n"
-"PO-Revision-Date: 2022-08-10 09:11+0000\n"
+"PO-Revision-Date: 2022-08-10 09:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch (Schweiz, Du)\n"
 "Language: de_CH_informal\n"
@@ -805,7 +805,7 @@ msgstr "Persönliche Ratenberechnung"
 #: src/Payone/Gateway/SepaDirectDebit.php:149
 #: src/Payone/Gateway/SepaDirectDebit.php:167
 msgid "Please check this option"
-msgstr "Sie müssen diese Checkbox ankreuzen, um fortfahren zu können"
+msgstr "Du musst diese Checkbox ankreuzen, um fortfahren zu können"
 
 #: src/Payone/Admin/Option/AddressChecks.php:101
 msgid "plugin.address_check.info"
@@ -1132,9 +1132,9 @@ msgstr "Ja"
 
 #: src/Payone/Gateway/GatewayBase.php:337
 msgid "Your order No. {{order}}"
-msgstr "Ihre Bestellung Nr. {{order}}"
+msgstr "Deine Bestellung Nr. {{order}}"
 
 #: src/Payone/Gateway/GatewayBase.php:342
 #: src/Payone/Gateway/GatewayBase.php:347
 msgid "Your refund No. {{order}}"
-msgstr "Ihre Rückerstattung No. {{order}}"
+msgstr "Deine Rückerstattung No. {{order}}"
