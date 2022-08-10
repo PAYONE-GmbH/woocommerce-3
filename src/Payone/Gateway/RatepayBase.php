@@ -26,7 +26,6 @@ abstract class RatepayBase extends RedirectGatewayBase {
      * @return null|string
      */
     public function determine_shop_id( $order_or_cart ) {
-        error_log('determine_shop_id()');
         if ( $order_or_cart instanceof \WC_Order ) {
             $currency = $order_or_cart->get_currency();
             $country_code_billing = strtoupper( $order_or_cart->get_billing_country() );
@@ -38,17 +37,10 @@ abstract class RatepayBase extends RedirectGatewayBase {
             $country_code_delivery = strtoupper( WC()->customer->get_shipping_country() );
             $amount = (float) $order_or_cart->get_total( 'non-view' );
         } else {
-            error_log('return null');
             return null;
         }
 
-        error_log(get_class($order_or_cart));
-        error_log('$currency = ' . $currency);
-        error_log('$country_code_billing = ' . $country_code_billing);
-        error_log('$country_code_delivery = ' . $country_code_delivery);
-        error_log('$amount = ' . $amount);
         $shop_ids_data = (array) $this->get_option( 'shop_ids_data', [] );
-        error_log('$shop_ids_data = ' . json_encode($shop_ids_data));
         foreach ( $shop_ids_data as $shop_id => $data ) {
             $basket_min_max = $this->get_basket_min_max( $shop_id );
             if ( $data['currency'] === $currency
@@ -57,12 +49,10 @@ abstract class RatepayBase extends RedirectGatewayBase {
                 && $amount >= $basket_min_max['min']
                 && $amount <= $basket_min_max['max']
             ) {
-                error_log('return ' . $shop_id);
                 return $shop_id;
             }
         }
 
-        error_log('return null');
         return null;
     }
 
@@ -81,13 +71,10 @@ abstract class RatepayBase extends RedirectGatewayBase {
             }
         }
 
-        error_log('is_available()');
         // Unterschied Rechnungs-/Versandadresse bestimmen
         if ( $is_available && $this->get_option( 'allow_different_shopping_address', 'no' ) === 'no' ) {
             $customer_billing = WC()->customer->get_billing();
             $customer_shipping = WC()->customer->get_shipping();
-            error_log('$customer_billing = ' . json_encode($customer_billing));
-            error_log('$customer_shipping = ' . json_encode($customer_shipping));
             if ( $customer_billing['first_name'] !== $customer_shipping['first_name']
                  || $customer_billing['last_name'] !== $customer_shipping['last_name']
                  || $customer_billing['address_1'] !== $customer_shipping['address_1']
@@ -96,8 +83,6 @@ abstract class RatepayBase extends RedirectGatewayBase {
                  || $customer_billing['postcode'] !== $customer_shipping['postcode']
                  || $customer_billing['country'] !== $customer_shipping['country']
             )  {
-                error_log('return false');
-
                 return false;
             }
         }
