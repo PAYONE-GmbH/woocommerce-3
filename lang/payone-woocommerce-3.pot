@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PAYONE v1.0.0\n"
-"POT-Creation-Date: 2022-07-21 12:29+0000\n"
+"POT-Creation-Date: 2022-08-10 08:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Your Name <you@example.com>\n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Active Countries"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:226
+#: src/Payone/Gateway/RatepayBase.php:241
 msgid "Add Shop-ID"
 msgstr ""
 
@@ -75,7 +75,7 @@ msgstr ""
 msgid "Alipay"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:178
+#: src/Payone/Gateway/RatepayBase.php:184
 msgid "Allow"
 msgstr ""
 
@@ -277,7 +277,7 @@ msgstr ""
 msgid "CSS"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:205
+#: src/Payone/Gateway/RatepayBase.php:220
 msgid "Currency"
 msgstr ""
 
@@ -326,7 +326,11 @@ msgstr ""
 msgid "Delivery address"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:177
+#: src/Payone/Gateway/RatepayBase.php:192
+msgid "Device Fingerprint Snippet-Id"
+msgstr ""
+
+#: src/Payone/Gateway/RatepayBase.php:183
 msgid "Different shipping address"
 msgstr ""
 
@@ -349,6 +353,13 @@ msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:60
 msgid "Discover"
+msgstr ""
+
+#: src/Payone/Admin/Option/Account.php:121
+msgid ""
+"Don't have a PAYONE Account yet? Click <a href=\"https://www.payone.com/DE-"
+"de/kampagne/ecom-testaccount\" target=\"_blank\" rel=\"noopener\">here</a> "
+"to apply for test credentials."
 msgstr ""
 
 #: views/order/order-download-invoice.php:21
@@ -502,7 +513,7 @@ msgstr ""
 msgid "Invoice address"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:206
+#: src/Payone/Gateway/RatepayBase.php:221
 msgid "Invoice country"
 msgstr ""
 
@@ -562,7 +573,7 @@ msgstr ""
 msgid "Mastercard"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:209
+#: src/Payone/Gateway/RatepayBase.php:224
 msgid "Max. basket"
 msgstr ""
 
@@ -597,7 +608,7 @@ msgstr ""
 msgid "Method of Authorization"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:208
+#: src/Payone/Gateway/RatepayBase.php:223
 msgid "Min. basket"
 msgstr ""
 
@@ -694,7 +705,7 @@ msgstr ""
 #: src/Payone/Gateway/Bancontact.php:58 src/Payone/Gateway/PayDirekt.php:58
 #: src/Payone/Gateway/CreditCard.php:511 src/Payone/Gateway/Sofort.php:57
 #: src/Payone/Gateway/Ideal.php:74 src/Payone/Gateway/Alipay.php:60
-#: src/Payone/Gateway/RatepayBase.php:163 src/Payone/Gateway/Giropay.php:58
+#: src/Payone/Gateway/RatepayBase.php:169 src/Payone/Gateway/Giropay.php:58
 #: src/Payone/Gateway/PayPalBase.php:50 src/Payone/Gateway/KlarnaBase.php:87
 msgid "Payment failed."
 msgstr ""
@@ -706,7 +717,7 @@ msgstr ""
 #: src/Payone/Gateway/Bancontact.php:50 src/Payone/Gateway/PayDirekt.php:50
 #: src/Payone/Gateway/CreditCard.php:505 src/Payone/Gateway/Sofort.php:49
 #: src/Payone/Gateway/Ideal.php:66 src/Payone/Gateway/Alipay.php:52
-#: src/Payone/Gateway/RatepayBase.php:157 src/Payone/Gateway/Giropay.php:50
+#: src/Payone/Gateway/RatepayBase.php:163 src/Payone/Gateway/Giropay.php:50
 #: src/Payone/Gateway/PayPalBase.php:42 src/Payone/Gateway/KlarnaBase.php:81
 msgid "Payment is authorized by PAYONE, payment is complete."
 msgstr ""
@@ -714,7 +725,7 @@ msgstr ""
 #: src/Payone/Gateway/Bancontact.php:53 src/Payone/Gateway/PayDirekt.php:53
 #: src/Payone/Gateway/CreditCard.php:508 src/Payone/Gateway/Sofort.php:52
 #: src/Payone/Gateway/Ideal.php:69 src/Payone/Gateway/Alipay.php:55
-#: src/Payone/Gateway/RatepayBase.php:160 src/Payone/Gateway/Giropay.php:53
+#: src/Payone/Gateway/RatepayBase.php:166 src/Payone/Gateway/Giropay.php:53
 #: src/Payone/Gateway/PayPalBase.php:45 src/Payone/Gateway/KlarnaBase.php:84
 msgid "Payment is captured by PAYONE, payment is complete."
 msgstr ""
@@ -794,10 +805,6 @@ msgstr ""
 
 #: src/Payone/Admin/Option/CreditCheck.php:96
 msgid "plugin.credit_check.info"
-msgstr ""
-
-#: src/Payone/Admin/Option/Account.php:121
-msgid "plugin.settings.info"
 msgstr ""
 
 #: src/Payone/Admin/TransactionLogListTable.php:14
@@ -915,15 +922,15 @@ msgstr ""
 msgid "Servicecharge"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:207
+#: src/Payone/Gateway/RatepayBase.php:222
 msgid "Shipping country"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:204
+#: src/Payone/Gateway/RatepayBase.php:219
 msgid "Shop-ID"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:186
+#: src/Payone/Gateway/RatepayBase.php:201
 msgid "Shop-IDs"
 msgstr ""
 
