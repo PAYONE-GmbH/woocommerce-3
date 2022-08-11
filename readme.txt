@@ -3,8 +3,8 @@ Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
-Tested up to: 5.9.3
-Stable tag: 2.1.0
+Tested up to: 6.0.1
+Stable tag: 2.2.0
 Requires PHP: 7.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -27,6 +27,8 @@ Currently supported payment methods include:
 * Giropay
 * Open Invoice
 * Prepayment
+* Klarna
+* Ratepay
 
 PAYONE GmbH is headquartered in Frankfurt am Main and is one of the leading omnichannel-payment providers in Europe. In addition to providing customer support to numerous Savings Banks (Sparkasse) the full-service payment service provider also provides cashless payment transaction services to more than 255,000 customers from stationary trade to the automated and holistic processing of e-commerce and mobile payments.
 
@@ -63,6 +65,29 @@ If you have found anything security related, please contact our technical suppor
 
 == Changelog ==
 
+== 2.2.0 ==
+
+New Features
+
+* New payment method: Ratepay Open Invoice
+* New payment method: Ratepay Direct Debit
+* New payment method: Ratepay Installments
+
+Bugfixes
+
+* Parameter shipping_state is now transmitted for paydirekt orders
+* Fixed custom parameters for credit card settings
+
+Maintenance
+
+* Payment methods no longer enabled by default
+* Include landing page in backend
+
+tested with
+wordpress version: 6.0.1
+woocommerce version: 6.8.0
+php version: 8.1.0
+
 == 2.1.0 ==
 
 New Features
@@ -74,7 +99,7 @@ New Features
   The Transactionstatus URL has to be changed to <SHOPURL>/wc-api/payoneplugin/. 
   The old Transactionstatus URL is temporarily still reachable.
  
-Bugfix(es)
+Bugfixes
  
 * Better generating of unique reference numbers
 * TX-Log corrections
