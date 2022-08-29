@@ -18,7 +18,7 @@ class Migration {
 			$charset_collate = $wpdb->get_charset_collate();
 
 			$table_name = $wpdb->prefix . \Payone\Payone\Api\Log::TABLE_NAME;
-			$sql = "CREATE TABLE {$table_name} (
+			$sql        = "CREATE TABLE {$table_name} (
 						id int(11) unsigned NOT NULL AUTO_INCREMENT,
   						request text,
   						response text,
@@ -29,7 +29,7 @@ class Migration {
 			dbDelta( $sql );
 
 			$table_name = $wpdb->prefix . \Payone\Transaction\Log::TABLE_NAME;
-			$sql = "CREATE TABLE {$table_name} (
+			$sql        = "CREATE TABLE {$table_name} (
 						id int(11) unsigned NOT NULL AUTO_INCREMENT,
 						transaction_id varchar(32) NOT NULL,
   						data text,

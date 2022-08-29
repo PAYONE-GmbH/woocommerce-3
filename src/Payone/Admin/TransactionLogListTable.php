@@ -19,7 +19,7 @@ class TransactionLogListTable extends AbstractListTable {
 	}
 
 	public function column_default( $item, $column_name ) {
-        switch ( $column_name ) {
+		switch ( $column_name ) {
 			case 'id':
 				return '<a href="?page=payone-transaction-log&id=' . $item->get_id() . '">' . $item->get_id() . '</a>';
 			case 'transaction_id':

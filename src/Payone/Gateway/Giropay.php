@@ -17,7 +17,7 @@ class Giropay extends RedirectGatewayBase {
 
 	public function init_form_fields() {
 		$this->init_common_form_fields( 'PAYONE ' . __( 'Giropay', 'payone-woocommerce-3' ) );
-        $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE' ];
+		$this->form_fields['countries']['default'] = [ 'DE' ];
 	}
 
 	public function payment_fields() {
@@ -44,7 +44,7 @@ class Giropay extends RedirectGatewayBase {
 			return;
 		}
 
-		$order = $transaction_status->get_order();
+		$order                = $transaction_status->get_order();
 		$authorization_method = $order->get_meta( '_authorization_method' );
 		if ( $authorization_method === 'authorization' && $transaction_status->is_paid() ) {
 			$order->add_order_note( __( 'Payment is authorized by PAYONE, payment is complete.', 'payone-woocommerce-3' ) );

@@ -5,7 +5,7 @@ namespace Payone\Payone\Api;
 use Payone\Plugin;
 
 class DataTransfer {
-    const META_KEY_PAYONE_REFERENCES = '_payone_reference';
+	const META_KEY_PAYONE_REFERENCES = '_payone_reference';
 
 	/**
 	 * @var array
@@ -62,13 +62,13 @@ class DataTransfer {
 	}
 
 	/**
-	 * @todo Wenn ein $key erneut gesetzt wird, kann es auch sein, dass ein Array gespeichert wird.
-	 *
 	 * @param string $key
 	 * @param mixed $value
 	 * @param DataTransfer
 	 *
 	 * @return $this
+	 * @todo Wenn ein $key erneut gesetzt wird, kann es auch sein, dass ein Array gespeichert wird.
+	 *
 	 */
 	public function set( $key, $value ) {
 		$this->parameter_bag[ $key ] = $value;
@@ -76,49 +76,49 @@ class DataTransfer {
 		return $this;
 	}
 
-    /**
-     * If the key is already used, no new value is set.
-     *
-     * @param string $key
-     * @param mixed $value
-     *
-     * @return $this
-     */
-    public function set_once( $key, $value ) {
-        if ( ! isset( $this->parameter_bag[ $key ] ) ) {
-            $this->parameter_bag[ $key ] = $value;
-        }
+	/**
+	 * If the key is already used, no new value is set.
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 *
+	 * @return $this
+	 */
+	public function set_once( $key, $value ) {
+		if ( ! isset( $this->parameter_bag[ $key ] ) ) {
+			$this->parameter_bag[ $key ] = $value;
+		}
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * @param \WC_Order $order
-     *
-     * @return $this
-     */
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return $this
+	 */
 	public function set_reference( \WC_Order $order ) {
-        $references = $order->get_meta( self::META_KEY_PAYONE_REFERENCES );
-        if ( $references ) {
-            // In $references sind alle benutzten Referenznummern kommasepariert enthalten. Die neuste Referenznummer steht vorne.
-            $reference_numbers = explode( ',', $references );
-            $newest_reference_number = $reference_numbers[0];
-            $newest_reference_number_parts = explode( '.', $newest_reference_number );
-            $newest_reference_number_postfix = isset( $newest_reference_number_parts[1] ) ? (int)$newest_reference_number_parts[1] : 1;
-            $new_postfix = $newest_reference_number_postfix + 1;
+		$references = $order->get_meta( self::META_KEY_PAYONE_REFERENCES );
+		if ( $references ) {
+			// In $references sind alle benutzten Referenznummern kommasepariert enthalten. Die neuste Referenznummer steht vorne.
+			$reference_numbers               = explode( ',', $references );
+			$newest_reference_number         = $reference_numbers[0];
+			$newest_reference_number_parts   = explode( '.', $newest_reference_number );
+			$newest_reference_number_postfix = isset( $newest_reference_number_parts[1] ) ? (int) $newest_reference_number_parts[1] : 1;
+			$new_postfix                     = $newest_reference_number_postfix + 1;
 
-            $new_reference = Plugin::sanitize_reference( $order->get_order_number() ) . '.' . $new_postfix;
-            $references = $new_reference . ',' . $references;
-        } else {
-            $new_reference = Plugin::sanitize_reference( $order->get_order_number() ) . '.1';
-            $references = $new_reference;
-        }
+			$new_reference = Plugin::sanitize_reference( $order->get_order_number() ) . '.' . $new_postfix;
+			$references    = $new_reference . ',' . $references;
+		} else {
+			$new_reference = Plugin::sanitize_reference( $order->get_order_number() ) . '.1';
+			$references    = $new_reference;
+		}
 
-        $order->update_meta_data( self::META_KEY_PAYONE_REFERENCES, $references );
-        $this->set( 'reference', $new_reference );
+		$order->update_meta_data( self::META_KEY_PAYONE_REFERENCES, $references );
+		$this->set( 'reference', $new_reference );
 
-        return $this;
-    }
+		return $this;
+	}
 
 	/**
 	 * @param string $key
@@ -174,17 +174,17 @@ class DataTransfer {
 		return (int) $this->get( $key, $default );
 	}
 
-    /**
-     * @param string $key
-     * @param string $default
-     *
-     * @return string
-     */
-    public function get_string( $key, $default = '' ) {
-        return (string) $this->get( $key, $default );
-    }
+	/**
+	 * @param string $key
+	 * @param string $default
+	 *
+	 * @return string
+	 */
+	public function get_string( $key, $default = '' ) {
+		return (string) $this->get( $key, $default );
+	}
 
-    public function get_all() {
+	public function get_all() {
 		return is_array( $this->parameter_bag ) ? $this->parameter_bag : [];
 	}
 
@@ -199,8 +199,8 @@ class DataTransfer {
 		if ( $this->has( '_DATA' ) ) {
 			// Der Wert wird sonst zu lang, um im api_log abgespeichert zu werden. Und es muss auch nicht ein ganzes
 			// PDF im Logfile landen.
-			$parameter_bag = $this->parameter_bag;
-			$parameter_bag[ '_DATA' ] = substr( $parameter_bag[ '_DATA' ], 0, 200 );
+			$parameter_bag          = $this->parameter_bag;
+			$parameter_bag['_DATA'] = substr( $parameter_bag['_DATA'], 0, 200 );
 
 			return json_encode( $parameter_bag );
 		}
@@ -211,17 +211,17 @@ class DataTransfer {
 	public function unserialize_parameters( $serialized ) {
 		$this->parameter_bag = json_decode( $serialized, true );
 
-        if ( ! is_array( $this->parameter_bag ) ) {
-            $this->parameter_bag = [];
-        }
+		if ( ! is_array( $this->parameter_bag ) ) {
+			$this->parameter_bag = [];
+		}
 	}
 
 	public function anonymize_parameters() {
-        if ( is_array( $this->parameter_bag ) ) {
-            foreach ($this->parameter_bag as $key => $value) {
-                $this->parameter_bag[$key] = $this->anonymize($key, $value);
-            }
-        }
+		if ( is_array( $this->parameter_bag ) ) {
+			foreach ( $this->parameter_bag as $key => $value ) {
+				$this->parameter_bag[ $key ] = $this->anonymize( $key, $value );
+			}
+		}
 	}
 
 	/**
@@ -245,50 +245,50 @@ class DataTransfer {
 		return $value;
 	}
 
-    /**
-     * @param array $parameters
-     *
-     * @return array
-     */
-	private static function remove_empty_parameters($parameters) {
-	    $clearedParameters = [];
-	    foreach ($parameters as $key => $value) {
-	        if ($value !== null && $value !== '') {
-	            $clearedParameters[$key] = $value;
-            }
-        }
+	/**
+	 * @param array $parameters
+	 *
+	 * @return array
+	 */
+	private static function remove_empty_parameters( $parameters ) {
+		$clearedParameters = [];
+		foreach ( $parameters as $key => $value ) {
+			if ( $value !== null && $value !== '' ) {
+				$clearedParameters[ $key ] = $value;
+			}
+		}
 
-        return $clearedParameters;
-    }
+		return $clearedParameters;
+	}
 
-    /**
-     * @param string $reference
-     *
-     * @return int
-     */
+	/**
+	 * @param string $reference
+	 *
+	 * @return int
+	 */
 	protected static function get_order_id_for_reference( $reference ) {
-        $args = array(
-            'meta_key' => self::META_KEY_PAYONE_REFERENCES,
-            'meta_value' => $reference,
-            'meta_compare' => 'LIKE',
-            'post_type' => 'shop_order',
-            'post_status' => 'any',
-        );
-        $posts = get_posts( $args );
-        if ( count( $posts ) === 1 ) {
-            $post = array_shift($posts);
+		$args  = array(
+			'meta_key'     => self::META_KEY_PAYONE_REFERENCES,
+			'meta_value'   => $reference,
+			'meta_compare' => 'LIKE',
+			'post_type'    => 'shop_order',
+			'post_status'  => 'any',
+		);
+		$posts = get_posts( $args );
+		if ( count( $posts ) === 1 ) {
+			$post = array_shift( $posts );
 
-            return $post->ID;
-        }
+			return $post->ID;
+		}
 
-        // Es wurde keine Order gefunden. Wir gehen jetzt davon aus, dass es sich bei $reference um eine Order-ID
-        // handelt, die vor der Einführung von META_KEY_PAYONE_REFERENCES angelegt wurde. Um sicher zu gehen,
-        // wird nun geprüft, ob die Order bereits einen Wert für META_KEY_PAYONE_REFERENCES hat. Nur wenn dem nicht
-        // so ist, wird $reference als Order-ID zurück gegeben.
-        if ( get_post_meta( $reference, self::META_KEY_PAYONE_REFERENCES ) ) {
-            return 0;
-        }
+		// Es wurde keine Order gefunden. Wir gehen jetzt davon aus, dass es sich bei $reference um eine Order-ID
+		// handelt, die vor der Einführung von META_KEY_PAYONE_REFERENCES angelegt wurde. Um sicher zu gehen,
+		// wird nun geprüft, ob die Order bereits einen Wert für META_KEY_PAYONE_REFERENCES hat. Nur wenn dem nicht
+		// so ist, wird $reference als Order-ID zurück gegeben.
+		if ( get_post_meta( $reference, self::META_KEY_PAYONE_REFERENCES ) ) {
+			return 0;
+		}
 
-        return $reference;
-    }
+		return $reference;
+	}
 }

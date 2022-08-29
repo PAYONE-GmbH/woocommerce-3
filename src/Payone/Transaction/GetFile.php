@@ -17,17 +17,17 @@ class GetFile extends Base {
 
 	public function execute( $mandate_identification_hash ) {
 		$args = [
-			'post_type' => 'shop_order',
-			'post_status' => 'any',
-			'meta_key' => '_mandate_identification_hash',
-			'meta_value' => $mandate_identification_hash,
+			'post_type'    => 'shop_order',
+			'post_status'  => 'any',
+			'meta_key'     => '_mandate_identification_hash',
+			'meta_value'   => $mandate_identification_hash,
 			'meta_compare' => '=',
 		];
 
 		$query = new \WP_Query( $args );
 		$posts = $query->get_posts();
-		if ( isset( $posts[ 0 ] ) ) {
-			$post = $posts[ 0 ];
+		if ( isset( $posts[0] ) ) {
+			$post  = $posts[0];
 			$order = wc_get_order( $post->ID );
 			$this->set( 'file_reference', $order->get_meta( '_mandate_identification' ) );
 

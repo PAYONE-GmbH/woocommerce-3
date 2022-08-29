@@ -44,14 +44,14 @@ class Log {
 	}
 
 	public static function construct_from_post_vars() {
-        $post_data = $_POST;
+		$post_data = $_POST;
 
-        $encode_to_utf8 = apply_filters( 'payone_tx_log_encode_to_utf8', true );
-        if ( $encode_to_utf8 ) {
-            array_walk_recursive( $post_data, function ( &$entry ) {
-                $entry = mb_convert_encoding( $entry, 'UTF-8' );
-            });
-        }
+		$encode_to_utf8 = apply_filters( 'payone_tx_log_encode_to_utf8', true );
+		if ( $encode_to_utf8 ) {
+			array_walk_recursive( $post_data, function ( &$entry ) {
+				$entry = mb_convert_encoding( $entry, 'UTF-8' );
+			} );
+		}
 
 		$transaction_id        = isset( $post_data['txid'] ) ? $post_data['txid'] : '';
 		$transaction_log_entry = new Log();
@@ -75,13 +75,13 @@ class Log {
 	 * @return Log
 	 */
 	public static function construct_from_array( $array ) {
-		$id = isset($array['id']) ? $array['id'] : null;
-		$data = isset($array['data']) ? $array['data'] : [];
-		$transaction_id = isset($array['transaction_id']) ? $array['transaction_id'] : '';
-		if (!$transaction_id) {
-			$transaction_id = isset($array['txid']) ? $array['txid'] : '';
+		$id             = isset( $array['id'] ) ? $array['id'] : null;
+		$data           = isset( $array['data'] ) ? $array['data'] : [];
+		$transaction_id = isset( $array['transaction_id'] ) ? $array['transaction_id'] : '';
+		if ( ! $transaction_id ) {
+			$transaction_id = isset( $array['txid'] ) ? $array['txid'] : '';
 		}
-		$created_at = isset($array['created_at']) ? $array['created_at'] : '1970-01-01 00:00:00';
+		$created_at = isset( $array['created_at'] ) ? $array['created_at'] : '1970-01-01 00:00:00';
 
 		$object = new Log( $id );
 		$object
@@ -93,8 +93,8 @@ class Log {
 	}
 
 	public function save() {
-		if (!$this->transactionLogEnabled) {
-			return ;
+		if ( ! $this->transactionLogEnabled ) {
+			return;
 		}
 
 		global $wpdb;
@@ -104,9 +104,9 @@ class Log {
 		$wpdb->insert(
 			$tableName,
 			[
-				'data'    => $this->get_data()->get_serialized_parameters(),
-				'transaction_id'   => $this->get_transaction_id(),
-				'created_at' => $this->get_created_at()->format( 'Y-m-d H:i:s' ),
+				'data'           => $this->get_data()->get_serialized_parameters(),
+				'transaction_id' => $this->get_transaction_id(),
+				'created_at'     => $this->get_created_at()->format( 'Y-m-d H:i:s' ),
 			],
 			[ '%s', '%s', '%s' ]
 		);

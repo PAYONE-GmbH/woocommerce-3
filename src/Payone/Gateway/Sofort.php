@@ -43,7 +43,7 @@ class Sofort extends RedirectGatewayBase {
 			return;
 		}
 
-		$order = $transaction_status->get_order();
+		$order                = $transaction_status->get_order();
 		$authorization_method = $order->get_meta( '_authorization_method' );
 		if ( $authorization_method === 'authorization' && $transaction_status->is_paid() ) {
 			$order->add_order_note( __( 'Payment is authorized by PAYONE, payment is complete.', 'payone-woocommerce-3' ) );

@@ -8,7 +8,7 @@ class PrePayment extends GatewayBase {
 	const GATEWAY_ID = 'bs_payone_prepayment';
 
 	public function __construct() {
-		parent::__construct(self::GATEWAY_ID);
+		parent::__construct( self::GATEWAY_ID );
 
 		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-vorkasse.png';
 		$this->method_title       = 'PAYONE ' . __( 'Prepayment', 'payone-woocommerce-3' );
@@ -65,7 +65,7 @@ class PrePayment extends GatewayBase {
 			$order->add_order_note( __( 'Payment received. Customer overpaid!', 'payone-woocommerce-3' ) );
 			$order->payment_complete();
 		} elseif ( $transaction_status->is_underpaid() ) {
-			$order->add_order_note(__( 'Payment received. Customer underpaid!', 'payone-woocommerce-3' ));
+			$order->add_order_note( __( 'Payment received. Customer underpaid!', 'payone-woocommerce-3' ) );
 		} elseif ( $transaction_status->is_paid() ) {
 			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
 			$order->payment_complete();

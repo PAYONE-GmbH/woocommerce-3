@@ -20,13 +20,13 @@ class Capture extends Base {
 	 * @return null|\Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
-	    if ( WCSHandler::is_subscription( $order ) && (int)$order->get_total() === 0 ) {
-	        // No capture neccessary. The preauthorization of 1 cent for the subscription
-            // ist just a way to get the payment through.
-	        return null;
-        }
+		if ( WCSHandler::is_subscription( $order ) && (int) $order->get_total() === 0 ) {
+			// No capture neccessary. The preauthorization of 1 cent for the subscription
+			// ist just a way to get the payment through.
+			return null;
+		}
 
-		if ($this->should_submit_cart() ) {
+		if ( $this->should_submit_cart() ) {
 			$this->add_article_list_to_transaction( $order );
 		}
 
@@ -38,8 +38,8 @@ class Capture extends Base {
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		// @todo narrative_text
 
-		$is_already_captured = $order->get_meta('_captured');
-		if ($is_already_captured) {
+		$is_already_captured = $order->get_meta( '_captured' );
+		if ( $is_already_captured ) {
 			$this->set_sequencenumber( $order, $current_sequencenumber );
 			$order->add_order_note( __( 'Capture already done', 'payone-woocommerce-3' ) );
 
@@ -47,22 +47,22 @@ class Capture extends Base {
 		}
 		$response = $this->submit();
 
-        if ( $response->is_approved() ) {
+		if ( $response->is_approved() ) {
 			$order->add_order_note( __( 'Capture successfull', 'payone-woocommerce-3' ) );
 			$order->update_meta_data( '_captured', time() );
 			$order->save_meta_data();
 
-            /**
-             * Für manuelle Captures ist der Mailversand grundsätzlich ausgeschaltet.
-             * Siehe Plugin::pre_disable_capture_mail_filter()
-             */
-            $old_value = Plugin::$send_mail_after_capture;
+			/**
+			 * Für manuelle Captures ist der Mailversand grundsätzlich ausgeschaltet.
+			 * Siehe Plugin::pre_disable_capture_mail_filter()
+			 */
+			$old_value                       = Plugin::$send_mail_after_capture;
 			Plugin::$send_mail_after_capture = true;
-            $mail = new \WC_Email_Customer_Processing_Order();
-            $mail->trigger( null, $order );
-            Plugin::$send_mail_after_capture = $old_value;
+			$mail                            = new \WC_Email_Customer_Processing_Order();
+			$mail->trigger( null, $order );
+			Plugin::$send_mail_after_capture = $old_value;
 		} else {
-            $this->set_sequencenumber( $order, $current_sequencenumber );
+			$this->set_sequencenumber( $order, $current_sequencenumber );
 			$order->add_order_note( __( 'Capture failed: ', 'payone-woocommerce-3' ) . $response->get_error_message() );
 		}
 

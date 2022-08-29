@@ -8,17 +8,17 @@ use Payone\Transaction\Capture;
 use Payone\Transaction\Debit;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
-    const TRANSIENT_KEY_SELECT_GATEWAY = 'payone_select_gateway';
+	const TRANSIENT_KEY_SELECT_GATEWAY = 'payone_select_gateway';
 
-    /**
+	/**
 	 * @var array
 	 */
 	protected $global_settings;
 
-    /**
-     * @var bool
-     */
-    protected $hide_when_no_shipping;
+	/**
+	 * @var bool
+	 */
+	protected $hide_when_no_shipping;
 
 	/**
 	 * @var string 0 or 1
@@ -85,7 +85,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$this->has_fields            = true;
 		$this->supports              = [ 'products', 'refunds' ];
 		$this->global_settings       = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-        $this->hide_when_no_shipping = false;
+		$this->hide_when_no_shipping = false;
 
 		$this->init_settings();
 		$this->init_form_fields();
@@ -114,49 +114,50 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$order = $transaction_status->get_order();
 
 		// Increment sequence number of the order if any provided
-        // through the TX status notification
+		// through the TX status notification
 		$sequencenumber = $transaction_status->get_sequencenumber();
 		if ( $sequencenumber ) {
 			$order->update_meta_data( '_sequencenumber', $sequencenumber );
 			$order->save_meta_data();
 		}
 
-        if ( $transaction_status->is_invoice() ) {
-            $invoice_id = $transaction_status->get_string( 'invoiceid' );
-            $order->add_order_note( sprintf( '%s (Invoice ID: %s)', __( 'Order is invoiced on PAYONE.', 'payone-woocommerce-3' ), $invoice_id ) );
-            $order->update_meta_data( '_invoiceid', $invoice_id );
-            $order->save_meta_data();
-        }
+		if ( $transaction_status->is_invoice() ) {
+			$invoice_id = $transaction_status->get_string( 'invoiceid' );
+			$order->add_order_note( sprintf( '%s (Invoice ID: %s)', __( 'Order is invoiced on PAYONE.', 'payone-woocommerce-3' ), $invoice_id ) );
+			$order->update_meta_data( '_invoiceid', $invoice_id );
+			$order->save_meta_data();
+		}
 
-        if ( $transaction_status->is_appointed() ) {
-		    // Just log and flag order meta that we got an APPOINTED TX status notification
-		    $order->add_order_note( __( 'Received status APPOINTED from PAYONE.', 'payone-woocommerce-3' ) );
-            $order->update_meta_data( '_appointed', time() );
-            $order->save_meta_data();
-        } elseif ( $transaction_status->is_refund() ) {
-		    // Refund the order if not already happened and we got a DEBIT TX status notification
-            $is_already_refunded = $order->get_meta( '_refunded' );
-            if ( ! $is_already_refunded ) {
-                $order->update_status( 'wc-refunded', __( 'Received status DEBIT from PAYONE.', 'payone-woocommerce-3' ) );
-                $order->update_meta_data( '_refunded', time() );
-                $order->save_meta_data();
-            }
-        } elseif ( $transaction_status->is_cancelation() || $transaction_status->is_failed() ) {
-		    // Set order status to failed if we get a CANCELED of FAILED TX status notification
-            $order->update_status( 'wc-failed', __( 'Received status CANCELATION from PAYONE with reason: ', 'payone-woocommerce-3' ) . $transaction_status->get( 'failedcause' ) );
-        } elseif ( $transaction_status->is_invoice() ) {
-            $order->add_order_note( __( 'The PAYONE platform has generated a receipt for this order', 'payone-woocommerce-3' ) );
-        } elseif ( $transaction_status->is_reminder() ) {
-            $order->add_order_note( __( 'The PAYONE dunning status has changed', 'payone-woocommerce-3' ) );
-        } elseif ( $transaction_status->is_transfer() ) {
-            $order->add_order_note( __( 'The PAYONE platform has registered a rebooking', 'payone-woocommerce-3' ) );
-        }
+		if ( $transaction_status->is_appointed() ) {
+			// Just log and flag order meta that we got an APPOINTED TX status notification
+			$order->add_order_note( __( 'Received status APPOINTED from PAYONE.', 'payone-woocommerce-3' ) );
+			$order->update_meta_data( '_appointed', time() );
+			$order->save_meta_data();
+		} elseif ( $transaction_status->is_refund() ) {
+			// Refund the order if not already happened and we got a DEBIT TX status notification
+			$is_already_refunded = $order->get_meta( '_refunded' );
+			if ( ! $is_already_refunded ) {
+				$order->update_status( 'wc-refunded', __( 'Received status DEBIT from PAYONE.', 'payone-woocommerce-3' ) );
+				$order->update_meta_data( '_refunded', time() );
+				$order->save_meta_data();
+			}
+		} elseif ( $transaction_status->is_cancelation() || $transaction_status->is_failed() ) {
+			// Set order status to failed if we get a CANCELED of FAILED TX status notification
+			$order->update_status( 'wc-failed', __( 'Received status CANCELATION from PAYONE with reason: ', 'payone-woocommerce-3' ) . $transaction_status->get( 'failedcause' ) );
+		} elseif ( $transaction_status->is_invoice() ) {
+			$order->add_order_note( __( 'The PAYONE platform has generated a receipt for this order', 'payone-woocommerce-3' ) );
+		} elseif ( $transaction_status->is_reminder() ) {
+			$order->add_order_note( __( 'The PAYONE dunning status has changed', 'payone-woocommerce-3' ) );
+		} elseif ( $transaction_status->is_transfer() ) {
+			$order->add_order_note( __( 'The PAYONE platform has registered a rebooking', 'payone-woocommerce-3' ) );
+		}
 	}
 
 	/**
 	 * @param \WC_Order $order
 	 */
-	public function add_content_to_thankyou_page( \WC_Order $order ) {}
+	public function add_content_to_thankyou_page( \WC_Order $order ) {
+	}
 
 	/**
 	 * @param \WC_Order $order
@@ -165,12 +166,13 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 */
 	public function capture( \WC_Order $order ) {
 		$capture = new Capture( $this );
-        $this->add_data_to_capture( $capture, $order );
+		$this->add_data_to_capture( $capture, $order );
 
 		return $capture->execute( $order );
 	}
 
-	protected function add_data_to_capture( Capture $capture, \WC_Order $order ) { }
+	protected function add_data_to_capture( Capture $capture, \WC_Order $order ) {
+	}
 
 	/**
 	 * @param int $order_id
@@ -180,19 +182,20 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @return bool|\WP_Error
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
-	    if ( (float)$amount <= 0.0 ) {
-	        return new \WP_Error( 1, __( 'Debit amount must be greater than zero.', 'payone-woocommerce-3' ) );
-        }
+		if ( (float) $amount <= 0.0 ) {
+			return new \WP_Error( 1, __( 'Debit amount must be greater than zero.', 'payone-woocommerce-3' ) );
+		}
 		$order = new \WC_Order( $order_id );
-        $order->add_order_note( __( 'Refund is issued through PAYONE', 'payone-woocommerce-3' ) );
+		$order->add_order_note( __( 'Refund is issued through PAYONE', 'payone-woocommerce-3' ) );
 
 		$debit = new Debit( $this );
-        $this->add_data_to_debit( $debit, $order );
+		$this->add_data_to_debit( $debit, $order );
 
 		return $debit->execute( $order, - $amount );
 	}
 
-    protected function add_data_to_debit( Debit $capture, \WC_Order $order ) { }
+	protected function add_data_to_debit( Debit $capture, \WC_Order $order ) {
+	}
 
 	/**
 	 * @return bool
@@ -200,15 +203,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	public function is_available() {
 		$is_available = parent::is_available();
 
-        if ( $is_available && WC()->cart && $this->min_amount > $this->get_order_total() ) {
+		if ( $is_available && WC()->cart && $this->min_amount > $this->get_order_total() ) {
 			$is_available = false;
 		}
 
-        if ( $is_available && $this->hide_when_no_shipping ) {
-            if ( ! wc_shipping_enabled() || wc_get_shipping_method_count() < 1 ) {
-                $is_available = false;
-            }
-        }
+		if ( $is_available && $this->hide_when_no_shipping ) {
+			if ( ! wc_shipping_enabled() || wc_get_shipping_method_count() < 1 ) {
+				$is_available = false;
+			}
+		}
 
 		if ( $is_available ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
@@ -219,8 +222,8 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			} elseif ( WC()->customer && WC()->customer->get_billing_country() ) {
 				$country = (string) WC()->customer->get_billing_country();
 			} else {
-			    $country = '';
-            }
+				$country = '';
+			}
 
 			$is_available = in_array( $country, $this->countries, true );
 		}
@@ -282,7 +285,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				'type'    => 'multiselect',
 				'options' => $countries->get_countries(),
 				'default' => [ 'DE', 'AT', 'CH' ],
-                'css'     => 'height:100px',
+				'css'     => 'height:100px',
 			],
 			'use_global_settings'       => [
 				'title'   => __( 'Use global settings', 'payone-woocommerce-3' ),
@@ -424,24 +427,24 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $this->text_on_booking_statement;
 	}
 
-    protected function add_email_meta_hook($callable = null) {
+	protected function add_email_meta_hook( $callable = null ) {
 		if ( $callable ) {
 			add_action( 'woocommerce_email_order_meta', $callable, 10, 3 );
 		}
 	}
 
-    /**
-     * @return bool
-     */
-    public function is_payone_invoice_module_enabled() {
-        if ( isset( $this->global_settings['payone_invoice_module_enabled'] ) ) {
-            return (bool) $this->global_settings['payone_invoice_module_enabled'];
-        }
+	/**
+	 * @return bool
+	 */
+	public function is_payone_invoice_module_enabled() {
+		if ( isset( $this->global_settings['payone_invoice_module_enabled'] ) ) {
+			return (bool) $this->global_settings['payone_invoice_module_enabled'];
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    private function process_global_settings() {
+	private function process_global_settings() {
 		$this->use_global_settings = $this->settings['use_global_settings'];
 		if ( $this->use_global_settings ) {
 			unset (
@@ -479,42 +482,42 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 	}
 
-    /**
-     * @param \WC_Order $order
-     *
-     * @return \SplFileInfo|null
-     */
-    public function get_invoice_for_order( $order ) {
-        $invoice_id = (string) $order->get_meta( '_invoiceid' );
-        $invoice_id = trim( $invoice_id );
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return \SplFileInfo|null
+	 */
+	public function get_invoice_for_order( $order ) {
+		$invoice_id = (string) $order->get_meta( '_invoiceid' );
+		$invoice_id = trim( $invoice_id );
 
-        if ( empty( $invoice_id ) ) {
-            return null;
-        }
+		if ( empty( $invoice_id ) ) {
+			return null;
+		}
 
-        $request = new Request();
-        $request->set( 'request', 'getinvoice' );
-        $request->set( 'invoice_title', $invoice_id );
-        $result = $request->submit();
+		$request = new Request();
+		$request->set( 'request', 'getinvoice' );
+		$request->set( 'invoice_title', $invoice_id );
+		$result = $request->submit();
 
-        if ( ! $result->is_ok() ) {
-            wc_add_notice( $result->get_error_message(), 'error' );
+		if ( ! $result->is_ok() ) {
+			wc_add_notice( $result->get_error_message(), 'error' );
 
-            return null;
-        }
+			return null;
+		}
 
-        $pdfFilePath = sprintf( '%s/Invoice.%s.pdf', sys_get_temp_dir(), $invoice_id );
+		$pdfFilePath = sprintf( '%s/Invoice.%s.pdf', sys_get_temp_dir(), $invoice_id );
 
-        $bytes = file_put_contents( $pdfFilePath, $result->get( '_DATA' ) );
+		$bytes = file_put_contents( $pdfFilePath, $result->get( '_DATA' ) );
 
-        if ( $bytes === false || $bytes < 1 ) {
-            return null;
-        }
+		if ( $bytes === false || $bytes < 1 ) {
+			return null;
+		}
 
-        return new \SplFileInfo( $pdfFilePath );
-    }
+		return new \SplFileInfo( $pdfFilePath );
+	}
 
-    /**
+	/**
 	 * This is a copy of $this->generate_select_html(), but without the table_markup
 	 *
 	 * @param string $key
@@ -540,15 +543,17 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$data = wp_parse_args( $data, $defaults );
 		ob_start();
 		?>
-		<fieldset>
-			<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-			<select class="select <?php echo esc_attr( $data['class'] ); ?>" name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?>>
+        <fieldset>
+            <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+            <select class="select <?php echo esc_attr( $data['class'] ); ?>"
+                    name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>"
+                    style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?>>
 				<?php foreach ( (array) $data['options'] as $option_key => $option_value ) : ?>
-					<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $option_key, esc_attr( $this->get_option( $key ) ) ); ?>><?php echo esc_attr( $option_value ); ?></option>
+                    <option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $option_key, esc_attr( $this->get_option( $key ) ) ); ?>><?php echo esc_attr( $option_value ); ?></option>
 				<?php endforeach; ?>
-			</select>
+            </select>
 			<?php echo $this->get_description_html( $data ); ?>
-		</fieldset>
+        </fieldset>
 		<?php
 
 		return ob_get_clean();
@@ -580,11 +585,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
 		ob_start();
 		?>
-			<fieldset>
-				<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-				<input class="input-text regular-input <?php echo esc_attr( $data['class'] ); ?>" type="<?php echo esc_attr( $data['type'] ); ?>" name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo esc_attr( $this->get_option( $key ) ); ?>" placeholder="<?php echo esc_attr( $data['placeholder'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
-				<?php echo $this->get_description_html( $data ); ?>
-			</fieldset>
+        <fieldset>
+            <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+            <input class="input-text regular-input <?php echo esc_attr( $data['class'] ); ?>"
+                   type="<?php echo esc_attr( $data['type'] ); ?>" name="<?php echo esc_attr( $field_key ); ?>"
+                   id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>"
+                   value="<?php echo esc_attr( $this->get_option( $key ) ); ?>"
+                   placeholder="<?php echo esc_attr( $data['placeholder'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
+			<?php echo $this->get_description_html( $data ); ?>
+        </fieldset>
 		<?php
 
 		return ob_get_clean();
@@ -597,7 +606,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @param string $email
 	 */
 	public function email_meta_action( \WC_Order $order, $sent_to_admin, $plain_text, $email = '' ) {
-		$clearing_info = @json_decode($order->get_meta( '_clearing_info' ), true );
+		$clearing_info = @json_decode( $order->get_meta( '_clearing_info' ), true );
 		if ( $clearing_info ) {
 			echo '<strong>' . __( 'IBAN', 'payone-woocommerce-3' ) . ':</strong> ';
 			echo $clearing_info['bankiban'] . '<br>';

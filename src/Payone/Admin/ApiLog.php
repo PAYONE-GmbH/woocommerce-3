@@ -29,7 +29,7 @@ class ApiLog implements ListTableInterface {
 		$query = 'SELECT id, request, response, created_at
                   FROM ' . $wpdb->prefix . \Payone\Payone\Api\Log::TABLE_NAME . ' 
                   ORDER BY created_at DESC
-                  LIMIT ' . ( $page -1 ) * $per_page . ', ' . $per_page;
+                  LIMIT ' . ( $page - 1 ) * $per_page . ', ' . $per_page;
 		$rows  = $wpdb->get_results( $query, ARRAY_A );
 
 		$entries = [];
@@ -49,7 +49,7 @@ class ApiLog implements ListTableInterface {
 		$query = 'SELECT COUNT(id)
                   FROM ' . $wpdb->prefix . \Payone\Payone\Api\Log::TABLE_NAME;
 
-		return (int)$wpdb->get_var( $query );
+		return (int) $wpdb->get_var( $query );
 	}
 
 	/**

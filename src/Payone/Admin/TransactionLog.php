@@ -4,7 +4,7 @@ namespace Payone\Admin;
 
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
-class TransactionLog implements ListTableInterface  {
+class TransactionLog implements ListTableInterface {
 	public function displayList() {
 		$list_table = new TransactionLogListTable( $this );
 		$list_table->prepare_items();
@@ -29,7 +29,7 @@ class TransactionLog implements ListTableInterface  {
 		$query = 'SELECT id, transaction_id, data, created_at
                   FROM ' . $wpdb->prefix . \Payone\Transaction\Log::TABLE_NAME . ' 
                   ORDER BY created_at DESC
-                  LIMIT ' . ( $page -1 ) * $per_page . ', ' . $per_page;
+                  LIMIT ' . ( $page - 1 ) * $per_page . ', ' . $per_page;
 		$rows  = $wpdb->get_results( $query, ARRAY_A );
 
 		$entries = [];
@@ -49,7 +49,7 @@ class TransactionLog implements ListTableInterface  {
 		$query = 'SELECT COUNT(id)
                   FROM ' . $wpdb->prefix . \Payone\Transaction\Log::TABLE_NAME;
 
-		return (int)$wpdb->get_var( $query );
+		return (int) $wpdb->get_var( $query );
 	}
 
 	/**

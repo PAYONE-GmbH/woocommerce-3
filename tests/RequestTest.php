@@ -3,9 +3,11 @@
 use PHPUnit\Framework\TestCase;
 
 // Some preparations for mocking the wordpress environment
-if (!defined('PAYONE_PLUGIN_VERSION')) define('PAYONE_PLUGIN_VERSION', 'test');
+if ( ! defined( 'PAYONE_PLUGIN_VERSION' ) ) {
+	define( 'PAYONE_PLUGIN_VERSION', 'test' );
+}
 
-function get_option( $key) {
+function get_option( $key ) {
 	return [
 		'account_id'      => '',
 		'merchant_id'     => '',
@@ -25,7 +27,7 @@ final class RequestTest extends TestCase {
 	public function testCreateResponse() {
 		$request = new \Payone\Payone\Api\Request();
 
-		$response = $request->create_response("status=REDIRECT\nredirecturl=https://secure.pay1.de/3ds/redirect.php?md=20954722&txid=262491170\ntxid=262491170");
+		$response = $request->create_response( "status=REDIRECT\nredirecturl=https://secure.pay1.de/3ds/redirect.php?md=20954722&txid=262491170\ntxid=262491170" );
 
 		$this->assertEquals( 'REDIRECT', $response->get( 'status' ) );
 		$this->assertEquals( 'https://secure.pay1.de/3ds/redirect.php?md=20954722&txid=262491170', $response->get( 'redirecturl' ) );
@@ -35,8 +37,8 @@ final class RequestTest extends TestCase {
 	public function testCreateGetfileResponse() {
 		$request = new \Payone\Payone\Api\Request();
 
-		$pdfData = "%PDF-1.5\n.SOME-DATA..\n%%EOF";
-		$response = $request->create_response($pdfData);
+		$pdfData  = "%PDF-1.5\n.SOME-DATA..\n%%EOF";
+		$response = $request->create_response( $pdfData );
 
 		$this->assertEquals( 'OK', $response->get( 'status' ) );
 		$this->assertEquals( $pdfData, $response->get( '_DATA' ) );

@@ -10,9 +10,9 @@ use Payone\Payone\Api\TransactionStatus;
  */
 class PayPalBase extends RedirectGatewayBase {
 
-    const TRANSIENT_KEY_WORKORDERID = 'payone_paypal_workorderid';
+	const TRANSIENT_KEY_WORKORDERID = 'payone_paypal_workorderid';
 
-    public function payment_fields() {
+	public function payment_fields() {
 		include PAYONE_VIEW_PATH . '/gateway/paypal/payment-form.php';
 	}
 
@@ -23,7 +23,7 @@ class PayPalBase extends RedirectGatewayBase {
 	 * @throws \WC_Data_Exception
 	 */
 	public function process_payment( $order_id ) {
-        return $this->process_redirect( $order_id, \Payone\Transaction\PayPal::class );
+		return $this->process_redirect( $order_id, \Payone\Transaction\PayPal::class );
 	}
 
 	/**
@@ -36,7 +36,7 @@ class PayPalBase extends RedirectGatewayBase {
 			return;
 		}
 
-		$order = $transaction_status->get_order();
+		$order                = $transaction_status->get_order();
 		$authorization_method = $order->get_meta( '_authorization_method' );
 		if ( $authorization_method === 'authorization' && $transaction_status->is_paid() ) {
 			$order->add_order_note( __( 'Payment is authorized by PAYONE, payment is complete.', 'payone-woocommerce-3' ) );
