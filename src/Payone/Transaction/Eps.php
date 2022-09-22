@@ -14,7 +14,7 @@ class Eps extends Base {
 
 		$this->set( 'clearingtype', 'sb' );
 		$this->set( 'onlinebanktransfertype', 'EPS' );
-        $this->set( 'bankgrouptype', $_POST['bankgrouptype'] );
+		$this->set( 'bankgrouptype', $_POST['bankgrouptype'] );
 	}
 
 	/**
@@ -23,15 +23,15 @@ class Eps extends Base {
 	 * @return \Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
-		if ($this->should_submit_cart() ) {
+		if ( $this->should_submit_cart() ) {
 			$this->add_article_list_to_transaction( $order );
 		}
 		$this->set_reference( $order );
 		$this->set( 'amount', $order->get_total() * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		$this->set_personal_data_from_order( $order );
-        $this->set_shipping_data_from_order( $order );
-        $this->set_customer_ip_from_order( $order );
+		$this->set_shipping_data_from_order( $order );
+		$this->set_customer_ip_from_order( $order );
 		$this->set( 'bankcountry', 'AT'/*$this->get( 'country' )*/ );
 		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'success', 'oid' => $order->get_id() ] ) );
 		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'error', 'oid' => $order->get_id() ] ) );

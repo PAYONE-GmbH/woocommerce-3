@@ -18,27 +18,27 @@ abstract class Helper {
 		$selectedValue = isset( $this->options[ $fieldName ] ) ? $this->options[ $fieldName ] : '';
 
 		$multiple = '';
-		$name = $optionName . '[' . $fieldName . ']';
-		if ($type === 'multiple') {
+		$name     = $optionName . '[' . $fieldName . ']';
+		if ( $type === 'multiple' ) {
 			$multiple = ' multiple="multiple"';
-			$name .= '[]';
+			$name     .= '[]';
 		}
 
-		echo '<select id="' . $fieldName . '" name="' . $name .'"'.$multiple.'>';
-		foreach ($options as $value => $label) {
+		echo '<select id="' . $fieldName . '" name="' . $name . '"' . $multiple . '>';
+		foreach ( $options as $value => $label ) {
 			$selected = false;
-			if (is_array($selectedValue) && $type === 'multiple') {
-				if (in_array($value, $selectedValue)) {
+			if ( is_array( $selectedValue ) && $type === 'multiple' ) {
+				if ( in_array( $value, $selectedValue ) ) {
 					$selected = true;
 				}
-			} elseif ($selectedValue == $value) {
+			} elseif ( $selectedValue == $value ) {
 				$selected = true;
 			}
 
-			if ($selected) {
+			if ( $selected ) {
 				$selected = ' selected="selected"';
 			}
-			echo '<option value="'.esc_attr($value).'"'.$selected.'>'.esc_html($label).'</option>';
+			echo '<option value="' . esc_attr( $value ) . '"' . $selected . '>' . esc_html( $label ) . '</option>';
 		}
 		echo '</select>';
 	}

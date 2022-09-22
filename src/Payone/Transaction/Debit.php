@@ -34,7 +34,7 @@ class Debit extends Base {
 
 		if ( $response->has_error() ) {
 			$this->set_sequencenumber( $order, $current_sequencenumber );
-			$order->add_order_note( __('Refund could not be processed: ', 'payone-woocommerce-3') . $response->get_error_message() );
+			$order->add_order_note( __( 'Refund could not be processed: ', 'payone-woocommerce-3' ) . $response->get_error_message() );
 
 			return false;
 		}
@@ -47,20 +47,22 @@ class Debit extends Base {
 
 	protected function get_article_list_for_transaction( \WC_Order $order ) {
 		// Bestimme die Default-Steuerrate
-		$tax_rates =  \WC_Tax::get_rates();
-		$va = 0;
+		$tax_rates = \WC_Tax::get_rates();
+		$va        = 0;
 		if ( is_array( $tax_rates ) ) {
 			$rates = array_shift( $tax_rates );
 			$rates = is_array( $rates ) ? $rates : [];
 			$va    = round( array_shift( $rates ) );
 		}
 
-		return [ '1' => [
-			'id' => 'GS',
-			'pr' => $this->get('amount'),
-			'no' => 1,
-			'de' => 'Gutschrift für Ihre Bestellung',
-			'va' => 100 * $va,
-		] ];
+		return [
+			'1' => [
+				'id' => 'GS',
+				'pr' => $this->get( 'amount' ),
+				'no' => 1,
+				'de' => 'Gutschrift für Ihre Bestellung',
+				'va' => 100 * $va,
+			]
+		];
 	}
 }

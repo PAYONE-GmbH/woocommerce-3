@@ -123,7 +123,7 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'address',
 			[
-				'invoice' => __( 'Invoice address', 'payone-woocommerce-3' ),
+				'invoice'  => __( 'Invoice address', 'payone-woocommerce-3' ),
 				'delivery' => __( 'Delivery address', 'payone-woocommerce-3' ),
 			] );
 	}
@@ -132,7 +132,7 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'type',
 			[
-				'basic' => __( 'Basic', 'payone-woocommerce-3' ),
+				'basic'  => __( 'Basic', 'payone-woocommerce-3' ),
 				'person' => __( 'Person (only available in Germany)', 'payone-woocommerce-3' ),
 			] );
 	}
@@ -153,8 +153,8 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'auto_correct',
 			[
-				'no' => __( 'No', 'payone-woocommerce-3' ),
-				'yes' => __( 'Yes', 'payone-woocommerce-3' ),
+				'no'               => __( 'No', 'payone-woocommerce-3' ),
+				'yes'              => __( 'Yes', 'payone-woocommerce-3' ),
 				'customer-decides' => __( 'Customer decides', 'payone-woocommerce-3' ),
 			] );
 	}
@@ -163,10 +163,10 @@ class AddressChecks extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'on_error',
 			[
-				'cancel' => __( 'Cancel checkout', 'payone-woocommerce-3' ),
-				're-entry' => __( 'Request re-entry of the address causing the problem', 'payone-woocommerce-3' ),
+				'cancel'    => __( 'Cancel checkout', 'payone-woocommerce-3' ),
+				're-entry'  => __( 'Request re-entry of the address causing the problem', 'payone-woocommerce-3' ),
 				'follow-up' => __( 'Perform follow-up credit check', 'payone-woocommerce-3' ),
-				'continue' => __( 'Continue', 'payone-woocommerce-3' ),
+				'continue'  => __( 'Continue', 'payone-woocommerce-3' ),
 			] );
 	}
 

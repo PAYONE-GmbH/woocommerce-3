@@ -9,16 +9,16 @@ use Payone\WooCommerceSubscription\WCSHandler;
 
 class SepaDirectDebit extends GatewayBase {
 
-    use WCSAwareGatewayTrait;
+	use WCSAwareGatewayTrait;
 
 	const GATEWAY_ID = 'bs_payone_sepa';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-        if ( WCSHandler::is_wcs_active() ) {
-            $this->add_wcs_support();
-        }
+		if ( WCSHandler::is_wcs_active() ) {
+			$this->add_wcs_support();
+		}
 
 		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-lastschrift.png';
 		$this->method_title       = 'PAYONE ' . __( 'Direct Debit', 'payone-woocommerce-3' );
@@ -27,13 +27,13 @@ class SepaDirectDebit extends GatewayBase {
 
 	public function init_form_fields() {
 		$this->init_common_form_fields( 'PAYONE ' . __( 'Direct Debit', 'payone-woocommerce-3' ) );
-		$this->form_fields['sepa_check_bank_data'] = [
+		$this->form_fields['sepa_check_bank_data']        = [
 			'title'   => __( 'Check bank data', 'payone-woocommerce-3' ),
 			'type'    => 'select',
 			'options' => [
-				'basic'    => __( 'Basic', 'payone-woocommerce-3' ),
+				'basic'     => __( 'Basic', 'payone-woocommerce-3' ),
 				'blacklist' => __( 'Check POS black list', 'payone-woocommerce-3' ),
-				'none' => __( 'None (only possible if PAYONE Mandate Management is inactive)', 'payone-woocommerce-3' ),
+				'none'      => __( 'None (only possible if PAYONE Mandate Management is inactive)', 'payone-woocommerce-3' ),
 			],
 			'default' => 'basic',
 		];
@@ -46,7 +46,7 @@ class SepaDirectDebit extends GatewayBase {
 			],
 			'default' => '1',
 		];
-		$this->form_fields['sepa_pdf_download_mandate'] = [
+		$this->form_fields['sepa_pdf_download_mandate']   = [
 			'title'   => __( 'Download mandate as PDF', 'payone-woocommerce-3' ),
 			'type'    => 'select',
 			'options' => [
@@ -65,25 +65,26 @@ class SepaDirectDebit extends GatewayBase {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-        // Depending on the Gateway, we might need to set up a special transaction for subscriptions
-        if ( WCSHandler::is_wcs_active() && method_exists( $this, 'wcs_get_transaction_for_subscription_signup' ) ) {
-            /** @var \Payone\Transaction\SepaDirectDebit $transaction */
-            $transaction = $this->wcs_get_transaction_for_subscription_signup( $order );
-        } else {
-            /** @var \Payone\Transaction\Base $transaction */
-            $transaction = new \Payone\Transaction\SepaDirectDebit( $this );
-        }
+		// Depending on the Gateway, we might need to set up a special transaction for subscriptions
+		if ( WCSHandler::is_wcs_active() && method_exists( $this, 'wcs_get_transaction_for_subscription_signup' ) ) {
+			/** @var \Payone\Transaction\SepaDirectDebit $transaction */
+			$transaction = $this->wcs_get_transaction_for_subscription_signup( $order );
+		} else {
+			/** @var \Payone\Transaction\Base $transaction */
+			$transaction = new \Payone\Transaction\SepaDirectDebit( $this );
+		}
 
-        /** @var \Payone\Payone\Api\Response $response */
+		/** @var \Payone\Payone\Api\Response $response */
 		$response = $transaction->execute( $order );
 
 		if ( $response->has_error() ) {
 			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(), 'error' );
+
 			return;
 		}
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
-        $order->add_meta_data('_payone_userid', $response->get( 'userid', '' ) );
+		$order->add_meta_data( '_payone_userid', $response->get( 'userid', '' ) );
 
 		$authorization_method = $transaction->get( 'request' );
 		$order->update_meta_data( '_authorization_method', $authorization_method );
@@ -92,14 +93,14 @@ class SepaDirectDebit extends GatewayBase {
 		$order->save_meta_data();
 		$order->save();
 
-        if ( $authorization_method === 'preauthorization'
-            && $this->get_authorization_method() === 'authorization'
-            && WCSHandler::is_wcs_active()
-            && wcs_order_contains_subscription( $order )
-            && (int)$order->get_total() === 0
-        ) {
-            $order->update_status( 'processing', __( 'Recurring payment authorized by PAYONE.', 'payone-woocommerce-3' ) );
-        } elseif ( $authorization_method === 'preauthorization' ) {
+		if ( $authorization_method === 'preauthorization'
+		     && $this->get_authorization_method() === 'authorization'
+		     && WCSHandler::is_wcs_active()
+		     && wcs_order_contains_subscription( $order )
+		     && (int) $order->get_total() === 0
+		) {
+			$order->update_status( 'processing', __( 'Recurring payment authorized by PAYONE.', 'payone-woocommerce-3' ) );
+		} elseif ( $authorization_method === 'preauthorization' ) {
 			$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
 			$order->update_status( 'processing',
@@ -119,43 +120,44 @@ class SepaDirectDebit extends GatewayBase {
 		);
 	}
 
-    /**
-     * @param \WC_Order $order
-     * @return \Payone\Transaction\SepaDirectDebit
-     */
-    public function wcs_get_transaction_for_subscription_signup( \WC_Order $order ) {
-        if ( (int)$order->get_total() === 0 ) {
-            $transaction = new \Payone\Transaction\SepaDirectDebit( $this, 'preauthorization' );
-            // The user does not need to pay anything right now, but we need to set the amount to 1 cent.
-            // This is not going to be captured. We just need the preauthorization;
-            $transaction->set('amount', 1);
-        } else {
-            $transaction = new \Payone\Transaction\SepaDirectDebit( $this );
-        }
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return \Payone\Transaction\SepaDirectDebit
+	 */
+	public function wcs_get_transaction_for_subscription_signup( \WC_Order $order ) {
+		if ( (int) $order->get_total() === 0 ) {
+			$transaction = new \Payone\Transaction\SepaDirectDebit( $this, 'preauthorization' );
+			// The user does not need to pay anything right now, but we need to set the amount to 1 cent.
+			// This is not going to be captured. We just need the preauthorization;
+			$transaction->set( 'amount', 1 );
+		} else {
+			$transaction = new \Payone\Transaction\SepaDirectDebit( $this );
+		}
 
-        $transaction->set_reference( $order );
-        $transaction->set( 'recurrence', 'recurring' );
-        $transaction->set( 'customer_is_present', 'yes' );
+		$transaction->set_reference( $order );
+		$transaction->set( 'recurrence', 'recurring' );
+		$transaction->set( 'customer_is_present', 'yes' );
 
-        return $transaction;
-    }
+		return $transaction;
+	}
 
 	public function process_manage_mandate( $data ) {
 		$result = [];
 
 		if ( $data['confirmation_check'] === '0' ) {
 			$result = [
-				'status' => 'error',
+				'status'  => 'error',
 				'message' => __( 'Please check this option', 'payone-woocommerce-3' ),
 			];
 		} elseif ( $data['confirmation_check'] === '1' ) {
 			$result = [
 				'status'    => 'active',
-				'reference' => $data[ 'mandate_identification' ],
+				'reference' => $data['mandate_identification'],
 			];
 		}
 
-		if ( !$result ) {
+		if ( ! $result ) {
 			$transaction = new \Payone\Transaction\ManageMandate( $this, $data );
 			$response    = $transaction->execute();
 
@@ -190,17 +192,17 @@ class SepaDirectDebit extends GatewayBase {
 		$result['call'] = 'process_manage_mandate';
 		$result['date'] = $data;
 
-		echo json_encode($result);
+		echo json_encode( $result );
 		exit;
 	}
 
 	public function process_manage_mandate_getfile( $data ) {
-		$mandate_identification_hash = isset ($data[ 'hash' ] ) ? $data[ 'hash' ] : '';
-		$transaction = new \Payone\Transaction\GetFile( $this );
-		$response = $transaction->execute( $mandate_identification_hash );
+		$mandate_identification_hash = isset ( $data['hash'] ) ? $data['hash'] : '';
+		$transaction                 = new \Payone\Transaction\GetFile( $this );
+		$response                    = $transaction->execute( $mandate_identification_hash );
 
-		header("Content-type:application/pdf");
-		header("Content-Disposition:attachment;filename=SEPA-Lastschriftmandat.pdf");
+		header( "Content-type:application/pdf" );
+		header( "Content-Disposition:attachment;filename=SEPA-Lastschriftmandat.pdf" );
 		echo utf8_decode( $response->get( '_DATA' ) );
 		exit;
 	}

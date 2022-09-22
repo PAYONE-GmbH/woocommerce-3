@@ -39,17 +39,17 @@ class TransactionStatus extends DataTransfer {
 
 				$this->order->update_meta_data( '_' . $this->get_action(), time() );
 				$this->order->save_meta_data();
-			} catch ( \Exception $e) {
-				$this->order = null;
+			} catch ( \Exception $e ) {
+				$this->order   = null;
 				$this->gateway = null;
 			}
 
-            if ( ! $this->order || ! $this->gateway ) {
-                $this->order = null;
-                $this->gateway = null;
-            }
+			if ( ! $this->order || ! $this->gateway ) {
+				$this->order   = null;
+				$this->gateway = null;
+			}
 		} else {
-			$this->order = null;
+			$this->order   = null;
 			$this->gateway = null;
 		}
 
@@ -170,33 +170,33 @@ class TransactionStatus extends DataTransfer {
 		return $this->get_action() === 'debit';
 	}
 
-    /**
-     * @return bool
-     */
-    public function is_failed() {
-        return $this->get_action() === 'failed';
-    }
+	/**
+	 * @return bool
+	 */
+	public function is_failed() {
+		return $this->get_action() === 'failed';
+	}
 
-    /**
-     * @return bool
-     */
-    public function is_invoice() {
-        return $this->get_action() === 'invoice';
-    }
+	/**
+	 * @return bool
+	 */
+	public function is_invoice() {
+		return $this->get_action() === 'invoice';
+	}
 
-    /**
-     * @return bool
-     */
-    public function is_reminder() {
-        return $this->get_action() === 'reminder';
-    }
+	/**
+	 * @return bool
+	 */
+	public function is_reminder() {
+		return $this->get_action() === 'reminder';
+	}
 
-    /**
-     * @return bool
-     */
-    public function is_transfer() {
-        return $this->get_action() === 'transfer';
-    }
+	/**
+	 * @return bool
+	 */
+	public function is_transfer() {
+		return $this->get_action() === 'transfer';
+	}
 
 	/**
 	 * All diese Status werden in der Basisklasse abgearbeitet und müssen deshalb nicht in den einzelnen

@@ -25,7 +25,7 @@ class Giropay extends Base {
 	 * @return \Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
-		if ($this->should_submit_cart() ) {
+		if ( $this->should_submit_cart() ) {
 			$this->add_article_list_to_transaction( $order );
 		}
 		$this->set_reference( $order );

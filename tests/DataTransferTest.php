@@ -48,19 +48,19 @@ final class DataTransferTest extends TestCase {
 		$dataTransfer = new \Payone\Payone\Api\DataTransfer();
 
 		$long_data = '';
-		for( $i = 0; $i<20; $i++) {
-			$long_data .= md5(time());
+		for ( $i = 0; $i < 20; $i ++ ) {
+			$long_data .= md5( time() );
 		}
-		$dataTransfer->set( '_DATA',  $long_data );
-		$this->assertEquals( 20*32, strlen( $dataTransfer->get( '_DATA' ) ) );
+		$dataTransfer->set( '_DATA', $long_data );
+		$this->assertEquals( 20 * 32, strlen( $dataTransfer->get( '_DATA' ) ) );
 		$this->assertEquals( 212, strlen( $dataTransfer->get_serialized_parameters() ) );
 	}
 
-    public function test_removed_empty_data_in_get_postfields_from_parameters() {
-        $dataTransfer = new \Payone\Payone\Api\DataTransfer();
-        $dataTransfer->set( 'filled',  'filled-data' );
-        $dataTransfer->set( 'not-filled', '');
+	public function test_removed_empty_data_in_get_postfields_from_parameters() {
+		$dataTransfer = new \Payone\Payone\Api\DataTransfer();
+		$dataTransfer->set( 'filled', 'filled-data' );
+		$dataTransfer->set( 'not-filled', '' );
 
-        $this->assertFalse( strpos( $dataTransfer->get_postfields_from_parameters(), 'not-filled' ) );
-    }
+		$this->assertFalse( strpos( $dataTransfer->get_postfields_from_parameters(), 'not-filled' ) );
+	}
 }

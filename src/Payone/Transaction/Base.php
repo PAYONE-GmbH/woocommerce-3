@@ -62,8 +62,8 @@ class Base extends Request {
 	}
 
 	public function set_personal_data_from_order( \WC_Order $order ) {
-	    $country = $order->get_billing_country();
-	    $company = $order->get_billing_company();
+		$country = $order->get_billing_country();
+		$company = $order->get_billing_company();
 
 		$this->set( 'lastname', $order->get_billing_last_name() );
 		$this->set( 'firstname', $order->get_billing_first_name() );
@@ -73,68 +73,69 @@ class Base extends Request {
 		$this->set( 'city', $order->get_billing_city() );
 
 		if ( ! empty( $company ) ) {
-            $this->set( 'company', $company );
-        }
+			$this->set( 'company', $company );
+		}
 
 		$this->set( 'country', $country );
 		$this->set( 'email', $order->get_billing_email() );
 		$this->set( 'telephonenumber', $order->get_billing_phone() );
 	}
 
-    /**
-     * Sets PAYONE API shipping data from the provided WooCommerce order object.
-     *
-     * @author Fabian Böttcher <fabian.boettcher@payone.de>
-     * @param \WC_Order $order The WooCommerce order object.
-     * @return void
-     */
+	/**
+	 * Sets PAYONE API shipping data from the provided WooCommerce order object.
+	 *
+	 * @param \WC_Order $order The WooCommerce order object.
+	 *
+	 * @return void
+	 * @author Fabian Böttcher <fabian.boettcher@payone.de>
+	 */
 	protected function set_shipping_data_from_order( \WC_Order $order ) {
-	    // Collect order shipping information.
-	    $data = [
-	        'shipping_firstname' => $order->get_shipping_first_name(),
-	        'shipping_lastname' => $order->get_shipping_last_name(),
-	        'shipping_company' => $order->get_shipping_company(),
-	        'shipping_street' => $order->get_shipping_address_1(),
-	        'shipping_zip' => $order->get_shipping_postcode(),
-	        'shipping_addressaddition' => $order->get_shipping_address_2(),
-	        'shipping_city' => $order->get_shipping_city(),
-	        'shipping_state' => $order->get_shipping_state(),
-	        'shipping_country' => $order->get_shipping_country(),
-        ];
+		// Collect order shipping information.
+		$data = [
+			'shipping_firstname'       => $order->get_shipping_first_name(),
+			'shipping_lastname'        => $order->get_shipping_last_name(),
+			'shipping_company'         => $order->get_shipping_company(),
+			'shipping_street'          => $order->get_shipping_address_1(),
+			'shipping_zip'             => $order->get_shipping_postcode(),
+			'shipping_addressaddition' => $order->get_shipping_address_2(),
+			'shipping_city'            => $order->get_shipping_city(),
+			'shipping_state'           => $order->get_shipping_state(),
+			'shipping_country'         => $order->get_shipping_country(),
+		];
 
-	    // Trim parameter values and set parameters null for empty strings.
-	    $data = array_map(function ($value) {
-	        return empty($value = trim($value)) ? null : $value;
-        }, $data);
+		// Trim parameter values and set parameters null for empty strings.
+		$data = array_map( function ( $value ) {
+			return empty( $value = trim( $value ) ) ? null : $value;
+		}, $data );
 
-	    // Set valid PAYONE API shipping data.
-	    foreach ($data as $name => $value) {
-	        if ($value !== null) {
-                $this->set( $name, $value );
-            }
-        }
-    }
+		// Set valid PAYONE API shipping data.
+		foreach ( $data as $name => $value ) {
+			if ( $value !== null ) {
+				$this->set( $name, $value );
+			}
+		}
+	}
 
-    /**
-     * Sets PAYONE API customer IP from the provided WooCommerce order.
-     *
-     * @author Fabian Böttcher <fabian.boettcher@payone.de>
-     * @param \WC_Order $order The WooCommerce order object.
-     * @return void
-     */
-    protected function set_customer_ip_from_order( \WC_Order $order )
-    {
-        // Get IP from order object.
-        $ip = get_post_meta($order->get_id(), '_customer_ip_address', true);
+	/**
+	 * Sets PAYONE API customer IP from the provided WooCommerce order.
+	 *
+	 * @param \WC_Order $order The WooCommerce order object.
+	 *
+	 * @return void
+	 * @author Fabian Böttcher <fabian.boettcher@payone.de>
+	 */
+	protected function set_customer_ip_from_order( \WC_Order $order ) {
+		// Get IP from order object.
+		$ip = get_post_meta( $order->get_id(), '_customer_ip_address', true );
 
-        // Validate the customer IP.
-        $ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+		// Validate the customer IP.
+		$ip = filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
 
-        // Append a valid IP address to PAYONE API request data.
-        if ($ip) {
-            $this->set( 'ip', $ip );
-        }
-    }
+		// Append a valid IP address to PAYONE API request data.
+		if ( $ip ) {
+			$this->set( 'ip', $ip );
+		}
+	}
 
 	/**
 	 * @param \WC_Order $order
@@ -142,7 +143,7 @@ class Base extends Request {
 	 * @return int
 	 */
 	protected function get_next_sequencenumber( \WC_Order $order ) {
-		$sequencenumber = 1 + (int)$order->get_meta( '_sequencenumber');
+		$sequencenumber = 1 + (int) $order->get_meta( '_sequencenumber' );
 		$order->update_meta_data( '_sequencenumber', $sequencenumber );
 		$order->save_meta_data();
 
@@ -158,173 +159,173 @@ class Base extends Request {
 		$order->save_meta_data();
 	}
 
-    /**
-     * @param \WC_Order|\WC_Cart $orderOrCart
-     */
+	/**
+	 * @param \WC_Order|\WC_Cart $orderOrCart
+	 */
 	public function add_article_list_to_transaction( $orderOrCart ) {
-        if ( $orderOrCart instanceof \WC_Order) {
-            $article_list = $this->get_article_list_for_transaction_from_order( $orderOrCart );
-        } else {
-            $article_list = $this->get_article_list_for_transaction_from_cart( $orderOrCart );
-        }
+		if ( $orderOrCart instanceof \WC_Order ) {
+			$article_list = $this->get_article_list_for_transaction_from_order( $orderOrCart );
+		} else {
+			$article_list = $this->get_article_list_for_transaction_from_cart( $orderOrCart );
+		}
 
-		foreach ( $article_list as $n => $article) {
-			$this->set( 'id[' . $n . ']', $article[ 'id' ] );
-			$this->set( 'pr[' . $n . ']', $article[ 'pr' ] );
-			$this->set( 'no[' . $n . ']', $article[ 'no' ] );
-			$this->set( 'de[' . $n . ']', $article[ 'de' ] );
-			$this->set( 'va[' . $n . ']', $article[ 'va' ] );
-			$this->set( 'it[' . $n . ']', $article[ 'it' ] );
+		foreach ( $article_list as $n => $article ) {
+			$this->set( 'id[' . $n . ']', $article['id'] );
+			$this->set( 'pr[' . $n . ']', $article['pr'] );
+			$this->set( 'no[' . $n . ']', $article['no'] );
+			$this->set( 'de[' . $n . ']', $article['de'] );
+			$this->set( 'va[' . $n . ']', $article['va'] );
+			$this->set( 'it[' . $n . ']', $article['it'] );
 		}
 	}
 
 	protected function get_article_list_for_transaction_from_order( \WC_Order $order ) {
-	    $articles = [];
-	    $discounts = [];
-        $n = 1;
+		$articles  = [];
+		$discounts = [];
+		$n         = 1;
 		foreach ( $order->get_items() as $item_id => $item_data ) {
-            $product = $item_data->get_product();
-            $data = $item_data->get_data();
-            $va = (int)round(100 * Plugin::get_tax_rate_for_item_data( $data ) );
-            $price_all = $data[ 'subtotal' ] + $data[ 'subtotal_tax' ];
-            $discount = $price_all - ($data[ 'total' ] + $data[ 'total_tax']);
-            $discount = (int)round( 100 * $discount );
-            $price_one = $price_all / $item_data->get_quantity();
-            $price = (int)round( 100 * $price_one );
-            $sku = $product->get_sku() ?: $product->get_id();
-            $articles[ $n ] = [
+			$product        = $item_data->get_product();
+			$data           = $item_data->get_data();
+			$va             = (int) round( 100 * Plugin::get_tax_rate_for_item_data( $data ) );
+			$price_all      = $data['subtotal'] + $data['subtotal_tax'];
+			$discount       = $price_all - ( $data['total'] + $data['total_tax'] );
+			$discount       = (int) round( 100 * $discount );
+			$price_one      = $price_all / $item_data->get_quantity();
+			$price          = (int) round( 100 * $price_one );
+			$sku            = $product->get_sku() ?: $product->get_id();
+			$articles[ $n ] = [
 				'id' => $sku,
 				'pr' => $price,
 				'no' => $item_data->get_quantity(),
 				'de' => $product->get_name(),
 				'va' => $va,
-                'it' => 'goods',
+				'it' => 'goods',
 			];
-			$n++;
+			$n ++;
 
-			if (!isset($discounts[$va])) {
-			    $discounts[$va] = 0;
-            }
-			$discounts[$va] += $discount;
+			if ( ! isset( $discounts[ $va ] ) ) {
+				$discounts[ $va ] = 0;
+			}
+			$discounts[ $va ] += $discount;
 		}
 		foreach ( $order->get_shipping_methods() as $item_id => $item_data ) {
-			$data = $item_data->get_data();
-            $va = Plugin::get_tax_rate_for_item_data( $data );
-			$price = (int)round( 100 * ( $data[ 'total' ] + $data[ 'total_tax' ] ) );
+			$data           = $item_data->get_data();
+			$va             = Plugin::get_tax_rate_for_item_data( $data );
+			$price          = (int) round( 100 * ( $data['total'] + $data['total_tax'] ) );
 			$articles[ $n ] = [
 				'id' => $item_data->get_instance_id(),
 				'pr' => $price,
 				'no' => 1,
-				'de' => $data[ 'name' ],
+				'de' => $data['name'],
 				'va' => 100 * $va,
-                'it' => 'shipment',
+				'it' => 'shipment',
 			];
-			$n++;
+			$n ++;
 		}
 
 		$discountIdx = 1;
 		foreach ( $discounts as $discountVa => $discount ) {
-		    if ( $discount > 0 ) {
-                $articles[ $n ] = [
-                    'id' => "{$order->get_id()}-{$discountIdx}",
-                    'pr' => - $discount,
-                    'no' => 1,
-                    'de' => __( 'Discount', 'payone-woocommerce-3' ),
-                    'va' => $discountVa,
-                    'it' => 'voucher',
-                ];
-                $n++;
-                $discountIdx++;
-            }
-        }
+			if ( $discount > 0 ) {
+				$articles[ $n ] = [
+					'id' => "{$order->get_id()}-{$discountIdx}",
+					'pr' => - $discount,
+					'no' => 1,
+					'de' => __( 'Discount', 'payone-woocommerce-3' ),
+					'va' => $discountVa,
+					'it' => 'voucher',
+				];
+				$n ++;
+				$discountIdx ++;
+			}
+		}
 
 		return $articles;
 	}
 
-    protected function get_article_list_for_transaction_from_cart( \WC_Cart $cart ) {
-        $articles = [];
-        $discounts = [];
-        $n = 1;
+	protected function get_article_list_for_transaction_from_cart( \WC_Cart $cart ) {
+		$articles  = [];
+		$discounts = [];
+		$n         = 1;
 
-        foreach ( $cart->get_cart_contents() as $item_data ) {
-            $product = $item_data[ 'data' ];
-            $data = [
-                'subtotal' => $item_data[ 'line_subtotal' ],
-                'subtotal_tax' => $item_data[ 'line_subtotal_tax' ],
-                'total' => $item_data[ 'line_total' ],
-                'total_tax' => $item_data[ 'line_tax' ],
-            ];
-            $va = (int)round(100 * Plugin::get_tax_rate_for_item_data( $data ) );
-            $price_all = $data[ 'subtotal' ] + $data[ 'subtotal_tax' ];
-            $discount = $price_all - ($data[ 'total' ] + $data[ 'total_tax']);
-            $discount = (int)round( 100 * $discount );
-            $price_one = $price_all / $item_data[ 'quantity' ];
-            $price = (int)round( 100 * $price_one );
-            $sku = $product->get_sku() ?: $product->get_id();
-            $articles[ $n ] = [
-                'id' => $sku,
-                'pr' => $price,
-                'no' => $item_data[ 'quantity' ],
-                'de' => $product->get_name(),
-                'va' => $va,
-                'it' => 'goods',
-            ];
-            $n++;
+		foreach ( $cart->get_cart_contents() as $item_data ) {
+			$product        = $item_data['data'];
+			$data           = [
+				'subtotal'     => $item_data['line_subtotal'],
+				'subtotal_tax' => $item_data['line_subtotal_tax'],
+				'total'        => $item_data['line_total'],
+				'total_tax'    => $item_data['line_tax'],
+			];
+			$va             = (int) round( 100 * Plugin::get_tax_rate_for_item_data( $data ) );
+			$price_all      = $data['subtotal'] + $data['subtotal_tax'];
+			$discount       = $price_all - ( $data['total'] + $data['total_tax'] );
+			$discount       = (int) round( 100 * $discount );
+			$price_one      = $price_all / $item_data['quantity'];
+			$price          = (int) round( 100 * $price_one );
+			$sku            = $product->get_sku() ?: $product->get_id();
+			$articles[ $n ] = [
+				'id' => $sku,
+				'pr' => $price,
+				'no' => $item_data['quantity'],
+				'de' => $product->get_name(),
+				'va' => $va,
+				'it' => 'goods',
+			];
+			$n ++;
 
-            if (!isset($discounts[$va])) {
-                $discounts[$va] = 0;
-            }
-            $discounts[$va] += $discount;
-        }
+			if ( ! isset( $discounts[ $va ] ) ) {
+				$discounts[ $va ] = 0;
+			}
+			$discounts[ $va ] += $discount;
+		}
 
-        foreach ( $cart->calculate_shipping() as $item_data ) {
-            /** @var \WC_Shipping_Rate $item_data */
-            $taxes = $item_data->get_taxes();
-            $tax = 0.0;
-            if ( $taxes ) {
-                $tax = array_shift( $taxes );
-            }
+		foreach ( $cart->calculate_shipping() as $item_data ) {
+			/** @var \WC_Shipping_Rate $item_data */
+			$taxes = $item_data->get_taxes();
+			$tax   = 0.0;
+			if ( $taxes ) {
+				$tax = array_shift( $taxes );
+			}
 
-            $data = [
-                'subtotal' => $item_data->get_cost(),
-                'subtotal_tax' => $tax,
-                'total' => $item_data->get_cost(),
-                'total_tax' => $tax,
-            ];
-            $va = Plugin::get_tax_rate_for_item_data( $data );
-            $price = (int)round( 100 * ( $data[ 'total' ] + $data[ 'total_tax' ] ) );
-            $articles[ $n ] = [
-                'id' => $item_data->get_instance_id(),
-                'pr' => $price,
-                'no' => 1,
-                'de' => $item_data->get_label(),
-                'va' => 100 * $va,
-                'it' => 'shipment',
-            ];
-            $n++;
-        }
+			$data           = [
+				'subtotal'     => $item_data->get_cost(),
+				'subtotal_tax' => $tax,
+				'total'        => $item_data->get_cost(),
+				'total_tax'    => $tax,
+			];
+			$va             = Plugin::get_tax_rate_for_item_data( $data );
+			$price          = (int) round( 100 * ( $data['total'] + $data['total_tax'] ) );
+			$articles[ $n ] = [
+				'id' => $item_data->get_instance_id(),
+				'pr' => $price,
+				'no' => 1,
+				'de' => $item_data->get_label(),
+				'va' => 100 * $va,
+				'it' => 'shipment',
+			];
+			$n ++;
+		}
 
-        // Just use the sum of all discounts as one position
-        if ( $cart->has_discount() ) {
-            $discount = round( $cart->get_discount_total() + $cart->get_discount_tax(), 2 );
-            $data = [
-                'subtotal' => $cart->get_discount_total(),
-                'subtotal_tax' => $cart->get_discount_tax(),
-                'total' => $cart->get_discount_total(),
-                'total_tax' => $cart->get_discount_tax(),
-            ];
-            $va = Plugin::get_tax_rate_for_item_data( $data );
-            $articles[ $n ] = [
-                'id' => 'd-' . $n,
-                'pr' => - 100 * $discount,
-                'no' => 1,
-                'de' => __( 'Discount', 'payone-woocommerce-3' ),
-                'va' => 100 * $va,
-                'it' => 'voucher',
-            ];
-        }
-        $n++;
+		// Just use the sum of all discounts as one position
+		if ( $cart->has_discount() ) {
+			$discount       = round( $cart->get_discount_total() + $cart->get_discount_tax(), 2 );
+			$data           = [
+				'subtotal'     => $cart->get_discount_total(),
+				'subtotal_tax' => $cart->get_discount_tax(),
+				'total'        => $cart->get_discount_total(),
+				'total_tax'    => $cart->get_discount_tax(),
+			];
+			$va             = Plugin::get_tax_rate_for_item_data( $data );
+			$articles[ $n ] = [
+				'id' => 'd-' . $n,
+				'pr' => - 100 * $discount,
+				'no' => 1,
+				'de' => __( 'Discount', 'payone-woocommerce-3' ),
+				'va' => 100 * $va,
+				'it' => 'voucher',
+			];
+		}
+		$n ++;
 
-        return $articles;
-    }
+		return $articles;
+	}
 }

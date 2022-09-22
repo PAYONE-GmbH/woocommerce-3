@@ -16,7 +16,7 @@
     <span id="direct_debit_confirmation_text"></span>
     <input id="direct_debit_confirmation_check" type="checkbox" name="direct_debit_confirmation_check" value="1">
     <label for="direct_debit_confirmation_check">
-        <?php _e( 'direct.debit.mandate.checkbox.label', 'payone-woocommerce-3' ); ?>
+		<?php _e( 'direct.debit.mandate.checkbox.label', 'payone-woocommerce-3' ); ?>
     </label>
 </div>
 <div id="direct_debit_error"></div>
@@ -25,6 +25,7 @@
     var mandate_identification = '';
     var confirmation_check_displayed = false;
     jQuery('#direct_debit_confirmation').hide();
+
     function payone_checkout_clicked_<?php echo \Payone\Gateway\SepaDirectDebit::GATEWAY_ID; ?>() {
         if (mandate_ok) {
             return true;
@@ -48,13 +49,14 @@
 
         return false;
     }
+
     function payone_manage_mandate(data) {
         jQuery('#direct_debit_error').html('');
-        jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-manage-mandate' ] ); ?>', data, function(result) {
+        jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-manage-mandate' ] ); ?>', data, function (result) {
             result = jQuery.parseJSON(result);
             if (result.status === 'error') {
                 jQuery('#direct_debit_error').html('<strong style="color:red">' + result.message + '</strong>');
-            } else if (result.status === 'active' ) {
+            } else if (result.status === 'active') {
                 mandate_identification = result['reference'];
                 document.getElementById("direct_debit_reference").value = result['reference'];
                 mandate_ok = true;

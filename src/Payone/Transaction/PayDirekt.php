@@ -22,7 +22,7 @@ class PayDirekt extends Base {
 	 * @return \Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
-		if ($this->should_submit_cart() ) {
+		if ( $this->should_submit_cart() ) {
 			$this->add_article_list_to_transaction( $order );
 		}
 		$this->set_reference( $order );
@@ -35,11 +35,11 @@ class PayDirekt extends Base {
 		$this->set( 'shipping_street', $order->get_billing_address_1() );
 		$this->set( 'shipping_zip', $order->get_billing_postcode() );
 		$this->set( 'shipping_city', $order->get_billing_city() );
-        $this->set( 'shipping_state', $order->get_billing_state() );
+		$this->set( 'shipping_state', $order->get_billing_state() );
 		$this->set( 'shipping_country', $order->get_billing_country() );
-		
+
 		$this->set_personal_data_from_order( $order );
-        $this->set_customer_ip_from_order( $order );
+		$this->set_customer_ip_from_order( $order );
 
 		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'success', 'oid' => $order->get_id() ] ) );
 		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'error', 'oid' => $order->get_id() ] ) );

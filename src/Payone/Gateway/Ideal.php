@@ -17,25 +17,25 @@ class Ideal extends RedirectGatewayBase {
 
 	public function init_form_fields() {
 		$this->init_common_form_fields( 'PAYONE ' . __( 'iDEAL', 'payone-woocommerce-3' ) );
-        $this->form_fields[ 'countries' ][ 'default' ] = [ 'NL' ];
+		$this->form_fields['countries']['default'] = [ 'NL' ];
 	}
 
 	public function payment_fields() {
-        $bankgroups = [
-            'ABN_AMRO_BANK' => 'ABN Amro',
-            'BUNQ_BANK' => 'Bunq',
-            'RABOBANK' => 'Rabobank',
-            'ASN_BANK' => 'ASN Bank',
-            'SNS_BANK' => 'SNS Bank',
-            'TRIODOS_BANK' => 'Triodos Bank',
-            'SNS_REGIO_BANK' => 'Regio Bank',
-            'ING_BANK' => 'ING Bank',
-            'KNAB_BANK' => 'Knab',
-            'VAN_LANSCHOT_BANKIERS' => 'van Lanschot',
-            'HANDELSBANKEN' => 'Handelsbanken',
-            'FRIESLAND_BANK' => 'Friesland Bank',
-            'REVOLUT' => 'Revolut',
-        ];
+		$bankgroups = [
+			'ABN_AMRO_BANK'         => 'ABN Amro',
+			'BUNQ_BANK'             => 'Bunq',
+			'RABOBANK'              => 'Rabobank',
+			'ASN_BANK'              => 'ASN Bank',
+			'SNS_BANK'              => 'SNS Bank',
+			'TRIODOS_BANK'          => 'Triodos Bank',
+			'SNS_REGIO_BANK'        => 'Regio Bank',
+			'ING_BANK'              => 'ING Bank',
+			'KNAB_BANK'             => 'Knab',
+			'VAN_LANSCHOT_BANKIERS' => 'van Lanschot',
+			'HANDELSBANKEN'         => 'Handelsbanken',
+			'FRIESLAND_BANK'        => 'Friesland Bank',
+			'REVOLUT'               => 'Revolut',
+		];
 
 		include PAYONE_VIEW_PATH . '/gateway/ideal/payment-form.php';
 	}
@@ -60,7 +60,7 @@ class Ideal extends RedirectGatewayBase {
 			return;
 		}
 
-		$order = $transaction_status->get_order();
+		$order                = $transaction_status->get_order();
 		$authorization_method = $order->get_meta( '_authorization_method' );
 		if ( $authorization_method === 'authorization' && $transaction_status->is_paid() ) {
 			$order->add_order_note( __( 'Payment is authorized by PAYONE, payment is complete.', 'payone-woocommerce-3' ) );

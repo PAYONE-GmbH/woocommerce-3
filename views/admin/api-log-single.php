@@ -4,22 +4,22 @@
     </h1>
     <h2>
         REQUEST
-        <small>(<?php echo $entry->get_created_at()->format('d.m.Y H:i')?> Uhr)</small>
+        <small>(<?php echo $entry->get_created_at()->format( 'd.m.Y H:i' ) ?> Uhr)</small>
     </h2>
     <table class="widefat fixed" cellspacing="0">
         <thead>
-            <tr>
-                <th>Parameter</th>
-                <th>Wert</th>
-            </tr>
+        <tr>
+            <th>Parameter</th>
+            <th>Wert</th>
+        </tr>
         </thead>
         <tbody>
-            <?php foreach ($entry->get_request()->get_all() as $key => $value) { ?>
-                <tr>
-                    <td><?php echo esc_html( $key ); ?></td>
-                    <td><?php echo esc_html( $value ); ?></td>
-                </tr>
-            <?php } ?>
+		<?php foreach ( $entry->get_request()->get_all() as $key => $value ) { ?>
+            <tr>
+                <td><?php echo esc_html( $key ); ?></td>
+                <td><?php echo esc_html( $value ); ?></td>
+            </tr>
+		<?php } ?>
         </tbody>
     </table>
     <h2>RESPONSE</h2>
@@ -31,10 +31,10 @@
         </tr>
         </thead>
         <tbody>
-		<?php foreach ($entry->get_response()->get_all() as $key => $value) { ?>
-            <?php if ( $key === '_DATA' ) {
-                $value = substr( $value, 0, 50 ) . ' [...]';
-            } ?>
+		<?php foreach ( $entry->get_response()->get_all() as $key => $value ) { ?>
+			<?php if ( $key === '_DATA' ) {
+				$value = substr( $value, 0, 50 ) . ' [...]';
+			} ?>
             <tr>
                 <td><?php echo esc_html( $key ); ?></td>
                 <td><?php echo esc_html( $value ); ?></td>

@@ -131,7 +131,7 @@ class CreditCheck extends Helper {
 			'moment_of_assessment',
 			[
 				'before' => __( 'Before choosing payment method', 'payone-woocommerce-3' ),
-				'after' => __( 'After choosing payment method', 'payone-woocommerce-3' ),
+				'after'  => __( 'After choosing payment method', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -139,8 +139,8 @@ class CreditCheck extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'type_of_assessment',
 			[
-				'infoscore-hard' => __( 'Infoscore ("hard" criterions)', 'payone-woocommerce-3' ),
-				'infoscore-all' => __( 'Infoscore (all features)', 'payone-woocommerce-3' ),
+				'infoscore-hard'      => __( 'Infoscore ("hard" criterions)', 'payone-woocommerce-3' ),
+				'infoscore-all'       => __( 'Infoscore (all features)', 'payone-woocommerce-3' ),
 				'infoscore-boniscore' => __( 'Infoscore (all features + Boniscore)', 'payone-woocommerce-3' ),
 			] );
 	}
@@ -149,9 +149,9 @@ class CreditCheck extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'auto_correct',
 			[
-				'red' => __( 'Red', 'payone-woocommerce-3' ),
+				'red'    => __( 'Red', 'payone-woocommerce-3' ),
 				'yellow' => __( 'Yellow', 'payone-woocommerce-3' ),
-				'green' => __( 'Green', 'payone-woocommerce-3' ),
+				'green'  => __( 'Green', 'payone-woocommerce-3' ),
 			] );
 	}
 
@@ -159,7 +159,7 @@ class CreditCheck extends Helper {
 		$this->selectField( self::OPTION_NAME,
 			'on_error',
 			[
-				'abort' => __( 'Abort checkout', 'payone-woocommerce-3' ),
+				'abort'    => __( 'Abort checkout', 'payone-woocommerce-3' ),
 				'continue' => __( 'Continue', 'payone-woocommerce-3' ),
 			] );
 	}

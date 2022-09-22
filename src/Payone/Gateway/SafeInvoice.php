@@ -18,7 +18,7 @@ class SafeInvoice extends GatewayBase {
 
 	public function init_form_fields() {
 		$this->init_common_form_fields( 'PAYONE ' . __( 'Secure Invoice', 'payone-woocommerce-3' ) );
-        $this->form_fields[ 'countries' ][ 'default' ] = [ 'DE' ];
+		$this->form_fields['countries']['default'] = [ 'DE' ];
 	}
 
 	public function payment_fields() {
@@ -73,7 +73,7 @@ class SafeInvoice extends GatewayBase {
 			$order->add_order_note( __( 'Payment received. Customer overpaid!', 'payone-woocommerce-3' ) );
 			$order->payment_complete();
 		} elseif ( $transaction_status->is_underpaid() ) {
-			$order->add_order_note(__( 'Payment received. Customer underpaid!', 'payone-woocommerce-3' ));
+			$order->add_order_note( __( 'Payment received. Customer underpaid!', 'payone-woocommerce-3' ) );
 		} elseif ( $transaction_status->is_paid() ) {
 			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
 			$order->payment_complete();
@@ -84,7 +84,7 @@ class SafeInvoice extends GatewayBase {
 		$authorization_method = $order->get_meta( '_authorization_method' );
 
 		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
-			$capture = new Capture( $this );
+			$capture  = new Capture( $this );
 			$response = $capture->execute( $order );
 			if ( $response && $response->is_approved() ) {
 				$response->store_clearing_info( $order );

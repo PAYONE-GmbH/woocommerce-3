@@ -1,5 +1,5 @@
 <script type="application/javascript">
-    jQuery(document).ready(function() {
+    jQuery(document).ready(function () {
         jQuery('#ratepay_installments_birthday_field').hide();
         jQuery('#ratepay_installments_iban_field').hide();
         jQuery('#ratepay-installments-plan').hide();
@@ -7,35 +7,35 @@
         jQuery('#ratepay-installments-plan-long').hide();
     });
 
-    jQuery('#ratepay_installments_months').on('change', function() {
-        payone_ratepay_installments_calculate( 'calculation-by-time' );
+    jQuery('#ratepay_installments_months').on('change', function () {
+        payone_ratepay_installments_calculate('calculation-by-time');
     });
-    jQuery('#ratepay_installments_calculate_button').on('click', function() {
-        payone_ratepay_installments_calculate( 'calculation-by-rate' );
+    jQuery('#ratepay_installments_calculate_button').on('click', function () {
+        payone_ratepay_installments_calculate('calculation-by-rate');
 
         return false;
     });
 
-    jQuery('#ratepay-installments-show-details').on('click', function() {
+    jQuery('#ratepay-installments-show-details').on('click', function () {
         jQuery('#ratepay-installments-plan-short').hide();
         jQuery('#ratepay-installments-plan-long').show();
 
         return false;
     });
-    jQuery('#ratepay-installments-hide-details').on('click', function() {
+    jQuery('#ratepay-installments-hide-details').on('click', function () {
         jQuery('#ratepay-installments-plan-short').show();
         jQuery('#ratepay-installments-plan-long').hide();
 
         return false;
     });
 
-    function payone_ratepay_installments_calculate( calculation_type ) {
+    function payone_ratepay_installments_calculate(calculation_type) {
         let ratepay_installment_data = {
             'calculation-type': calculation_type,
             'month': jQuery('#ratepay_installments_months').val(),
             'rate': jQuery('#ratepay_installments_rate').val(),
         };
-        jQuery.post('<?php echo \Payone\Plugin::get_callback_url(['type' => 'ajax-ratepay-calculate']); ?>', ratepay_installment_data, function (result) {
+        jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-ratepay-calculate' ] ); ?>', ratepay_installment_data, function (result) {
             result = jQuery.parseJSON(result);
 
             jQuery('#ratepay_installments_birthday_field').show();
@@ -69,15 +69,18 @@
 	<?php echo nl2br( $this->get_option( 'description' ) ); ?>
 </p>
 <div id="ratepay_installments_error"></div>
-<input type="hidden" name="ratepay_installments_installment_amount" id="ratepay_installments_installment_amount" value="">
-<input type="hidden" name="ratepay_installments_installment_number" id="ratepay_installments_installment_number" value="">
-<input type="hidden" name="ratepay_installments_last_installment_amount" id="ratepay_installments_last_installment_amount" value="">
+<input type="hidden" name="ratepay_installments_installment_amount" id="ratepay_installments_installment_amount"
+       value="">
+<input type="hidden" name="ratepay_installments_installment_number" id="ratepay_installments_installment_number"
+       value="">
+<input type="hidden" name="ratepay_installments_last_installment_amount"
+       id="ratepay_installments_last_installment_amount" value="">
 <input type="hidden" name="ratepay_installments_interest_rate" id="ratepay_installments_interest_rate" value="">
 <input type="hidden" name="ratepay_installments_amount" id="ratepay_installments_amount" value="">
 <fieldset>
     <p class="form-row form-row-full" id="ratepay_installments_months_field">
         <label for="ratepay_installments_months">
-            <?php _e('Number of monthly installments', 'payone-woocommerce-3'); ?>
+			<?php _e( 'Number of monthly installments', 'payone-woocommerce-3' ); ?>
         </label>
         <span class="woocommerce-input-wrapper">
             <select class="input-text " name="ratepay_installments_months" id="ratepay_installments_months">
@@ -94,7 +97,7 @@
     </p>
     <p class="form-row form-row-full form-row-first" id="ratepay_installments_rate_field">
         <label for="ratepay_installments_rate">
-            <?php _e('Monthly rate', 'payone-woocommerce-3' ); ?>
+			<?php _e( 'Monthly rate', 'payone-woocommerce-3' ); ?>
         </label>
         <span class="woocommerce-input-wrapper">
             <input type="text" class="input-text " name="ratepay_installments_rate" id="ratepay_installments_rate">
@@ -114,7 +117,9 @@
     <div id="ratepay-installments-plan-short">
         <table class="table">
             <tr>
-                <th><span id="ratepay-installments-plan-short-rates"></span> <?php _e( 'monthly installments', 'payone-woocommerce-3' ); ?></th>
+                <th>
+                    <span id="ratepay-installments-plan-short-rates"></span> <?php _e( 'monthly installments', 'payone-woocommerce-3' ); ?>
+                </th>
                 <td><span id="ratepay-installments-plan-short-rate"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
             <tr>
@@ -122,7 +127,8 @@
                 <td><span id="ratepay-installments-plan-short-total-amount"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
         </table>
-        <small><a href="#" id="ratepay-installments-show-details"><?php _e( 'Show details', 'payone-woocommerce-3' ); ?></a></small>
+        <small><a href="#"
+                  id="ratepay-installments-show-details"><?php _e( 'Show details', 'payone-woocommerce-3' ); ?></a></small>
     </div>
     <div id="ratepay-installments-plan-long">
         <table class="table">
@@ -132,7 +138,8 @@
             </tr>
             <tr>
                 <th><?php _e( 'Servicecharge', 'payone-woocommerce-3' ); ?></th>
-                <td><span id="ratepay-installments-plan-interest-service-charge"></span>&nbsp;<?php echo $currency; ?></td>
+                <td><span id="ratepay-installments-plan-interest-service-charge"></span>&nbsp;<?php echo $currency; ?>
+                </td>
             </tr>
             <tr>
                 <th><?php _e( 'Annual percentage rate', 'payone-woocommerce-3' ); ?></th>
@@ -148,7 +155,10 @@
             </tr>
             <tr></tr>
             <tr>
-                <th><span id="ratepay-installments-plan-rates"></span> <?php _e( 'monthly installments', 'payone-woocommerce-3' ); ?> à</th>
+                <th>
+                    <span id="ratepay-installments-plan-rates"></span> <?php _e( 'monthly installments', 'payone-woocommerce-3' ); ?>
+                    à
+                </th>
                 <td><span id="ratepay-installments-plan-rate"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
             <tr>
@@ -160,21 +170,23 @@
                 <td><span id="ratepay-installments-plan-total-amount"></span>&nbsp;<?php echo $currency; ?></td>
             </tr>
         </table>
-        <small><a href="#" id="ratepay-installments-hide-details"><?php _e( 'Hide details', 'payone-woocommerce-3' ); ?></a></small>
+        <small><a href="#"
+                  id="ratepay-installments-hide-details"><?php _e( 'Hide details', 'payone-woocommerce-3' ); ?></a></small>
     </div>
 </div>
 <fieldset>
     <p class="form-row form-row-full validate-required" id="ratepay_installments_birthday_field">
         <label for="ratepay_installments_birthday">
-            <?php _e('Birthday', 'payone-woocommerce-3'); ?>
+			<?php _e( 'Birthday', 'payone-woocommerce-3' ); ?>
         </label>
         <span class="woocommerce-input-wrapper">
-            <input type="date" class="input-text " name="ratepay_installments_birthday" id="ratepay_installments_birthday">
+            <input type="date" class="input-text " name="ratepay_installments_birthday"
+                   id="ratepay_installments_birthday">
         </span>
     </p>
     <p class="form-row form-row-full validate-required" id="ratepay_installments_iban_field">
         <label for="ratepay_installments_iban">
-            <?php _e('IBAN', 'payone-woocommerce-3'); ?>
+			<?php _e( 'IBAN', 'payone-woocommerce-3' ); ?>
         </label>
         <span class="woocommerce-input-wrapper">
             <input type="text" class="input-text " name="ratepay_installments_iban" id="ratepay_installments_iban">

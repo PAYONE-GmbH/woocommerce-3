@@ -4,40 +4,41 @@
 <input type="hidden" name="card_expiredate" id="card_expiredate">
 
 <?php
-    $cardnumber_css = '';
-    if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
-	    $cardnumber_css = $this->get_option( 'cc_field_cardnumber_css' );
-    }
-    $cvc2_css = '';
-    if ( $this->get_option( 'cc_field_cvc2_style' ) === 'custom' ) {
-	    $cvc2_css = $this->get_option( 'cc_field_cvc2_css' );
-    }
-    $month_css = '';
-    if ( $this->get_option( 'cc_field_month_style' ) === 'custom' ) {
-	    $month_css = $this->get_option( 'cc_field_month_css' );
-    }
-    $year_css = '';
-    if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
-        $year_css = $this->get_option( 'cc_field_year_css' );
-    }
+$cardnumber_css = '';
+if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
+	$cardnumber_css = $this->get_option( 'cc_field_cardnumber_css' );
+}
+$cvc2_css = '';
+if ( $this->get_option( 'cc_field_cvc2_style' ) === 'custom' ) {
+	$cvc2_css = $this->get_option( 'cc_field_cvc2_css' );
+}
+$month_css = '';
+if ( $this->get_option( 'cc_field_month_style' ) === 'custom' ) {
+	$month_css = $this->get_option( 'cc_field_month_css' );
+}
+$year_css = '';
+if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
+	$year_css = $this->get_option( 'cc_field_year_css' );
+}
 ?>
 <p>
 	<?php echo nl2br( $this->get_option( 'description' ) ); ?>
 </p>
 <fieldset>
     <p class="form-row form-row-wide">
-        <label for="card_holder" title="<?php _e( 'as printed on card', 'payone-woocommerce-3' ) ?>"><?php _e( 'Card Holder', 'payone-woocommerce-3' ) ?></label>
+        <label for="card_holder"
+               title="<?php _e( 'as printed on card', 'payone-woocommerce-3' ) ?>"><?php _e( 'Card Holder', 'payone-woocommerce-3' ) ?></label>
         <input class="payoneInput" id="card_holder" type="text" name="card_holder" value="" maxlength="50">
     </p>
 
     <p class="form-row form-row-wide">
         <label for="cardtypeInput"><?php _e( 'Card type', 'payone-woocommerce-3' ) ?></label>
         <select class="payoneSelect" id="cardtype">
-            <?php foreach ( $this->get_option( 'cc_brands' ) as $cc_brand ) { ?>
+			<?php foreach ( $this->get_option( 'cc_brands' ) as $cc_brand ) { ?>
                 <option value="<?php echo $cc_brand; ?>">
-                    <?php echo $this->get_option( 'cc_brand_label_' . $cc_brand ); ?>
+					<?php echo $this->get_option( 'cc_brand_label_' . $cc_brand ); ?>
                 </option>
-            <?php } ?>
+			<?php } ?>
         </select>
     </p>
 
@@ -73,12 +74,12 @@
                 style: "<?php echo $cardnumber_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_cardnumber_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_cardnumber_maxchars' ); ?>"
-                <?php if ($this->get_option( 'cc_field_cardnumber_iframe' ) === 'custom') { ?>
+				<?php if ($this->get_option( 'cc_field_cardnumber_iframe' ) === 'custom') { ?>
                 , iframe: {
                     width: "<?php echo $this->get_option( 'cc_field_cardnumber_width' ); ?>",
                     height: "<?php echo $this->get_option( 'cc_field_cardnumber_height' ); ?>"
                 }
-                <?php } ?>
+				<?php } ?>
             },
             cardcvc2: {
                 selector: "cardcvc2",
@@ -86,13 +87,13 @@
                 style: "<?php echo $cvc2_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_cvc2_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_cvc2_maxchars' ); ?>",
-                length: { "V": 3, "M": 3, "A": 4, "D": 3, "J": 0, "O": 3, "P": 3, "U": 3 }
-	            <?php if ($this->get_option( 'cc_field_cvc2_iframe' ) === 'custom') { ?>
+                length: {"V": 3, "M": 3, "A": 4, "D": 3, "J": 0, "O": 3, "P": 3, "U": 3}
+				<?php if ($this->get_option( 'cc_field_cvc2_iframe' ) === 'custom') { ?>
                 , iframe: {
                     width: "<?php echo $this->get_option( 'cc_field_cvc2_width' ); ?>",
                     height: "<?php echo $this->get_option( 'cc_field_cvc2_height' ); ?>"
                 }
-	            <?php } ?>
+				<?php } ?>
             },
             cardexpiremonth: {
                 selector: "cardexpiremonth",
@@ -100,12 +101,12 @@
                 style: "<?php echo $month_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_month_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_month_maxchars' ); ?>"
-                <?php if ($this->get_option( 'cc_field_month_iframe' ) === 'custom') { ?>
+				<?php if ($this->get_option( 'cc_field_month_iframe' ) === 'custom') { ?>
                 , iframe: {
                     width: "<?php echo $this->get_option( 'cc_field_month_width' ); ?>",
                     height: "<?php echo $this->get_option( 'cc_field_month_height' ); ?>"
                 }
-                <?php } ?>
+				<?php } ?>
             },
             cardexpireyear: {
                 selector: "cardexpireyear",
@@ -113,12 +114,12 @@
                 style: "<?php echo $year_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_year_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_year_maxchars' ); ?>"
-	            <?php if ($this->get_option( 'cc_field_year_iframe' ) === 'custom') { ?>
+				<?php if ($this->get_option( 'cc_field_year_iframe' ) === 'custom') { ?>
                 , iframe: {
                     width: "<?php echo $this->get_option( 'cc_field_year_width' ); ?>",
                     height: "<?php echo $this->get_option( 'cc_field_year_height' ); ?>"
                 }
-	            <?php } ?>
+				<?php } ?>
             }
         },
         defaultStyle: {
@@ -133,7 +134,7 @@
         language: Payone.ClientApi.Language.<?php echo $this->get_option( 'cc_error_output_language' ); ?>,
         events: {
             rendered: function () {
-                iframes.setCardType('<?php $cc_brand_choices = $this->get_option('cc_brands'); echo esc_attr( $cc_brand_choices[0] ); ?>');
+                iframes.setCardType('<?php $cc_brand_choices = $this->get_option( 'cc_brands' ); echo esc_attr( $cc_brand_choices[0] ); ?>');
             }
         }
     };
@@ -177,7 +178,7 @@
             iframes.creditCardCheck('checkCallback');
         } else {
             var error_message = 'Bitte Formular vollständig ausfüllen!';
-            if ( cardholder_ok !== true ) {
+            if (cardholder_ok !== true) {
                 error_message += '<br>' + cardholder_ok;
             }
 
@@ -192,7 +193,7 @@
     function check_cardholder() {
         var cardholder = document.getElementById("card_holder").value;
 
-        if ( cardholder.length > 50 || cardholder.match(/[^a-zA-Z \-äöüÄÖÜß]/g)) {
+        if (cardholder.length > 50 || cardholder.match(/[^a-zA-Z \-äöüÄÖÜß]/g)) {
             return 'Bitte geben Sie maximal 50 Zeichen für den Karteninhaber ein, Sonderzeichen außer Deutsche Umlaute und einem Bindestrich sind nicht erlaubt.';
         }
 
@@ -209,7 +210,7 @@
             payone_unblock();
             jQuery('#place_order').parents('form').submit();
         } else {
-            jQuery('#errorOutput').html('<strong style="color:red">'  + response.errormessage + '</strong>');
+            jQuery('#errorOutput').html('<strong style="color:red">' + response.errormessage + '</strong>');
             payone_unblock();
             return false;
         }

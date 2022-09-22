@@ -10,14 +10,14 @@ class Response extends DataTransfer {
 		return $this->get( 'status' ) === 'APPROVED';
 	}
 
-    /**
-     * @return bool
-     */
-    public function is_ok() {
-        return $this->get( 'status' ) === 'OK';
-    }
+	/**
+	 * @return bool
+	 */
+	public function is_ok() {
+		return $this->get( 'status' ) === 'OK';
+	}
 
-    /**
+	/**
 	 * @return bool
 	 */
 	public function has_error() {
@@ -42,7 +42,7 @@ class Response extends DataTransfer {
 	 * @return string
 	 */
 	public function get_error_message() {
-		return __( $this->get( 'errormessage' ), 'payone-woocommerce-3' ).' ['.$this->get('errorcode').']';
+		return __( $this->get( 'errormessage' ), 'payone-woocommerce-3' ) . ' [' . $this->get( 'errorcode' ) . ']';
 	}
 
 	/**
@@ -50,7 +50,7 @@ class Response extends DataTransfer {
 	 */
 	public function store_clearing_info( \WC_Order $order ) {
 		$clearing_reference = $this->get( 'clearing_reference', $order->get_transaction_id() );
-		$clearing_info = [
+		$clearing_info      = [
 			'bankaccount'       => $this->get( 'clearing_bankaccount' ),
 			'bankcode'          => $this->get( 'clearing_bankcode' ),
 			'bankcountry'       => $this->get( 'clearing_bankcountry' ),

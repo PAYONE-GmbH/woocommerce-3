@@ -21,9 +21,9 @@ define( 'PAYONE_VIEW_PATH', PAYONE_PLUGIN_PATH . '/views' );
 require_once 'src/autoload.php';
 
 $payonePlugin = null;
-add_action( 'woocommerce_loaded', function() {
-    global $payonePlugin;
+add_action( 'woocommerce_loaded', function () {
+	global $payonePlugin;
 
-    $payonePlugin = new \Payone\Plugin();
-    $payonePlugin->init();
+	$payonePlugin = new \Payone\Plugin();
+	$payonePlugin->init();
 } );

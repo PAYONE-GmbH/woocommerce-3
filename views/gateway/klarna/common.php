@@ -24,7 +24,7 @@
     };
     var klarna_data = {};
 
-    function payone_checkout_clicked_klarna_generic( payment_category ) {
+    function payone_checkout_clicked_klarna_generic(payment_category) {
         klarna_data = {
             category: payment_category,
             currency: '<?php echo get_woocommerce_currency(); ?>',
@@ -62,7 +62,7 @@
         }
 
         if (klarna_vars[payment_category].widget_shown === false) {
-            jQuery.post('<?php echo \Payone\Plugin::get_callback_url(['type' => 'ajax-klarna-start-session']); ?>', klarna_data, function (result) {
+            jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-klarna-start-session' ] ); ?>', klarna_data, function (result) {
                 klarna_vars[payment_category].result_start_session = jQuery.parseJSON(result);
                 if (klarna_vars[payment_category].result_start_session.status === 'ok') {
                     document.getElementById("klarna_workorderid").value = klarna_vars[payment_category].result_start_session.workorderid;
@@ -82,12 +82,12 @@
                         }
                     });
                 } else {
-                    jQuery('#klarna_'  + payment_category + '_error').html('<strong style="color:red">' + klarna_vars[payment_category].result_start_session.message + '</strong>');
+                    jQuery('#klarna_' + payment_category + '_error').html('<strong style="color:red">' + klarna_vars[payment_category].result_start_session.message + '</strong>');
                     payone_unblock();
                 }
             });
         } else if (klarna_vars[payment_category].widget_shown === true && klarna_vars[payment_category].finished === false) {
-            Klarna.Payments.authorize( { payment_method_category: payment_category }, klarna_vars[payment_category].result_start_session.data, function(klarnaResult) {
+            Klarna.Payments.authorize({payment_method_category: payment_category}, klarna_vars[payment_category].result_start_session.data, function (klarnaResult) {
                 payone_unblock();
                 if (klarnaResult.approved === false && klarnaResult.show_form === false) {
                     jQuery('#klarna_' + payment_category + '_error').html('<strong style="color:red">PAYONE Klarna Rechnung kann nicht genutzt werden!</strong>');
@@ -100,7 +100,7 @@
                     klarna_vars[payment_category].finished = true;
                     jQuery('#place_order').parents('form').submit();
                 }
-            } );
+            });
         }
 
         return klarna_vars[payment_category].finished;

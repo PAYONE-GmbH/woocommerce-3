@@ -20,33 +20,33 @@ class SafeInvoice extends Base {
 	 * @return \Payone\Payone\Api\Response
 	 */
 	public function execute( \WC_Order $order ) {
-        $this->set_reference( $order );
+		$this->set_reference( $order );
 		$this->set( 'amount', $order->get_total() * 100 );
 		$this->set( 'currency', strtoupper( $order->get_currency() ) );
 		$this->set_personal_data_from_order( $order );
-        $this->set_shipping_data_from_order( $order );
-        $this->set_customer_ip_from_order( $order );
+		$this->set_shipping_data_from_order( $order );
+		$this->set_customer_ip_from_order( $order );
 		$this->add_article_list_to_transaction( $order );
 		$this->set_business_relation( $order );
 
 		return $this->submit();
 	}
 
-    /**
-     * Sets the proper business relation of the customer according
-     * to the provided billing address data.
-     *
-     * @param \WC_Order $order
-     */
+	/**
+	 * Sets the proper business relation of the customer according
+	 * to the provided billing address data.
+	 *
+	 * @param \WC_Order $order
+	 */
 	protected function set_business_relation( \WC_Order $order ) {
-        $company = $order->get_billing_company();
+		$company = $order->get_billing_company();
 
-        // Set b2b if billing company is present, set b2c otherwise
-        $this->set(
-            'businessrelation',
-            is_string($company) && !empty($company)
-                ? 'b2b'
-                : 'b2c'
-        );
-    }
+		// Set b2b if billing company is present, set b2c otherwise
+		$this->set(
+			'businessrelation',
+			is_string( $company ) && ! empty( $company )
+				? 'b2b'
+				: 'b2c'
+		);
+	}
 }
