@@ -7,14 +7,9 @@ use Payone\Plugin;
 class CreditCard extends Base {
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
-	 * @param string $authorization_method
 	 */
-	public function __construct( $gateway, $authorization_method = null ) {
-		// We want to be able to overide the default setting for subscription handling
-		if ( $authorization_method === null ) {
-			$authorization_method = $gateway->get_authorization_method();
-		}
-		parent::__construct( $authorization_method );
+	public function __construct( $gateway ) {
+		parent::__construct( $gateway->get_authorization_method() );
 		$this->set_data_from_gateway( $gateway );
 
 		$this->set( 'clearingtype', 'cc' );

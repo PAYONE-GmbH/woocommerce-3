@@ -3,25 +3,16 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
-use Payone\Transaction\Capture;
-use Payone\WooCommerceSubscription\WCSAwareGatewayTrait;
-use Payone\WooCommerceSubscription\WCSHandler;
 
 class CreditCard extends RedirectGatewayBase {
-
-	use WCSAwareGatewayTrait;
 
 	const GATEWAY_ID = 'bs_payone_creditcard';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		if ( WCSHandler::is_wcs_active() ) {
-			$this->add_wcs_support();
-		}
-
-		$this->icon         = PAYONE_PLUGIN_URL . 'assets/icon-creditcard.png';
-		$this->method_title = 'PAYONE ' . __( 'Credit Card', 'payone-woocommerce-3' );
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-creditcard.png';
+		$this->method_title       = 'PAYONE ' . __( 'Credit Card', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 
@@ -467,28 +458,6 @@ class CreditCard extends RedirectGatewayBase {
 	 */
 	public function process_payment( $order_id ) {
 		return $this->process_redirect( $order_id, \Payone\Transaction\CreditCard::class );
-	}
-
-	/**
-	 * @param \WC_Order $order
-	 *
-	 * @return \Payone\Transaction\CreditCard
-	 */
-	public function wcs_get_transaction_for_subscription_signup( \WC_Order $order ) {
-		if ( (int) $order->get_total() === 0 ) {
-			$transaction = new \Payone\Transaction\CreditCard( $this, 'preauthorization' );
-			// The user does not need to pay anything right now, but we need to set the amount to 1 cent.
-			// This is not going to be captured. We just need the preauthorization;
-			$transaction->set( 'amount', 1 );
-		} else {
-			$transaction = new \Payone\Transaction\CreditCard( $this );
-		}
-
-		$transaction->set_reference( $order );
-		$transaction->set( 'recurrence', 'recurring' );
-		$transaction->set( 'customer_is_present', 'yes' );
-
-		return $transaction;
 	}
 
 	/**

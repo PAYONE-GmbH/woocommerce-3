@@ -12,7 +12,7 @@ class RatepayOpenInvoice extends RatepayBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->method_title = 'PAYONE ' . __( 'Ratepay Open Invoice', 'payone-woocommerce-3' );
+		$this->method_title       = 'PAYONE ' . __( 'Ratepay Open Invoice', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 

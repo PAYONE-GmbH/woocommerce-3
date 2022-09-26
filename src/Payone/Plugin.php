@@ -14,7 +14,6 @@ use Payone\Gateway\RatepayInstallments;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
-use Payone\WooCommerceSubscription\WCSHandler;
 
 class Plugin {
 	// @deprecated
@@ -108,18 +107,6 @@ class Plugin {
 			$this,
 			'handle_woocommerce_admin_order_data_after_order_details'
 		] );
-
-		if ( WCSHandler::is_wcs_active()
-		     && WCSHandler::is_payone_subscription_auto_failover_enabled()
-		     && WCSHandler::is_payone_gateway_is_available_and_subscritpion_aware( Invoice::GATEWAY_ID )
-		) {
-			add_action(
-				'woocommerce_subscription_renewal_payment_failed',
-				[ WCSHandler::class, 'process_woocommerce_subscription_renewal_payment_failed' ],
-				10,
-				2
-			);
-		}
 	}
 
 	/**
