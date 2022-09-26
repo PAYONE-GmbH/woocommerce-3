@@ -88,11 +88,6 @@ class Account extends Helper {
 			[ $this, 'paypal_billing_agreements_enabled' ],
 			'payone-settings-account',
 			'payone_account_settings' );
-		add_settings_field( 'payone_invoice_module_enabled',
-			__( 'Is PAYONE Invoice module enabled?', 'payone-woocommerce-3' ),
-			[ $this, 'payone_invoice_module_enabled' ],
-			'payone-settings-account',
-			'payone_account_settings' );
 	}
 
 	/**
@@ -196,13 +191,6 @@ class Account extends Helper {
 
 	public function payone_subscription_auto_failover() {
 		$this->selectField( self::OPTION_NAME, 'payone_subscription_auto_failover', [
-			'0' => __( 'No', 'payone-woocommerce-3' ),
-			'1' => __( 'Yes', 'payone-woocommerce-3' ),
-		] );
-	}
-
-	public function payone_invoice_module_enabled() {
-		$this->selectField( self::OPTION_NAME, 'payone_invoice_module_enabled', [
 			'0' => __( 'No', 'payone-woocommerce-3' ),
 			'1' => __( 'Yes', 'payone-woocommerce-3' ),
 		] );
