@@ -78,6 +78,7 @@ class Plugin {
 			\Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID  => \Payone\Gateway\RatepayOpenInvoice::class,
 			\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID  => \Payone\Gateway\RatepayDirectDebit::class,
 			\Payone\Gateway\RatepayInstallments::GATEWAY_ID => \Payone\Gateway\RatepayInstallments::class,
+			\Payone\Gateway\Trustly::GATEWAY_ID             => \Payone\Gateway\Trustly::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
