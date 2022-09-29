@@ -344,9 +344,9 @@ class CreditCard extends RedirectGatewayBase {
 		$out .= '</th><td class="forminp">';
 
 		$selected_brands = (array) $this->get_option( $key );
-		foreach ( $data['options'] as $brand_key => $brand_label ) {
-			$out .= '<div class="cc_brands_wrapper">';
+		$out .= '<div class="cc_brands_wrapper"><table class="table fixed">';
 
+		foreach ( $data['options'] as $brand_key => $brand_label ) {
 			if ( in_array( $brand_key, $selected_brands, true ) ) {
 				$checked = ' checked="checked"';
 			} else {
@@ -355,18 +355,18 @@ class CreditCard extends RedirectGatewayBase {
 
 			$checkbox_id   = $this->get_field_key( $key );
 			$checkbox_name = $checkbox_id . '[]';
-			$out           .= '<label for="' . $checkbox_id . '">';
+			$out           .= '<tr><td><label for="' . $checkbox_id . '">';
 			$out           .= '<input type="checkbox" name="' . $checkbox_name . '" id="' . $checkbox_id . '" value="' . esc_attr( $brand_key ) . '"' . $checked . '>';
-			$out           .= $brand_label . '</label>';
+			$out           .= $brand_label . '</label></td>';
 
 			$text_input_name = 'cc_brand_label_' . $brand_key;
 			$value           = $this->get_option( $text_input_name );
 			$text_input_name = $this->plugin_id . $this->id . '_' . $text_input_name;
-			$out             .= '<input class="input-text regular-input" type="text" name="' . $text_input_name . '" id="' . $text_input_name . '" value="' . esc_attr( $value ) . '">';
+			$out             .= '<td><input class="input-text regular-input" type="text" name="' . $text_input_name . '" id="' . $text_input_name . '" value="' . esc_attr( $value ) . '"></td>';
 
-			$out .= '</div>';
+			$out .= '</tr>';
 		}
-		$out .= '</td></tr>';
+		$out .= '</table></div></td></tr>';
 
 		return $out;
 	}
