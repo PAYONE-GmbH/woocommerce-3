@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
 "POT-Creation-Date: 2018-07-26 10:03+0200\n"
-"PO-Revision-Date: 2022-09-26 12:28+0000\n"
+"PO-Revision-Date: 2022-10-04 09:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch (Sie)\n"
 "Language: de_DE_formal\n"
@@ -859,7 +859,7 @@ msgstr "Ratepay Ratenkauf"
 #: src/Payone/Gateway/RatepayOpenInvoice.php:15
 #: src/Payone/Gateway/RatepayOpenInvoice.php:20
 msgid "Ratepay Open Invoice"
-msgstr "PAYONE Ratepay Rechnungskauf"
+msgstr "Ratepay Rechnungskauf"
 
 #: src/Payone/Gateway/GatewayBase.php:133
 msgid "Received status APPOINTED from PAYONE."
