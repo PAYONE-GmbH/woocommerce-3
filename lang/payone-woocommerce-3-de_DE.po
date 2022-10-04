@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PAYONE v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
 "POT-Creation-Date: 2018-07-26 10:03+0200\n"
-"PO-Revision-Date: 2022-08-10 09:22+0000\n"
+"PO-Revision-Date: 2022-10-04 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -22,7 +22,7 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Loco-Version: 2.6.1; wp-5.9.3"
+"X-Loco-Version: 2.6.1; wp-5.9.4"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
 msgid "Abort checkout"
@@ -859,7 +859,7 @@ msgstr "Ratepay Ratenkauf"
 #: src/Payone/Gateway/RatepayOpenInvoice.php:15
 #: src/Payone/Gateway/RatepayOpenInvoice.php:20
 msgid "Ratepay Open Invoice"
-msgstr "Ratepay Open Invoice"
+msgstr "Ratepay Rechnungskauf"
 
 #: src/Payone/Gateway/GatewayBase.php:133
 msgid "Received status APPOINTED from PAYONE."
@@ -892,7 +892,7 @@ msgstr "Rückerstattung konnte nicht bearbeitet werden: "
 
 #: src/Payone/Gateway/GatewayBase.php:187
 msgid "Refund is issued through PAYONE"
-msgstr ""
+msgstr "Rückerstattung bei PAYONE erfolgt"
 
 #: src/Payone/Admin/ApiLogListTable.php:9
 msgid "Request"

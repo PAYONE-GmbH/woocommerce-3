@@ -475,13 +475,6 @@ class Plugin {
 			];
 		}
 
-		if ( ! $gateway->is_payone_invoice_module_enabled() ) {
-			return [
-				'status'  => 'error',
-				'message' => __( 'Invoice module is not enabled.', 'payone-woocommerce-3' ),
-			];
-		}
-
 		$splFileInfo = $gateway->get_invoice_for_order( $order );
 
 		if ( ! $splFileInfo instanceof \SplFileInfo ) {
