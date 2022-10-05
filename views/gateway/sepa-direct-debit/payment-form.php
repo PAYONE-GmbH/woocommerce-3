@@ -7,10 +7,6 @@
         <label for="direct_debit_iban"><?php _e( 'IBAN', 'payone-woocommerce-3' ); ?></label>
         <input type="text" name="direct_debit_iban" id="direct_debit_iban">
     </p>
-    <p id="direct_debit_bic_field" class="form-row form-row-wide">
-        <label for="direct_debit_bic"><?php _e( 'BIC', 'payone-woocommerce-3' ); ?></label>
-        <input type="text" name="direct_debit_bic" id="direct_debit_bic">
-    </p>
 </div>
 <div id="direct_debit_confirmation">
     <span id="direct_debit_confirmation_text"></span>
@@ -36,7 +32,6 @@
             country: jQuery('#billing_country').val(),
             city: jQuery('#billing_city').val(),
             iban: jQuery('#direct_debit_iban').val(),
-            bic: jQuery('#direct_debit_bic').val(),
             currency: '<?php echo get_woocommerce_currency(); ?>',
             confirmation_check: jQuery('#direct_debit_confirmation_check').prop('checked') ? 1 : 0,
             mandate_identification: mandate_identification
