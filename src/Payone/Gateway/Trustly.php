@@ -10,7 +10,7 @@ class Trustly extends RedirectGatewayBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon               = 'https://cdn.pay1.de/clearingtypes/sb/trl/default.svg';
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-trustly.png';
 		$this->method_title       = 'PAYONE ' . __( 'Trustly', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
