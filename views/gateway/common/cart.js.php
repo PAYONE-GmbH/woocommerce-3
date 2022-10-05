@@ -5,12 +5,7 @@ $paypal_express_button_image = PAYONE_PLUGIN_URL . 'assets/' . __( 'checkout-pay
 $paypal_express_button_image = apply_filters( 'payone_paypal_express_button_image_url', $paypal_express_button_image );
 ?>
 <script type="text/javascript">
-    jQuery('#payone-paypal-express-button').html('
-    <button style="text-align:center;width:100%" title="PayPal Express">
-        <img style="margin:auto; text-align:left;" src="<?php echo $paypal_express_button_image; ?>"
-             alt="PayPal Express">
-    </button>
-    ');
+    jQuery('#payone-paypal-express-button').html('<button style="text-align:center;width:100%" title="PayPal Express"><img style="margin:auto; text-align:left;" src="<?php echo $paypal_express_button_image; ?>" alt="PayPal Express"></button>');
     jQuery('#payone-paypal-express-button').on('click', function (event) {
     jQuery('.cart_totals').block({
         message: null,
