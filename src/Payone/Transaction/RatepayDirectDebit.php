@@ -12,7 +12,6 @@ class RatepayDirectDebit extends Base {
 
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
-	 * @param string $authorization_method
 	 */
 	public function __construct( $gateway ) {
 		parent::__construct( $gateway->get_authorization_method() );

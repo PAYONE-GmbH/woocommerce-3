@@ -45,7 +45,7 @@ class Debit extends Base {
 		return true;
 	}
 
-	protected function get_article_list_for_transaction( \WC_Order $order ) {
+	protected function get_article_list_for_transaction_from_order( \WC_Order $order ) {
 		// Bestimme die Default-Steuerrate
 		$tax_rates = \WC_Tax::get_rates();
 		$va        = 0;

@@ -433,17 +433,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function is_payone_invoice_module_enabled() {
-		if ( isset( $this->global_settings['payone_invoice_module_enabled'] ) ) {
-			return (bool) $this->global_settings['payone_invoice_module_enabled'];
-		}
-
-		return false;
-	}
-
 	private function process_global_settings() {
 		$this->use_global_settings = $this->settings['use_global_settings'];
 		if ( $this->use_global_settings ) {

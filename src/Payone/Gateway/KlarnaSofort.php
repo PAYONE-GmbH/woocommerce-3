@@ -12,7 +12,7 @@ class KlarnaSofort extends KlarnaBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->method_title = 'PAYONE ' . __( 'Klarna Sofort bezahlen', 'payone-woocommerce-3' );
+		$this->method_title       = 'PAYONE ' . __( 'Klarna Sofort bezahlen', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 

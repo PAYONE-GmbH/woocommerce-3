@@ -14,7 +14,6 @@ use Payone\Gateway\RatepayInstallments;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
-use Payone\WooCommerceSubscription\WCSHandler;
 
 class Plugin {
 	// @deprecated
@@ -79,6 +78,7 @@ class Plugin {
 			\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID  => \Payone\Gateway\RatepayDirectDebit::class,
 			\Payone\Gateway\RatepayInstallments::GATEWAY_ID => \Payone\Gateway\RatepayInstallments::class,
 			\Payone\Gateway\Trustly::GATEWAY_ID             => \Payone\Gateway\Trustly::class,
+			\Payone\Gateway\Przelewy24::GATEWAY_ID          => \Payone\Gateway\Przelewy24::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -109,18 +109,6 @@ class Plugin {
 			$this,
 			'handle_woocommerce_admin_order_data_after_order_details'
 		] );
-
-		if ( WCSHandler::is_wcs_active()
-		     && WCSHandler::is_payone_subscription_auto_failover_enabled()
-		     && WCSHandler::is_payone_gateway_is_available_and_subscritpion_aware( Invoice::GATEWAY_ID )
-		) {
-			add_action(
-				'woocommerce_subscription_renewal_payment_failed',
-				[ WCSHandler::class, 'process_woocommerce_subscription_renewal_payment_failed' ],
-				10,
-				2
-			);
-		}
 	}
 
 	/**
@@ -473,13 +461,6 @@ class Plugin {
 			return [
 				'status'  => 'error',
 				'message' => __( 'Could not get payment method for order.', 'payone-woocommerce-3' ),
-			];
-		}
-
-		if ( ! $gateway->is_payone_invoice_module_enabled() ) {
-			return [
-				'status'  => 'error',
-				'message' => __( 'Invoice module is not enabled.', 'payone-woocommerce-3' ),
 			];
 		}
 

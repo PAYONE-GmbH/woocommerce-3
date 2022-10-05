@@ -2,14 +2,11 @@
 
 namespace Payone\Transaction;
 
-use Payone\Plugin;
-
 class KlarnaStartSession extends Base {
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
-	 * @param string $authorization_method
 	 */
-	public function __construct( $gateway, $authorization_method = null ) {
+	public function __construct( $gateway ) {
 		parent::__construct( 'genericpayment' );
 		$this->set_data_from_gateway( $gateway );
 
