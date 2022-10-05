@@ -11,8 +11,8 @@ class PayPalExpress extends PayPalBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon         = PAYONE_PLUGIN_URL . 'assets/icon-paypal.png';
-		$this->method_title = 'PAYONE ' . __( 'PayPal Express', 'payone-woocommerce-3' );
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-paypal.png';
+		$this->method_title       = 'PAYONE ' . __( 'PayPal Express', 'payone-woocommerce-3' );
 		$this->method_description = '';
 
 		$this->pay_button_id = 'payone-paypal-express-button';

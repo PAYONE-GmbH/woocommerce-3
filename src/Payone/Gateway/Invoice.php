@@ -3,21 +3,13 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
-use Payone\WooCommerceSubscription\WCSAwareGatewayTrait;
-use Payone\WooCommerceSubscription\WCSHandler;
 
 class Invoice extends GatewayBase {
-
-	use WCSAwareGatewayTrait;
 
 	const GATEWAY_ID = 'bs_payone_invoice';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
-
-		if ( WCSHandler::is_wcs_active() ) {
-			$this->add_wcs_support();
-		}
 
 		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';
 		$this->method_title       = 'PAYONE ' . __( 'Invoice', 'payone-woocommerce-3' );
@@ -36,25 +28,7 @@ class Invoice extends GatewayBase {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-		if ( WCSHandler::is_wcs_active() && WCSHandler::is_subscription( $order ) ) {
-			if ( (int) $order->get_total() === 0 ) {
-				// We don't need to do anything. This is just the start of the trial period without any upfront cost.
-				$order->add_order_note( __( 'Subscription started. No invoice necessary at the moment.', 'payone-woocommerce-3' ) );
-				$order->payment_complete();
-
-				// Return thankyou redirect
-				return array(
-					'result'   => 'success',
-					'redirect' => $this->get_return_url( $order ),
-				);
-			}
-
-			if ( method_exists( $this, 'wcs_get_transaction_for_subscription_signup' ) ) {
-				$transaction = $this->wcs_get_transaction_for_subscription_signup( $order );
-			}
-		} else {
-			$transaction = new \Payone\Transaction\Invoice( $this );
-		}
+		$transaction = new \Payone\Transaction\Invoice( $this );
 
 		$response = $transaction->execute( $order );
 
@@ -84,21 +58,6 @@ class Invoice extends GatewayBase {
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
 		);
-	}
-
-	/**
-	 * @param \WC_Order $order
-	 *
-	 * @return \Payone\Transaction\Invoice
-	 */
-	public function wcs_get_transaction_for_subscription_signup( \WC_Order $order ) {
-		$transaction = new \Payone\Transaction\Invoice( $this );
-
-		$transaction->set_reference( $order );
-		$transaction->set( 'recurrence', 'recurring' );
-		$transaction->set( 'customer_is_present', 'yes' );
-
-		return $transaction;
 	}
 
 	/**

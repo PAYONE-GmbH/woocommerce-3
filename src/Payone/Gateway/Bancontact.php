@@ -10,7 +10,7 @@ class Bancontact extends RedirectGatewayBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon = PAYONE_PLUGIN_URL . 'assets/icon-bancontact.png';
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-bancontact.png';
 		$this->method_title       = 'PAYONE ' . __( 'Bancontact', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
