@@ -77,6 +77,7 @@ class Plugin {
 			\Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID  => \Payone\Gateway\RatepayOpenInvoice::class,
 			\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID  => \Payone\Gateway\RatepayDirectDebit::class,
 			\Payone\Gateway\RatepayInstallments::GATEWAY_ID => \Payone\Gateway\RatepayInstallments::class,
+			\Payone\Gateway\Przelewy24::GATEWAY_ID          => \Payone\Gateway\Przelewy24::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -459,13 +460,6 @@ class Plugin {
 			return [
 				'status'  => 'error',
 				'message' => __( 'Could not get payment method for order.', 'payone-woocommerce-3' ),
-			];
-		}
-
-		if ( ! $gateway->is_payone_invoice_module_enabled() ) {
-			return [
-				'status'  => 'error',
-				'message' => __( 'Invoice module is not enabled.', 'payone-woocommerce-3' ),
 			];
 		}
 
