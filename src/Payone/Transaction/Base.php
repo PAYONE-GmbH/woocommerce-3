@@ -31,6 +31,21 @@ class Base extends Request {
 		if ( $this->gateway->should_submit_cart() ) {
 			return true;
 		}
+		
+		// Für diese Gateways bei Debit immer die detaillierte Artikelliste mitsenden
+		if ( $this->get( 'request' ) === 'debit'
+		     && in_array( $this->gateway->id, [
+				\Payone\Gateway\SafeInvoice::GATEWAY_ID,
+				\Payone\Gateway\KlarnaInstallments::GATEWAY_ID,
+				\Payone\Gateway\KlarnaInvoice::GATEWAY_ID,
+				\Payone\Gateway\KlarnaSofort::GATEWAY_ID,
+				\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID,
+				\Payone\Gateway\RatepayInstallments::GATEWAY_ID,
+				\Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID,
+			], true )
+		) {
+			return true;
+		}
 
 		// Bei Sicherer Rechnung immer den Warenkorb mitsenden
 		return $this->gateway->id === \Payone\Gateway\SafeInvoice::GATEWAY_ID;
