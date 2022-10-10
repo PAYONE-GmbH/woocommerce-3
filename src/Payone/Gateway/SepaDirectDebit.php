@@ -4,21 +4,13 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Plugin;
-use Payone\WooCommerceSubscription\WCSAwareGatewayTrait;
-use Payone\WooCommerceSubscription\WCSHandler;
 
 class SepaDirectDebit extends GatewayBase {
-
-	use WCSAwareGatewayTrait;
 
 	const GATEWAY_ID = 'bs_payone_sepa';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
-
-		if ( WCSHandler::is_wcs_active() ) {
-			$this->add_wcs_support();
-		}
 
 		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-lastschrift.png';
 		$this->method_title       = 'PAYONE ' . __( 'Direct Debit', 'payone-woocommerce-3' );
@@ -65,14 +57,8 @@ class SepaDirectDebit extends GatewayBase {
 		global $woocommerce;
 		$order = new \WC_Order( $order_id );
 
-		// Depending on the Gateway, we might need to set up a special transaction for subscriptions
-		if ( WCSHandler::is_wcs_active() && method_exists( $this, 'wcs_get_transaction_for_subscription_signup' ) ) {
-			/** @var \Payone\Transaction\SepaDirectDebit $transaction */
-			$transaction = $this->wcs_get_transaction_for_subscription_signup( $order );
-		} else {
-			/** @var \Payone\Transaction\Base $transaction */
-			$transaction = new \Payone\Transaction\SepaDirectDebit( $this );
-		}
+		/** @var \Payone\Transaction\Base $transaction */
+		$transaction = new \Payone\Transaction\SepaDirectDebit( $this );
 
 		/** @var \Payone\Payone\Api\Response $response */
 		$response = $transaction->execute( $order );
@@ -93,14 +79,7 @@ class SepaDirectDebit extends GatewayBase {
 		$order->save_meta_data();
 		$order->save();
 
-		if ( $authorization_method === 'preauthorization'
-		     && $this->get_authorization_method() === 'authorization'
-		     && WCSHandler::is_wcs_active()
-		     && wcs_order_contains_subscription( $order )
-		     && (int) $order->get_total() === 0
-		) {
-			$order->update_status( 'processing', __( 'Recurring payment authorized by PAYONE.', 'payone-woocommerce-3' ) );
-		} elseif ( $authorization_method === 'preauthorization' ) {
+		if ( $authorization_method === 'preauthorization' ) {
 			$order->update_status( 'on-hold', __( 'Waiting for payment.', 'payone-woocommerce-3' ) );
 		} elseif ( $authorization_method === 'authorization' ) {
 			$order->update_status( 'processing',
@@ -118,28 +97,6 @@ class SepaDirectDebit extends GatewayBase {
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
 		);
-	}
-
-	/**
-	 * @param \WC_Order $order
-	 *
-	 * @return \Payone\Transaction\SepaDirectDebit
-	 */
-	public function wcs_get_transaction_for_subscription_signup( \WC_Order $order ) {
-		if ( (int) $order->get_total() === 0 ) {
-			$transaction = new \Payone\Transaction\SepaDirectDebit( $this, 'preauthorization' );
-			// The user does not need to pay anything right now, but we need to set the amount to 1 cent.
-			// This is not going to be captured. We just need the preauthorization;
-			$transaction->set( 'amount', 1 );
-		} else {
-			$transaction = new \Payone\Transaction\SepaDirectDebit( $this );
-		}
-
-		$transaction->set_reference( $order );
-		$transaction->set( 'recurrence', 'recurring' );
-		$transaction->set( 'customer_is_present', 'yes' );
-
-		return $transaction;
 	}
 
 	public function process_manage_mandate( $data ) {

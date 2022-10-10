@@ -4,24 +4,24 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
 
-class Bancontact extends RedirectGatewayBase {
-	const GATEWAY_ID = 'payone_bancontact';
+class Przelewy24 extends RedirectGatewayBase {
+	const GATEWAY_ID = 'payone_przelewy24';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-bancontact.png';
-		$this->method_title       = 'PAYONE ' . __( 'Bancontact', 'payone-woocommerce-3' );
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-przelewy24.png';
+		$this->method_title       = 'PAYONE ' . __( 'Przelewy24', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 
 	public function init_form_fields() {
-		$this->init_common_form_fields( 'PAYONE ' . __( 'Bancontact', 'payone-woocommerce-3' ) );
-		$this->form_fields['countries']['default'] = [ 'BE' ];
+		$this->init_common_form_fields( 'PAYONE ' . __( 'Przelewy24', 'payone-woocommerce-3' ) );
+		$this->form_fields['countries']['default'] = [ 'PL' ];
 	}
 
 	public function payment_fields() {
-		include PAYONE_VIEW_PATH . '/gateway/bancontact/payment-form.php';
+		include PAYONE_VIEW_PATH . '/gateway/przelewy24/payment-form.php';
 	}
 
 	/**
@@ -31,7 +31,7 @@ class Bancontact extends RedirectGatewayBase {
 	 * @throws \WC_Data_Exception
 	 */
 	public function process_payment( $order_id ) {
-		return $this->process_redirect( $order_id, \Payone\Transaction\Bancontact::class );
+		return $this->process_redirect( $order_id, \Payone\Transaction\Przelewy24::class );
 	}
 
 	/**

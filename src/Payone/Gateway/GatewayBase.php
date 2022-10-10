@@ -2,6 +2,7 @@
 
 namespace Payone\Gateway;
 
+use Automattic\WooCommerce\Admin\Overrides\OrderRefund;
 use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Capture;
@@ -186,9 +187,13 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			return new \WP_Error( 1, __( 'Debit amount must be greater than zero.', 'payone-woocommerce-3' ) );
 		}
 		$order = new \WC_Order( $order_id );
+        // The first item in the array is the refund for this call
+		$refund = $order->get_refunds()[0];
+
 		$order->add_order_note( __( 'Refund is issued through PAYONE', 'payone-woocommerce-3' ) );
 
 		$debit = new Debit( $this );
+        $debit->set_refund( $refund );
 		$this->add_data_to_debit( $debit, $order );
 
 		return $debit->execute( $order, - $amount );
@@ -431,17 +436,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		if ( $callable ) {
 			add_action( 'woocommerce_email_order_meta', $callable, 10, 3 );
 		}
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function is_payone_invoice_module_enabled() {
-		if ( isset( $this->global_settings['payone_invoice_module_enabled'] ) ) {
-			return (bool) $this->global_settings['payone_invoice_module_enabled'];
-		}
-
-		return false;
 	}
 
 	private function process_global_settings() {

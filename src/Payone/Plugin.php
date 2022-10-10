@@ -14,7 +14,6 @@ use Payone\Gateway\RatepayInstallments;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
-use Payone\WooCommerceSubscription\WCSHandler;
 
 class Plugin {
 	// @deprecated
@@ -78,6 +77,8 @@ class Plugin {
 			\Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID  => \Payone\Gateway\RatepayOpenInvoice::class,
 			\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID  => \Payone\Gateway\RatepayDirectDebit::class,
 			\Payone\Gateway\RatepayInstallments::GATEWAY_ID => \Payone\Gateway\RatepayInstallments::class,
+			\Payone\Gateway\Trustly::GATEWAY_ID             => \Payone\Gateway\Trustly::class,
+			\Payone\Gateway\Przelewy24::GATEWAY_ID          => \Payone\Gateway\Przelewy24::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -108,18 +109,6 @@ class Plugin {
 			$this,
 			'handle_woocommerce_admin_order_data_after_order_details'
 		] );
-
-		if ( WCSHandler::is_wcs_active()
-		     && WCSHandler::is_payone_subscription_auto_failover_enabled()
-		     && WCSHandler::is_payone_gateway_is_available_and_subscritpion_aware( Invoice::GATEWAY_ID )
-		) {
-			add_action(
-				'woocommerce_subscription_renewal_payment_failed',
-				[ WCSHandler::class, 'process_woocommerce_subscription_renewal_payment_failed' ],
-				10,
-				2
-			);
-		}
 	}
 
 	/**
@@ -475,13 +464,6 @@ class Plugin {
 			];
 		}
 
-		if ( ! $gateway->is_payone_invoice_module_enabled() ) {
-			return [
-				'status'  => 'error',
-				'message' => __( 'Invoice module is not enabled.', 'payone-woocommerce-3' ),
-			];
-		}
-
 		$splFileInfo = $gateway->get_invoice_for_order( $order );
 
 		if ( ! $splFileInfo instanceof \SplFileInfo ) {
@@ -722,6 +704,14 @@ class Plugin {
 	 * @return float
 	 */
 	public static function get_tax_rate_for_item_data( $item_data ) {
+		return self::get_tax_rate_for_total($item_data['total'], $item_data['total_tax'] );
+	}
+
+	public static function get_tax_rate_for_total( $total, $tax ) {
+		if ( $tax == 0) {
+			return 0.0;
+		}
+
 		$all_tax_classes   = \WC_Tax::get_tax_classes();
 		$all_tax_classes[] = '';
 		$all_tax_rates     = [];
@@ -729,11 +719,7 @@ class Plugin {
 			$all_tax_rates[] = \WC_Tax::get_rates_for_tax_class( $tax_class );
 		}
 
-		if ( $item_data['total_tax'] == 0 ) {
-			return 0.0;
-		}
-
-		$calculated_tax_rate = ( int ) ( 100 * round( 100 * $item_data['total_tax'] / $item_data['total'], 0 ) );
+		$calculated_tax_rate = ( int ) ( 100 * round( 100 * $tax / $total, 0 ) );
 
 		foreach ( $all_tax_rates as $tax_rates ) {
 			foreach ( $tax_rates as $tax_rate ) {
