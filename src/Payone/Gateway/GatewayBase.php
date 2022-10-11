@@ -114,10 +114,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		$order = $transaction_status->get_order();
 
-		// Increment sequence number of the order if any provided
-		// through the TX status notification
+		// Update sequence number of the order if the provided
+		// through the TX status notification is larger
 		$sequencenumber = $transaction_status->get_sequencenumber();
-		if ( $sequencenumber ) {
+		$current_sequencenumber = (int) $order->get_meta( '_sequencenumber' );
+        if ( $sequencenumber > $current_sequencenumber) {
 			$order->update_meta_data( '_sequencenumber', $sequencenumber );
 			$order->save_meta_data();
 		}
