@@ -61,6 +61,15 @@ class RatepayInstallments extends RatepayBase {
 			$transaction->set( 'add_paydata[month]', $month );
 		} else {
 			$rate = isset( $data['rate'] ) ? $data['rate'] : '';
+			/**
+			 * Angabe der Rate in deutschem und englischen Format zulassen. Wenn aber Komma und Punkt vorkommen, wird
+			 * von der deutschen Variante ausgegangen und der Dezimalpunkt entfernt.
+			 */
+			if (strpos($rate, '.') !== false && strpos($rate, ',') !== false) {
+				$rate = str_replace('.', '', $rate);
+			}
+			$rate = str_replace(',', '.', $rate);
+
 			$transaction->set( 'add_paydata[rate]', $rate );
 		}
 
