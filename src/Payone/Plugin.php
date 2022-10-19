@@ -704,6 +704,14 @@ class Plugin {
 	 * @return float
 	 */
 	public static function get_tax_rate_for_item_data( $item_data ) {
+		return self::get_tax_rate_for_total($item_data['total'], $item_data['total_tax'] );
+	}
+
+	public static function get_tax_rate_for_total( $total, $tax ) {
+		if ( $tax == 0) {
+			return 0.0;
+		}
+
 		$all_tax_classes   = \WC_Tax::get_tax_classes();
 		$all_tax_classes[] = '';
 		$all_tax_rates     = [];
@@ -711,11 +719,7 @@ class Plugin {
 			$all_tax_rates[] = \WC_Tax::get_rates_for_tax_class( $tax_class );
 		}
 
-		if ( $item_data['total_tax'] == 0 ) {
-			return 0.0;
-		}
-
-		$calculated_tax_rate = ( int ) ( 100 * round( 100 * $item_data['total_tax'] / $item_data['total'], 0 ) );
+		$calculated_tax_rate = ( int ) ( 100 * round( 100 * $tax / $total, 0 ) );
 
 		foreach ( $all_tax_rates as $tax_rates ) {
 			foreach ( $tax_rates as $tax_rate ) {

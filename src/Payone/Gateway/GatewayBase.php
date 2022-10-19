@@ -2,6 +2,7 @@
 
 namespace Payone\Gateway;
 
+use Automattic\WooCommerce\Admin\Overrides\OrderRefund;
 use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Capture;
@@ -113,10 +114,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		$order = $transaction_status->get_order();
 
-		// Increment sequence number of the order if any provided
-		// through the TX status notification
+		// Update sequence number of the order if the provided
+		// through the TX status notification is larger
 		$sequencenumber = $transaction_status->get_sequencenumber();
-		if ( $sequencenumber ) {
+		$current_sequencenumber = (int) $order->get_meta( '_sequencenumber' );
+        if ( $sequencenumber > $current_sequencenumber) {
 			$order->update_meta_data( '_sequencenumber', $sequencenumber );
 			$order->save_meta_data();
 		}
@@ -186,9 +188,13 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			return new \WP_Error( 1, __( 'Debit amount must be greater than zero.', 'payone-woocommerce-3' ) );
 		}
 		$order = new \WC_Order( $order_id );
+        // The first item in the array is the refund for this call
+		$refund = $order->get_refunds()[0];
+
 		$order->add_order_note( __( 'Refund is issued through PAYONE', 'payone-woocommerce-3' ) );
 
 		$debit = new Debit( $this );
+        $debit->set_refund( $refund );
 		$this->add_data_to_debit( $debit, $order );
 
 		return $debit->execute( $order, - $amount );

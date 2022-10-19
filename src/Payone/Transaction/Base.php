@@ -2,6 +2,7 @@
 
 namespace Payone\Transaction;
 
+use Automattic\WooCommerce\Admin\Overrides\OrderRefund;
 use Payone\Gateway\GatewayBase;
 use Payone\Payone\Api\Request;
 use Payone\Plugin;
@@ -28,6 +29,21 @@ class Base extends Request {
 		}
 
 		if ( $this->gateway->should_submit_cart() ) {
+			return true;
+		}
+		
+		// Für diese Gateways bei Debit immer die detaillierte Artikelliste mitsenden
+		if ( $this->get( 'request' ) === 'debit'
+		     && in_array( $this->gateway->id, [
+				\Payone\Gateway\SafeInvoice::GATEWAY_ID,
+				\Payone\Gateway\KlarnaInstallments::GATEWAY_ID,
+				\Payone\Gateway\KlarnaInvoice::GATEWAY_ID,
+				\Payone\Gateway\KlarnaSofort::GATEWAY_ID,
+				\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID,
+				\Payone\Gateway\RatepayInstallments::GATEWAY_ID,
+				\Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID,
+			], true )
+		) {
 			return true;
 		}
 
@@ -160,13 +176,17 @@ class Base extends Request {
 	}
 
 	/**
-	 * @param \WC_Order|\WC_Cart $orderOrCart
+	 * @param \WC_Order|\WC_Cart|OrderRefund $orderOrCartOrRefund
+	 *
+	 * @return array
 	 */
-	public function add_article_list_to_transaction( $orderOrCart ) {
-		if ( $orderOrCart instanceof \WC_Order ) {
-			$article_list = $this->get_article_list_for_transaction_from_order( $orderOrCart );
+	public function add_article_list_to_transaction( $orderOrCartOrRefund ) {
+		if ( $orderOrCartOrRefund instanceof \WC_Order ) {
+			$article_list = $this->get_article_list_for_transaction_from_order( $orderOrCartOrRefund );
+		} elseif ( $orderOrCartOrRefund instanceof \WC_Cart ) {
+			$article_list = $this->get_article_list_for_transaction_from_cart( $orderOrCartOrRefund );
 		} else {
-			$article_list = $this->get_article_list_for_transaction_from_cart( $orderOrCart );
+			$article_list = $this->get_article_list_for_transaction_from_refund( $orderOrCartOrRefund );
 		}
 
 		foreach ( $article_list as $n => $article ) {
@@ -179,6 +199,11 @@ class Base extends Request {
 		}
 	}
 
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return array
+	 */
 	protected function get_article_list_for_transaction_from_order( \WC_Order $order ) {
 		$articles  = [];
 		$discounts = [];
@@ -242,6 +267,11 @@ class Base extends Request {
 		return $articles;
 	}
 
+	/**
+	 * @param \WC_Cart $cart
+	 *
+	 * @return array
+	 */
 	protected function get_article_list_for_transaction_from_cart( \WC_Cart $cart ) {
 		$articles  = [];
 		$discounts = [];
@@ -325,6 +355,53 @@ class Base extends Request {
 			];
 		}
 		$n ++;
+
+		return $articles;
+	}
+
+	/**
+	 * @param OrderRefund $refund
+	 *
+	 * @return array
+	 */
+	protected function get_article_list_for_transaction_from_refund( OrderRefund $refund = null ) {
+		if ( ! $refund ) {
+			return [];
+		}
+
+		$articles = [];
+		$n        = 1;
+
+		foreach ( $refund->get_items() as $item ) {
+			$product        = $item->get_product();
+			$data           = $item->get_data();
+			$va             = (int) round( 100 * Plugin::get_tax_rate_for_item_data( $data ) );
+			$price_all      = $data['subtotal'] + $data['subtotal_tax'];
+			$price_one      = $price_all / $item->get_quantity();
+			$price          = (int) round( 100 * $price_one );
+			$sku            = $product->get_sku() ?: $product->get_id();
+			$articles[ $n ] = [
+				'id' => $sku,
+				'pr' => - $price,
+				'no' => - $item->get_quantity(),
+				'de' => $product->get_name(),
+				'va' => $va,
+				'it' => 'goods',
+			];
+			$n ++;
+		}
+		$refund_data = $refund->get_data();
+		if ( $refund_data['shipping_total'] != 0 ) {
+			$va             = Plugin::get_tax_rate_for_total( $refund_data['shipping_total'], $refund_data['shipping_tax'] );
+			$articles[ $n ] = [
+				'id' => 'shipment-' . $n,
+				'pr' => 100 * ( $refund_data['shipping_total'] + $refund_data['shipping_tax'] ),
+				'no' => 1,
+				'de' => __( 'Shipping', 'payone-woocommerce-3' ),
+				'va' => 100 * $va,
+				'it' => 'shipment',
+			];
+		}
 
 		return $articles;
 	}
