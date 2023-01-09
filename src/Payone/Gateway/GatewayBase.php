@@ -241,10 +241,10 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @param string $label
 	 */
 	public function init_common_form_fields( $label ) {
-		$default_merchant_id = $this->global_settings['merchant_id'];
-		$default_portal_id   = $this->global_settings['portal_id'];
-		$default_account_id  = $this->global_settings['account_id'];
-		$default_key         = $this->global_settings['key'];
+		$default_merchant_id = isset( $this->global_settings['merchant_id'] ) ? $this->global_settings['merchant_id'] : '';
+		$default_portal_id   = isset( $this->global_settings['portal_id'] ) ? $this->global_settings['portal_id'] : '';
+		$default_account_id  = isset( $this->global_settings['account_id'] ) ? $this->global_settings['account_id'] : '';
+		$default_key         = isset( $this->global_settings['key'] ) ? $this->global_settings['key'] : '';
 
 		$countries = new \WC_Countries();
 
@@ -455,15 +455,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			);
 		}
 		if ( $this->use_global_settings ) {
-			$this->merchant_id               = $this->global_settings['merchant_id'];
-			$this->portal_id                 = $this->global_settings['portal_id'];
-			$this->account_id                = $this->global_settings['account_id'];
-			$this->key                       = $this->global_settings['key'];
-			$this->submit_cart               = $this->global_settings['submit_cart'];
-			$this->activate_pdf_download     = $this->global_settings['activate_pdf_download'];
-			$this->dynamic_invoice_text      = $this->global_settings['dynamic_invoice_text'];
-			$this->dynamic_refund_text       = $this->global_settings['dynamic_refund_text'];
-			$this->text_on_booking_statement = $this->global_settings['text_on_booking_statement'];
+			$this->merchant_id               = isset( $this->global_settings['merchant_id'] ) ? $this->global_settings['merchant_id'] : '';
+			$this->portal_id                 = isset( $this->global_settings['portal_id'] ) ? $this->global_settings['portal_id'] : '';
+			$this->account_id                = isset( $this->global_settings['account_id'] ) ? $this->global_settings['account_id'] : '';
+			$this->key                       = isset( $this->global_settings['key'] ) ? $this->global_settings['key'] : '';
+			$this->submit_cart               = isset( $this->global_settings['submit_cart'] ) ? $this->global_settings['submit_cart'] : '';
+			$this->activate_pdf_download     = isset( $this->global_settings['activate_pdf_download'] ) ? $this->global_settings['activate_pdf_download'] : '';
+			$this->dynamic_invoice_text      = isset( $this->global_settings['dynamic_invoice_text'] ) ? $this->global_settings['dynamic_invoice_text'] : '';
+			$this->dynamic_refund_text       = isset( $this->global_settings['dynamic_refund_text'] ) ? $this->global_settings['dynamic_refund_text'] : '';
+			$this->text_on_booking_statement = isset( $this->global_settings['text_on_booking_statement'] ) ? $this->global_settings['text_on_booking_statement'] : '';
 		} else {
 			$this->merchant_id               = isset( $this->settings['merchant_id'] ) ? $this->settings['merchant_id'] : '';
 			$this->portal_id                 = isset( $this->settings['portal_id'] ) ? $this->settings['portal_id'] : '';
