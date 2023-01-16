@@ -20,10 +20,10 @@ define( 'PAYONE_VIEW_PATH', PAYONE_PLUGIN_PATH . '/views' );
 
 require_once 'src/autoload.php';
 
-$payonePlugin = null;
+$payone_plugin = null;
 add_action( 'woocommerce_loaded', function () {
-	global $payonePlugin;
+	global $payone_plugin;
 
-	$payonePlugin = new \Payone\Plugin();
-	$payonePlugin->init();
+	$payone_plugin = new \Payone\Plugin();
+	$payone_plugin->init();
 } );

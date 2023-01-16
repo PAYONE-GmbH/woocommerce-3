@@ -11,9 +11,10 @@ class Invoice extends GatewayBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';
-		$this->method_title       = 'PAYONE ' . __( 'Invoice', 'payone-woocommerce-3' );
-		$this->method_description = '';
+		$this->icon                       = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';
+		$this->method_title               = 'PAYONE ' . __( 'Invoice', 'payone-woocommerce-3' );
+		$this->method_description         = '';
+		$this->test_transaction_classname = \Payone\Transaction\Invoice::class;
 	}
 
 	public function init_form_fields() {

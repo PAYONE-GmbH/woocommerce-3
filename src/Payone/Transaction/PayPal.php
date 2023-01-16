@@ -44,4 +44,23 @@ class PayPal extends Base {
 
 		return $this->submit();
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function test_request_successful() {
+		$this->set( 'request', 'preauthorization' );
+		$this->set( 'reference', 'test' . $this->get( 'clearingtype' ) . '_' . ( random_int( time() - 1000, time() ) ) );
+		$this->set( 'amount', 100 );
+		$this->set( 'currency', 'EUR' );
+		$this->set( 'country', 'DE' );
+		$this->set( 'lastname', 'Tester' );
+		$this->set( 'firstname', 'Tim' );
+
+		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'success'] ) );
+		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'error'] ) );
+		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'back'] ) );
+
+		return $this->submit()->is_redirect();
+	}
 }
