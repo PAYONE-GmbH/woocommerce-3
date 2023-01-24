@@ -42,6 +42,18 @@ class Base extends Request {
 				\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID,
 				\Payone\Gateway\RatepayInstallments::GATEWAY_ID,
 				\Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID,
+				\Payone\Gateway\SecuredInvoice::GATEWAY_ID,
+				\Payone\Gateway\SecuredInstallment::GATEWAY_ID,
+			], true )
+		) {
+			return true;
+		}
+
+		// Für diese Gateways bei Capture immer die detaillierte Artikelliste mitsenden
+		if ( $this->get( 'request' ) === 'capture'
+		     && in_array( $this->gateway->id, [
+				\Payone\Gateway\SecuredInvoice::GATEWAY_ID,
+				\Payone\Gateway\SecuredInstallment::GATEWAY_ID,
 			], true )
 		) {
 			return true;
@@ -95,6 +107,17 @@ class Base extends Request {
 		$this->set( 'country', $country );
 		$this->set( 'email', $order->get_billing_email() );
 		$this->set( 'telephonenumber', $order->get_billing_phone() );
+	}
+
+	/**
+	 * "YYYY-MM-DD" -> "YYYYMMDD"
+	 *
+	 * @param string $birthday
+	 *
+	 * @return string
+	 */
+	public static function convert_birthday( $birthday ) {
+		return implode( '', explode( '-', $birthday ) );
 	}
 
 	/**

@@ -11,6 +11,7 @@ use Payone\Gateway\KlarnaInvoice;
 use Payone\Gateway\KlarnaSofort;
 use Payone\Gateway\PayPalExpress;
 use Payone\Gateway\RatepayInstallments;
+use Payone\Gateway\SecuredInstallment;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
@@ -79,6 +80,8 @@ class Plugin {
 			\Payone\Gateway\RatepayInstallments::GATEWAY_ID => \Payone\Gateway\RatepayInstallments::class,
 			\Payone\Gateway\Trustly::GATEWAY_ID             => \Payone\Gateway\Trustly::class,
 			\Payone\Gateway\Przelewy24::GATEWAY_ID          => \Payone\Gateway\Przelewy24::class,
+			\Payone\Gateway\SecuredInvoice::GATEWAY_ID      => \Payone\Gateway\SecuredInvoice::class,
+			\Payone\Gateway\SecuredInstallment::GATEWAY_ID  => \Payone\Gateway\SecuredInstallment::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -306,6 +309,9 @@ class Plugin {
 		}
 		if ( $this->is_ratepay_calculate_callback() ) {
 			return $this->process_ratepay_calculate();
+		}
+		if ( $this->is_secured_installment_options_callback() ) {
+			return $this->process_secured_installment_options();
 		}
 
 		$response = 'ERROR';
@@ -651,6 +657,29 @@ class Plugin {
 		$gateway = self::find_gateway( RatepayInstallments::GATEWAY_ID );
 		if ( $gateway ) {
 			return $gateway->process_calculate( $_POST );
+		}
+
+		return null;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function is_secured_installment_options_callback() {
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-secured-installment-options' ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function process_secured_installment_options() {
+		$gateway = self::find_gateway( SecuredInstallment::GATEWAY_ID );
+		if ( $gateway ) {
+			return $gateway->process_secured_installment_options();
 		}
 
 		return null;

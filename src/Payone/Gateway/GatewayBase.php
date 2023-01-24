@@ -108,6 +108,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $methods;
 	}
 
+	public function get_mode()
+    {
+        return $this->global_settings['mode'];
+    }
+
 	/**
 	 * @param TransactionStatus $transaction_status
 	 */
