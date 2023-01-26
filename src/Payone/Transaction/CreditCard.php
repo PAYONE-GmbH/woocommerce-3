@@ -40,4 +40,24 @@ class CreditCard extends Base {
 
 		return $this->submit();
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function test_request_successful() {
+		$this->set( 'request', 'preauthorization' );
+		$this->set( 'reference', 'test' . $this->get( 'clearingtype' ) . '_' . ( random_int( time() - 1000, time() ) ) );
+		$this->set( 'amount', 100 );
+		$this->set( 'currency', 'EUR' );
+		$this->set( 'pseudocardpan', '5500000000099999' );
+		$this->set( 'cardtype', 'M' );
+		$this->set( 'cardexpiredate', date('y') . '12');
+		$this->set( 'cardpan', '5500000000000004' );
+		$this->set( 'lastname', 'Tester' );
+		$this->set( 'firstname', 'Tim' );
+		$this->set( 'country', 'DE' );
+		$this->set( 'ecommercemode', 'internet' );
+
+		return $this->submit()->is_approved();
+	}
 }

@@ -31,4 +31,19 @@ class PrePayment extends Base {
 
 		return $this->submit();
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function test_request_successful() {
+		$this->set( 'request', 'preauthorization' );
+		$this->set( 'reference', 'test' . $this->get( 'clearingtype' ) . '_' . ( random_int( time() - 1000, time() ) ) );
+		$this->set( 'amount', 100 );
+		$this->set( 'currency', 'EUR' );
+		$this->set( 'country', 'DE' );
+		$this->set( 'lastname', 'Tester' );
+		$this->set( 'firstname', 'Tim' );
+
+		return $this->submit()->is_approved();
+	}
 }

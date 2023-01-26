@@ -10,9 +10,13 @@ class SepaDirectDebit extends Base {
 		parent::__construct( $gateway->get_authorization_method() );
 		$this->set_data_from_gateway( $gateway );
 
-		$this->set( 'mandate_identification', $_POST['direct_debit_reference'] );
 		$this->set( 'clearingtype', 'elv' );
-		$this->set( 'iban', $_POST['direct_debit_iban'] );
+		if ( isset( $_POST['direct_debit_reference'] ) ) {
+			$this->set( 'mandate_identification', $_POST['direct_debit_reference'] );
+		}
+		if ( isset( $_POST['direct_debit_iban'] ) ) {
+			$this->set( 'iban', $_POST['direct_debit_iban'] );
+		}
 	}
 
 	/**
@@ -32,5 +36,22 @@ class SepaDirectDebit extends Base {
 		$this->set_customer_ip_from_order( $order );
 
 		return $this->submit();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function test_request_successful() {
+		$this->set( 'request', 'preauthorization' );
+		$this->set( 'reference', 'test' . $this->get( 'clearingtype' ) . '_' . ( random_int( time() - 1000, time() ) ) );
+		$this->set( 'amount', 100 );
+		$this->set( 'currency', 'EUR' );
+		$this->set( 'bankaccount', '2599100003' );
+		$this->set( 'bankcountry', 'DE' );
+		$this->set( 'country', 'DE' );
+		$this->set( 'lastname', 'Tester' );
+		$this->set( 'firstname', 'Tim' );
+
+		return $this->submit()->is_approved();
 	}
 }
