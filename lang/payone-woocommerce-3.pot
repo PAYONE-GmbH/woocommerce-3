@@ -5,11 +5,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PAYONE v1.0.0\n"
-"\n"
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2023-01-30 08:36+0000\n"
+"POT-Creation-Date: 2023-01-30 19:47+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
@@ -126,7 +125,7 @@ msgstr ""
 #: views/gateway/ratepay/open-invoice-payment-form.php:8
 #: views/gateway/ratepay/installments-payment-form.php:180
 #: views/gateway/ratepay/direct-debit-payment-form.php:8
-#: views/gateway/payla/secured-installment-payment-form.php:60
+#: views/gateway/payla/secured-installment-payment-form.php:64
 #: views/gateway/payla/secured-invoice-payment-form.php:27
 msgid "Birthday"
 msgstr ""
@@ -452,7 +451,7 @@ msgstr ""
 #: views/gateway/ratepay/installments-payment-form.php:189
 #: views/gateway/ratepay/direct-debit-payment-form.php:17
 #: views/gateway/giropay/payment-form.php:7
-#: views/gateway/payla/secured-installment-payment-form.php:68
+#: views/gateway/payla/secured-installment-payment-form.php:72
 #: views/gateway/sepa-direct-debit/payment-form.php:7
 #: src/Payone/Gateway/GatewayBase.php:661
 msgid "IBAN"
@@ -952,6 +951,10 @@ msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:30 src/Payone/Gateway/CreditCard.php:298
 msgid "Select"
+msgstr ""
+
+#: views/gateway/payla/secured-installment-payment-form.php:16
+msgid "Select the number of payments"
 msgstr ""
 
 #: src/Payone/Admin/TransactionLogListTable.php:12

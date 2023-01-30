@@ -9,7 +9,7 @@ msgstr ""
 "Language: de_CH_informal\n"
 "Language-Team: Deutsch (Schweiz, Du)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2023-01-30 08:37+0000\n"
+"PO-Revision-Date: 2023-01-30 19:49+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
@@ -126,7 +126,7 @@ msgstr "BIC"
 #: views/gateway/ratepay/open-invoice-payment-form.php:8
 #: views/gateway/ratepay/installments-payment-form.php:180
 #: views/gateway/ratepay/direct-debit-payment-form.php:8
-#: views/gateway/payla/secured-installment-payment-form.php:60
+#: views/gateway/payla/secured-installment-payment-form.php:64
 #: views/gateway/payla/secured-invoice-payment-form.php:27
 msgid "Birthday"
 msgstr "Geburtstag"
@@ -464,7 +464,7 @@ msgstr ""
 #: views/gateway/ratepay/installments-payment-form.php:189
 #: views/gateway/ratepay/direct-debit-payment-form.php:17
 #: views/gateway/giropay/payment-form.php:7
-#: views/gateway/payla/secured-installment-payment-form.php:68
+#: views/gateway/payla/secured-installment-payment-form.php:72
 #: views/gateway/sepa-direct-debit/payment-form.php:7
 #: src/Payone/Gateway/GatewayBase.php:661
 msgid "IBAN"
@@ -968,6 +968,10 @@ msgstr "Gesicherter Rechnungskauf"
 #: src/Payone/Gateway/CreditCard.php:30 src/Payone/Gateway/CreditCard.php:298
 msgid "Select"
 msgstr "Auswahl"
+
+#: views/gateway/payla/secured-installment-payment-form.php:16
+msgid "Select the number of payments"
+msgstr "Wähle die Anzahl der Raten"
 
 #: src/Payone/Admin/TransactionLogListTable.php:12
 msgid "Sequencenumber"

@@ -13,13 +13,13 @@
         payone_block();
         jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-secured-installment-options' ] ); ?>', function ( result ) {
             result = jQuery.parseJSON(result);
-            var html = '<fieldset class="validate-required">';
+            var html = '<fieldset class="validate-required"><label><?php  _e( 'Select the number of payments', 'payone-woocommerce-3' ); ?></label>';
             for (let i = 0; i<result.length; i++) {
                 jQuery('#payone_secured_installment_workorderid').val(result[i].workorderid);
-                html += '<h4><input class="input-radio" style="margin-right:10px;" type="radio" id="payone_secured_installment_option_' + i + '" name="payone_secured_installment_option" value="' + result[i].option_id + '">';
+                html += '<h4 style="margin-top:1em"><input class="input-radio" style="margin-right:10px;" type="radio" id="payone_secured_installment_option_' + i + '" name="payone_secured_installment_option" value="' + result[i].option_id + '" onclick="payone_secured_installement_option_selected(this.value);">';
                 html += '<label for="payone_secured_installment_option_' + i + '">';
                 html += result[i].number_of_payments + ' ' + '<?php _e( 'monthly installments', 'payone-woocommerce-3' ); ?>' + ' à ' + result[i].monthly_amount + '</label></h4>';
-                html += '<table class="table">';
+                html += '<table class="payone_secured_installment_option_table" id="payone_secured_installment_option_table_' + result[i].option_id + '" class="table" style="display: none;">';
                 html += '<tr><th><?php _e( 'Total amount', 'payone-woocommerce-3' ); ?></th><td>' + result[i].total_amount_value + '</td></tr>';
                 html += '<tr><th><?php _e( 'Interest rate', 'payone-woocommerce-3' ); ?></th><td>' + result[i].nominal_interest_rate + '</td></tr>';
                 html += '<tr><th><?php _e( 'Annual percentage rate', 'payone-woocommerce-3' ); ?></th><td>' + result[i].effective_interest_rate + '</td></tr>';
@@ -47,6 +47,10 @@
         jQuery('#payoneSecuredInstallmentErrorOutput').html('<strong style="color:red">' + messages + '</strong>');
 
         return messages.length === 0;
+    }
+    function payone_secured_installement_option_selected( value ) {
+        jQuery( '.payone_secured_installment_option_table' ).hide();
+        jQuery( '#payone_secured_installment_option_table_' + value ).show();
     }
 </script>
 
