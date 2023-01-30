@@ -9,7 +9,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2023-01-30 08:24+0000\n"
+"POT-Creation-Date: 2023-01-30 08:36+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
