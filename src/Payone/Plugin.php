@@ -313,6 +313,10 @@ class Plugin {
 		if ( $this->is_secured_installment_options_callback() ) {
 			return $this->process_secured_installment_options();
 		}
+		if ( $this->is_api_settings_callback() ) {
+			$this->process_check_api_settings_callback();
+			exit;
+		}
 
 		$response = 'ERROR';
 		if ( $this->request_is_from_payone() ) {
@@ -387,6 +391,34 @@ class Plugin {
 		}
 
 		return apply_filters( 'payone_request_is_from_payone', $result );
+	}
+
+	private function is_api_settings_callback() {
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-test-api-settings' ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private function process_check_api_settings_callback() {
+		$result = false;
+
+		$gateway_id = $_POST['gateway_id'];
+
+		$gateway = self::find_gateway( $gateway_id );
+		if ( $gateway ) {
+			$result = $gateway->payone_api_settings_are_valid( true );
+		}
+
+		$message = $result ? __( 'successful', 'payone-woocommerce-3' ) : __( 'failed', 'payone-woocommerce-3' ) ;
+
+		echo json_encode( [
+			'gateway_id' => $gateway_id,
+			'message' => $message,
+			'result' => $result,
+		] );
+		exit;
 	}
 
 	/**

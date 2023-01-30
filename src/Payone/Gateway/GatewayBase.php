@@ -10,6 +10,7 @@ use Payone\Transaction\Debit;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
 	const TRANSIENT_KEY_SELECT_GATEWAY = 'payone_select_gateway';
+    const OPTION_KEY_API_VALUES_VALID = 'payone_api_values_valid';
 
 	/**
 	 * @var array
@@ -20,6 +21,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @var bool
 	 */
 	protected $hide_when_no_shipping;
+
+	/**
+	 * @var string
+	 */
+    protected $test_transaction_classname;
 
 	/**
 	 * @var string 0 or 1
@@ -82,11 +88,12 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	private $text_on_booking_statement;
 
 	public function __construct( $id ) {
-		$this->id                    = $id;
-		$this->has_fields            = true;
-		$this->supports              = [ 'products', 'refunds' ];
-		$this->global_settings       = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-		$this->hide_when_no_shipping = false;
+		$this->id                         = $id;
+		$this->has_fields                 = true;
+		$this->supports                   = [ 'products', 'refunds' ];
+		$this->global_settings            = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+        $this->hide_when_no_shipping      = false;
+        $this->test_transaction_classname = '';
 
 		$this->init_settings();
 		$this->init_form_fields();
@@ -100,6 +107,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$this->process_global_settings();
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
+		$this->display_errors();
 	}
 
 	public static function add( $methods ) {
@@ -108,9 +116,47 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $methods;
 	}
 
-	public function get_mode()
-    {
-        return $this->global_settings['mode'];
+	public function get_mode() {
+		return $this->global_settings['mode'];
+	}
+
+	public function admin_options() {
+        parent::admin_options();
+
+		if ( !$this->payone_api_settings_are_valid( true ) ) {
+			$this->add_error( __('Connection to PAYONE API failed', 'payone-woocommerce-3') );
+			$this->display_errors();
+		}
+	}
+
+    public function payone_is_testable() {
+        return $this->test_transaction_classname
+               && method_exists( $this->test_transaction_classname, 'test_request_successful' );
+    }
+
+	/**
+	 * @return bool
+	 */
+    public function payone_api_settings_are_valid( $force = false ) {
+	    $test_result = true;
+
+        if ( $this->payone_is_testable() ) {
+            $transient_key = self::OPTION_KEY_API_VALUES_VALID . '_' . $this->id;
+
+            $test_result = false;
+	        $transient_result = null;
+            if ( $force === false ) {
+                $transient_result = get_transient( $transient_key ); // is false, when transient not found
+                $test_result = 'yes' === $transient_result;
+            }
+            if ( $force === true || $transient_result === false ) {
+	            $test_result = ( new $this->test_transaction_classname( $this ) )
+		            ->test_request_successful();
+	            set_transient( $transient_key, $test_result ? 'yes' : 'no', 60*60 ); // 1 hour caching
+            }
+	    }
+
+        return $test_result;
     }
 
 	/**
@@ -238,6 +284,10 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
 			$is_available = in_array( $country, $this->countries, true );
 		}
+
+        if ( $is_available ) {
+            $is_available = $this->payone_api_settings_are_valid();
+        }
 
 		return $is_available;
 	}

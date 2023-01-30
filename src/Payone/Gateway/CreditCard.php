@@ -14,6 +14,7 @@ class CreditCard extends RedirectGatewayBase {
 		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-creditcard.png';
 		$this->method_title       = 'PAYONE ' . __( 'Credit Card', 'payone-woocommerce-3' );
 		$this->method_description = '';
+		$this->test_transaction_classname = \Payone\Transaction\CreditCard::class;
 	}
 
 	public function init_form_fields() {
