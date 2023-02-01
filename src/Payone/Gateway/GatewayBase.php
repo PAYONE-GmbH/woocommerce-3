@@ -2,7 +2,6 @@
 
 namespace Payone\Gateway;
 
-use Automattic\WooCommerce\Admin\Overrides\OrderRefund;
 use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Capture;
@@ -41,6 +40,16 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @var float
 	 */
 	private $min_amount;
+
+	/**
+	 * @var float
+	 */
+    protected $min_amount_validation = 0;
+
+	/**
+	 * @var float
+	 */
+	protected $max_amount_validation = 0;
 
 	/**
 	 * @var string
@@ -106,6 +115,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
 		$this->process_global_settings();
 
+        add_action( 'woocommerce_settings_api_sanitized_fields_' . $this->id, [ $this, 'validate_admin_options' ] );
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
 		$this->display_errors();
 	}
@@ -325,12 +335,12 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			'min_amount'                => [
 				'title'   => __( 'Minimum order value', 'payone-woocommerce-3' ),
 				'type'    => 'text',
-				'default' => '0',
+				'default' => $this->min_amount_validation,
 			],
 			'max_amount'                => [
 				'title'   => __( 'Maximum order value', 'payone-woocommerce-3' ),
 				'type'    => 'text',
-				'default' => '0',
+				'default' => $this->max_amount_validation,
 			],
 			'authorization_method'      => [
 				'title'   => __( 'Method of Authorization', 'payone-woocommerce-3' ),
@@ -417,6 +427,25 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			$this->form_fields['authorization_method']['default'] = 'preauthorization';
 		}
 	}
+
+    public function validate_admin_options( $options ) {
+        if ( (int) round( $this->min_amount_validation ) !== 0 ) {
+	        $min_amount = isset( $options['min_amount'] ) ? $options['min_amount'] : $this->min_amount_validation;
+	        if ( $min_amount < $this->min_amount_validation ) {
+		        \WC_Admin_Settings::add_error( sprintf( __( 'The minimum order value must not be lower than %d', 'payone-woocommerce-3' ), $this->min_amount_validation ) );
+		        $options['min_amount'] = $this->min_amount_validation;
+	        }
+        }
+	    if ( (int) round( $this->max_amount_validation ) !== 0 ) {
+		    $max_amount = isset( $options['max_amount'] ) ? $options['max_amount'] : $this->max_amount_validation;
+		    if ( $max_amount > $this->max_amount_validation || $max_amount < 0.01 ) {
+			    \WC_Admin_Settings::add_error( sprintf( __( 'The maximum order value must not be higher than %d', 'payone-woocommerce-3' ), $this->max_amount_validation ) );
+			    $options['max_amount'] = $this->max_amount_validation;
+		    }
+	    }
+
+        return $options;
+    }
 
 	/**
 	 * @return string

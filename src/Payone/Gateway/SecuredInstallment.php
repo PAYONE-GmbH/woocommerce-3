@@ -9,6 +9,9 @@ class SecuredInstallment extends GatewayBase {
 	const GATEWAY_ID = 'payone_secured_installment';
 	const PAYLA_PARTNER_ID = 'e7yeryF2of8X';
 
+	protected $min_amount_validation = 200;
+	protected $max_amount_validation = 3500;
+
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
@@ -48,28 +51,6 @@ class SecuredInstallment extends GatewayBase {
 				];
 				$i++;
 			}
-			/*
-			$result = [
-				'annual_percentage_rate' => number_format_i18n( $response->get( 'add_paydata[annual-percentage-rate]' ), 2 ),
-				'interest_amount'        => number_format_i18n( $response->get( 'add_paydata[interest-amount]' ), 2 ),
-				'amount'                 => number_format_i18n( $response->get( 'add_paydata[amount]' ), 2 ),
-				'number_of_rates'        => $response->get( 'add_paydata[number-of-rates]' ),
-				'rate'                   => number_format_i18n( $response->get( 'add_paydata[rate]' ), 2 ),
-				'payment_firstday'       => $response->get( 'add_paydata[payment-firstday]' ),
-				'interest_rate'          => number_format_i18n( $response->get( 'add_paydata[interest-rate]' ), 2 ),
-				'monthly_debit_interest' => number_format_i18n( $response->get( 'add_paydata[monthly-debit-interest]' ), 2 ),
-				'last_rate'              => number_format_i18n( $response->get( 'add_paydata[last-rate]' ), 2 ),
-				'service_charge'         => number_format_i18n( $response->get( 'add_paydata[service-charge]' ), 2 ),
-				'total_amount'           => number_format_i18n( $response->get( 'add_paydata[total-amount]' ), 2 ),
-				'form'                   => [
-					'installment_amount'      => $response->get( 'add_paydata[rate]' ),
-					'installment_number'      => $response->get( 'add_paydata[number-of-rates]' ),
-					'last_installment_amount' => $response->get( 'add_paydata[last-rate]' ),
-					'interest_rate'           => 100 * $response->get( 'add_paydata[interest-rate]' ),
-					'amount'                  => $response->get( 'add_paydata[total-amount]' ),
-				],
-			];
-			*/
 
 			echo json_encode( $result );
 			exit;

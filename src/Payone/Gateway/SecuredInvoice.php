@@ -9,6 +9,9 @@ class SecuredInvoice extends GatewayBase {
 	const GATEWAY_ID = 'payone_secured_invoice';
 	const PAYLA_PARTNER_ID = 'e7yeryF2of8X';
 
+	protected $min_amount_validation = 10;
+	protected $max_amount_validation = 1500;
+
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
