@@ -438,9 +438,8 @@ class CreditCard extends RedirectGatewayBase {
 	}
 
 	public function payment_fields() {
-		$global_settings = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 		$options         = [
-			'mode'        => $global_settings['mode'],
+			'mode'        => $this->get_mode(),
 			'merchant_id' => $this->get_merchant_id(),
 			'account_id'  => $this->get_account_id(),
 			'portal_id'   => $this->get_portal_id(),
