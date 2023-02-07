@@ -28,6 +28,7 @@ class RatepayOpenInvoice extends RatepayBase {
 	public function payment_fields() {
 		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/ratepay/open-invoice-payment-form.php';
 	}
 

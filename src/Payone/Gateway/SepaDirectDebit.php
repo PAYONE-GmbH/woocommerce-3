@@ -51,6 +51,7 @@ class SepaDirectDebit extends GatewayBase {
 	}
 
 	public function payment_fields() {
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/sepa-direct-debit/payment-form.php';
 	}
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2023-02-01 15:00+0000\n"
+"POT-Creation-Date: 2023-02-07 08:53+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
@@ -71,7 +71,7 @@ msgid "AmEX"
 msgstr ""
 
 #: views/gateway/ratepay/installments-payment-form.php:145
-#: views/gateway/payla/secured-installment-payment-form.php:25
+#: views/gateway/payla/secured-installment-payment-form.php:29
 msgid "Annual percentage rate"
 msgstr ""
 
@@ -125,7 +125,7 @@ msgstr ""
 #: views/gateway/ratepay/open-invoice-payment-form.php:8
 #: views/gateway/ratepay/installments-payment-form.php:180
 #: views/gateway/ratepay/direct-debit-payment-form.php:8
-#: views/gateway/payla/secured-installment-payment-form.php:64
+#: views/gateway/payla/secured-installment-payment-form.php:68
 #: views/gateway/payla/secured-invoice-payment-form.php:27
 msgid "Birthday"
 msgstr ""
@@ -451,7 +451,7 @@ msgstr ""
 #: views/gateway/ratepay/installments-payment-form.php:189
 #: views/gateway/ratepay/direct-debit-payment-form.php:17
 #: views/gateway/giropay/payment-form.php:7
-#: views/gateway/payla/secured-installment-payment-form.php:72
+#: views/gateway/payla/secured-installment-payment-form.php:76
 #: views/gateway/sepa-direct-debit/payment-form.php:7
 #: src/Payone/Gateway/GatewayBase.php:690
 msgid "IBAN"
@@ -500,7 +500,7 @@ msgid "Interest amount"
 msgstr ""
 
 #: views/gateway/ratepay/installments-payment-form.php:149
-#: views/gateway/payla/secured-installment-payment-form.php:24
+#: views/gateway/payla/secured-installment-payment-form.php:28
 msgid "Interest rate"
 msgstr ""
 
@@ -558,7 +558,7 @@ msgstr ""
 msgid "Length"
 msgstr ""
 
-#: views/gateway/payla/secured-installment-payment-form.php:26
+#: views/gateway/payla/secured-installment-payment-form.php:30
 msgid "Link to credit information"
 msgstr ""
 
@@ -643,9 +643,12 @@ msgstr ""
 msgid "Moment of assessment"
 msgstr ""
 
+#: views/gateway/payla/secured-installment-payment-form.php:26
+msgid "Monthly amount"
+msgstr ""
+
 #: views/gateway/ratepay/installments-payment-form.php:121
 #: views/gateway/ratepay/installments-payment-form.php:159
-#: views/gateway/payla/secured-installment-payment-form.php:21
 msgid "monthly installments"
 msgstr ""
 
@@ -675,6 +678,10 @@ msgstr ""
 msgid "Number of monthly installments"
 msgstr ""
 
+#: views/gateway/payla/secured-installment-payment-form.php:25
+msgid "Number of payments"
+msgstr ""
+
 #: src/Payone/Gateway/CreditCard.php:27
 msgid "Numeric"
 msgstr ""
@@ -690,6 +697,10 @@ msgstr ""
 
 #: src/Payone/Gateway/CreditCard.php:28
 msgid "Password"
+msgstr ""
+
+#: views/gateway/payla/secured-installment-payment-form.php:20
+msgid "Payable in __num_installments__ installments, each __monthly_amount__"
 msgstr ""
 
 #: src/Payone/Gateway/PayDirekt.php:14 src/Payone/Gateway/PayDirekt.php:19
@@ -812,16 +823,16 @@ msgstr ""
 msgid "Please check this option"
 msgstr ""
 
-#: views/gateway/payla/secured-installment-payment-form.php:38
+#: views/gateway/payla/secured-installment-payment-form.php:42
 msgid "Please choose a payment plan!"
 msgstr ""
 
-#: views/gateway/payla/secured-installment-payment-form.php:41
+#: views/gateway/payla/secured-installment-payment-form.php:45
 #: views/gateway/payla/secured-invoice-payment-form.php:12
 msgid "Please enter your birthday!"
 msgstr ""
 
-#: views/gateway/payla/secured-installment-payment-form.php:44
+#: views/gateway/payla/secured-installment-payment-form.php:48
 msgid "Please enter your IBAN!"
 msgstr ""
 
@@ -1080,7 +1091,7 @@ msgstr ""
 
 #: views/gateway/ratepay/installments-payment-form.php:126
 #: views/gateway/ratepay/installments-payment-form.php:169
-#: views/gateway/payla/secured-installment-payment-form.php:23
+#: views/gateway/payla/secured-installment-payment-form.php:27
 msgid "Total amount"
 msgstr ""
 

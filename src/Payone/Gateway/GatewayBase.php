@@ -22,6 +22,16 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	protected $hide_when_no_shipping;
 
 	/**
+	 * @var bool
+	 */
+    protected $hide_when_divergent_shipping_address;
+
+	/**
+	 * @var bool
+	 */
+	protected $hide_when_b2b;
+
+	/**
 	 * @var string
 	 */
     protected $test_transaction_classname;
@@ -97,12 +107,14 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	private $text_on_booking_statement;
 
 	public function __construct( $id ) {
-		$this->id                         = $id;
-		$this->has_fields                 = true;
-		$this->supports                   = [ 'products', 'refunds' ];
-		$this->global_settings            = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-        $this->hide_when_no_shipping      = false;
-        $this->test_transaction_classname = '';
+		$this->id                                   = $id;
+		$this->has_fields                           = true;
+		$this->supports                             = [ 'products', 'refunds' ];
+		$this->global_settings                      = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+        $this->hide_when_no_shipping                = false;
+        $this->hide_when_divergent_shipping_address = false;
+        $this->hide_when_b2b                        = false;
+        $this->test_transaction_classname           = '';
 
 		$this->init_settings();
 		$this->init_form_fields();
@@ -279,6 +291,14 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				$is_available = false;
 			}
 		}
+
+		if ( $is_available && $this->hide_when_b2b && $this->is_b2b() ) {
+			$is_available = false;
+		}
+
+		if ( $is_available && $this->hide_when_divergent_shipping_address && $this->has_divergent_shipping_address() ) {
+	        $is_available = false;
+        }
 
 		if ( $is_available ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
@@ -700,5 +720,52 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			echo '<strong>' . __( 'pp.bankname', 'payone-woocommerce-3' ) . ':</strong> ';
 			echo $clearing_info['bankname'] . '<br><br>';
 		}
+	}
+
+    private function has_divergent_shipping_address() {
+	    $post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
+	    $post_data = [];
+	    parse_str( $post_data_string, $post_data );
+
+        $payone_ship_to_different_address_checkbox = isset( $post_data['payone_ship_to_different_address_checkbox'] ) ? $post_data['payone_ship_to_different_address_checkbox'] : 0;
+	    if ( $payone_ship_to_different_address_checkbox ) {
+		    $billing_first_name  = isset( $post_data['billing_first_name'] ) ? $post_data['billing_first_name'] : '';
+		    $shipping_first_name = isset( $post_data['shipping_first_name'] ) ? $post_data['shipping_first_name'] : '';
+		    $billing_last_name   = isset( $post_data['billing_last_name'] ) ? $post_data['billing_last_name'] : '';
+		    $shipping_last_name  = isset( $post_data['shipping_last_name'] ) ? $post_data['shipping_last_name'] : '';
+		    $billing_company     = isset( $post_data['billing_company'] ) ? $post_data['billing_company'] : '';
+		    $shipping_company    = isset( $post_data['shipping_company'] ) ? $post_data['shipping_company'] : '';
+		    $billing_address_1   = isset( $post_data['billing_address_1'] ) ? $post_data['billing_address_1'] : '';
+		    $shipping_address_1  = isset( $post_data['shipping_address_1'] ) ? $post_data['shipping_address_1'] : '';
+		    $billing_address_2   = isset( $post_data['billing_address_2'] ) ? $post_data['billing_address_2'] : '';
+		    $shipping_address_2  = isset( $post_data['shipping_address_2'] ) ? $post_data['shipping_address_2'] : '';
+		    $billing_city        = isset( $post_data['billing_city'] ) ? $post_data['billing_city'] : '';
+		    $shipping_city       = isset( $post_data['shipping_city'] ) ? $post_data['shipping_city'] : '';
+		    $billing_postcode    = isset( $post_data['billing_postcode'] ) ? $post_data['billing_postcode'] : '';
+		    $shipping_postcode   = isset( $post_data['shipping_postcode'] ) ? $post_data['shipping_postcode'] : '';
+		    $billing_country     = isset( $post_data['billing_country'] ) ? $post_data['billing_country'] : '';
+		    $shipping_country    = isset( $post_data['shipping_country'] ) ? $post_data['shipping_country'] : '';
+
+		    return $billing_first_name !== $shipping_first_name
+		           || $billing_last_name !== $shipping_last_name
+		           || $billing_company !== $shipping_company
+		           || $billing_address_1 !== $shipping_address_1
+		           || $billing_address_2 !== $shipping_address_2
+		           || $billing_city !== $shipping_city
+		           || $billing_postcode !== $shipping_postcode
+		           || $billing_country !== $shipping_country;
+	    }
+
+        return false;
+    }
+
+	private function is_b2b() {
+		$post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
+        $post_data = [];
+        parse_str( $post_data_string, $post_data );
+
+        $billing_company = isset( $post_data['billing_company'] ) ? $post_data['billing_company'] : '';
+
+        return $billing_company !== '';
 	}
 }

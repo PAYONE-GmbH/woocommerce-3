@@ -16,10 +16,14 @@
             var html = '<fieldset class="validate-required"><label><?php  _e( 'Select the number of payments', 'payone-woocommerce-3' ); ?></label>';
             for (let i = 0; i<result.length; i++) {
                 jQuery('#payone_secured_installment_workorderid').val(result[i].workorderid);
-                html += '<h4 style="margin-top:1em"><input class="input-radio" style="margin-right:10px;" type="radio" id="payone_secured_installment_option_' + i + '" name="payone_secured_installment_option" value="' + result[i].option_id + '" onclick="payone_secured_installement_option_selected(this.value);">';
-                html += '<label for="payone_secured_installment_option_' + i + '">';
-                html += result[i].number_of_payments + ' ' + '<?php _e( 'monthly installments', 'payone-woocommerce-3' ); ?>' + ' à ' + result[i].monthly_amount + '</label></h4>';
+                html += '<div style="margin-top:1em"><input class="input-radio" style="margin-right:10px;" type="radio" id="payone_secured_installment_option_' + i + '" name="payone_secured_installment_option" value="' + result[i].option_id + '" onclick="payone_secured_installement_option_selected(this.value);">';
+                let headline = '<?php _e( 'Payable in __num_installments__ installments, each __monthly_amount__', 'payone-woocommerce-3' ); ?>';
+                headline = headline.replace( '__num_installments__', result[i].number_of_payments );
+                headline = headline.replace( '__monthly_amount__', result[i].monthly_amount );
+                html += '<label for="payone_secured_installment_option_' + i + '">' + headline + '</label></div>';
                 html += '<table class="payone_secured_installment_option_table" id="payone_secured_installment_option_table_' + result[i].option_id + '" class="table" style="display: none;">';
+                html += '<tr><th><?php _e( 'Number of payments', 'payone-woocommerce-3' ); ?></th><td>' + result[i].number_of_payments + '</td></tr>';
+                html += '<tr><th><?php _e( 'Monthly rate', 'payone-woocommerce-3' ); ?></th><td>' + result[i].monthly_amount + '</td></tr>';
                 html += '<tr><th><?php _e( 'Total amount', 'payone-woocommerce-3' ); ?></th><td>' + result[i].total_amount_value + '</td></tr>';
                 html += '<tr><th><?php _e( 'Interest rate', 'payone-woocommerce-3' ); ?></th><td>' + result[i].nominal_interest_rate + '</td></tr>';
                 html += '<tr><th><?php _e( 'Annual percentage rate', 'payone-woocommerce-3' ); ?></th><td>' + result[i].effective_interest_rate + '</td></tr>';

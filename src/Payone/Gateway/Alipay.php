@@ -24,6 +24,7 @@ class Alipay extends RedirectGatewayBase {
 	public function payment_fields() {
 		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/alipay/payment-form.php';
 	}
 

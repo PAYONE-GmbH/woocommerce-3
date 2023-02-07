@@ -18,6 +18,9 @@ class SecuredInvoice extends GatewayBase {
 		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';
 		$this->method_title       = 'PAYONE ' . __( 'Secured Invoice', 'payone-woocommerce-3' );
 		$this->method_description = '';
+
+		$this->hide_when_divergent_shipping_address = true;
+		$this->hide_when_b2b                        = true;
 	}
 
 	public function init_form_fields() {
@@ -28,6 +31,7 @@ class SecuredInvoice extends GatewayBase {
 		$environment = $this->get_mode() === 'live' ? 'p' : 't';
 		$snippet_token = self::PAYLA_PARTNER_ID . $this->get_merchant_id() . md5(uniqid('payone_secured_invioce', true));
 
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/payla/secured-invoice-payment-form.php';
 	}
 

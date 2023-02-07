@@ -9,7 +9,7 @@ msgstr ""
 "Language: de_CH_informal\n"
 "Language-Team: Deutsch (Schweiz, Du)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2023-02-01 15:05+0000\n"
+"PO-Revision-Date: 2023-02-07 09:00+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
@@ -72,7 +72,7 @@ msgid "AmEX"
 msgstr "AmEX"
 
 #: views/gateway/ratepay/installments-payment-form.php:145
-#: views/gateway/payla/secured-installment-payment-form.php:25
+#: views/gateway/payla/secured-installment-payment-form.php:29
 msgid "Annual percentage rate"
 msgstr "Effektiver Jahreszins"
 
@@ -126,7 +126,7 @@ msgstr "BIC"
 #: views/gateway/ratepay/open-invoice-payment-form.php:8
 #: views/gateway/ratepay/installments-payment-form.php:180
 #: views/gateway/ratepay/direct-debit-payment-form.php:8
-#: views/gateway/payla/secured-installment-payment-form.php:64
+#: views/gateway/payla/secured-installment-payment-form.php:68
 #: views/gateway/payla/secured-invoice-payment-form.php:27
 msgid "Birthday"
 msgstr "Geburtstag"
@@ -464,7 +464,7 @@ msgstr ""
 #: views/gateway/ratepay/installments-payment-form.php:189
 #: views/gateway/ratepay/direct-debit-payment-form.php:17
 #: views/gateway/giropay/payment-form.php:7
-#: views/gateway/payla/secured-installment-payment-form.php:72
+#: views/gateway/payla/secured-installment-payment-form.php:76
 #: views/gateway/sepa-direct-debit/payment-form.php:7
 #: src/Payone/Gateway/GatewayBase.php:690
 msgid "IBAN"
@@ -513,7 +513,7 @@ msgid "Interest amount"
 msgstr "Zinsbetrag"
 
 #: views/gateway/ratepay/installments-payment-form.php:149
-#: views/gateway/payla/secured-installment-payment-form.php:24
+#: views/gateway/payla/secured-installment-payment-form.php:28
 msgid "Interest rate"
 msgstr "Sollzinssatz p.a. (gebunden)"
 
@@ -571,7 +571,7 @@ msgstr ""
 msgid "Length"
 msgstr "Länge"
 
-#: views/gateway/payla/secured-installment-payment-form.php:26
+#: views/gateway/payla/secured-installment-payment-form.php:30
 msgid "Link to credit information"
 msgstr "Link zu den Kreditinformationen"
 
@@ -656,9 +656,12 @@ msgstr "Modus"
 msgid "Moment of assessment"
 msgstr ""
 
+#: views/gateway/payla/secured-installment-payment-form.php:26
+msgid "Monthly amount"
+msgstr ""
+
 #: views/gateway/ratepay/installments-payment-form.php:121
 #: views/gateway/ratepay/installments-payment-form.php:159
-#: views/gateway/payla/secured-installment-payment-form.php:21
 msgid "monthly installments"
 msgstr "monatliche Raten"
 
@@ -688,6 +691,10 @@ msgstr ""
 msgid "Number of monthly installments"
 msgstr "Laufzeit"
 
+#: views/gateway/payla/secured-installment-payment-form.php:25
+msgid "Number of payments"
+msgstr "Ratenanzahl"
+
 #: src/Payone/Gateway/CreditCard.php:27
 msgid "Numeric"
 msgstr "Numerisch"
@@ -704,6 +711,10 @@ msgstr ""
 #: src/Payone/Gateway/CreditCard.php:28
 msgid "Password"
 msgstr "Passwort"
+
+#: views/gateway/payla/secured-installment-payment-form.php:20
+msgid "Payable in __num_installments__ installments, each __monthly_amount__"
+msgstr "Bezahlung in __num_installments__ Raten je __monthly_amount__"
 
 #: src/Payone/Gateway/PayDirekt.php:14 src/Payone/Gateway/PayDirekt.php:19
 msgid "paydirekt"
@@ -828,16 +839,16 @@ msgstr "Persönliche Ratenberechnung"
 msgid "Please check this option"
 msgstr "Du musst diese Checkbox ankreuzen, um fortfahren zu können"
 
-#: views/gateway/payla/secured-installment-payment-form.php:38
+#: views/gateway/payla/secured-installment-payment-form.php:42
 msgid "Please choose a payment plan!"
 msgstr "Wähle bitte eine der Varianten!"
 
-#: views/gateway/payla/secured-installment-payment-form.php:41
+#: views/gateway/payla/secured-installment-payment-form.php:45
 #: views/gateway/payla/secured-invoice-payment-form.php:12
 msgid "Please enter your birthday!"
 msgstr "Gib bitte Deinen Geburtstag ein!"
 
-#: views/gateway/payla/secured-installment-payment-form.php:44
+#: views/gateway/payla/secured-installment-payment-form.php:48
 msgid "Please enter your IBAN!"
 msgstr "Gib bitte Deine IBAN ein!"
 
@@ -1096,7 +1107,7 @@ msgstr "Die PAYONE Plattform hat eine Umbuchung registriert"
 
 #: views/gateway/ratepay/installments-payment-form.php:126
 #: views/gateway/ratepay/installments-payment-form.php:169
-#: views/gateway/payla/secured-installment-payment-form.php:23
+#: views/gateway/payla/secured-installment-payment-form.php:27
 msgid "Total amount"
 msgstr "Gesamtbetrag"
 

@@ -24,6 +24,11 @@
 
     return '';
 }
+    function payone_listen_to_company_change() {
+        jQuery( '#billing_company,#shipping_company' ).change( function() {
+            jQuery( 'form.checkout' ).trigger( 'update_checkout' );
+        } );
+}
     function payone_klarna_category_was_chosen() {
     var current_gateway = jQuery('input[name=payment_method]:checked').val();
 
@@ -51,6 +56,7 @@
 }
 
     jQuery('form.woocommerce-checkout').change(function (event) {
+    jQuery('input[name="payone_ship_to_different_address_checkbox"]').val( jQuery('#ship-to-different-address-checkbox').prop('checked') ? 1 : 0 );
     if ( payone_secured_installment_was_chosen() && typeof payone_secured_installment_options_setup === 'function' ) {
        payone_secured_installment_options_setup();
     }
@@ -96,6 +102,8 @@
 
     jQuery(document).ready(function () {
     var payone_payment_methods_initialized = false;
+
+    payone_listen_to_company_change();
 
     if (select_gateway_after_redirect) {
     var current_gateway = jQuery('input[name=payment_method]:checked').val();
