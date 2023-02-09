@@ -24,6 +24,7 @@ class KlarnaSofort extends KlarnaBase {
 	public function payment_fields() {
 		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include_once PAYONE_VIEW_PATH . '/gateway/klarna/common.php';
 		include PAYONE_VIEW_PATH . '/gateway/klarna/sofort-payment-form.php';
 	}

@@ -447,6 +447,7 @@ class CreditCard extends RedirectGatewayBase {
 		];
 		$hash            = $this->calculate_hash( $options );
 
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/creditcard/payment-form.php';
 	}
 

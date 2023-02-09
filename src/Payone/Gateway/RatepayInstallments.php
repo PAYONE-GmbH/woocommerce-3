@@ -38,6 +38,7 @@ class RatepayInstallments extends RatepayBase {
 			$currency = '€';
 		}
 
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/ratepay/installments-payment-form.php';
 	}
 

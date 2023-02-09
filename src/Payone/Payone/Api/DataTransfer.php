@@ -115,6 +115,8 @@ class DataTransfer {
 		}
 
 		$order->update_meta_data( self::META_KEY_PAYONE_REFERENCES, $references );
+		$order->save_meta_data();
+
 		$this->set( 'reference', $new_reference );
 
 		return $this;

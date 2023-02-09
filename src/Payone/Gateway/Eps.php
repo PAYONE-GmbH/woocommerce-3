@@ -53,6 +53,7 @@ class Eps extends RedirectGatewayBase {
 			'EPS_VKB'       => 'Volkskreditbank AG',
 		];
 
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/eps/payment-form.php';
 	}
 
