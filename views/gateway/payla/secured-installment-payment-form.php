@@ -44,8 +44,8 @@
         if ( jQuery('#payone_secured_installment_birthday').val() === '' ) {
             messages += '<?php _e( 'Please enter your birthday!', 'payone-woocommerce-3' ); ?><br>';
         }
-        if ( jQuery('#payone_secured_installment_iban').val() === '' ) {
-            messages += '<?php _e( 'Please enter your IBAN!', 'payone-woocommerce-3' ); ?><br>';
+        if ( ! payone_valid_iban( jQuery('#payone_secured_installment_iban').val() ) ) {
+            messages += '<?php _e( 'Please enter a valid IBAN!', 'payone-woocommerce-3' ); ?><br>';
         }
 
         jQuery('#payoneSecuredInstallmentErrorOutput').html('<strong style="color:red">' + messages + '</strong>');
