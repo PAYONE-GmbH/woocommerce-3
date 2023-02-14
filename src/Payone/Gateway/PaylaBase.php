@@ -1,0 +1,55 @@
+<?php
+
+namespace Payone\Gateway;
+
+use Payone\Payone\Api\TransactionStatus;
+
+class PaylaBase extends GatewayBase {
+	const PAYLA_PARTNER_ID = 'e7yeryF2of8X';
+
+	public function __construct( $id ) {
+		parent::__construct( $id );
+
+		$this->hide_when_divergent_shipping_address = true;
+		$this->hide_when_b2b                        = true;
+	}
+
+	/**
+	 * @param TransactionStatus $transaction_status
+	 */
+	public function process_transaction_status( TransactionStatus $transaction_status ) {
+		parent::process_transaction_status( $transaction_status );
+
+		if ( $transaction_status->no_further_action_necessary() ) {
+			return;
+		}
+
+		$order = $transaction_status->get_order();
+
+		if ( $transaction_status->is_overpaid() ) {
+			$order->add_order_note( __( 'Payment received. Customer overpaid!', 'payone-woocommerce-3' ) );
+			$order->payment_complete();
+		} elseif ( $transaction_status->is_underpaid() ) {
+			$order->add_order_note( __( 'Payment received. Customer underpaid!', 'payone-woocommerce-3' ) );
+		} elseif ( $transaction_status->is_paid() ) {
+			$order->add_order_note( __( 'Payment received.', 'payone-woocommerce-3' ) );
+			$order->payment_complete();
+		}
+	}
+
+	public function order_status_changed( \WC_Order $order, $from_status, $to_status ) {
+		$authorization_method = $order->get_meta( '_authorization_method' );
+
+		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
+			$this->capture( $order );
+		}
+	}
+
+	protected function get_error_message( \Payone\Payone\Api\Response $response ) {
+		if ( $response->get_error_code() === 307 ) {
+			return __( 'This payment method is not available. Please select another.', 'payone-woocommerce-3' );
+		}
+
+		return $response->get_error_message();
+	}
+}

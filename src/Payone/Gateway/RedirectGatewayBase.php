@@ -80,7 +80,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 			// we are processing the payment as regular.
 			if ( $response->has_error() ) {
 				// According to the WooCommerce docs we just return nothing to indicate a payment error
-				wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(), 'error' );
+				wc_add_notice( $this->get_error_message( $response ), 'error' );
 			} else {
 				// No error, complete the payment
 				$this->handle_successfull_payment( $order );

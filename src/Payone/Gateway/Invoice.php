@@ -35,8 +35,7 @@ class Invoice extends GatewayBase {
 		$response = $transaction->execute( $order );
 
 		if ( $response->has_error() ) {
-			wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message(),
-				'error' );
+			wc_add_notice( $this->get_error_message( $response ), 'error' );
 
 			return;
 		}
