@@ -8,18 +8,18 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2023-02-09 09:02+0000\n"
+"POT-Creation-Date: 2023-02-14 08:09+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
 msgid "Abort checkout"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:401
+#: src/Payone/Gateway/GatewayBase.php:405
 msgid "Account ID"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:420
+#: src/Payone/Gateway/GatewayBase.php:424
 #: src/Payone/Admin/Option/Account.php:52
 msgid "Activate PDF download"
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:375
+#: src/Payone/Gateway/GatewayBase.php:379
 msgid "Active Countries"
 msgstr ""
 
@@ -92,7 +92,7 @@ msgstr ""
 msgid "Austria"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:369
+#: src/Payone/Gateway/GatewayBase.php:373
 msgid "Authorization"
 msgstr ""
 
@@ -118,7 +118,7 @@ msgid "Before choosing payment method"
 msgstr ""
 
 #: views/gateway/giropay/payment-form.php:25
-#: src/Payone/Gateway/GatewayBase.php:712
+#: src/Payone/Gateway/GatewayBase.php:716
 msgid "BIC"
 msgstr ""
 
@@ -288,7 +288,7 @@ msgstr ""
 msgid "Customer decides"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:351
+#: src/Payone/Gateway/GatewayBase.php:355
 msgid "Customer Message"
 msgstr ""
 
@@ -305,7 +305,7 @@ msgstr ""
 msgid "Deactivated"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:261
+#: src/Payone/Gateway/GatewayBase.php:265
 msgid "Debit amount must be greater than zero."
 msgstr ""
 
@@ -370,17 +370,17 @@ msgstr ""
 msgid "Download mandate as PDF"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:429
+#: src/Payone/Gateway/GatewayBase.php:433
 #: src/Payone/Admin/Option/Account.php:57
 msgid "Dynamic invoice text"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:434
+#: src/Payone/Gateway/GatewayBase.php:438
 #: src/Payone/Admin/Option/Account.php:62
 msgid "Dynamic refund text"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:340
+#: src/Payone/Gateway/GatewayBase.php:344
 msgid "Enable this payment method"
 msgstr ""
 
@@ -453,7 +453,7 @@ msgstr ""
 #: views/gateway/giropay/payment-form.php:21
 #: views/gateway/payla/secured-installment-payment-form.php:76
 #: views/gateway/sepa-direct-debit/payment-form.php:7
-#: src/Payone/Gateway/GatewayBase.php:710
+#: src/Payone/Gateway/GatewayBase.php:714
 msgid "IBAN"
 msgstr ""
 
@@ -518,9 +518,9 @@ msgstr ""
 msgid "Invoice country"
 msgstr ""
 
-#: src/Payone/Gateway/SecuredInstallment.php:87
-#: src/Payone/Gateway/SafeInvoice.php:50 src/Payone/Gateway/Invoice.php:50
-#: src/Payone/Gateway/SecuredInvoice.php:59
+#: src/Payone/Gateway/SecuredInstallment.php:81
+#: src/Payone/Gateway/SafeInvoice.php:49 src/Payone/Gateway/Invoice.php:49
+#: src/Payone/Gateway/SecuredInvoice.php:53
 msgid "Invoice has been sent"
 msgstr ""
 
@@ -532,7 +532,7 @@ msgstr ""
 msgid "JCB"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:406
+#: src/Payone/Gateway/GatewayBase.php:410
 #: src/Payone/Admin/Option/Account.php:37
 msgid "Key"
 msgstr ""
@@ -594,11 +594,11 @@ msgstr ""
 msgid "Maximum cart value"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:361
+#: src/Payone/Gateway/GatewayBase.php:365
 msgid "Maximum order value"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:391
+#: src/Payone/Gateway/GatewayBase.php:395
 #: src/Payone/Admin/Option/Account.php:22
 msgid "Merchant ID"
 msgstr ""
@@ -607,7 +607,7 @@ msgstr ""
 msgid "Merchant-ID"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:366
+#: src/Payone/Gateway/GatewayBase.php:370
 msgid "Method of Authorization"
 msgstr ""
 
@@ -620,7 +620,7 @@ msgstr ""
 msgid "Minimum cart value"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:356
+#: src/Payone/Gateway/GatewayBase.php:360
 msgid "Minimum order value"
 msgstr ""
 
@@ -655,9 +655,9 @@ msgstr ""
 
 #: src/Payone/Gateway/SepaDirectDebit.php:37
 #: src/Payone/Gateway/SepaDirectDebit.php:46
-#: src/Payone/Gateway/CreditCard.php:23 src/Payone/Gateway/GatewayBase.php:385
-#: src/Payone/Gateway/GatewayBase.php:414
-#: src/Payone/Gateway/GatewayBase.php:423
+#: src/Payone/Gateway/CreditCard.php:23 src/Payone/Gateway/GatewayBase.php:389
+#: src/Payone/Gateway/GatewayBase.php:418
+#: src/Payone/Gateway/GatewayBase.php:427
 #: src/Payone/Admin/Option/AddressChecks.php:108
 #: src/Payone/Admin/Option/AddressChecks.php:156
 #: src/Payone/Admin/Option/CreditCheck.php:103
@@ -706,11 +706,7 @@ msgstr ""
 
 #: src/Payone/Gateway/RedirectGatewayBase.php:39
 #: src/Payone/Gateway/RedirectGatewayBase.php:47
-#: src/Payone/Gateway/RedirectGatewayBase.php:83
-#: src/Payone/Gateway/SepaDirectDebit.php:69
-#: src/Payone/Gateway/SecuredInstallment.php:75
-#: src/Payone/Gateway/SafeInvoice.php:37 src/Payone/Gateway/Invoice.php:38
-#: src/Payone/Gateway/SecuredInvoice.php:47
+#: src/Payone/Gateway/GatewayBase.php:250
 msgid "Payment error: "
 msgstr ""
 
@@ -751,23 +747,19 @@ msgstr ""
 
 #: src/Payone/Gateway/Eps.php:88 src/Payone/Gateway/SepaDirectDebit.php:195
 #: src/Payone/Gateway/SepaDirectDebit.php:197
-#: src/Payone/Gateway/SecuredInstallment.php:120
-#: src/Payone/Gateway/SafeInvoice.php:79 src/Payone/Gateway/Invoice.php:83
-#: src/Payone/Gateway/SecuredInvoice.php:92
-#: src/Payone/Gateway/PrePayment.php:72
+#: src/Payone/Gateway/SafeInvoice.php:78 src/Payone/Gateway/PaylaBase.php:35
+#: src/Payone/Gateway/Invoice.php:82 src/Payone/Gateway/PrePayment.php:72
 msgid "Payment received."
 msgstr ""
 
-#: src/Payone/Gateway/Eps.php:83 src/Payone/Gateway/SecuredInstallment.php:115
-#: src/Payone/Gateway/SafeInvoice.php:74 src/Payone/Gateway/Invoice.php:78
-#: src/Payone/Gateway/SecuredInvoice.php:87
+#: src/Payone/Gateway/Eps.php:83 src/Payone/Gateway/SafeInvoice.php:73
+#: src/Payone/Gateway/PaylaBase.php:30 src/Payone/Gateway/Invoice.php:77
 #: src/Payone/Gateway/PrePayment.php:67
 msgid "Payment received. Customer overpaid!"
 msgstr ""
 
-#: src/Payone/Gateway/Eps.php:86 src/Payone/Gateway/SecuredInstallment.php:118
-#: src/Payone/Gateway/SafeInvoice.php:77 src/Payone/Gateway/Invoice.php:81
-#: src/Payone/Gateway/SecuredInvoice.php:90
+#: src/Payone/Gateway/Eps.php:86 src/Payone/Gateway/SafeInvoice.php:76
+#: src/Payone/Gateway/PaylaBase.php:33 src/Payone/Gateway/Invoice.php:80
 #: src/Payone/Gateway/PrePayment.php:70
 msgid "Payment received. Customer underpaid!"
 msgstr ""
@@ -848,28 +840,28 @@ msgstr ""
 
 #: src/Payone/Admin/TransactionLogListTable.php:14
 #: src/Payone/Admin/ApiLogListTable.php:13
-#: src/Payone/Gateway/GatewayBase.php:396
+#: src/Payone/Gateway/GatewayBase.php:400
 #: src/Payone/Admin/Option/Account.php:27
 msgid "Portal ID"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:714
+#: src/Payone/Gateway/GatewayBase.php:718
 msgid "pp.bankaccount"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:716
+#: src/Payone/Gateway/GatewayBase.php:720
 msgid "pp.bankaccountholder"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:720
+#: src/Payone/Gateway/GatewayBase.php:724
 msgid "pp.bankname"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:718
+#: src/Payone/Gateway/GatewayBase.php:722
 msgid "pp.reference"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:370
+#: src/Payone/Gateway/GatewayBase.php:374
 msgid "Preauthorization"
 msgstr ""
 
@@ -924,7 +916,7 @@ msgstr ""
 msgid "Refund could not be processed: "
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:267
+#: src/Payone/Gateway/GatewayBase.php:271
 msgid "Refund is issued through PAYONE"
 msgstr ""
 
@@ -952,13 +944,13 @@ msgstr ""
 msgid "Secure Invoice"
 msgstr ""
 
-#: src/Payone/Gateway/SecuredInstallment.php:19
-#: src/Payone/Gateway/SecuredInstallment.php:27
+#: src/Payone/Gateway/SecuredInstallment.php:18
+#: src/Payone/Gateway/SecuredInstallment.php:23
 msgid "Secured Installment"
 msgstr ""
 
-#: src/Payone/Gateway/SecuredInvoice.php:19
-#: src/Payone/Gateway/SecuredInvoice.php:27
+#: src/Payone/Gateway/SecuredInvoice.php:18
+#: src/Payone/Gateway/SecuredInvoice.php:23
 msgid "Secured Invoice"
 msgstr ""
 
@@ -1028,7 +1020,7 @@ msgstr ""
 msgid "Subaccount ID"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:411
+#: src/Payone/Gateway/GatewayBase.php:415
 #: src/Payone/Admin/Option/Account.php:47
 msgid "Submit cart"
 msgstr ""
@@ -1060,7 +1052,7 @@ msgstr ""
 msgid "Text input"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:439
+#: src/Payone/Gateway/GatewayBase.php:443
 #: src/Payone/Admin/Option/Account.php:67
 msgid "Text on booking statement"
 msgstr ""
@@ -1069,12 +1061,12 @@ msgstr ""
 msgid "The following payment methods are enabled and can be tested:"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:462
+#: src/Payone/Gateway/GatewayBase.php:466
 #, php-format
 msgid "The maximum order value must not be higher than %d"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:455
+#: src/Payone/Gateway/GatewayBase.php:459
 #, php-format
 msgid "The minimum order value must not be lower than %d"
 msgstr ""
@@ -1089,6 +1081,10 @@ msgstr ""
 
 #: src/Payone/Gateway/GatewayBase.php:227
 msgid "The PAYONE platform has registered a rebooking"
+msgstr ""
+
+#: src/Payone/Gateway/PaylaBase.php:50
+msgid "This payment method is not available. Please select another."
 msgstr ""
 
 #: views/gateway/ratepay/installments-payment-form.php:143
@@ -1122,7 +1118,7 @@ msgstr ""
 msgid "Type of assessment"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:382
+#: src/Payone/Gateway/GatewayBase.php:386
 msgid "Use global settings"
 msgstr ""
 
@@ -1176,9 +1172,9 @@ msgstr ""
 
 #: src/Payone/Gateway/SepaDirectDebit.php:38
 #: src/Payone/Gateway/SepaDirectDebit.php:47
-#: src/Payone/Gateway/CreditCard.php:24 src/Payone/Gateway/GatewayBase.php:386
-#: src/Payone/Gateway/GatewayBase.php:415
-#: src/Payone/Gateway/GatewayBase.php:424
+#: src/Payone/Gateway/CreditCard.php:24 src/Payone/Gateway/GatewayBase.php:390
+#: src/Payone/Gateway/GatewayBase.php:419
+#: src/Payone/Gateway/GatewayBase.php:428
 #: src/Payone/Admin/Option/AddressChecks.php:109
 #: src/Payone/Admin/Option/AddressChecks.php:157
 #: src/Payone/Admin/Option/CreditCheck.php:104
@@ -1188,11 +1184,11 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:431
+#: src/Payone/Gateway/GatewayBase.php:435
 msgid "Your order No. {{order}}"
 msgstr ""
 
-#: src/Payone/Gateway/GatewayBase.php:436
-#: src/Payone/Gateway/GatewayBase.php:441
+#: src/Payone/Gateway/GatewayBase.php:440
+#: src/Payone/Gateway/GatewayBase.php:445
 msgid "Your refund No. {{order}}"
 msgstr ""

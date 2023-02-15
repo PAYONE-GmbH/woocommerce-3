@@ -246,6 +246,10 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $capture->execute( $order );
 	}
 
+    protected function get_error_message( \Payone\Payone\Api\Response $response ) {
+        return __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message();
+    }
+
 	protected function add_data_to_capture( Capture $capture, \WC_Order $order ) {
 	}
 
@@ -597,17 +601,17 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$request = new Request();
 		$request->set( 'request', 'getinvoice' );
 		$request->set( 'invoice_title', $invoice_id );
-		$result = $request->submit();
+		$response = $request->submit();
 
-		if ( ! $result->is_ok() ) {
-			wc_add_notice( $result->get_error_message(), 'error' );
+		if ( ! $response->is_ok() ) {
+			wc_add_notice( $this->get_error_message( $response ), 'error' );
 
 			return null;
 		}
 
 		$pdfFilePath = sprintf( '%s/Invoice.%s.pdf', sys_get_temp_dir(), $invoice_id );
 
-		$bytes = file_put_contents( $pdfFilePath, $result->get( '_DATA' ) );
+		$bytes = file_put_contents( $pdfFilePath, $response->get( '_DATA' ) );
 
 		if ( $bytes === false || $bytes < 1 ) {
 			return null;
