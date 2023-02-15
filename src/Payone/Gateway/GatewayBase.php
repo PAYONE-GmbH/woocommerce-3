@@ -32,6 +32,16 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	protected $hide_when_b2b;
 
 	/**
+	 * @var string[]
+	 */
+	protected $supported_countries;
+
+	/**
+	 * @var string[]
+	 */
+    protected $supported_currencies;
+
+	/**
 	 * @var string
 	 */
 	protected $test_transaction_classname;
@@ -111,6 +121,8 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$this->has_fields                           = true;
 		$this->supports                             = [ 'products', 'refunds' ];
 		$this->global_settings                      = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+        $this->supported_countries                  = (new \WC_Countries())->get_countries();
+        $this->supported_currencies                 = []; // all
 		$this->hide_when_no_shipping                = false;
 		$this->hide_when_divergent_shipping_address = false;
 		$this->hide_when_b2b                        = false;
@@ -290,6 +302,10 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			$is_available = false;
 		}
 
+        if ( $is_available && $this->supported_currencies ) {
+            $is_available = in_array( get_woocommerce_currency(), $this->supported_currencies, true );
+        }
+
 		if ( $is_available && $this->hide_when_no_shipping ) {
 			if ( ! wc_shipping_enabled() || wc_get_shipping_method_count() < 1 ) {
 				$is_available = false;
@@ -335,8 +351,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$default_account_id  = isset( $this->global_settings['account_id'] ) ? $this->global_settings['account_id'] : '';
 		$default_key         = isset( $this->global_settings['key'] ) ? $this->global_settings['key'] : '';
 
-		$countries = new \WC_Countries();
-
 		$this->form_fields = [
 			'enabled'                   => [
 				'title'   => __( 'Enable/Disable', 'woocommerce' ),
@@ -378,7 +392,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			'countries'                 => [
 				'title'   => __( 'Active Countries', 'payone-woocommerce-3' ),
 				'type'    => 'multiselect',
-				'options' => $countries->get_countries(),
+				'options' => $this->supported_countries,
 				'default' => [ 'DE', 'AT', 'CH' ],
 				'css'     => 'height:100px',
 			],
