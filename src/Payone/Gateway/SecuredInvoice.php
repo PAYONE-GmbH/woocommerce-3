@@ -20,7 +20,12 @@ class SecuredInvoice extends PaylaBase {
 	}
 
 	public function init_form_fields() {
+		$this->supported_countries = [
+			'DE' => __( 'Germany', 'woocommerce' ),
+			'AT' => __( 'Austria', 'woocommerce' ),
+		];
 		$this->init_common_form_fields( 'PAYONE ' . __( 'Secured Invoice', 'payone-woocommerce-3' ) );
+		$this->form_fields['countries']['default'] = [ 'DE', 'AT' ];
 	}
 
 	public function payment_fields() {
