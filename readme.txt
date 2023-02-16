@@ -3,8 +3,8 @@ Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
-Tested up to: 6.0.2
-Stable tag: 2.3.0
+Tested up to: 6.1.1
+Stable tag: 2.4.0
 Requires PHP: 7.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -19,13 +19,14 @@ This plugin is thoroughly tested but still in an early stage, so any feedback is
 Seamless integration into the checkout. Supports simplified PCI DSS conformity in accordance with SAQ A.
 Currently supported payment methods include:
 * Credit Card
-* Direct Debit
+* PAYONE Direct Debit
 * PayPal
 * paydirekt
-* Secure Invoice
+* PAYONE Secured Invoice
+* PAYONE Secured Installment
 * Sofort
-* Open Invoice
-* Prepayment
+* PAYONE Open Invoice
+* PAYONE Prepayment
 * Klarna
 * Ratepay
 * Trustly
@@ -68,6 +69,25 @@ If you have found anything security related, please contact our technical suppor
 
 
 == Changelog ==
+
+== 2.4.0 ==
+
+New Features
+
+* New payment method: PAYONE Secured Invoice
+* New payment method: PAYONE Secured Installment
+* Implement a API test in backend
+ 
+Maintenance
+ 
+* Rename global js variables and functions
+* Better error handling for options
+
+tested with
+
+wordpress version: 6.1.1
+woocommerce version: 7.4.0
+php version: 8.1.0
 
 == 2.3.0 ==
 
