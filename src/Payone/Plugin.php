@@ -408,7 +408,7 @@ class Plugin {
 
 		$gateway = self::find_gateway( $gateway_id );
 		if ( $gateway ) {
-			$result = $gateway->payone_api_settings_are_valid( true );
+			$result = $gateway->payone_api_settings_are_valid();
 		}
 
 		$message = $result ? __( 'successful', 'payone-woocommerce-3' ) : __( 'failed', 'payone-woocommerce-3' ) ;
