@@ -1,6 +1,6 @@
 <div class="wrap">
     <h1>
-        Payone - Einstellungen
+        PAYONE - Einstellungen
         <?php if ( count( $testable_gateways ) > 0 ) { ?>
             <a href="#TB_inline?&width=400&height=300&inlineId=payone-modal-test-api-settings" class="button thickbox">
                 <?php _e( 'Test API settings', 'payone-woocommerce-3'); ?>

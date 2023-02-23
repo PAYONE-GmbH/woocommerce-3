@@ -9,7 +9,6 @@ use Payone\Transaction\Debit;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
 	const TRANSIENT_KEY_SELECT_GATEWAY = 'payone_select_gateway';
-	const OPTION_KEY_API_VALUES_VALID = 'payone_api_values_valid';
 
 	/**
 	 * @var array
@@ -155,12 +154,12 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	}
 
 	public function admin_options() {
-		parent::admin_options();
-
-		if ( ! $this->payone_api_settings_are_valid( true ) ) {
-			$this->add_error( __( 'Connection to PAYONE API failed', 'payone-woocommerce-3' ) );
+		if ( ! $this->payone_api_settings_are_valid() ) {
+            $this->add_error( __( 'Connection to PAYONE API failed', 'payone-woocommerce-3' ) );
 			$this->display_errors();
 		}
+
+		parent::admin_options();
 	}
 
 	public function payone_is_testable() {
@@ -171,23 +170,19 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @return bool
 	 */
-	public function payone_api_settings_are_valid( $force = false ) {
+	public function payone_api_settings_are_valid() {
 		$test_result = true;
 
 		if ( $this->payone_is_testable() ) {
-			$transient_key = self::OPTION_KEY_API_VALUES_VALID . '_' . $this->id;
+            $test_result = ( new $this->test_transaction_classname( $this ) )
+                ->set( 'mode', 'test' )
+                ->test_request_successful();
 
-			$test_result      = false;
-			$transient_result = null;
-			if ( $force === false ) {
-				$transient_result = get_transient( $transient_key ); // is false, when transient not found
-				$test_result      = 'yes' === $transient_result;
-			}
-			if ( $force === true || $transient_result === false ) {
-				$test_result = ( new $this->test_transaction_classname( $this ) )
-					->test_request_successful();
-				set_transient( $transient_key, $test_result ? 'yes' : 'no', 60 * 60 ); // 1 hour caching
-			}
+            if ( ! $test_result ) {
+	            $this->enabled = 'no';
+	            $this->settings['enabled'] = 'no';
+	            $this->update_option( 'enabled', $this->enabled );
+            }
 		}
 
 		return $test_result;
@@ -333,10 +328,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			}
 
 			$is_available = in_array( $country, $this->countries, true );
-		}
-
-		if ( $is_available ) {
-			$is_available = $this->payone_api_settings_are_valid();
 		}
 
 		return $is_available;
