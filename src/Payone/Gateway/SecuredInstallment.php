@@ -30,7 +30,7 @@ class SecuredInstallment extends PaylaBase {
 
 	public function payment_fields() {
 		$environment = $this->get_mode() === 'live' ? 'p' : 't';
-		$snippet_token = self::PAYLA_PARTNER_ID . $this->get_merchant_id() . md5(uniqid('payone_secured_installment', true));
+		$snippet_token = self::PAYLA_PARTNER_ID . '_' . $this->get_merchant_id() . '_' . md5(uniqid('payone_secured_installment', true));
 
 		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/payla/secured-installment-payment-form.php';
