@@ -71,6 +71,11 @@ class DataTransfer {
 	 *
 	 */
 	public function set( $key, $value ) {
+		if ( $key === 'amount' ) {
+			// make sure that $value is always an integer
+			$value = (int) round( $value, 0 );
+		}
+
 		$this->parameter_bag[ $key ] = $value;
 
 		return $this;
