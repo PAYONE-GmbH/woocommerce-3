@@ -4,7 +4,7 @@ Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
 Tested up to: 6.1.1
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 Requires PHP: 7.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -69,6 +69,22 @@ If you have found anything security related, please contact our technical suppor
 
 
 == Changelog ==
+
+== 2.4.1 ==
+
+Bugfixes
+
+* Fixed problem with PAYONE Credit Card
+* Fixed BNPL Token
+* Fixed problem with rounding errors in checkout
+ 
+Maintenance
+ 
+* tested with
+
+wordpress version: 6.1.1
+woocommerce version: 7.4.0
+php version: 8.1.0
 
 == 2.4.0 ==
 
