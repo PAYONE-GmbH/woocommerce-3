@@ -6,6 +6,7 @@ use Payone\Payone\Api\TransactionStatus;
 
 class PaylaBase extends GatewayBase {
 	const PAYLA_PARTNER_ID = 'e7yeryF2of8X';
+	const TRANSIENT_KEY_PAYLA_FAILED = 'payone_payla_failed';
 
 	public function __construct( $id ) {
 		parent::__construct( $id );
@@ -13,6 +14,22 @@ class PaylaBase extends GatewayBase {
 		$this->supported_currencies                 = [ 'EUR' ];
 		$this->hide_when_divergent_shipping_address = true;
 		$this->hide_when_b2b                        = true;
+	}
+
+	public function is_available() {
+		$failed_before = get_transient( self::TRANSIENT_KEY_PAYLA_FAILED );
+		if ( $failed_before ) {
+			return false;
+		}
+
+		return parent::is_available();
+	}
+
+	public function payla_request_failed() {
+		global $woocommerce;
+
+		set_transient( self::TRANSIENT_KEY_PAYLA_FAILED, 1, 60 * 20 );
+		$woocommerce->session->set( 'reload_checkout ', 'true' );
 	}
 
 	/**
