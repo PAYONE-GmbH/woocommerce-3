@@ -16,7 +16,7 @@ class PayPal extends Base {
 		$this->set( 'clearingtype', 'wlt' );
 		$this->set( 'wallettype', 'PPE' );
 
-		$workorderid = get_transient( PayPalBase::TRANSIENT_KEY_WORKORDERID );
+		$workorderid = Plugin::get_session_value( PayPalBase::SESSION_KEY_WORKORDERID );
 		if ( $workorderid ) {
 			$this->set( 'workorderid', $workorderid );
 		}

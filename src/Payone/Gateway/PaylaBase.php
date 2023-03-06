@@ -2,11 +2,12 @@
 
 namespace Payone\Gateway;
 
+use Payone\Plugin;
 use Payone\Payone\Api\TransactionStatus;
 
 class PaylaBase extends GatewayBase {
 	const PAYLA_PARTNER_ID = 'e7yeryF2of8X';
-	const TRANSIENT_KEY_PAYLA_FAILED = 'payone_payla_failed';
+	const SESSION_KEY_PAYLA_FAILED = 'payone_payla_failed';
 
 	public function __construct( $id ) {
 		parent::__construct( $id );
@@ -17,7 +18,7 @@ class PaylaBase extends GatewayBase {
 	}
 
 	public function is_available() {
-		$failed_before = get_transient( self::TRANSIENT_KEY_PAYLA_FAILED );
+		$failed_before = Plugin::get_session_value( self::SESSION_KEY_PAYLA_FAILED );
 		if ( $failed_before ) {
 			return false;
 		}
@@ -28,7 +29,7 @@ class PaylaBase extends GatewayBase {
 	public function payla_request_failed() {
 		global $woocommerce;
 
-		set_transient( self::TRANSIENT_KEY_PAYLA_FAILED, 1, 60 * 20 );
+		Plugin::set_session_value( self::SESSION_KEY_PAYLA_FAILED, 1 );
 		$woocommerce->session->set( 'reload_checkout ', 'true' );
 	}
 

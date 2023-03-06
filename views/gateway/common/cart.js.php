@@ -1,5 +1,5 @@
 <?php
-delete_transient( \Payone\Gateway\PayPalExpress::TRANSIENT_KEY_WORKORDERID );
+\Payone\Plugin::delete_session_value( \Payone\Gateway\PayPalExpress::SESSION_KEY_WORKORDERID );
 
 $paypal_express_button_image = PAYONE_PLUGIN_URL . 'assets/' . __( 'checkout-paypal-en.png', 'payone-woocommerce-3' );
 $paypal_express_button_image = apply_filters( 'payone_paypal_express_button_image_url', $paypal_express_button_image );

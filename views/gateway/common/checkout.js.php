@@ -1,4 +1,3 @@
-<?php use Payone\Gateway\KlarnaBase;?>
 <script type = "text/javascript" >
     function payone_block() {
         jQuery('.woocommerce-checkout-payment, .woocommerce-checkout-review-order-table').block({
@@ -94,16 +93,16 @@ jQuery('form.woocommerce-checkout').change(function (event) {
 ;
 
 <?php
-$gateway_to_select = get_transient( \Payone\Gateway\GatewayBase::TRANSIENT_KEY_SELECT_GATEWAY );
+$gateway_to_select = \Payone\Plugin::get_session_value( \Payone\Gateway\GatewayBase::SESSION_KEY_SELECT_GATEWAY );
 if ($gateway_to_select) {
-    delete_transient( \Payone\Gateway\GatewayBase::TRANSIENT_KEY_SELECT_GATEWAY );
+    \Payone\Plugin::delete_session_value( \Payone\Gateway\GatewayBase::SESSION_KEY_SELECT_GATEWAY );
 } else {
     $gateway_to_select = '';
 }
 ?>
 var select_gateway_after_redirect = '<?php echo $gateway_to_select; ?>';
 
-var payone_klarna_actively_chosen = <?php echo get_transient(KlarnaBase::TRANSIENT_KEY_SESSION_STARTED) ? 'true' : 'false'; ?>;
+var payone_klarna_actively_chosen = <?php echo \Payone\Plugin::get_session_value( \Payone\Gateway\KlarnaBase::SESSION_KEY_SESSION_STARTED ) ? 'true' : 'false'; ?>;
 
 jQuery(document).ready(function () {
     var payone_payment_methods_initialized = false;

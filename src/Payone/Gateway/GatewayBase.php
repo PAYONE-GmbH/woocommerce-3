@@ -8,7 +8,7 @@ use Payone\Transaction\Capture;
 use Payone\Transaction\Debit;
 
 abstract class GatewayBase extends \WC_Payment_Gateway {
-	const TRANSIENT_KEY_SELECT_GATEWAY = 'payone_select_gateway';
+	const SESSION_KEY_SELECT_GATEWAY = 'payone_select_gateway';
 
 	/**
 	 * @var array
