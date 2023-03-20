@@ -3,8 +3,8 @@ Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
-Tested up to: 6.0.1
-Stable tag: 2.2.0
+Tested up to: 6.1.1
+Stable tag: 2.4.1
 Requires PHP: 7.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -19,16 +19,21 @@ This plugin is thoroughly tested but still in an early stage, so any feedback is
 Seamless integration into the checkout. Supports simplified PCI DSS conformity in accordance with SAQ A.
 Currently supported payment methods include:
 * Credit Card
-* Direct Debit
+* PAYONE Direct Debit
 * PayPal
 * paydirekt
-* Secure Invoice
+* PAYONE Secured Invoice
+* PAYONE Secured Installment
 * Sofort
-* Giropay
-* Open Invoice
-* Prepayment
+* PAYONE Open Invoice
+* PAYONE Prepayment
 * Klarna
 * Ratepay
+* Trustly
+* P24
+* iDEAL
+* Bancontact
+* Alipay
 
 PAYONE GmbH is headquartered in Frankfurt am Main and is one of the leading omnichannel-payment providers in Europe. In addition to providing customer support to numerous Savings Banks (Sparkasse) the full-service payment service provider also provides cashless payment transaction services to more than 255,000 customers from stationary trade to the automated and holistic processing of e-commerce and mobile payments.
 
@@ -64,6 +69,63 @@ If you have found anything security related, please contact our technical suppor
 
 
 == Changelog ==
+
+== 2.4.1 ==
+
+* Fixed problem with PAYONE Credit Card
+* Fixed BNPL Token
+* Fixed problem with rounding errors in checkout
+ 
+Maintenance
+ 
+* tested with
+
+wordpress version: 6.1.1
+woocommerce version: 7.4.0
+php version: 8.1.0
+
+== 2.4.0 ==
+
+New Features
+
+* New payment method: PAYONE Secured Invoice
+* New payment method: PAYONE Secured Installment
+* Implement a API test in backend
+ 
+Maintenance
+ 
+* Rename global js variables and functions
+* Better error handling for options
+
+tested with
+
+wordpress version: 6.1.1
+woocommerce version: 7.4.0
+php version: 8.1.0
+
+== 2.3.0 ==
+
+New Features
+
+* New payment method: Przelewy24
+* New payment method: Trustly
+* Removed field for BIC for PAYONE Direct Debit
+
+Bugfixes
+
+* Fixed article list for refunds
+* Fixed translations
+
+Maintenance
+
+* Applying wordpress coding styleguide
+* Removed subscription (wcs) support
+* Removed checkbox for PAYONE Invoice module
+
+tested with
+wordpress version: 6.0.2
+woocommerce version: 6.9.4
+php version: 8.1
 
 == 2.2.0 ==
 

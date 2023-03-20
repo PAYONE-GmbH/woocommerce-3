@@ -1,0 +1,1 @@
+<input type="hidden" name="payone_ship_to_different_address_checkbox">

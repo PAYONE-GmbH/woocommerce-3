@@ -12,7 +12,6 @@ class RatepayOpenInvoice extends Base {
 
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
-	 * @param string $authorization_method
 	 */
 	public function __construct( $gateway ) {
 		parent::__construct( $gateway->get_authorization_method() );
@@ -22,7 +21,7 @@ class RatepayOpenInvoice extends Base {
 		$this->set( 'financingtype', $gateway->get_financingtype() );
 		$this->set( 'add_paydata[customer_allow_credit_inquiry]', 'yes' );
 		$this->set( 'add_paydata[merchant_consumer_id]', WC()->customer->get_id() );
-		$this->set( 'birthday', RatepayBase::convert_birthday( $_POST['ratepay_open_invoice_birthday'] ) );
+		$this->set( 'birthday', Base::convert_birthday( $_POST['ratepay_open_invoice_birthday'] ) );
 
 		$this->gateway = $gateway;
 	}

@@ -2,13 +2,26 @@
 
 namespace Payone\Transaction;
 
+use Automattic\WooCommerce\Admin\Overrides\OrderRefund;
+
 class Debit extends Base {
+	/**
+	 * @var OrderRefund
+	 */
+	private $refund = null;
+
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
 	 */
 	public function __construct( $gateway ) {
 		parent::__construct( 'debit' );
 		$this->set_data_from_gateway( $gateway );
+	}
+
+	public function set_refund( OrderRefund $refund ) {
+		$this->refund = $refund;
+
+		return $this;
 	}
 
 	/**
@@ -27,7 +40,7 @@ class Debit extends Base {
 
 		// Dieser Aufruf *muss* nach dem Setzen von 'amount' stattfinden!
 		if ( $this->should_submit_cart() ) {
-			$this->add_article_list_to_transaction( $order );
+			$this->add_article_list_to_transaction( $this->refund );
 		}
 
 		$response = $this->submit();
@@ -45,7 +58,7 @@ class Debit extends Base {
 		return true;
 	}
 
-	protected function get_article_list_for_transaction( \WC_Order $order ) {
+	protected function get_article_list_for_transaction_from_order( \WC_Order $order ) {
 		// Bestimme die Default-Steuerrate
 		$tax_rates = \WC_Tax::get_rates();
 		$va        = 0;

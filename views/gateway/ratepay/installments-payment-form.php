@@ -64,11 +64,29 @@
             jQuery('#ratepay_installments_amount').val(result.form.amount);
         });
     }
+
+    function payone_checkout_clicked_<?php echo \Payone\Gateway\RatepayInstallments::GATEWAY_ID; ?>() {
+        var messages = '';
+
+        jQuery('#ratepay_installments_error').html('');
+
+        if ( jQuery('#ratepay_installments_birthday').val() === '' ) {
+            messages += '<?php _e( 'Please enter your birthday!', 'payone-woocommerce-3' ); ?><br>';
+        }
+        if ( ! payone_valid_iban( jQuery('#ratepay_installments_iban').val() ) ) {
+            messages += '<?php _e( 'Please enter a valid IBAN!', 'payone-woocommerce-3' ); ?><br>';
+        }
+
+        jQuery('#ratepay_installments_error').html('<strong style="color:red">' + messages + '</strong>');
+
+        payone_unblock();
+
+        return messages.length === 0;
+    }
 </script>
 <p>
 	<?php echo nl2br( $this->get_option( 'description' ) ); ?>
 </p>
-<div id="ratepay_installments_error"></div>
 <input type="hidden" name="ratepay_installments_installment_amount" id="ratepay_installments_installment_amount"
        value="">
 <input type="hidden" name="ratepay_installments_installment_number" id="ratepay_installments_installment_number"
@@ -110,7 +128,6 @@
                 <?php _e( 'Calculate', 'payone-woocommerce-3' ); ?>
             </button>
         </span>
-</fieldset>
 </fieldset>
 <div id="ratepay-installments-plan">
     <h3><?php _e( 'Personal calculation', 'payone-woocommerce-3' ); ?></h3>
@@ -193,5 +210,7 @@
         </span>
     </p>
 </fieldset>
+
+<div id="ratepay_installments_error"></div>
 
 <?php include( '_disclaimer.php' );

@@ -304,14 +304,4 @@ abstract class RatepayBase extends RedirectGatewayBase {
 		];
 	}
 
-	/**
-	 * "YYYY-MM-DD" -> "YYYYMMDD"
-	 *
-	 * @param string $birthday
-	 *
-	 * @return string
-	 */
-	public static function convert_birthday( $birthday ) {
-		return implode( '', explode( '-', $birthday ) );
-	}
 }
