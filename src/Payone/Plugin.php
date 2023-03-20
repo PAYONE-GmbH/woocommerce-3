@@ -11,10 +11,10 @@ use Payone\Gateway\KlarnaInvoice;
 use Payone\Gateway\KlarnaSofort;
 use Payone\Gateway\PayPalExpress;
 use Payone\Gateway\RatepayInstallments;
+use Payone\Gateway\SecuredInstallment;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
-use Payone\WooCommerceSubscription\WCSHandler;
 
 class Plugin {
 	// @deprecated
@@ -78,6 +78,10 @@ class Plugin {
 			\Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID  => \Payone\Gateway\RatepayOpenInvoice::class,
 			\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID  => \Payone\Gateway\RatepayDirectDebit::class,
 			\Payone\Gateway\RatepayInstallments::GATEWAY_ID => \Payone\Gateway\RatepayInstallments::class,
+			\Payone\Gateway\Trustly::GATEWAY_ID             => \Payone\Gateway\Trustly::class,
+			\Payone\Gateway\Przelewy24::GATEWAY_ID          => \Payone\Gateway\Przelewy24::class,
+			\Payone\Gateway\SecuredInvoice::GATEWAY_ID      => \Payone\Gateway\SecuredInvoice::class,
+			\Payone\Gateway\SecuredInstallment::GATEWAY_ID  => \Payone\Gateway\SecuredInstallment::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -108,18 +112,6 @@ class Plugin {
 			$this,
 			'handle_woocommerce_admin_order_data_after_order_details'
 		] );
-
-		if ( WCSHandler::is_wcs_active()
-		     && WCSHandler::is_payone_subscription_auto_failover_enabled()
-		     && WCSHandler::is_payone_gateway_is_available_and_subscritpion_aware( Invoice::GATEWAY_ID )
-		) {
-			add_action(
-				'woocommerce_subscription_renewal_payment_failed',
-				[ WCSHandler::class, 'process_woocommerce_subscription_renewal_payment_failed' ],
-				10,
-				2
-			);
-		}
 	}
 
 	/**
@@ -318,6 +310,13 @@ class Plugin {
 		if ( $this->is_ratepay_calculate_callback() ) {
 			return $this->process_ratepay_calculate();
 		}
+		if ( $this->is_secured_installment_options_callback() ) {
+			return $this->process_secured_installment_options();
+		}
+		if ( $this->is_api_settings_callback() ) {
+			$this->process_check_api_settings_callback();
+			exit;
+		}
 
 		$response = 'ERROR';
 		if ( $this->request_is_from_payone() ) {
@@ -392,6 +391,34 @@ class Plugin {
 		}
 
 		return apply_filters( 'payone_request_is_from_payone', $result );
+	}
+
+	private function is_api_settings_callback() {
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-test-api-settings' ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private function process_check_api_settings_callback() {
+		$result = false;
+
+		$gateway_id = $_POST['gateway_id'];
+
+		$gateway = self::find_gateway( $gateway_id );
+		if ( $gateway ) {
+			$result = $gateway->payone_api_settings_are_valid();
+		}
+
+		$message = $result ? __( 'successful', 'payone-woocommerce-3' ) : __( 'failed', 'payone-woocommerce-3' ) ;
+
+		echo json_encode( [
+			'gateway_id' => $gateway_id,
+			'message' => $message,
+			'result' => $result,
+		] );
+		exit;
 	}
 
 	/**
@@ -472,13 +499,6 @@ class Plugin {
 			return [
 				'status'  => 'error',
 				'message' => __( 'Could not get payment method for order.', 'payone-woocommerce-3' ),
-			];
-		}
-
-		if ( ! $gateway->is_payone_invoice_module_enabled() ) {
-			return [
-				'status'  => 'error',
-				'message' => __( 'Invoice module is not enabled.', 'payone-woocommerce-3' ),
 			];
 		}
 
@@ -675,6 +695,29 @@ class Plugin {
 	}
 
 	/**
+	 * @return bool
+	 */
+	private function is_secured_installment_options_callback() {
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-secured-installment-options' ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function process_secured_installment_options() {
+		$gateway = self::find_gateway( SecuredInstallment::GATEWAY_ID );
+		if ( $gateway ) {
+			return $gateway->process_secured_installment_options();
+		}
+
+		return null;
+	}
+
+	/**
 	 * @param \WC_Order $order
 	 *
 	 * @return null|GatewayBase
@@ -722,6 +765,14 @@ class Plugin {
 	 * @return float
 	 */
 	public static function get_tax_rate_for_item_data( $item_data ) {
+		return self::get_tax_rate_for_total($item_data['total'], $item_data['total_tax'] );
+	}
+
+	public static function get_tax_rate_for_total( $total, $tax ) {
+		if ( $tax == 0) {
+			return 0.0;
+		}
+
 		$all_tax_classes   = \WC_Tax::get_tax_classes();
 		$all_tax_classes[] = '';
 		$all_tax_rates     = [];
@@ -729,11 +780,7 @@ class Plugin {
 			$all_tax_rates[] = \WC_Tax::get_rates_for_tax_class( $tax_class );
 		}
 
-		if ( $item_data['total_tax'] == 0 ) {
-			return 0.0;
-		}
-
-		$calculated_tax_rate = ( int ) ( 100 * round( 100 * $item_data['total_tax'] / $item_data['total'], 0 ) );
+		$calculated_tax_rate = ( int ) ( 100 * round( 100 * $tax / $total, 0 ) );
 
 		foreach ( $all_tax_rates as $tax_rates ) {
 			foreach ( $tax_rates as $tax_rate ) {

@@ -71,6 +71,11 @@ class DataTransfer {
 	 *
 	 */
 	public function set( $key, $value ) {
+		if ( $key === 'amount' ) {
+			// make sure that $value is always an integer
+			$value = (int) round( $value, 0 );
+		}
+
 		$this->parameter_bag[ $key ] = $value;
 
 		return $this;
@@ -115,6 +120,8 @@ class DataTransfer {
 		}
 
 		$order->update_meta_data( self::META_KEY_PAYONE_REFERENCES, $references );
+		$order->save_meta_data();
+
 		$this->set( 'reference', $new_reference );
 
 		return $this;

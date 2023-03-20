@@ -12,7 +12,7 @@ class RatepayOpenInvoice extends RatepayBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->method_title = 'PAYONE ' . __( 'Ratepay Open Invoice', 'payone-woocommerce-3' );
+		$this->method_title       = 'PAYONE ' . __( 'Ratepay Open Invoice', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
 
@@ -28,6 +28,7 @@ class RatepayOpenInvoice extends RatepayBase {
 	public function payment_fields() {
 		$options = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
 
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/ratepay/open-invoice-payment-form.php';
 	}
 

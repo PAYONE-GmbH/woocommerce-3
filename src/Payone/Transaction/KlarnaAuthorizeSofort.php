@@ -5,10 +5,9 @@ namespace Payone\Transaction;
 class KlarnaAuthorizeSofort extends KlarnaAuthorizeBase {
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
-	 * @param string $authorization_method
 	 */
-	public function __construct( $gateway, $authorization_method = null ) {
-		parent::__construct( $gateway, $authorization_method );
+	public function __construct( $gateway ) {
+		parent::__construct( $gateway );
 
 		$this->set( 'financingtype', 'KDD' );
 	}

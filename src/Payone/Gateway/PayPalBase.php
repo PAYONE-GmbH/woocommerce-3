@@ -13,6 +13,7 @@ class PayPalBase extends RedirectGatewayBase {
 	const TRANSIENT_KEY_WORKORDERID = 'payone_paypal_workorderid';
 
 	public function payment_fields() {
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/paypal/payment-form.php';
 	}
 

@@ -18,7 +18,6 @@ class ManageMandate extends Base {
 		$this->set( 'city', $data['city'] );
 		$this->set( 'lastname', $data['lastname'] );
 		$this->set( 'iban', $data['iban'] );
-		$this->set( 'bic', $data['bic'] );
 	}
 
 	public function execute() {

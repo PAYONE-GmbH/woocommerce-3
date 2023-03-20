@@ -39,6 +39,13 @@ class Response extends DataTransfer {
 	}
 
 	/**
+	 * @return int
+	 */
+	public function get_error_code() {
+		return $this->get_int( 'errorcode' );
+	}
+
+	/**
 	 * @return string
 	 */
 	public function get_error_message() {

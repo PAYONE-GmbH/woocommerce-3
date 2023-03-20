@@ -21,6 +21,31 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	protected $hide_when_no_shipping;
 
 	/**
+	 * @var bool
+	 */
+	protected $hide_when_divergent_shipping_address;
+
+	/**
+	 * @var bool
+	 */
+	protected $hide_when_b2b;
+
+	/**
+	 * @var string[]
+	 */
+	protected $supported_countries;
+
+	/**
+	 * @var string[]
+	 */
+    protected $supported_currencies;
+
+	/**
+	 * @var string
+	 */
+	protected $test_transaction_classname;
+
+	/**
 	 * @var string 0 or 1
 	 */
 	private $use_global_settings;
@@ -34,6 +59,16 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @var float
 	 */
 	private $min_amount;
+
+	/**
+	 * @var float
+	 */
+	protected $min_amount_validation = 0;
+
+	/**
+	 * @var float
+	 */
+	protected $max_amount_validation = 0;
 
 	/**
 	 * @var string
@@ -81,11 +116,16 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	private $text_on_booking_statement;
 
 	public function __construct( $id ) {
-		$this->id                    = $id;
-		$this->has_fields            = true;
-		$this->supports              = [ 'products', 'refunds' ];
-		$this->global_settings       = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-		$this->hide_when_no_shipping = false;
+		$this->id                                   = $id;
+		$this->has_fields                           = true;
+		$this->supports                             = [ 'products', 'refunds' ];
+		$this->global_settings                      = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+        $this->supported_countries                  = (new \WC_Countries())->get_countries();
+        $this->supported_currencies                 = []; // all
+		$this->hide_when_no_shipping                = false;
+		$this->hide_when_divergent_shipping_address = false;
+		$this->hide_when_b2b                        = false;
+		$this->test_transaction_classname           = '';
 
 		$this->init_settings();
 		$this->init_form_fields();
@@ -98,7 +138,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
 		$this->process_global_settings();
 
+		add_action( 'woocommerce_settings_api_sanitized_fields_' . $this->id, [ $this, 'validate_admin_options' ] );
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
+		$this->display_errors();
 	}
 
 	public static function add( $methods ) {
@@ -107,16 +149,56 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $methods;
 	}
 
+	public function get_mode() {
+		return $this->global_settings['mode'];
+	}
+
+	public function admin_options() {
+		if ( ! $this->payone_api_settings_are_valid() ) {
+            $this->add_error( __( 'Connection to PAYONE API failed', 'payone-woocommerce-3' ) );
+			$this->display_errors();
+		}
+
+		parent::admin_options();
+	}
+
+	public function payone_is_testable() {
+		return $this->test_transaction_classname
+		       && method_exists( $this->test_transaction_classname, 'test_request_successful' );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function payone_api_settings_are_valid() {
+		$test_result = true;
+
+		if ( $this->payone_is_testable() ) {
+            $test_result = ( new $this->test_transaction_classname( $this ) )
+                ->set( 'mode', 'test' )
+                ->test_request_successful();
+
+            if ( ! $test_result ) {
+	            $this->enabled = 'no';
+	            $this->settings['enabled'] = 'no';
+	            $this->update_option( 'enabled', $this->enabled );
+            }
+		}
+
+		return $test_result;
+	}
+
 	/**
 	 * @param TransactionStatus $transaction_status
 	 */
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		$order = $transaction_status->get_order();
 
-		// Increment sequence number of the order if any provided
-		// through the TX status notification
-		$sequencenumber = $transaction_status->get_sequencenumber();
-		if ( $sequencenumber ) {
+		// Update sequence number of the order if the provided
+		// through the TX status notification is larger
+		$sequencenumber         = $transaction_status->get_sequencenumber();
+		$current_sequencenumber = (int) $order->get_meta( '_sequencenumber' );
+		if ( $sequencenumber > $current_sequencenumber ) {
 			$order->update_meta_data( '_sequencenumber', $sequencenumber );
 			$order->save_meta_data();
 		}
@@ -171,6 +253,10 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $capture->execute( $order );
 	}
 
+    protected function get_error_message( \Payone\Payone\Api\Response $response ) {
+        return __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message();
+    }
+
 	protected function add_data_to_capture( Capture $capture, \WC_Order $order ) {
 	}
 
@@ -186,9 +272,13 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			return new \WP_Error( 1, __( 'Debit amount must be greater than zero.', 'payone-woocommerce-3' ) );
 		}
 		$order = new \WC_Order( $order_id );
+		// The first item in the array is the refund for this call
+		$refund = $order->get_refunds()[0];
+
 		$order->add_order_note( __( 'Refund is issued through PAYONE', 'payone-woocommerce-3' ) );
 
 		$debit = new Debit( $this );
+		$debit->set_refund( $refund );
 		$this->add_data_to_debit( $debit, $order );
 
 		return $debit->execute( $order, - $amount );
@@ -207,10 +297,22 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			$is_available = false;
 		}
 
+        if ( $is_available && $this->supported_currencies ) {
+            $is_available = in_array( get_woocommerce_currency(), $this->supported_currencies, true );
+        }
+
 		if ( $is_available && $this->hide_when_no_shipping ) {
 			if ( ! wc_shipping_enabled() || wc_get_shipping_method_count() < 1 ) {
 				$is_available = false;
 			}
+		}
+
+		if ( $is_available && $this->hide_when_b2b && $this->is_b2b() ) {
+			$is_available = false;
+		}
+
+		if ( $is_available && $this->hide_when_divergent_shipping_address && $this->has_divergent_shipping_address() ) {
+			$is_available = false;
 		}
 
 		if ( $is_available ) {
@@ -235,12 +337,10 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 * @param string $label
 	 */
 	public function init_common_form_fields( $label ) {
-		$default_merchant_id = $this->global_settings['merchant_id'];
-		$default_portal_id   = $this->global_settings['portal_id'];
-		$default_account_id  = $this->global_settings['account_id'];
-		$default_key         = $this->global_settings['key'];
-
-		$countries = new \WC_Countries();
+		$default_merchant_id = isset( $this->global_settings['merchant_id'] ) ? $this->global_settings['merchant_id'] : '';
+		$default_portal_id   = isset( $this->global_settings['portal_id'] ) ? $this->global_settings['portal_id'] : '';
+		$default_account_id  = isset( $this->global_settings['account_id'] ) ? $this->global_settings['account_id'] : '';
+		$default_key         = isset( $this->global_settings['key'] ) ? $this->global_settings['key'] : '';
 
 		$this->form_fields = [
 			'enabled'                   => [
@@ -264,12 +364,12 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			'min_amount'                => [
 				'title'   => __( 'Minimum order value', 'payone-woocommerce-3' ),
 				'type'    => 'text',
-				'default' => '0',
+				'default' => $this->min_amount_validation,
 			],
 			'max_amount'                => [
 				'title'   => __( 'Maximum order value', 'payone-woocommerce-3' ),
 				'type'    => 'text',
-				'default' => '0',
+				'default' => $this->max_amount_validation,
 			],
 			'authorization_method'      => [
 				'title'   => __( 'Method of Authorization', 'payone-woocommerce-3' ),
@@ -283,7 +383,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			'countries'                 => [
 				'title'   => __( 'Active Countries', 'payone-woocommerce-3' ),
 				'type'    => 'multiselect',
-				'options' => $countries->get_countries(),
+				'options' => $this->supported_countries,
 				'default' => [ 'DE', 'AT', 'CH' ],
 				'css'     => 'height:100px',
 			],
@@ -355,6 +455,25 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			unset( $this->form_fields['authorization_method']['options']['authorization'] );
 			$this->form_fields['authorization_method']['default'] = 'preauthorization';
 		}
+	}
+
+	public function validate_admin_options( $options ) {
+		if ( (int) round( $this->min_amount_validation ) !== 0 ) {
+			$min_amount = isset( $options['min_amount'] ) ? $options['min_amount'] : $this->min_amount_validation;
+			if ( $min_amount < $this->min_amount_validation ) {
+				\WC_Admin_Settings::add_error( sprintf( __( 'The minimum order value must not be lower than %d', 'payone-woocommerce-3' ), $this->min_amount_validation ) );
+				$options['min_amount'] = $this->min_amount_validation;
+			}
+		}
+		if ( (int) round( $this->max_amount_validation ) !== 0 ) {
+			$max_amount = isset( $options['max_amount'] ) ? $options['max_amount'] : $this->max_amount_validation;
+			if ( $max_amount > $this->max_amount_validation || $max_amount < 0.01 ) {
+				\WC_Admin_Settings::add_error( sprintf( __( 'The maximum order value must not be higher than %d', 'payone-woocommerce-3' ), $this->max_amount_validation ) );
+				$options['max_amount'] = $this->max_amount_validation;
+			}
+		}
+
+		return $options;
 	}
 
 	/**
@@ -433,17 +552,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function is_payone_invoice_module_enabled() {
-		if ( isset( $this->global_settings['payone_invoice_module_enabled'] ) ) {
-			return (bool) $this->global_settings['payone_invoice_module_enabled'];
-		}
-
-		return false;
-	}
-
 	private function process_global_settings() {
 		$this->use_global_settings = $this->settings['use_global_settings'];
 		if ( $this->use_global_settings ) {
@@ -460,15 +568,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			);
 		}
 		if ( $this->use_global_settings ) {
-			$this->merchant_id               = $this->global_settings['merchant_id'];
-			$this->portal_id                 = $this->global_settings['portal_id'];
-			$this->account_id                = $this->global_settings['account_id'];
-			$this->key                       = $this->global_settings['key'];
-			$this->submit_cart               = $this->global_settings['submit_cart'];
-			$this->activate_pdf_download     = $this->global_settings['activate_pdf_download'];
-			$this->dynamic_invoice_text      = $this->global_settings['dynamic_invoice_text'];
-			$this->dynamic_refund_text       = $this->global_settings['dynamic_refund_text'];
-			$this->text_on_booking_statement = $this->global_settings['text_on_booking_statement'];
+			$this->merchant_id               = isset( $this->global_settings['merchant_id'] ) ? $this->global_settings['merchant_id'] : '';
+			$this->portal_id                 = isset( $this->global_settings['portal_id'] ) ? $this->global_settings['portal_id'] : '';
+			$this->account_id                = isset( $this->global_settings['account_id'] ) ? $this->global_settings['account_id'] : '';
+			$this->key                       = isset( $this->global_settings['key'] ) ? $this->global_settings['key'] : '';
+			$this->submit_cart               = isset( $this->global_settings['submit_cart'] ) ? $this->global_settings['submit_cart'] : '';
+			$this->activate_pdf_download     = isset( $this->global_settings['activate_pdf_download'] ) ? $this->global_settings['activate_pdf_download'] : '';
+			$this->dynamic_invoice_text      = isset( $this->global_settings['dynamic_invoice_text'] ) ? $this->global_settings['dynamic_invoice_text'] : '';
+			$this->dynamic_refund_text       = isset( $this->global_settings['dynamic_refund_text'] ) ? $this->global_settings['dynamic_refund_text'] : '';
+			$this->text_on_booking_statement = isset( $this->global_settings['text_on_booking_statement'] ) ? $this->global_settings['text_on_booking_statement'] : '';
 		} else {
 			$this->merchant_id               = isset( $this->settings['merchant_id'] ) ? $this->settings['merchant_id'] : '';
 			$this->portal_id                 = isset( $this->settings['portal_id'] ) ? $this->settings['portal_id'] : '';
@@ -498,17 +606,17 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$request = new Request();
 		$request->set( 'request', 'getinvoice' );
 		$request->set( 'invoice_title', $invoice_id );
-		$result = $request->submit();
+		$response = $request->submit();
 
-		if ( ! $result->is_ok() ) {
-			wc_add_notice( $result->get_error_message(), 'error' );
+		if ( ! $response->is_ok() ) {
+			wc_add_notice( $this->get_error_message( $response ), 'error' );
 
 			return null;
 		}
 
 		$pdfFilePath = sprintf( '%s/Invoice.%s.pdf', sys_get_temp_dir(), $invoice_id );
 
-		$bytes = file_put_contents( $pdfFilePath, $result->get( '_DATA' ) );
+		$bytes = file_put_contents( $pdfFilePath, $response->get( '_DATA' ) );
 
 		if ( $bytes === false || $bytes < 1 ) {
 			return null;
@@ -621,5 +729,58 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			echo '<strong>' . __( 'pp.bankname', 'payone-woocommerce-3' ) . ':</strong> ';
 			echo $clearing_info['bankname'] . '<br><br>';
 		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function has_divergent_shipping_address() {
+		$post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
+		$post_data        = [];
+		parse_str( $post_data_string, $post_data );
+
+		$payone_ship_to_different_address_checkbox = isset( $post_data['payone_ship_to_different_address_checkbox'] ) ? $post_data['payone_ship_to_different_address_checkbox'] : 0;
+		if ( $payone_ship_to_different_address_checkbox ) {
+			$billing_first_name  = isset( $post_data['billing_first_name'] ) ? $post_data['billing_first_name'] : '';
+			$shipping_first_name = isset( $post_data['shipping_first_name'] ) ? $post_data['shipping_first_name'] : '';
+			$billing_last_name   = isset( $post_data['billing_last_name'] ) ? $post_data['billing_last_name'] : '';
+			$shipping_last_name  = isset( $post_data['shipping_last_name'] ) ? $post_data['shipping_last_name'] : '';
+			$billing_company     = isset( $post_data['billing_company'] ) ? $post_data['billing_company'] : '';
+			$shipping_company    = isset( $post_data['shipping_company'] ) ? $post_data['shipping_company'] : '';
+			$billing_address_1   = isset( $post_data['billing_address_1'] ) ? $post_data['billing_address_1'] : '';
+			$shipping_address_1  = isset( $post_data['shipping_address_1'] ) ? $post_data['shipping_address_1'] : '';
+			$billing_address_2   = isset( $post_data['billing_address_2'] ) ? $post_data['billing_address_2'] : '';
+			$shipping_address_2  = isset( $post_data['shipping_address_2'] ) ? $post_data['shipping_address_2'] : '';
+			$billing_city        = isset( $post_data['billing_city'] ) ? $post_data['billing_city'] : '';
+			$shipping_city       = isset( $post_data['shipping_city'] ) ? $post_data['shipping_city'] : '';
+			$billing_postcode    = isset( $post_data['billing_postcode'] ) ? $post_data['billing_postcode'] : '';
+			$shipping_postcode   = isset( $post_data['shipping_postcode'] ) ? $post_data['shipping_postcode'] : '';
+			$billing_country     = isset( $post_data['billing_country'] ) ? $post_data['billing_country'] : '';
+			$shipping_country    = isset( $post_data['shipping_country'] ) ? $post_data['shipping_country'] : '';
+
+			return $billing_first_name !== $shipping_first_name
+			       || $billing_last_name !== $shipping_last_name
+			       || $billing_company !== $shipping_company
+			       || $billing_address_1 !== $shipping_address_1
+			       || $billing_address_2 !== $shipping_address_2
+			       || $billing_city !== $shipping_city
+			       || $billing_postcode !== $shipping_postcode
+			       || $billing_country !== $shipping_country;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function is_b2b() {
+		$post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
+		$post_data        = [];
+		parse_str( $post_data_string, $post_data );
+
+		$billing_company = isset( $post_data['billing_company'] ) ? $post_data['billing_company'] : '';
+
+		return $billing_company !== '';
 	}
 }

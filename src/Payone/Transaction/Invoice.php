@@ -2,17 +2,14 @@
 
 namespace Payone\Transaction;
 
+use Payone\Plugin;
+
 class Invoice extends Base {
 	/**
 	 * @param \Payone\Gateway\GatewayBase $gateway
-	 * @param string $authorization_method
 	 */
-	public function __construct( $gateway, $authorization_method = null ) {
-		// We want to be able to overide the default setting for subscription handling
-		if ( $authorization_method === null ) {
-			$authorization_method = $gateway->get_authorization_method();
-		}
-		parent::__construct( $authorization_method );
+	public function __construct( $gateway ) {
+		parent::__construct( $gateway->get_authorization_method() );
 		$this->set_data_from_gateway( $gateway );
 
 		$this->set( 'clearingtype', 'rec' );
@@ -35,5 +32,20 @@ class Invoice extends Base {
 		$this->set_customer_ip_from_order( $order );
 
 		return $this->submit();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function test_request_successful() {
+		$this->set( 'request', 'preauthorization' );
+		$this->set( 'reference', 'test' . $this->get( 'clearingtype' ) . '_' . ( random_int( time() - 1000, time() ) ) );
+		$this->set( 'amount', 100 );
+		$this->set( 'currency', 'EUR' );
+		$this->set( 'country', 'DE' );
+		$this->set( 'lastname', 'Tester' );
+		$this->set( 'firstname', 'Tim' );
+
+		return $this->submit()->is_approved();
 	}
 }

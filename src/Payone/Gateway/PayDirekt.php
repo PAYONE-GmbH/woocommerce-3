@@ -21,6 +21,7 @@ class PayDirekt extends RedirectGatewayBase {
 	}
 
 	public function payment_fields() {
+		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/paydirekt/payment-form.php';
 	}
 

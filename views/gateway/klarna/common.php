@@ -25,6 +25,9 @@
     var klarna_data = {};
 
     function payone_checkout_clicked_klarna_generic(payment_category) {
+        if (!payment_category) {
+            return;
+        }
         klarna_data = {
             category: payment_category,
             currency: '<?php echo get_woocommerce_currency(); ?>',

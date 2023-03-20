@@ -78,16 +78,6 @@ class Account extends Helper {
 			[ $this, 'field_transaction_log' ],
 			'payone-settings-account',
 			'payone_account_settings' );
-		add_settings_field( 'payone_subscription_auto_failover',
-			__( 'Enable automatic failover for WooCommerce Subscriptions?', 'payone-woocommerce-3' ),
-			[ $this, 'payone_subscription_auto_failover' ],
-			'payone-settings-account',
-			'payone_account_settings' );
-		add_settings_field( 'paypal_billing_agreements_enabled',
-			__( 'Are PayPal Billing Agreements enabled?', 'payone-woocommerce-3' ),
-			[ $this, 'paypal_billing_agreements_enabled' ],
-			'payone-settings-account',
-			'payone_account_settings' );
 		add_settings_field( 'payone_invoice_module_enabled',
 			__( 'Is PAYONE Invoice module enabled?', 'payone-woocommerce-3' ),
 			[ $this, 'payone_invoice_module_enabled' ],
@@ -194,22 +184,8 @@ class Account extends Helper {
 			] );
 	}
 
-	public function payone_subscription_auto_failover() {
-		$this->selectField( self::OPTION_NAME, 'payone_subscription_auto_failover', [
-			'0' => __( 'No', 'payone-woocommerce-3' ),
-			'1' => __( 'Yes', 'payone-woocommerce-3' ),
-		] );
-	}
-
 	public function payone_invoice_module_enabled() {
 		$this->selectField( self::OPTION_NAME, 'payone_invoice_module_enabled', [
-			'0' => __( 'No', 'payone-woocommerce-3' ),
-			'1' => __( 'Yes', 'payone-woocommerce-3' ),
-		] );
-	}
-
-	public function paypal_billing_agreements_enabled() {
-		$this->selectField( self::OPTION_NAME, 'paypal_billing_agreements_enabled', [
 			'0' => __( 'No', 'payone-woocommerce-3' ),
 			'1' => __( 'Yes', 'payone-woocommerce-3' ),
 		] );
@@ -220,6 +196,18 @@ class Account extends Helper {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 
+		$testable_gateways = [];
+		$available_gateways = WC()->payment_gateways->payment_gateways();
+		foreach ( $available_gateways as $gateway_id => $gateway ) {
+			if ( method_exists( $gateway, 'payone_is_testable' )
+			     && $gateway->payone_is_testable()
+				 && $gateway->enabled === 'yes'
+			) {
+				$testable_gateways[$gateway_id] = $gateway->method_title;
+			}
+		}
+
+		add_thickbox();
 		include PAYONE_VIEW_PATH . '/admin/options.php';
 	}
 }

@@ -64,9 +64,9 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
 </fieldset>
 <div id="paymentform"></div>
 <script>
-    var request, config;
+    var payone_request, payone_config;
 
-    config = {
+    payone_config = {
         fields: {
             cardpan: {
                 selector: "cardpan",
@@ -134,12 +134,12 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
         language: Payone.ClientApi.Language.<?php echo $this->get_option( 'cc_error_output_language' ); ?>,
         events: {
             rendered: function () {
-                iframes.setCardType('<?php $cc_brand_choices = $this->get_option( 'cc_brands' ); echo esc_attr( $cc_brand_choices[0] ); ?>');
+                payone_iframes.setCardType('<?php $cc_brand_choices = $this->get_option( 'cc_brands' ); echo esc_attr( $cc_brand_choices[0] ); ?>');
             }
         }
     };
 
-    request = {
+    payone_request = {
         request: 'creditcardcheck',
         responsetype: 'JSON',
         mode: '<?php echo esc_attr( $options['mode'] ); ?>',
@@ -150,10 +150,10 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
         storecarddata: 'yes',
         hash: '<?php echo esc_attr( $hash ); ?>'
     };
-    var iframes = new Payone.ClientApi.HostedIFrames(config, request);
+    var payone_iframes = new Payone.ClientApi.HostedIFrames(payone_config, payone_request);
 
     document.getElementById('cardtype').onchange = function () {
-        iframes.setCardType(this.value);
+        payone_iframes.setCardType(this.value);
     };
 
     jQuery(document).on('click', '#place_order', function () {
@@ -164,18 +164,18 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
             : true;
     });
 
-    var check_status = false;
+    var payone_check_status = false;
 
     function payone_checkout_clicked_<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>() {
-        if (check_status === true) {
+        if (payone_check_status === true) {
             // Skip the test, as it already succeeded.
             return true;
         }
 
-        var cardholder_ok = check_cardholder();
+        var cardholder_ok = payone_check_cardholder();
 
-        if (iframes.isComplete() && cardholder_ok === true) {
-            iframes.creditCardCheck('checkCallback');
+        if (payone_iframes.isComplete() && cardholder_ok === true) {
+            payone_iframes.creditCardCheck('payone_check_callback');
         } else {
             var error_message = 'Bitte Formular vollständig ausfüllen!';
             if (cardholder_ok !== true) {
@@ -190,7 +190,7 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
         return false;
     }
 
-    function check_cardholder() {
+    function payone_check_cardholder() {
         var cardholder = document.getElementById("card_holder").value;
 
         if (cardholder.length > 50 || cardholder.match(/[^a-zA-Z \-äöüÄÖÜß]/g)) {
@@ -200,9 +200,9 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
         return true;
     }
 
-    function checkCallback(response) {
+    function payone_check_callback(response) {
         if (response.status === "VALID") {
-            check_status = true;
+            payone_check_status = true;
             document.getElementById("card_pseudopan").value = response.pseudocardpan;
             document.getElementById("card_truncatedpan").value = response.truncatedcardpan;
             document.getElementById("card_type").value = response.cardtype;
