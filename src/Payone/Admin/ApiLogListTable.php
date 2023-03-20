@@ -20,7 +20,7 @@ class ApiLogListTable extends AbstractListTable {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'id':
-				return '<a href="?page=payone-api-log&id=' . $item->get_id() . '">' . $item->get_id() . '</a>';
+				return '<a href="?page=payone-api-log&id=' . esc_attr( $item->get_id() ) . '">' . esc_html( $item->get_id() ) . '</a>';
 			case 'request':
 				$result        = $item->get_request()->get( 'request' );
 				$clearing_type = $item->get_request()->get( 'clearingtype' );
@@ -28,7 +28,7 @@ class ApiLogListTable extends AbstractListTable {
 					$result .= ' (' . $clearing_type . ')';
 				}
 
-				return $result;
+				return esc_html( $result );
 			case 'response':
 				$result = $item->get_response()->get( 'status' );
 				if ( $item->get_request()->get( 'request' ) === 'managemandate' ) {
@@ -38,13 +38,13 @@ class ApiLogListTable extends AbstractListTable {
 					}
 				}
 
-				return $result;
+				return esc_html( $result );
 			case 'mode':
-				return $item->get_request()->get( 'mode' );
+				return esc_html( $item->get_request()->get( 'mode' ) );
 			case 'merchant_id':
-				return $item->get_request()->get( 'mid' );
+				return esc_html( $item->get_request()->get( 'mid' ) );
 			case 'portal_id':
-				return $item->get_request()->get( 'portalid' );
+				return esc_html( $item->get_request()->get( 'portalid' ) );
 			case 'created_at':
 				return $item->get_created_at()->format( 'd.m.Y H:i' );
 			default:
