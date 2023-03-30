@@ -39,6 +39,10 @@ class CreditCard extends RedirectGatewayBase {
 			'en' => __( 'English', 'payone-woocommerce-3' ),
 		];
 
+        $this->form_fields['credit_card_configuration_label'] = [
+            'title' => __( 'Credit card settings', 'payone-woocommerce-3' ),
+            'type'  => 'title',
+        ];
 		$this->form_fields['cc_brands']                = [
 			'title'   => __( 'Credit card brands', 'payone-woocommerce-3' ),
 			'type'    => 'cc_brands',
@@ -118,38 +122,45 @@ class CreditCard extends RedirectGatewayBase {
 			'title'   => __( 'Length', 'payone-woocommerce-3' ),
 			'type'    => 'no_display', // 'text',
 			'default' => '20',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cardnumber_maxchars'] = [
 			'title'   => __( 'Max. chars', 'payone-woocommerce-3' ),
 			'type'    => 'no_display', // 'text',
 			'default' => '20',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cardnumber_iframe']   = [
 			'title'   => __( 'Iframe', 'payone-woocommerce-3' ),
 			'type'    => 'no_display', // 'select',
 			'options' => $iframe_options,
 			'default' => 'default',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cardnumber_width']    = [
 			'title'   => __( 'Width', 'payone-woocommerce-3' ),
 			'type'    => 'no_display', // 'text',
 			'default' => '100px',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cardnumber_height']   = [
 			'title'   => __( 'Height', 'payone-woocommerce-3' ),
 			'type'    => 'no_display', // 'text',
 			'default' => '20px',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cardnumber_style']    = [
 			'title'   => __( 'Style', 'payone-woocommerce-3' ),
 			'type'    => 'no_display', // 'select',
 			'options' => $style_options,
 			'default' => 'default',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cardnumber_css']      = [
 			'title'   => __( 'CSS', 'payone-woocommerce-3' ),
 			'type'    => 'no_display', // 'text',
 			'default' => '',
+            'css' => 'height: 34px;',
 		];
 
 		$this->form_fields['cc_field_cvc2_type']     = [
@@ -157,43 +168,51 @@ class CreditCard extends RedirectGatewayBase {
 			'type'    => 'style_input',
 			'options' => $type_options,
 			'default' => 'password',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cvc2_length']   = [
 			'title'   => __( 'Length', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '4',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cvc2_maxchars'] = [
 			'title'   => __( 'Max. chars', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '4',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cvc2_iframe']   = [
 			'title'   => __( 'Iframe', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'options' => $iframe_options,
 			'default' => 'default',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cvc2_width']    = [
 			'title'   => __( 'Width', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '30px',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cvc2_height']   = [
 			'title'   => __( 'Height', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '20px',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cvc2_style']    = [
 			'title'   => __( 'Style', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'options' => $style_options,
 			'default' => 'default',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_cvc2_css']      = [
 			'title'   => __( 'CSS', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '',
+            'css' => 'height: 34px;',
 		];
 
 		$this->form_fields['cc_field_month_type']     = [
@@ -201,43 +220,51 @@ class CreditCard extends RedirectGatewayBase {
 			'type'    => 'style_input',
 			'options' => $type_options,
 			'default' => 'select',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_month_length']   = [
 			'title'   => __( 'Length', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '20',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_month_maxchars'] = [
 			'title'   => __( 'Max. chars', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '20',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_month_iframe']   = [
 			'title'   => __( 'Iframe', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'options' => $iframe_options,
 			'default' => 'default',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_month_width']    = [
 			'title'   => __( 'Width', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '20px',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_month_height']   = [
 			'title'   => __( 'Height', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '20px',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_month_style']    = [
 			'title'   => __( 'Style', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'options' => $style_options,
 			'default' => 'default',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_month_css']      = [
 			'title'   => __( 'CSS', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '',
+            'css' => 'height: 34px;',
 		];
 
 		$this->form_fields['cc_field_year_type']     = [
@@ -245,43 +272,51 @@ class CreditCard extends RedirectGatewayBase {
 			'type'    => 'style_input',
 			'options' => $type_options,
 			'default' => 'select',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_year_length']   = [
 			'title'   => __( 'Length', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '20',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_year_maxchars'] = [
 			'title'   => __( 'Max. chars', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '20',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_year_iframe']   = [
 			'title'   => __( 'Iframe', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'options' => $iframe_options,
 			'default' => 'default',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_year_width']    = [
 			'title'   => __( 'Width', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '20px',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_year_height']   = [
 			'title'   => __( 'Height', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '20px',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_year_style']    = [
 			'title'   => __( 'Style', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'options' => $style_options,
 			'default' => 'default',
+            'css' => 'height: 34px;',
 		];
 		$this->form_fields['cc_field_year_css']      = [
 			'title'   => __( 'CSS', 'payone-woocommerce-3' ),
 			'type'    => 'no_display',
 			'default' => '',
+            'css' => 'height: 34px;',
 		];
 
 		$this->form_fields['cc_default_style_label'] = [
@@ -322,7 +357,7 @@ class CreditCard extends RedirectGatewayBase {
 			'default' => '1',
 		];
 		$this->form_fields['cc_error_output_language'] = [
-			'title'   => __( 'Error output active', 'payone-woocommerce-3' ),
+			'title'   => __( 'Error output language', 'payone-woocommerce-3' ),
 			'type'    => 'select',
 			'options' => $language_options,
 			'default' => 'de',
@@ -387,13 +422,9 @@ class CreditCard extends RedirectGatewayBase {
 		$out    = '<tr valign="top">';
 		$out    .= '<th scope="row" class="titledesc">';
 		$out    .= '<label>' . $labels[ $field ] . '</label>';
-		$out    .= '</th><td class="forminp"><table><tr>';
-		$out    .= '<th>' . __( 'Type', 'payone-woocommerce-3' ) . '</th>';
-		$out    .= '<th>' . __( 'Length', 'payone-woocommerce-3' ) . '</th>';
-		$out    .= '<th>' . __( 'Max. Chars', 'payone-woocommerce-3' ) . '</th>';
-		$out    .= '</tr><tr>';
+		$out    .= '</th><td class="forminp"><details><summary>'.$data['title'].'</summary><table><tr>';
 
-		$out .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data ) . '</td>';
+		$out .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data, __( 'Type', 'payone-woocommerce-3' )) . '</td>';
 
 		$key  = 'cc_field_' . $field . '_length';
 		$data = $this->form_fields[ $key ];
@@ -403,9 +434,6 @@ class CreditCard extends RedirectGatewayBase {
 		$data = $this->form_fields[ $key ];
 		$out  .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
 
-		$out .= '</tr><tr><th>' . __( 'Iframe', 'payone-woocommerce-3' ) . '</th>';
-		$out .= '<th>' . __( 'Width', 'payone-woocommerce-3' ) . '</th>';
-		$out .= '<th>' . __( 'Height', 'payone-woocommerce-3' ) . '</th>';
 		$out .= '</tr><tr>';
 
 		$key  = 'cc_field_' . $field . '_iframe';
@@ -420,8 +448,6 @@ class CreditCard extends RedirectGatewayBase {
 		$data = $this->form_fields[ $key ];
 		$out  .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
 
-		$out .= '</tr><tr><th>' . __( 'Style', 'payone-woocommerce-3' ) . '</th>';
-		$out .= '<th>' . __( 'CSS', 'payone-woocommerce-3' ) . '</th>';
 		$out .= '</tr><tr>';
 
 		$key  = 'cc_field_' . $field . '_style';
@@ -432,7 +458,7 @@ class CreditCard extends RedirectGatewayBase {
 		$data = $this->form_fields[ $key ];
 		$out  .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
 
-		$out .= '</tr></table></td></tr>';
+		$out .= '</tr></table></details></td></tr>';
 
 		return $out;
 	}

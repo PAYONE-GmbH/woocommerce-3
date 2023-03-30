@@ -359,6 +359,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			'description'               => [
 				'title'   => __( 'Customer Message', 'payone-woocommerce-3' ),
 				'type'    => 'textarea',
+                'css'       => 'width: 400px;',
 				'default' => '',
 			],
 			'min_amount'                => [
@@ -382,10 +383,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			],
 			'countries'                 => [
 				'title'   => __( 'Active Countries', 'payone-woocommerce-3' ),
-				'type'    => 'multiselect',
+				'type'    => 'cc_countries',
 				'options' => $this->supported_countries,
 				'default' => [ 'DE', 'AT', 'CH' ],
-				'css'     => 'height:100px',
 			],
 			'use_global_settings'       => [
 				'title'   => __( 'Use global settings', 'payone-woocommerce-3' ),
@@ -633,7 +633,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 *
 	 * @return string
 	 */
-	public function generate_select_html_without_table_markup( $key, $data ) {
+	public function generate_select_html_without_table_markup( $key, $data, $title = '' ) {
 		$field_key = $this->get_field_key( $key );
 		$defaults  = array(
 			'title'             => '',
@@ -652,6 +652,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		ob_start();
 		?>
         <fieldset>
+            <label style="display: block; font-weight: bold;"><?php echo $title ?: $data['title']; ?></label>
             <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
             <select class="select <?php echo esc_attr( $data['class'] ); ?>"
                     name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>"
@@ -694,6 +695,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		ob_start();
 		?>
         <fieldset>
+            <label style="display: block; font-weight: bold;"><?php echo $data['title']; ?></label>
             <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
             <input class="input-text regular-input <?php echo esc_attr( $data['class'] ); ?>"
                    type="<?php echo esc_attr( $data['type'] ); ?>" name="<?php echo esc_attr( $field_key ); ?>"
@@ -706,6 +708,61 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
 		return ob_get_clean();
 	}
+
+    public function generate_cc_countries_html( $key, $data ) {
+        $defaults  = array(
+            'title'             => '',
+            'disabled'          => false,
+            'class'             => '',
+            'css'               => '',
+            'placeholder'       => '',
+            'type'              => 'text',
+            'desc_tip'          => false,
+            'description'       => '',
+            'custom_attributes' => array(),
+            'select_buttons'    => false,
+            'options'           => array(),
+        );
+        $settings  = wp_parse_args( $data, $defaults );
+        $value = (array) $this->get_option( $key, array() );
+        $field_key = $this->get_field_key( $key );
+        $selections = $value;
+        $description = \WC_Settings_API::get_description_html($settings);
+        $tooltip_html = \WC_Settings_API::get_tooltip_html($settings);
+
+        if ( ! empty( $settings['options'] ) ) {
+            $countries = $settings['options'];
+        } else {
+            $countries = WC()->countries->countries;
+        }
+
+        asort( $countries );
+
+        ob_start();
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <label for="<?php echo esc_attr( $field_key ); ?>"><?php echo esc_html( $settings['title'] ); ?> <?php echo $tooltip_html; // WPCS: XSS ok. ?></label>
+            </th>
+            <td class="forminp">
+                <select multiple="multiple" name="<?php echo esc_attr( $field_key ); ?>[]" style="width:350px" data-placeholder="<?php esc_attr_e( 'Choose countries / regions&hellip;', 'woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Country / Region', 'woocommerce' ); ?>" class="wc-enhanced-select">
+                    <?php
+                    if ( ! empty( $countries ) ) {
+                        foreach ( $countries as $key => $val ) {
+                            echo '<option value="' . esc_attr( $key ) . '"' . wc_selected( $key, $selections ) . '>' . esc_html( $val ) . '</option>'; // WPCS: XSS ok.
+                        }
+                    }
+                    ?>
+                </select> <?php echo ( $description ) ? $description : ''; // WPCS: XSS ok. ?> <br /><a class="select_all button" href="#"><?php esc_html_e( 'Select all', 'woocommerce' ); ?></a> <a class="select_none button" href="#"><?php esc_html_e( 'Select none', 'woocommerce' ); ?></a>
+            </td>
+        </tr>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function validate_cc_countries_field( $key, $value ) {
+        return $this->validate_multiselect_field( $key, (array) $value );
+    }
 
 	/**
 	 * @param \WC_Order $order
