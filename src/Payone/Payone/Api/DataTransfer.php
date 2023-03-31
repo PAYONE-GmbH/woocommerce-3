@@ -91,7 +91,7 @@ class DataTransfer {
 	 */
 	public function set_once( $key, $value ) {
 		if ( ! isset( $this->parameter_bag[ $key ] ) ) {
-			$this->parameter_bag[ $key ] = $value;
+			$this->set( $key, $value );
 		}
 
 		return $this;
