@@ -339,7 +339,7 @@ class CreditCard extends RedirectGatewayBase {
 		$out .= '</th><td class="forminp">';
 
 		$selected_brands = (array) $this->get_option( $key );
-		$out .= '<details><summary>'.__( 'Kreditkartenfirmen konfigurieren', 'payone-woocommerce-3' ).'</summary><div class="cc_brands_wrapper"><table class="table fixed">';
+		$out .= '<details><summary>'.__( 'Credit card brands', 'payone-woocommerce-3' ) . ' ' . __( 'configuration', 'payone-woocommerce-3' ) .'</summary><div class="cc_brands_wrapper"><table class="table fixed">';
 
 		foreach ( $data['options'] as $brand_key => $brand_label ) {
 			if ( in_array( $brand_key, $selected_brands, true ) ) {
@@ -383,7 +383,7 @@ class CreditCard extends RedirectGatewayBase {
 		// Werden für die Übersetzung benötigt
 		$out    = '<tr valign="top">';
 		$out    .= '<th scope="row" class="titledesc">';
-		$out    .= '</th><td class="forminp"><details><summary>' . ' "' . $data['title'] . '" ' .  __('konfigurieren', 'payone-woocommerce-3').'</summary><table><tr>';
+		$out    .= '</th><td class="forminp"><details><summary>' . ' "' . $data['title'] . '" ' . __('configuration', 'payone-woocommerce-3') . '</summary><table><tr>';
 
 		$out .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data, __( 'Type', 'payone-woocommerce-3' )) . '</td>';
 

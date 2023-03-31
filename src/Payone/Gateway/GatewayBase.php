@@ -753,7 +753,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
                         }
                     }
                     ?>
-                </select> <?php echo ( $description ) ? $description : ''; // WPCS: XSS ok. ?> <br /><a class="select_all button" href="#"><?php esc_html_e( 'Select all', 'woocommerce' ); ?></a> <a class="select_none button" href="#"><?php esc_html_e( 'Select none', 'woocommerce' ); ?></a>
+                </select> <?php echo ( $description ) ? $description : ''; // WPCS: XSS ok. ?>
+                <br /><a class="select_all button" href="#"><?php esc_html_e( 'Select all', 'woocommerce' ); ?></a>
+                <a class="select_none button" href="#"><?php esc_html_e( 'Select none', 'woocommerce' ); ?></a>
             </td>
         </tr>
         <?php
