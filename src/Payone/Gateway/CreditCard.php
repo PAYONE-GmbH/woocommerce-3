@@ -39,6 +39,10 @@ class CreditCard extends RedirectGatewayBase {
 			'en' => __( 'English', 'payone-woocommerce-3' ),
 		];
 
+        $this->form_fields['credit_card_configuration_label'] = [
+            'title' => __( 'Credit card settings', 'payone-woocommerce-3' ),
+            'type'  => 'title',
+        ];
 		$this->form_fields['cc_brands']                = [
 			'title'   => __( 'Credit card brands', 'payone-woocommerce-3' ),
 			'type'    => 'cc_brands',
@@ -322,7 +326,7 @@ class CreditCard extends RedirectGatewayBase {
 			'default' => '1',
 		];
 		$this->form_fields['cc_error_output_language'] = [
-			'title'   => __( 'Error output active', 'payone-woocommerce-3' ),
+			'title'   => __( 'Error output language', 'payone-woocommerce-3' ),
 			'type'    => 'select',
 			'options' => $language_options,
 			'default' => 'de',
@@ -332,11 +336,10 @@ class CreditCard extends RedirectGatewayBase {
 	public function generate_cc_brands_html( $key, $data ) {
 		$out = '<tr valign="top">';
 		$out .= '<th scope="row" class="titledesc">';
-		$out .= '<label>' . __( 'Credit card brand', 'payone-woocommerce-3' ) . '</label>';
 		$out .= '</th><td class="forminp">';
 
 		$selected_brands = (array) $this->get_option( $key );
-		$out .= '<div class="cc_brands_wrapper"><table class="table fixed">';
+		$out .= '<details><summary>'.__( 'Credit card brands', 'payone-woocommerce-3' ) . ' ' . __( 'configuration', 'payone-woocommerce-3' ) .'</summary><div class="cc_brands_wrapper"><table class="table fixed">';
 
 		foreach ( $data['options'] as $brand_key => $brand_label ) {
 			if ( in_array( $brand_key, $selected_brands, true ) ) {
@@ -347,7 +350,7 @@ class CreditCard extends RedirectGatewayBase {
 
 			$checkbox_id   = $this->get_field_key( $key );
 			$checkbox_name = $checkbox_id . '[]';
-			$out           .= '<tr><td><label for="' . $checkbox_id . '">';
+			$out           .= '<tr><td><label>';
 			$out           .= '<input type="checkbox" name="' . $checkbox_name . '" id="' . $checkbox_id . '" value="' . esc_attr( $brand_key ) . '"' . $checked . '>';
 			$out           .= $brand_label . '</label></td>';
 
@@ -358,7 +361,7 @@ class CreditCard extends RedirectGatewayBase {
 
 			$out .= '</tr>';
 		}
-		$out .= '</table></div></td></tr>';
+		$out .= '</table></div></details></td></tr>';
 
 		return $out;
 	}
@@ -378,22 +381,11 @@ class CreditCard extends RedirectGatewayBase {
 		}
 
 		// Werden für die Übersetzung benötigt
-		$labels = [
-			'cardnumber' => __( 'style.input.label.cardnumber', 'payone-woocommerce-3' ),
-			'cvc2'       => __( 'style.input.label.cvc2', 'payone-woocommerce-3' ),
-			'month'      => __( 'style.input.label.month', 'payone-woocommerce-3' ),
-			'year'       => __( 'style.input.label.year', 'payone-woocommerce-3' ),
-		];
 		$out    = '<tr valign="top">';
 		$out    .= '<th scope="row" class="titledesc">';
-		$out    .= '<label>' . $labels[ $field ] . '</label>';
-		$out    .= '</th><td class="forminp"><table><tr>';
-		$out    .= '<th>' . __( 'Type', 'payone-woocommerce-3' ) . '</th>';
-		$out    .= '<th>' . __( 'Length', 'payone-woocommerce-3' ) . '</th>';
-		$out    .= '<th>' . __( 'Max. Chars', 'payone-woocommerce-3' ) . '</th>';
-		$out    .= '</tr><tr>';
+		$out    .= '</th><td class="forminp"><details><summary>' . ' "' . $data['title'] . '" ' . __('configuration', 'payone-woocommerce-3') . '</summary><table><tr>';
 
-		$out .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data ) . '</td>';
+		$out .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data, __( 'Type', 'payone-woocommerce-3' )) . '</td>';
 
 		$key  = 'cc_field_' . $field . '_length';
 		$data = $this->form_fields[ $key ];
@@ -403,9 +395,6 @@ class CreditCard extends RedirectGatewayBase {
 		$data = $this->form_fields[ $key ];
 		$out  .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
 
-		$out .= '</tr><tr><th>' . __( 'Iframe', 'payone-woocommerce-3' ) . '</th>';
-		$out .= '<th>' . __( 'Width', 'payone-woocommerce-3' ) . '</th>';
-		$out .= '<th>' . __( 'Height', 'payone-woocommerce-3' ) . '</th>';
 		$out .= '</tr><tr>';
 
 		$key  = 'cc_field_' . $field . '_iframe';
@@ -420,8 +409,6 @@ class CreditCard extends RedirectGatewayBase {
 		$data = $this->form_fields[ $key ];
 		$out  .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
 
-		$out .= '</tr><tr><th>' . __( 'Style', 'payone-woocommerce-3' ) . '</th>';
-		$out .= '<th>' . __( 'CSS', 'payone-woocommerce-3' ) . '</th>';
 		$out .= '</tr><tr>';
 
 		$key  = 'cc_field_' . $field . '_style';
@@ -432,7 +419,7 @@ class CreditCard extends RedirectGatewayBase {
 		$data = $this->form_fields[ $key ];
 		$out  .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
 
-		$out .= '</tr></table></td></tr>';
+		$out .= '</tr></table></details></td></tr>';
 
 		return $out;
 	}

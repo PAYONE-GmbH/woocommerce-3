@@ -1,0 +1,44 @@
+.woocommerce .form-table details summary {
+    position: relative;
+    box-sizing: border-box;
+    max-width: 400px;
+    list-style: none;
+    color: #1d2327;
+    border: 1px solid rgb(140, 143, 148);
+    border-radius: 4px;
+    height: 34px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+    background-color: #f6f7f7;
+}
+
+.woocommerce .form-table details summary::after {
+    content: '';
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    width: 16px;
+    height: 16px;
+    background: transparent url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E) no-repeat center;
+    background-size: 16px 16px;
+}
+
+.woocommerce .form-table details[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.woocommerce .form-table details summary::-webkit-details-marker {
+    display:none;
+}
+
+.woocommerce .form-table details select {
+    width: 100% !important;
+}
+
+.woocommerce .form-table details .regular-input,
+.woocommerce .form-table details select {
+    min-height: 34px;
+}
