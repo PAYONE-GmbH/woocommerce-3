@@ -652,7 +652,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		ob_start();
 		?>
         <fieldset>
-            <label style="display: block; font-weight: bold;"><?php echo $title ?: $data['title']; ?></label>
+            <label style="display: block; font-weight: bold;"><?php echo ( isset( $title ) ? $title : $data['title'] ); ?></label>
             <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
             <select class="select <?php echo esc_attr( $data['class'] ); ?>"
                     name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>"
