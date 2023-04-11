@@ -188,6 +188,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $test_result;
 	}
 
+    protected function after_payment_successful() {
+    }
+
 	/**
 	 * @param TransactionStatus $transaction_status
 	 */

@@ -110,6 +110,8 @@ abstract class RedirectGatewayBase extends GatewayBase {
 		wc_reduce_stock_levels( $order->get_id() );
 
 		$woocommerce->cart->empty_cart();
+
+		$this->after_payment_successful();
 	}
 
 	/**
