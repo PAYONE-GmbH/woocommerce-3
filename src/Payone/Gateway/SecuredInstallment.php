@@ -2,8 +2,6 @@
 
 namespace Payone\Gateway;
 
-use Payone\Payone\Api\TransactionStatus;
-
 class SecuredInstallment extends PaylaBase {
 
 	const GATEWAY_ID = 'payone_secured_installment';
@@ -74,6 +72,8 @@ class SecuredInstallment extends PaylaBase {
 
 		if ( $response->has_error() ) {
 			wc_add_notice( $this->get_error_message( $response ), 'error' );
+
+			$this->payla_request_failed();
 
 			return;
 		}

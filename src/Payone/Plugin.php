@@ -614,7 +614,7 @@ class Plugin {
 		if ( $gateway_id ) {
 			$gateway = self::find_gateway( $gateway_id );
 			if ( $gateway ) {
-				set_transient( KlarnaBase::TRANSIENT_KEY_SESSION_STARTED, true, 60 * 20 );
+				self::set_session_value( KlarnaBase::SESSION_KEY_SESSION_STARTED, true );
 
 				return $gateway->process_start_session( $_POST );
 			}
@@ -663,9 +663,10 @@ class Plugin {
 	private function process_paypal_express_get_checkout() {
 		$gateway = self::find_gateway( PayPalExpress::GATEWAY_ID );
 		if ( $gateway ) {
-			$workorderid = get_transient( PayPalExpress::TRANSIENT_KEY_WORKORDERID );
+			$workorderid = self::get_session_value( PayPalExpress::SESSION_KEY_WORKORDERID );
 
-			return $gateway->process_get_checkout( $workorderid );
+			$gateway->process_get_checkout( $workorderid );
+			exit;
 		}
 
 		return null;
@@ -725,6 +726,28 @@ class Plugin {
 	public static function get_gateway_for_order( \WC_Order $order ) {
 		// @todo Was tun, wenn es das Gateway nicht gibt?
 		return self::find_gateway( $order->get_payment_method() );
+	}
+
+	public static function get_session_value( $key, $default = null ) {
+		$session = WC()->session;
+
+		if ( $session ) {
+			return $session->get( $key, $default );
+		}
+
+		return $default;
+	}
+
+	public static function set_session_value( $key, $value ) {
+		$session = WC()->session;
+
+		if ( $session ) {
+			$session->set( $key, $value );
+		}
+	}
+
+	public static function delete_session_value( $key ) {
+		self::set_session_value( $key, null );
 	}
 
 	public function add_javascript() {
