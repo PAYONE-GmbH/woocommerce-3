@@ -14,6 +14,7 @@ class KlarnaSofort extends KlarnaBase {
 
 		$this->method_title       = 'PAYONE ' . __( 'Klarna Sofort bezahlen', 'payone-woocommerce-3' );
 		$this->method_description = '';
+		$this->hide_when_b2b      = true;
 	}
 
 	public function init_form_fields() {
