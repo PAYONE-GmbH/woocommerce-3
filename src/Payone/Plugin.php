@@ -451,7 +451,16 @@ class Plugin {
 		$order   = new \WC_Order( $order_id );
 		$gateway = self::get_gateway_for_order( $order );
 
-		return $gateway->process_payment( $order_id );
+		$logged_in_user_id = wp_get_current_user()->ID;
+		if ( $logged_in_user_id ) {
+			$order_user = $order->get_user();
+			if ( $order_user && $order->get_user()->ID === $logged_in_user_id ) {
+				return $gateway->process_payment( $order_id );
+			}
+		}
+
+		wp_redirect( wc_get_checkout_url() );
+		exit;
 	}
 
 	/**
