@@ -17,6 +17,19 @@ class CreditCard extends RedirectGatewayBase {
 		$this->test_transaction_classname = \Payone\Transaction\CreditCard::class;
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function is_available() {
+		$is_available = parent::is_available();
+
+		if ( $is_available && count( $this->settings['cc_brands'] ) === 0 ) {
+			$is_available = false;
+		}
+
+		return $is_available;
+	}
+
 	public function init_form_fields() {
 		$this->init_common_form_fields( 'PAYONE ' . __( 'Credit Card', 'payone-woocommerce-3' ) );
 		$yesno_options    = [
