@@ -3,6 +3,7 @@
 namespace Payone\Gateway;
 
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Plugin;
 
 /**
  * PayPal and PayPalExpress share some functions. In order to not repeat the code, those functions are bundled in
@@ -26,6 +27,13 @@ class PayPalBase extends RedirectGatewayBase {
 	public function process_payment( $order_id ) {
 		return $this->process_redirect( $order_id, \Payone\Transaction\PayPal::class );
 	}
+
+	protected function after_payment_successful() {
+		parent::after_payment_successful();
+
+		Plugin::delete_session_value( self::SESSION_KEY_WORKORDERID );
+	}
+
 
 	/**
 	 * @param TransactionStatus $transaction_status
