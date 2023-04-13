@@ -9,7 +9,6 @@ use Payone\Transaction\Debit;
 
 abstract class RatepayBase extends RedirectGatewayBase {
 
-	const TRANSIENT_KEY_SESSION_STARTED = 'payone_sssion_started';
 	const DEVICE_FINGERPRINT_FIELD = 'device_fingerprint';
 	const DEFAULT_DEVICE_FINGERPRINT = 'ratepay';
 

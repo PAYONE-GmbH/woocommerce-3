@@ -47,6 +47,8 @@ class SecuredInvoice extends PaylaBase {
 		if ( $response->has_error() ) {
 			wc_add_notice( $this->get_error_message( $response ), 'error' );
 
+			$this->payla_request_failed();
+
 			return;
 		}
 

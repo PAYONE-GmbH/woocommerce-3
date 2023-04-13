@@ -26,7 +26,7 @@ class PayPalExpress extends PayPalBase {
 		$is_available = parent::is_available();
 
 		if ( $is_available && ! is_cart() ) {
-			$is_available = get_transient( self::TRANSIENT_KEY_WORKORDERID ) !== false;
+			$is_available = Plugin::get_session_value( self::SESSION_KEY_WORKORDERID ) !== null;
 		}
 
 		return $is_available;
@@ -53,7 +53,7 @@ class PayPalExpress extends PayPalBase {
 				'workorderid' => $response->get( 'workorderid' ),
 				'url'         => $response->get( 'redirecturl' ),
 			];
-			set_transient( self::TRANSIENT_KEY_WORKORDERID, $result['workorderid'], 60 * 10 );
+			Plugin::set_session_value( self::SESSION_KEY_WORKORDERID, $result['workorderid'] );
 		} else {
 			$result = [
 				'status'  => 'error',
@@ -109,7 +109,7 @@ class PayPalExpress extends PayPalBase {
 		WC()->customer->set_shipping_country( $response->get( 'add_paydata[shipping_country]' ) );
 		WC()->customer->set_shipping_phone( $response->get( 'add_paydata[telephonenumber]' ) );
 
-		set_transient( self::TRANSIENT_KEY_SELECT_GATEWAY, self::GATEWAY_ID );
+		Plugin::set_session_value( self::SESSION_KEY_SELECT_GATEWAY, self::GATEWAY_ID );
 
 		wp_redirect( wc_get_checkout_url() );
 		exit;
