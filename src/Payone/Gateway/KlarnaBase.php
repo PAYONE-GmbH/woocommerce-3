@@ -9,7 +9,7 @@ use Payone\Transaction\Debit;
 
 abstract class KlarnaBase extends RedirectGatewayBase {
 
-	const TRANSIENT_KEY_SESSION_STARTED = 'payone_sssion_started';
+	const SESSION_KEY_SESSION_STARTED = 'payone_klarna_session_started';
 
 	public function __construct( $id ) {
 		parent::__construct( $id );
