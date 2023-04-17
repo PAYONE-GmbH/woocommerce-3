@@ -633,7 +633,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 *
 	 * @return string
 	 */
-	public function generate_select_html_without_table_markup( $key, $data, $title = '' ) {
+	public function generate_select_html_without_table_markup( $key, $data, $title = '&nbsp;' ) {
 		$field_key = $this->get_field_key( $key );
 		$defaults  = array(
 			'title'             => '',

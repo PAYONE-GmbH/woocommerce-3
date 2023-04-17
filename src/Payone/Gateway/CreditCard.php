@@ -108,12 +108,6 @@ class CreditCard extends RedirectGatewayBase {
 			'type'    => 'no_display',
 			'default' => 'China Union Pay',
 		];
-		$this->form_fields['ask_for_cvc2']             = [
-			'title'   => __( 'Ask for CVC2', 'payone-woocommerce-3' ),
-			'type'    => 'select',
-			'options' => $yesno_options,
-			'default' => '1',
-		];
 		$this->form_fields['minimum_validity_of_card'] = [
 			'title'   => __( 'Minimum validity of card', 'payone-woocommerce-3' ),
 			'type'    => 'text',
