@@ -50,6 +50,8 @@ class Plugin {
 		if ( is_admin() ) {
 			$settings = new \Payone\Admin\Settings();
 			$settings->init();
+			$assets = new \Payone\Admin\Assets();
+            $assets->init();
 		}
 
 		add_action( 'woocommerce_api_payoneplugin', [ $this, 'handle_callback' ] );
