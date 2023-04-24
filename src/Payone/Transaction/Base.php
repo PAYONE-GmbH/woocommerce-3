@@ -8,6 +8,11 @@ use Payone\Payone\Api\Request;
 use Payone\Plugin;
 
 class Base extends Request {
+	const FIELD_LENGTH_ID_N = 32;
+	const FIELD_LENGTH_NO_N = 6;
+	const FIELD_LENGTH_DE_N = 255;
+	const FIELD_LENGTH_VA_N = 4;
+
 	/**
 	 * @var GatewayBase
 	 */
@@ -213,11 +218,11 @@ class Base extends Request {
 		}
 
 		foreach ( $article_list as $n => $article ) {
-			$this->set( 'id[' . $n . ']', $article['id'] );
+			$this->set( 'id[' . $n . ']', substr( $article['id'], 0, self::FIELD_LENGTH_ID_N ) );
 			$this->set( 'pr[' . $n . ']', $article['pr'] );
-			$this->set( 'no[' . $n . ']', $article['no'] );
-			$this->set( 'de[' . $n . ']', $article['de'] );
-			$this->set( 'va[' . $n . ']', $article['va'] );
+			$this->set( 'no[' . $n . ']', substr( $article['no'], 0, self::FIELD_LENGTH_NO_N ) );
+			$this->set( 'de[' . $n . ']', substr( $article['de'], 0, self::FIELD_LENGTH_DE_N ) );
+			$this->set( 'va[' . $n . ']', substr( $article['va'], 0, self::FIELD_LENGTH_VA_N ) );
 			$this->set( 'it[' . $n . ']', $article['it'] );
 		}
 	}
