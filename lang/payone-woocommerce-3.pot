@@ -8,7 +8,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2023-04-25 12:25+0000\n"
+"POT-Creation-Date: 2023-04-25 14:53+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
@@ -129,11 +129,11 @@ msgstr ""
 
 #: views/gateway/payla/_disclaimer.php:2
 msgid ""
-"By placing this order, I agree to the supplementary <a href=\"https://legal."
-"paylater.payone.com/en/terms-of-payment.html\" target=\"_blank\">payment "
-"terms</a> and the performance of a risk assessment for the selected payment "
-"method. I am aware of the supplementary <a href=\"https://legal.paylater."
-"payone.com/en/data-protection-payments.html\" target=\"_blank\">data "
+"By placing this order, I agree to the <a href=\"https://legal.paylater."
+"payone.com/en/terms-of-payment.html\" target=\"_blank\">supplementary "
+"payment terms</a> and the performance of a risk assessment for the selected "
+"payment method. I am aware of the <a href=\"https://legal.paylater.payone."
+"com/en/data-protection-payments.html\" target=\"_blank\">supplementary data "
 "protection notice</a>."
 msgstr ""
 
