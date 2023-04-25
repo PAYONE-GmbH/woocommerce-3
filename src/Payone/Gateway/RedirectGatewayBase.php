@@ -68,6 +68,10 @@ abstract class RedirectGatewayBase extends GatewayBase {
 			$order->save_meta_data();
 			$order->save();
 
+			if ( WC()->session ) {
+				WC()->session->set( 'order_key', $order->get_order_key() );
+			}
+
 			// Perform the redirect if we need to
 			if ( $response->is_redirect() ) {
 				return [
@@ -110,6 +114,8 @@ abstract class RedirectGatewayBase extends GatewayBase {
 		wc_reduce_stock_levels( $order->get_id() );
 
 		$woocommerce->cart->empty_cart();
+
+		$this->after_payment_successful();
 	}
 
 	/**

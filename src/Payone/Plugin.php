@@ -50,6 +50,8 @@ class Plugin {
 		if ( is_admin() ) {
 			$settings = new \Payone\Admin\Settings();
 			$settings->init();
+			$assets = new \Payone\Admin\Assets();
+            $assets->init();
 		}
 
 		add_action( 'woocommerce_api_payoneplugin', [ $this, 'handle_callback' ] );
@@ -452,7 +454,28 @@ class Plugin {
 		$order   = new \WC_Order( $order_id );
 		$gateway = self::get_gateway_for_order( $order );
 
-		return $gateway->process_payment( $order_id );
+		$logged_in_user_id = wp_get_current_user()->ID;
+		$session_order_key = null;
+		if ( WC()->session ) {
+			$session_order_key = WC()->session->get( 'order_key' );
+		}
+
+		$redirect_allowed = false;
+		if ( $logged_in_user_id ) {
+			$order_user = $order->get_user();
+			if ( $order_user && $order->get_user()->ID === $logged_in_user_id ) {
+				$redirect_allowed = true;
+			}
+		} elseif ( $session_order_key && $session_order_key === $order->get_order_key() ) {
+			$redirect_allowed = true;
+		}
+
+		if ( $redirect_allowed ) {
+			return $gateway->process_payment( $order_id );
+		}
+
+		wp_redirect( wc_get_checkout_url() );
+		exit;
 	}
 
 	/**

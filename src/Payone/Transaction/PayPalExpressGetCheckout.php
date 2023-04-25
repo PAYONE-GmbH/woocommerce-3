@@ -25,6 +25,10 @@ class PayPalExpressGetCheckout extends Base {
 		$this->set_once( 'amount', $cart->get_total( 'non-view' ) * 100 );
 		$this->set( 'currency', strtoupper( get_woocommerce_currency() ) );
 
+		if ( $this->should_submit_cart() ) {
+			$this->add_article_list_to_transaction( $cart );
+		}
+
 		return $this->submit();
 	}
 }
