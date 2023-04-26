@@ -12,7 +12,7 @@ class SecuredDirectDebit extends PaylaBase {
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
-		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-lastschrift.png';
+		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-secured-lastschrift.png';
 		$this->method_title       = 'PAYONE ' . __( 'Secured Direct Debit', 'payone-woocommerce-3' );
 		$this->method_description = '';
 	}
