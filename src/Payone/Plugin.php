@@ -84,6 +84,7 @@ class Plugin {
 			\Payone\Gateway\Przelewy24::GATEWAY_ID          => \Payone\Gateway\Przelewy24::class,
 			\Payone\Gateway\SecuredInvoice::GATEWAY_ID      => \Payone\Gateway\SecuredInvoice::class,
 			\Payone\Gateway\SecuredInstallment::GATEWAY_ID  => \Payone\Gateway\SecuredInstallment::class,
+			\Payone\Gateway\SecuredDirectDebit::GATEWAY_ID  => \Payone\Gateway\SecuredDirectDebit::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
