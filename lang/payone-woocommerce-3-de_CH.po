@@ -9,7 +9,7 @@ msgstr ""
 "Language: de_CH\n"
 "Language-Team: Deutsch (Schweiz)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2023-04-26 11:26+0000\n"
+"PO-Revision-Date: 2023-04-26 11:33+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
