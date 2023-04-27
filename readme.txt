@@ -3,8 +3,8 @@ Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
-Tested up to: 6.1.1
-Stable tag: 2.4.1
+Tested up to: 7.6.0
+Stable tag: 2.5.0
 Requires PHP: 7.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -23,6 +23,7 @@ Currently supported payment methods include:
 * PayPal
 * paydirekt
 * PAYONE Secured Invoice
+* PAYONE Secured Direct Debit
 * PAYONE Secured Installment
 * Sofort
 * PAYONE Open Invoice
@@ -70,7 +71,34 @@ If you have found anything security related, please contact our technical suppor
 
 == Changelog ==
 
+== 2.5.0 ==
+
+New Features
+ 
+* New layout for credit card settings
+* New payment method: PAYONE Secured Direct Debit
+ 
+Bugfixes
+ 
+* Fix for credit card if no card is selected
+* Sanitize id[n]-parameter before transmitting
+* Fix for wrong PayPal redirect
+ 
+Maintenance
+ 
+* Updated iDeal issuer list
+* Using WooCommerce sessions
+* Hide Klarna installments and Klarna sofort for b2b orders
+
+*  tested with 
+
+wordpress version: 6.2
+woocommerce version: 7.6.0
+php version: 8.1.0
+
 == 2.4.1 ==
+
+Bugfixes
 
 * Fixed problem with PAYONE Credit Card
 * Fixed BNPL Token
