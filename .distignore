@@ -1,12 +1,10 @@
-/.wordpress-org
-/.git
 /.github
+/.wordpress-org
 /ci
 /tests
-/scripts
 
 .distignore
-.README.md
-.phpunit.xml
-.phpcs.ruleset.xml
 .gitlab-ci.yml
+phpcs.ruleset.xml
+phpunit.xml
+README.md
