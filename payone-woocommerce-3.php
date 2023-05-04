@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: PAYONE Payment for WooCommerce
- * Version: 2.5.0
+ * Version: 2.5.1
  * Plugin URI: https://www.payone.com/
  * Description: Integration of PAYONE payment into your WooCommerce store.
  * Author: PAYONE GmbH
@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
 
-define( 'PAYONE_PLUGIN_VERSION', '2.5.0' );
+define( 'PAYONE_PLUGIN_VERSION', '2.5.1' );
 define( 'PAYONE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PAYONE_PLUGIN_PATH', __DIR__ );
 define( 'PAYONE_VIEW_PATH', PAYONE_PLUGIN_PATH . '/views' );
