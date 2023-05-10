@@ -1,4 +1,5 @@
 /.github
+/.git
 /.wordpress-org
 /ci
 /tests
