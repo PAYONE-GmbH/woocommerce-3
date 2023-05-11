@@ -1,8 +1,5 @@
 name: Plugin asset/readme update
 on:
-  push:
-    branches:
-    - trunk
   workflow_dispatch:
 jobs:
   trunk:
