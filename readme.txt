@@ -4,7 +4,7 @@ Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
 Tested up to: 7.6.0
-Stable tag: 2.5.1
+Stable tag: 2.5.2
 Requires PHP: 7.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -71,7 +71,7 @@ If you have found anything security related, please contact our technical suppor
 
 == Changelog ==
 
-== 2.5.1 ==
+== 2.5.2 ==
 
 New Features
  
