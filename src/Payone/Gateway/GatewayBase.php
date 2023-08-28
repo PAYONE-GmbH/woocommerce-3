@@ -460,6 +460,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 	}
 
+	protected function add_allow_different_shipping_address_field() {
+		$this->form_fields['allow_different_shopping_address'] = [
+			'title'   => __( 'Different shipping address', 'payone-woocommerce-3' ),
+			'label'   => __( 'Allow', 'payone-woocommerce-3' ),
+			'type'    => 'checkbox',
+			'default' => false,
+		];
+	}
+
 	public function validate_admin_options( $options ) {
 		if ( (int) round( $this->min_amount_validation ) !== 0 ) {
 			$min_amount = isset( $options['min_amount'] ) ? $options['min_amount'] : $this->min_amount_validation;
@@ -796,6 +805,19 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @return bool
 	 */
+	protected function is_b2b() {
+		$post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
+		$post_data        = [];
+		parse_str( $post_data_string, $post_data );
+
+		$billing_company = isset( $post_data['billing_company'] ) ? $post_data['billing_company'] : '';
+
+		return $billing_company !== '';
+	}
+
+	/**
+	 * @return bool
+	 */
 	private function has_divergent_shipping_address() {
 		$post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
 		$post_data        = [];
@@ -831,18 +853,5 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 
 		return false;
-	}
-
-	/**
-	 * @return bool
-	 */
-	private function is_b2b() {
-		$post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
-		$post_data        = [];
-		parse_str( $post_data_string, $post_data );
-
-		$billing_company = isset( $post_data['billing_company'] ) ? $post_data['billing_company'] : '';
-
-		return $billing_company !== '';
 	}
 }

@@ -13,8 +13,6 @@ class PaylaBase extends GatewayBase {
 		parent::__construct( $id );
 
 		$this->supported_currencies                 = [ 'EUR' ];
-		$this->hide_when_divergent_shipping_address = true;
-		$this->hide_when_b2b                        = true;
 	}
 
 	public function is_available() {

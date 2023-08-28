@@ -176,15 +176,6 @@ abstract class RatepayBase extends RedirectGatewayBase {
 		}
 	}
 
-	protected function add_allow_different_shipping_address_field() {
-		$this->form_fields['allow_different_shopping_address'] = [
-			'title'   => __( 'Different shipping address', 'payone-woocommerce-3' ),
-			'label'   => __( 'Allow', 'payone-woocommerce-3' ),
-			'type'    => 'checkbox',
-			'default' => false,
-		];
-	}
-
 	protected function add_device_fingerprint_field() {
 		$this->form_fields[ self::DEVICE_FINGERPRINT_FIELD ] = [
 			'title'   => __( 'Device Fingerprint Snippet-Id', 'payone-woocommerce-3' ),

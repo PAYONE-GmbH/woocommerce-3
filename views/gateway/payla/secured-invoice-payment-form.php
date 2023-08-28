@@ -30,6 +30,16 @@
             <input type="date" class="input-text " name="payone_secured_invoice_birthday" id="payone_secured_invoice_birthday">
         </span>
     </p>
+	<?php if ( $this->is_b2b() ) { ?>
+        <p class="form-row form-row-full" id="payone_secured_invoice_vatid_field">
+            <label for="payone_secured_invoice_vatid_field">
+                <?php _e( 'VAT-ID', 'payone-woocommerce-3' ); ?>
+            </label>
+            <span class="woocommerce-input-wrapper">
+                <input type="text" class="input-text " name="payone_secured_invoice_vatid" id="payone_secured_invoice_vatid">
+            </span>
+        </p>
+	<?php } ?>
 </fieldset>
 
 <?php include( '_disclaimer.php' ); ?>

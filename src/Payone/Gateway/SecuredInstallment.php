@@ -15,6 +15,7 @@ class SecuredInstallment extends PaylaBase {
 		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-rechnungskauf.png';
 		$this->method_title       = 'PAYONE ' . __( 'Secured Installment', 'payone-woocommerce-3' );
 		$this->method_description = '';
+		$this->hide_when_b2b      = true;
 	}
 
 	public function init_form_fields() {
@@ -24,6 +25,8 @@ class SecuredInstallment extends PaylaBase {
 		];
 		$this->init_common_form_fields( 'PAYONE ' . __( 'Secured Installment', 'payone-woocommerce-3' ) );
 		$this->form_fields['countries']['default'] = [ 'DE', 'AT' ];
+		$this->add_allow_different_shipping_address_field();
+		$this->form_fields['allow_different_shopping_address']['description'] = __( 'Attention: has to be enabled in the PAYONE account', 'payone-woocommerce-3' );
 	}
 
 	public function payment_fields() {
