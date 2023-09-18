@@ -23,11 +23,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @var bool
 	 */
-	protected $hide_when_divergent_shipping_address;
-
-	/**
-	 * @var bool
-	 */
 	protected $hide_when_b2b;
 
 	/**
@@ -116,16 +111,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	private $text_on_booking_statement;
 
 	public function __construct( $id ) {
-		$this->id                                   = $id;
-		$this->has_fields                           = true;
-		$this->supports                             = [ 'products', 'refunds' ];
-		$this->global_settings                      = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-        $this->supported_countries                  = (new \WC_Countries())->get_countries();
-        $this->supported_currencies                 = []; // all
-		$this->hide_when_no_shipping                = false;
-		$this->hide_when_divergent_shipping_address = false;
-		$this->hide_when_b2b                        = false;
-		$this->test_transaction_classname           = '';
+		$this->id                         = $id;
+		$this->has_fields                 = true;
+		$this->supports                   = [ 'products', 'refunds' ];
+		$this->global_settings            = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+        $this->supported_countries        = (new \WC_Countries())->get_countries();
+        $this->supported_currencies       = []; // all
+		$this->hide_when_no_shipping      = false;
+		$this->hide_when_b2b              = false;
+		$this->test_transaction_classname = '';
 
 		$this->init_settings();
 		$this->init_form_fields();
@@ -311,10 +305,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 
 		if ( $is_available && $this->hide_when_b2b && $this->is_b2b() ) {
-			$is_available = false;
-		}
-
-		if ( $is_available && $this->hide_when_divergent_shipping_address && $this->has_divergent_shipping_address() ) {
 			$is_available = false;
 		}
 
@@ -818,7 +808,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @return bool
 	 */
-	private function has_divergent_shipping_address() {
+	protected function has_divergent_shipping_address() {
 		$post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
 		$post_data        = [];
 		parse_str( $post_data_string, $post_data );

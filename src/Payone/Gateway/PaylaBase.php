@@ -12,16 +12,24 @@ class PaylaBase extends GatewayBase {
 	public function __construct( $id ) {
 		parent::__construct( $id );
 
-		$this->supported_currencies                 = [ 'EUR' ];
+		$this->supported_currencies  = [ 'EUR' ];
 	}
 
 	public function is_available() {
+		$is_available = parent::is_available();
+
 		$failed_before = Plugin::get_session_value( self::SESSION_KEY_PAYLA_FAILED );
 		if ( $failed_before ) {
-			return false;
+			$is_available = false;
 		}
 
-		return parent::is_available();
+		if ( $is_available && $this->get_option( 'allow_different_shopping_address', 'no' ) === 'no' ) {
+			if ( $this->has_divergent_shipping_address() ) {
+				$is_available = false;
+			}
+		}
+
+		return $is_available;
 	}
 
 	public function payla_request_failed() {
