@@ -8,11 +8,9 @@
             }
         });
     }
-
 function payone_unblock() {
     jQuery('.woocommerce-checkout-payment, .woocommerce-checkout-review-order-table').unblock();
 }
-
 function payone_klarna_gateway_id_to_category(gateway_id) {
     switch (gateway_id) {
         case '<?php echo \Payone\Gateway\KlarnaInvoice::GATEWAY_ID; ?>':
@@ -22,22 +20,17 @@ function payone_klarna_gateway_id_to_category(gateway_id) {
         case '<?php echo \Payone\Gateway\KlarnaSofort::GATEWAY_ID; ?>':
             return 'direct_debit';
     }
-
     return '';
 }
-
 function payone_listen_to_company_change() {
     jQuery('#billing_company,#shipping_company').change(function () {
         jQuery('form.checkout').trigger('update_checkout');
     });
 }
-
 function payone_klarna_category_was_chosen() {
     var current_gateway = jQuery('input[name=payment_method]:checked').val();
-
     return payone_klarna_gateway_id_to_category(current_gateway) !== '';
 }
-
 function reload_current_klarna_widget() {
     var current_gateway = jQuery('input[name=payment_method]:checked').val();
     var current_category = payone_klarna_gateway_id_to_category(current_gateway);
@@ -54,11 +47,9 @@ function reload_current_klarna_widget() {
         payone_checkout_clicked_klarna_generic(current_category);
     }
 }
-
 function payone_secured_installment_was_chosen() {
     return jQuery('input[name=payment_method]:checked').val() == '<?php echo \Payone\Gateway\SecuredInstallment::GATEWAY_ID; ?>';
 }
-
 jQuery('form.woocommerce-checkout').change(function (event) {
     jQuery('input[name="payone_ship_to_different_address_checkbox"]').val(jQuery('#ship-to-different-address-checkbox').prop('checked') ? 1 : 0);
     if (payone_secured_installment_was_chosen() && typeof payone_secured_installment_options_setup === 'function') {
@@ -84,14 +75,11 @@ jQuery('form.woocommerce-checkout').change(function (event) {
                 values_changed = true;
             }
         }
-
         if (values_changed) {
             reload_current_klarna_widget();
         }
     }
-})
-;
-
+});
 <?php
 $gateway_to_select = \Payone\Plugin::get_session_value( \Payone\Gateway\GatewayBase::SESSION_KEY_SELECT_GATEWAY );
 if ($gateway_to_select) {
@@ -101,33 +89,26 @@ if ($gateway_to_select) {
 }
 ?>
 var select_gateway_after_redirect = '<?php echo $gateway_to_select; ?>';
-
 var payone_klarna_actively_chosen = <?php echo \Payone\Plugin::get_session_value( \Payone\Gateway\KlarnaBase::SESSION_KEY_SESSION_STARTED ) ? 'true' : 'false'; ?>;
-
-jQuery(document).ready(function () {
+    jQuery(document).ready(function () {
     var payone_payment_methods_initialized = false;
-
     payone_listen_to_company_change();
-
     if (select_gateway_after_redirect) {
         var current_gateway = jQuery('input[name=payment_method]:checked').val();
         if (current_gateway !== select_gateway_after_redirect) {
             jQuery('#payment_method_' + select_gateway_after_redirect).click();
         }
     }
-
     jQuery('body').on('updated_checkout', function (event) {
         if (payone_payment_methods_initialized && payone_klarna_actively_chosen) {
             reload_current_klarna_widget();
         }
     });
-
     jQuery('body').on('payment_method_selected', function (event) {
         var current_gateway = jQuery('input[name=payment_method]:checked').val();
         var is_klarna_gateway = current_gateway === '<?php echo \Payone\Gateway\KlarnaInvoice::GATEWAY_ID; ?>'
             || current_gateway === '<?php echo \Payone\Gateway\KlarnaInstallments::GATEWAY_ID; ?>'
             || current_gateway === '<?php echo \Payone\Gateway\KlarnaSofort::GATEWAY_ID; ?>';
-
         if (payone_payment_methods_initialized === false) {
             payone_payment_methods_initialized = true;
         } else {
@@ -135,7 +116,6 @@ jQuery(document).ready(function () {
                 payone_klarna_actively_chosen = true;
             }
         }
-
         if (payone_klarna_actively_chosen) {
             var current_category = payone_klarna_gateway_id_to_category(current_gateway);
             klarna_vars.pay_later.widget_shown = false;
@@ -150,12 +130,9 @@ jQuery(document).ready(function () {
             payone_checkout_clicked_klarna_generic(current_category);
         }
     });
-
-
     jQuery('form.woocommerce-checkout').on('checkout_place_order', function (event) {
         if (jQuery('input#terms').length === 0 || jQuery('input#terms').is(':checked')) {
             var current_gateway = jQuery('input[name=payment_method]:checked').val();
-
             var result = true;
             switch ( current_gateway ) {
                 case '<?php echo \Payone\Gateway\Giropay::GATEWAY_ID; ?>':
@@ -190,12 +167,9 @@ jQuery(document).ready(function () {
                     payone_unblock();
             }
         }
-
         return result;
     });
-})
-;
-
+});
 function payone_valid_iban(value) {
     value = value.replace(/\s+/g, '').toUpperCase();
     const codeLengths = {
@@ -215,18 +189,14 @@ function payone_valid_iban(value) {
     let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     let alphaMap = {};
     let number = [];
-
     alphabet.forEach((value, index) => {
         alphaMap[value] = index + 10;
     });
-
     rearrange.split('').forEach((value, index) => {
         number[index] = alphaMap[value] || value;
     });
-
     return payone_modulo(number.join('').toString(), 97) === 1;
 }
-
 function payone_modulo(aNumStr, aDiv) {
     var tmp = "";
     var i, r;
@@ -237,5 +207,4 @@ function payone_modulo(aNumStr, aDiv) {
     }
     return tmp / 1;
 }
-
 </script>

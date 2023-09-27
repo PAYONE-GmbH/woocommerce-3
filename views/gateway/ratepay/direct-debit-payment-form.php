@@ -4,20 +4,15 @@
 <script>
     function payone_checkout_clicked_<?php echo \Payone\Gateway\RatepayDirectDebit::GATEWAY_ID; ?>() {
         var messages = '';
-
         jQuery('#ratepay_direct_debit_error').html('');
-
         if ( jQuery('#ratepay_direct_debit_birthday').val() === '' ) {
             messages += '<?php _e( 'Please enter your birthday!', 'payone-woocommerce-3' ); ?><br>';
         }
         if ( ! payone_valid_iban( jQuery('#ratepay_direct_debit_iban').val() ) ) {
             messages += '<?php _e( 'Please enter a valid IBAN!', 'payone-woocommerce-3' ); ?><br>';
         }
-
         jQuery('#ratepay_direct_debit_error').html('<strong style="color:red">' + messages + '</strong>');
-
         payone_unblock();
-
         return messages.length === 0;
     }
 </script>

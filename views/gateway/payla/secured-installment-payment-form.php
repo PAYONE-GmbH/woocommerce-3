@@ -37,7 +37,6 @@
     }
     function payone_checkout_clicked_<?php echo \Payone\Gateway\SecuredInstallment::GATEWAY_ID; ?>() {
         var messages = '';
-
         if ( typeof jQuery('input[name="payone_secured_installment_option"]:checked').val() === 'undefined' ) {
             messages += '<?php _e( 'Please choose a payment plan!', 'payone-woocommerce-3' ); ?><br>';
         }
@@ -47,9 +46,7 @@
         if ( ! payone_valid_iban( jQuery('#payone_secured_installment_iban').val() ) ) {
             messages += '<?php _e( 'Please enter a valid IBAN!', 'payone-woocommerce-3' ); ?><br>';
         }
-
         jQuery('#payoneSecuredInstallmentErrorOutput').html('<strong style="color:red">' + messages + '</strong>');
-
         return messages.length === 0;
     }
     function payone_secured_installement_option_selected( value ) {

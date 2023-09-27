@@ -65,7 +65,6 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
 <div id="paymentform"></div>
 <script>
     var payone_request, payone_config;
-
     payone_config = {
         fields: {
             cardpan: {
@@ -138,7 +137,6 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
             }
         }
     };
-
     payone_request = {
         request: 'creditcardcheck',
         responsetype: 'JSON',
@@ -151,29 +149,22 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
         hash: '<?php echo esc_attr( $hash ); ?>'
     };
     var payone_iframes = new Payone.ClientApi.HostedIFrames(payone_config, payone_request);
-
     document.getElementById('cardtype').onchange = function () {
         payone_iframes.setCardType(this.value);
     };
-
     jQuery(document).on('click', '#place_order', function () {
         var currentGateway = jQuery('input[name=payment_method]:checked').val();
-
         return currentGateway === '<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>'
             ? payone_checkout_clicked_<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>()
             : true;
     });
-
     var payone_check_status = false;
-
     function payone_checkout_clicked_<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>() {
         if (payone_check_status === true) {
             // Skip the test, as it already succeeded.
             return true;
         }
-
         var cardholder_ok = payone_check_cardholder();
-
         if (payone_iframes.isComplete() && cardholder_ok === true) {
             payone_iframes.creditCardCheck('payone_check_callback');
         } else {
@@ -181,25 +172,19 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
             if (cardholder_ok !== true) {
                 error_message += '<br>' + cardholder_ok;
             }
-
             jQuery('#errorOutput').html('<strong style="color:red">' + error_message + '</strong>');
             payone_unblock();
         }
-
         // Bearbeitung hier abschließen. Das Submit wird dann über "checkCallback" realisiert.
         return false;
     }
-
     function payone_check_cardholder() {
         var cardholder = document.getElementById("card_holder").value;
-
         if (cardholder.length > 50 || cardholder.match(/[^a-zA-Z \-äöüÄÖÜß]/g)) {
             return 'Bitte geben Sie maximal 50 Zeichen für den Karteninhaber ein, Sonderzeichen außer Deutsche Umlaute und einem Bindestrich sind nicht erlaubt.';
         }
-
         return true;
     }
-
     function payone_check_callback(response) {
         if (response.status === "VALID") {
             payone_check_status = true;

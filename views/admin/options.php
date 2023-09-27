@@ -40,16 +40,12 @@
 <script>
     function payone_test_api_settings( e ) {
         e.preventDefault();
-
         var testable_gateways = <?php echo json_encode( $testable_gateways ); ?>;
         jQuery( '#payone_test_api_settings_submit_button' ).html( '<strong><?php _e( 'Running tests...', 'payone-woocommerce-3' ) ?></strong>' );
-
         var ajax_url = '<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-test-api-settings' ] ); ?>';
-
         var num_gateways_to_test = Object.keys( testable_gateways ).length;
         for ( gateway_id in testable_gateways ) {
             jQuery('#gw-status-' + gateway_id ).text(' is being tested...');
-
             jQuery.post(ajax_url, {gateway_id: gateway_id}, function (result) {
                 var json = jQuery.parseJSON( result );
                 var message = ( json.result ? '<span style="color:green">' : '<span style="color:red">' ) + json.message + '</span>';
@@ -57,11 +53,9 @@
                 num_gateways_to_test--;
                 if ( num_gateways_to_test < 1 ) {
                     jQuery( '#payone_test_api_settings_submit_button' ).html( '<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Re-Run tests', 'payone-woocommerce-3' ); ?>">' );
-
                 }
             });
         }
-
         return false;
     }
 </script>

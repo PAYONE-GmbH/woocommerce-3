@@ -6,29 +6,23 @@
         jQuery('#ratepay-installments-plan-short').show();
         jQuery('#ratepay-installments-plan-long').hide();
     });
-
     jQuery('#ratepay_installments_months').on('change', function () {
         payone_ratepay_installments_calculate('calculation-by-time');
     });
     jQuery('#ratepay_installments_calculate_button').on('click', function () {
         payone_ratepay_installments_calculate('calculation-by-rate');
-
         return false;
     });
-
     jQuery('#ratepay-installments-show-details').on('click', function () {
         jQuery('#ratepay-installments-plan-short').hide();
         jQuery('#ratepay-installments-plan-long').show();
-
         return false;
     });
     jQuery('#ratepay-installments-hide-details').on('click', function () {
         jQuery('#ratepay-installments-plan-short').show();
         jQuery('#ratepay-installments-plan-long').hide();
-
         return false;
     });
-
     function payone_ratepay_installments_calculate(calculation_type) {
         let ratepay_installment_data = {
             'calculation-type': calculation_type,
@@ -37,11 +31,9 @@
         };
         jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-ratepay-calculate' ] ); ?>', ratepay_installment_data, function (result) {
             result = jQuery.parseJSON(result);
-
             jQuery('#ratepay_installments_birthday_field').show();
             jQuery('#ratepay_installments_iban_field').show();
             jQuery('#ratepay-installments-plan').show();
-
             jQuery('#ratepay_installments_months').val(result.number_of_rates);
             jQuery('#ratepay-installments-plan-short-rates').text(result.number_of_rates);
             jQuery('#ratepay-installments-plan-rates').text(result.number_of_rates - 1);
@@ -56,7 +48,6 @@
             jQuery('#ratepay-installments-plan-annual-percentage-rate').text(result.annual_percentage_rate);
             jQuery('#ratepay-installments-plan-interest-rate').text(result.interest_rate);
             jQuery('#ratepay-installments-plan-interest-amount').text(result.interest_amount);
-
             jQuery('#ratepay_installments_installment_amount').val(result.form.installment_amount);
             jQuery('#ratepay_installments_installment_number').val(result.form.installment_number);
             jQuery('#ratepay_installments_last_installment_amount').val(result.form.last_installment_amount);
@@ -64,23 +55,17 @@
             jQuery('#ratepay_installments_amount').val(result.form.amount);
         });
     }
-
     function payone_checkout_clicked_<?php echo \Payone\Gateway\RatepayInstallments::GATEWAY_ID; ?>() {
         var messages = '';
-
         jQuery('#ratepay_installments_error').html('');
-
         if ( jQuery('#ratepay_installments_birthday').val() === '' ) {
             messages += '<?php _e( 'Please enter your birthday!', 'payone-woocommerce-3' ); ?><br>';
         }
         if ( ! payone_valid_iban( jQuery('#ratepay_installments_iban').val() ) ) {
             messages += '<?php _e( 'Please enter a valid IBAN!', 'payone-woocommerce-3' ); ?><br>';
         }
-
         jQuery('#ratepay_installments_error').html('<strong style="color:red">' + messages + '</strong>');
-
         payone_unblock();
-
         return messages.length === 0;
     }
 </script>

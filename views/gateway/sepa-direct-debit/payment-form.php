@@ -21,12 +21,10 @@
     var mandate_identification = '';
     var confirmation_check_displayed = false;
     jQuery('#direct_debit_confirmation').hide();
-
     function payone_checkout_clicked_<?php echo \Payone\Gateway\SepaDirectDebit::GATEWAY_ID; ?>() {
         if (mandate_ok) {
             return true;
         }
-
         var data = {
             lastname: jQuery('#billing_last_name').val(),
             country: jQuery('#billing_country').val(),
@@ -36,15 +34,12 @@
             confirmation_check: jQuery('#direct_debit_confirmation_check').prop('checked') ? 1 : 0,
             mandate_identification: mandate_identification
         };
-
         if (!confirmation_check_displayed) {
             data.confirmation_check = -1;
         }
         payone_manage_mandate(data);
-
         return false;
     }
-
     function payone_manage_mandate(data) {
         jQuery('#direct_debit_error').html('');
         jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-manage-mandate' ] ); ?>', data, function (result) {
@@ -63,7 +58,6 @@
                 jQuery('#direct_debit_confirmation_check').prop('checked', false);
                 jQuery('#direct_debit_wrapper').hide();
                 jQuery('#direct_debit_confirmation').show();
-
                 if (confirmation_check_displayed) {
                     document.getElementById("direct_debit_reference").value = result['reference'];
                     mandate_ok = true;
