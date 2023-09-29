@@ -10,7 +10,6 @@
     margin: 0 !important;
     font-family: system-ui !important;
 }
-
 .payoneSelect {
     -webkit-appearance: menulist !important;
     background-color: white !important;
@@ -23,7 +22,6 @@
     margin: 0 !important;
     font-family: system-ui !important;
 }
-
 #expireInput {
     display: -webkit-box;
     display: -moz-box;

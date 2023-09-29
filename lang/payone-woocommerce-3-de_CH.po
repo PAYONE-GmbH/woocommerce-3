@@ -9,7 +9,7 @@ msgstr ""
 "Language: de_CH\n"
 "Language-Team: Deutsch (Schweiz)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2023-04-26 11:38+0000\n"
+"PO-Revision-Date: 2023-08-28 15:23+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
@@ -39,7 +39,7 @@ msgstr "Aktiv"
 msgid "Active Countries"
 msgstr "Aktive Länder"
 
-#: src/Payone/Gateway/RatepayBase.php:239
+#: src/Payone/Gateway/RatepayBase.php:230
 msgid "Add Shop-ID"
 msgstr "Shop-ID hinzufügen"
 
@@ -63,7 +63,7 @@ msgstr ""
 msgid "Alipay"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:182
+#: src/Payone/Gateway/GatewayBase.php:466
 msgid "Allow"
 msgstr "Erlauben"
 
@@ -83,6 +83,12 @@ msgstr "API-Log"
 #: views/gateway/creditcard/payment-form.php:30
 msgid "as printed on card"
 msgstr ""
+
+#: src/Payone/Gateway/SecuredInstallment.php:29
+#: src/Payone/Gateway/SecuredDirectDebit.php:29
+#: src/Payone/Gateway/SecuredInvoice.php:29
+msgid "Attention: has to be enabled in the PAYONE account"
+msgstr "Hinweis: Muss im PAYONE-Konto freigeschaltet sein!"
 
 #: src/Payone/Admin/Option/AddressChecks.php:145
 #: src/Payone/Admin/Option/CreditCheck.php:122
@@ -115,7 +121,7 @@ msgid "Before choosing payment method"
 msgstr ""
 
 #: views/gateway/giropay/payment-form.php:25
-#: src/Payone/Gateway/GatewayBase.php:783
+#: src/Payone/Gateway/GatewayBase.php:792
 msgid "BIC"
 msgstr "BIC"
 
@@ -285,7 +291,7 @@ msgstr ""
 msgid "CSS"
 msgstr "CSS"
 
-#: src/Payone/Gateway/RatepayBase.php:218
+#: src/Payone/Gateway/RatepayBase.php:209
 msgid "Currency"
 msgstr "Währung"
 
@@ -334,11 +340,11 @@ msgstr "Standard Style"
 msgid "Delivery address"
 msgstr "Lieferadresse"
 
-#: src/Payone/Gateway/RatepayBase.php:190
+#: src/Payone/Gateway/RatepayBase.php:181
 msgid "Device Fingerprint Snippet-Id"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:181
+#: src/Payone/Gateway/GatewayBase.php:465
 msgid "Different shipping address"
 msgstr "Abweichende Lieferadresse"
 
@@ -355,7 +361,7 @@ msgstr "Lastschrift"
 msgid "direct.debit.mandate.checkbox.label"
 msgstr "Ich erteile das SEPA-Lastschriftmandat"
 
-#: src/Payone/Transaction/Base.php:286 src/Payone/Transaction/Base.php:380
+#: src/Payone/Transaction/Base.php:304 src/Payone/Transaction/Base.php:398
 msgid "Discount"
 msgstr "Rabatt"
 
@@ -469,7 +475,7 @@ msgstr ""
 #: views/gateway/payla/secured-installment-payment-form.php:76
 #: views/gateway/payla/secured-direct-debit-payment-form.php:38
 #: views/gateway/sepa-direct-debit/payment-form.php:7
-#: src/Payone/Gateway/GatewayBase.php:781
+#: src/Payone/Gateway/GatewayBase.php:790
 msgid "IBAN"
 msgstr "IBAN"
 
@@ -529,13 +535,13 @@ msgstr "Rechnungskauf"
 msgid "Invoice address"
 msgstr "Rechnungsadresse"
 
-#: src/Payone/Gateway/RatepayBase.php:219
+#: src/Payone/Gateway/RatepayBase.php:210
 msgid "Invoice country"
 msgstr "Land (Rechnung)"
 
-#: src/Payone/Gateway/SecuredInstallment.php:86
+#: src/Payone/Gateway/SecuredInstallment.php:89
 #: src/Payone/Gateway/SafeInvoice.php:49 src/Payone/Gateway/Invoice.php:49
-#: src/Payone/Gateway/SecuredInvoice.php:60
+#: src/Payone/Gateway/SecuredInvoice.php:61
 msgid "Invoice has been sent"
 msgstr "Rechnung wurde verschickt"
 
@@ -590,7 +596,7 @@ msgstr "Maestro"
 msgid "Mastercard"
 msgstr "Mastercard"
 
-#: src/Payone/Gateway/RatepayBase.php:222
+#: src/Payone/Gateway/RatepayBase.php:213
 msgid "Max. basket"
 msgstr "Max. Warenwert"
 
@@ -621,7 +627,7 @@ msgstr "Merchant-ID"
 msgid "Method of Authorization"
 msgstr "Methode der Autorisierung"
 
-#: src/Payone/Gateway/RatepayBase.php:221
+#: src/Payone/Gateway/RatepayBase.php:212
 msgid "Min. basket"
 msgstr "Min. Warenwert"
 
@@ -730,7 +736,7 @@ msgid "Payment failed."
 msgstr "Zahlung fehlgeschlagen."
 
 #: src/Payone/Gateway/SepaDirectDebit.php:88
-#: src/Payone/Gateway/SecuredDirectDebit.php:65
+#: src/Payone/Gateway/SecuredDirectDebit.php:68
 msgid "Payment is authorized and captured."
 msgstr "Zahlung wurde autorisiert und belastet."
 
@@ -758,19 +764,19 @@ msgstr "Bezahldienst hat einen Fehler gemeldet"
 
 #: src/Payone/Gateway/Eps.php:88 src/Payone/Gateway/SepaDirectDebit.php:195
 #: src/Payone/Gateway/SepaDirectDebit.php:197
-#: src/Payone/Gateway/SafeInvoice.php:78 src/Payone/Gateway/PaylaBase.php:54
+#: src/Payone/Gateway/SafeInvoice.php:78 src/Payone/Gateway/PaylaBase.php:52
 #: src/Payone/Gateway/Invoice.php:82 src/Payone/Gateway/PrePayment.php:72
 msgid "Payment received."
 msgstr "Zahlung eingegangen."
 
 #: src/Payone/Gateway/Eps.php:83 src/Payone/Gateway/SafeInvoice.php:73
-#: src/Payone/Gateway/PaylaBase.php:49 src/Payone/Gateway/Invoice.php:77
+#: src/Payone/Gateway/PaylaBase.php:47 src/Payone/Gateway/Invoice.php:77
 #: src/Payone/Gateway/PrePayment.php:67
 msgid "Payment received. Customer overpaid!"
 msgstr "Bezahlung eingegangen. Kunde hat zu viel gezahlt!"
 
 #: src/Payone/Gateway/Eps.php:86 src/Payone/Gateway/SafeInvoice.php:76
-#: src/Payone/Gateway/PaylaBase.php:52 src/Payone/Gateway/Invoice.php:80
+#: src/Payone/Gateway/PaylaBase.php:50 src/Payone/Gateway/Invoice.php:80
 #: src/Payone/Gateway/PrePayment.php:70
 msgid "Payment received. Customer underpaid!"
 msgstr "Bezahlung eingegangen. Kunde hat zu wenig gezahlt!"
@@ -861,19 +867,19 @@ msgstr ""
 msgid "Portal ID"
 msgstr "Portal ID"
 
-#: src/Payone/Gateway/GatewayBase.php:785
+#: src/Payone/Gateway/GatewayBase.php:794
 msgid "pp.bankaccount"
 msgstr "Kontonummer"
 
-#: src/Payone/Gateway/GatewayBase.php:787
+#: src/Payone/Gateway/GatewayBase.php:796
 msgid "pp.bankaccountholder"
 msgstr "Zahlungsempfänger"
 
-#: src/Payone/Gateway/GatewayBase.php:791
+#: src/Payone/Gateway/GatewayBase.php:800
 msgid "pp.bankname"
 msgstr "Bank"
 
-#: src/Payone/Gateway/GatewayBase.php:789
+#: src/Payone/Gateway/GatewayBase.php:798
 msgid "pp.reference"
 msgstr "Verwendungszweck"
 
@@ -961,17 +967,17 @@ msgid "Secure Invoice"
 msgstr "Gesicherter Rechnungskauf"
 
 #: src/Payone/Gateway/SecuredDirectDebit.php:16
-#: src/Payone/Gateway/SecuredDirectDebit.php:25
+#: src/Payone/Gateway/SecuredDirectDebit.php:26
 msgid "Secured Direct Debit"
 msgstr "Gesicherte Lastschrift"
 
 #: src/Payone/Gateway/SecuredInstallment.php:16
-#: src/Payone/Gateway/SecuredInstallment.php:25
+#: src/Payone/Gateway/SecuredInstallment.php:26
 msgid "Secured Installment"
 msgstr "Gesicherter Ratenkauf"
 
-#: src/Payone/Gateway/SecuredInvoice.php:18
-#: src/Payone/Gateway/SecuredInvoice.php:27
+#: src/Payone/Gateway/SecuredInvoice.php:16
+#: src/Payone/Gateway/SecuredInvoice.php:26
 msgid "Secured Invoice"
 msgstr "Gesicherter Rechnungskauf"
 
@@ -991,19 +997,19 @@ msgstr "Sequenznummer"
 msgid "Servicecharge"
 msgstr "Vertragsabschlussgebühr"
 
-#: src/Payone/Transaction/Base.php:428
+#: src/Payone/Transaction/Base.php:446
 msgid "Shipping"
 msgstr ""
 
-#: src/Payone/Gateway/RatepayBase.php:220
+#: src/Payone/Gateway/RatepayBase.php:211
 msgid "Shipping country"
 msgstr "Land (Lieferung)"
 
-#: src/Payone/Gateway/RatepayBase.php:217
+#: src/Payone/Gateway/RatepayBase.php:208
 msgid "Shop-ID"
 msgstr "Shop-ID"
 
-#: src/Payone/Gateway/RatepayBase.php:199
+#: src/Payone/Gateway/RatepayBase.php:190
 msgid "Shop-IDs"
 msgstr "Shop-IDs"
 
@@ -1065,12 +1071,12 @@ msgstr "Text auf Buchungsbeleg"
 msgid "The following payment methods are enabled and can be tested:"
 msgstr "Die folgenden Bezahlarten sind aktiviert und können getestet werden:"
 
-#: src/Payone/Gateway/GatewayBase.php:474
+#: src/Payone/Gateway/GatewayBase.php:483
 #, php-format
 msgid "The maximum order value must not be higher than %d"
 msgstr "Der maximale Wert der Bestellung darf nicht größer als %d sein"
 
-#: src/Payone/Gateway/GatewayBase.php:467
+#: src/Payone/Gateway/GatewayBase.php:476
 #, php-format
 msgid "The minimum order value must not be lower than %d"
 msgstr "Der minimale Wert der Bestellung darf nicht kleiner als %d sein"
@@ -1087,7 +1093,7 @@ msgstr "Die PAYONE Plattform hat zu dieser Bestellung einen Beleg generiert"
 msgid "The PAYONE platform has registered a rebooking"
 msgstr "Die PAYONE Plattform hat eine Umbuchung registriert"
 
-#: src/Payone/Gateway/PaylaBase.php:69
+#: src/Payone/Gateway/PaylaBase.php:67
 msgid "This payment method is not available. Please select another."
 msgstr ""
 "Die gewählte Zahlart steht nicht zur Verfügung. Bitte wählen Sie eine andere "
@@ -1148,12 +1154,16 @@ msgstr "Gültiges Jahr"
 msgid "Validity"
 msgstr "Gültigkeit"
 
+#: views/gateway/payla/secured-invoice-payment-form.php:36
+msgid "VAT-ID"
+msgstr "Steuernummer"
+
 #: src/Payone/Gateway/CreditCard.php:63
 msgid "VISA"
 msgstr "VISA"
 
 #: src/Payone/Gateway/SepaDirectDebit.php:85
-#: src/Payone/Gateway/SecuredDirectDebit.php:62
+#: src/Payone/Gateway/SecuredDirectDebit.php:65
 #: src/Payone/Gateway/PrePayment.php:41
 msgid "Waiting for payment."
 msgstr "Auf Zahlung warten."

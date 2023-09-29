@@ -14,7 +14,11 @@ class SecuredInvoice extends Base {
 		$this->set( 'financingtype', 'PIV' );
 		$this->set( 'add_paydata[device_token]', $_POST['payone_secured_invoice_token'] );
 		$this->set( 'birthday', Base::convert_birthday( $_POST['payone_secured_invoice_birthday'] ) );
-		$this->set( 'businessrelation', 'b2c' );
+
+		$vat_id = isset( $_POST['payone_secured_invoice_vatid'] ) ? $_POST['payone_secured_invoice_vatid'] : null;
+		if ( $vat_id ) {
+			$this->set( 'vatid', $vat_id );
+		}
 	}
 
 	/**
@@ -30,6 +34,7 @@ class SecuredInvoice extends Base {
 		$this->set_personal_data_from_order( $order );
 		$this->set_shipping_data_from_order( $order );
 		$this->set_customer_ip_from_order( $order );
+		$this->set_business_relation( $order );
 
 		return $this->submit();
 	}

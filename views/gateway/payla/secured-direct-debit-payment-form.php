@@ -4,19 +4,15 @@
 <script id="paylaDcs" type="text/javascript" src="https://d.payla.io/dcs/<?php echo esc_attr(self::PAYLA_PARTNER_ID); ?>/<?php echo esc_attr($this->get_merchant_id()); ?>/dcs.js"></script>
 <script>
     var paylaDcsT = paylaDcs.init("<?php echo $environment; ?>", "<?php echo $snippet_token; ?>");
-
     function payone_checkout_clicked_<?php echo \Payone\Gateway\SecuredDirectDebit::GATEWAY_ID; ?>() {
         var messages = '';
-
         if ( jQuery('#payone_secured_direct_debit_birthday').val() === '' ) {
             messages += '<?php _e( 'Please enter your birthday!', 'payone-woocommerce-3' ); ?>';
         }
         if ( ! payone_valid_iban( jQuery('#payone_secured_direct_debit_iban').val() ) ) {
             messages += '<?php _e( 'Please enter a valid IBAN!', 'payone-woocommerce-3' ); ?><br>';
         }
-
         jQuery('#payoneSecuredDirectDebitErrorOutput').html('<strong style="color:red">' + messages + '</strong>');
-
         return messages.length === 0;
     }
 </script>

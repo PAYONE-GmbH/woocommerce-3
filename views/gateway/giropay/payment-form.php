@@ -6,11 +6,9 @@
         jQuery('#payone_giropay_error_output').html('');
         if ( ! payone_valid_iban( jQuery('#giropay_iban').val() ) ) {
             jQuery('#payone_giropay_error_output').html('<strong style="color:red">' + '<?php _e( 'Please enter a valid IBAN!', 'payone-woocommerce-3' ); ?>' + '</strong>');
-
             payone_unblock();
             return false;
         }
-
         payone_unblock();
         return true;
     }

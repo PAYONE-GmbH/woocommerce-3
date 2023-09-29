@@ -70,19 +70,9 @@ abstract class RatepayBase extends RedirectGatewayBase {
 			}
 		}
 
-		// Unterschied Rechnungs-/Versandadresse bestimmen
 		if ( $is_available && $this->get_option( 'allow_different_shopping_address', 'no' ) === 'no' ) {
-			$customer_billing  = WC()->customer->get_billing();
-			$customer_shipping = WC()->customer->get_shipping();
-			if ( $customer_billing['first_name'] !== $customer_shipping['first_name']
-			     || $customer_billing['last_name'] !== $customer_shipping['last_name']
-			     || $customer_billing['address_1'] !== $customer_shipping['address_1']
-			     || $customer_billing['address_2'] !== $customer_shipping['address_2']
-			     || $customer_billing['city'] !== $customer_shipping['city']
-			     || $customer_billing['postcode'] !== $customer_shipping['postcode']
-			     || $customer_billing['country'] !== $customer_shipping['country']
-			) {
-				return false;
+			if ( $this->has_divergent_shipping_address() ) {
+				$is_available = false;
 			}
 		}
 
@@ -174,15 +164,6 @@ abstract class RatepayBase extends RedirectGatewayBase {
 		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
 			$this->capture( $order );
 		}
-	}
-
-	protected function add_allow_different_shipping_address_field() {
-		$this->form_fields['allow_different_shopping_address'] = [
-			'title'   => __( 'Different shipping address', 'payone-woocommerce-3' ),
-			'label'   => __( 'Allow', 'payone-woocommerce-3' ),
-			'type'    => 'checkbox',
-			'default' => false,
-		];
 	}
 
 	protected function add_device_fingerprint_field() {

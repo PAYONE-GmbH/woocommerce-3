@@ -4,16 +4,12 @@
 <script id="paylaDcs" type="text/javascript" src="https://d.payla.io/dcs/<?php echo esc_attr(self::PAYLA_PARTNER_ID); ?>/<?php echo esc_attr($this->get_merchant_id()); ?>/dcs.js"></script>
 <script>
     var paylaDcsT = paylaDcs.init("<?php echo $environment; ?>", "<?php echo $snippet_token; ?>");
-
     function payone_checkout_clicked_<?php echo \Payone\Gateway\SecuredInvoice::GATEWAY_ID; ?>() {
         var messages = '';
-
         if ( jQuery('#payone_secured_invoice_birthday').val() === '' ) {
             messages += '<?php _e( 'Please enter your birthday!', 'payone-woocommerce-3' ); ?>';
         }
-
         jQuery('#payoneSecuredInvoiceErrorOutput').html('<strong style="color:red">' + messages + '</strong>');
-
         return messages.length === 0;
     }
 </script>
@@ -30,6 +26,16 @@
             <input type="date" class="input-text " name="payone_secured_invoice_birthday" id="payone_secured_invoice_birthday">
         </span>
     </p>
+	<?php if ( $this->is_b2b() ) { ?>
+        <p class="form-row form-row-full" id="payone_secured_invoice_vatid_field">
+            <label for="payone_secured_invoice_vatid_field">
+                <?php _e( 'VAT-ID', 'payone-woocommerce-3' ); ?>
+            </label>
+            <span class="woocommerce-input-wrapper">
+                <input type="text" class="input-text " name="payone_secured_invoice_vatid" id="payone_secured_invoice_vatid">
+            </span>
+        </p>
+	<?php } ?>
 </fieldset>
 
 <?php include( '_disclaimer.php' ); ?>

@@ -14,17 +14,13 @@ $paypal_express_button_image = apply_filters( 'payone_paypal_express_button_imag
             opacity: 0.6
         }
     });
-
     event.preventDefault();
-
     jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-paypal-express-set-checkout' ] ); ?>', function (result) {
-    var json = jQuery.parseJSON(result);
-    if (typeof json.status !== 'undefined' && json.status === 'ok') {
-    window.location.href = json.url;
-}
-});
-
+        var json = jQuery.parseJSON(result);
+        if (typeof json.status !== 'undefined' && json.status === 'ok') {
+            window.location.href = json.url;
+        }
+    });
     return false;
-})
-;
+});
 </script>

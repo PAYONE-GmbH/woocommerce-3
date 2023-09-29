@@ -23,7 +23,6 @@
         }
     };
     var klarna_data = {};
-
     function payone_checkout_clicked_klarna_generic(payment_category) {
         if (!payment_category) {
             return;
@@ -63,7 +62,6 @@
             klarna_data.shipping_city = klarna_data.city;
             klarna_data.shipping_country = klarna_data.country;
         }
-
         if (klarna_vars[payment_category].widget_shown === false) {
             jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-klarna-start-session' ] ); ?>', klarna_data, function (result) {
                 klarna_vars[payment_category].result_start_session = jQuery.parseJSON(result);
@@ -105,7 +103,6 @@
                 }
             });
         }
-
         return klarna_vars[payment_category].finished;
     }
 </script>

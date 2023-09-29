@@ -23,11 +23,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @var bool
 	 */
-	protected $hide_when_divergent_shipping_address;
-
-	/**
-	 * @var bool
-	 */
 	protected $hide_when_b2b;
 
 	/**
@@ -116,16 +111,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	private $text_on_booking_statement;
 
 	public function __construct( $id ) {
-		$this->id                                   = $id;
-		$this->has_fields                           = true;
-		$this->supports                             = [ 'products', 'refunds' ];
-		$this->global_settings                      = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-        $this->supported_countries                  = (new \WC_Countries())->get_countries();
-        $this->supported_currencies                 = []; // all
-		$this->hide_when_no_shipping                = false;
-		$this->hide_when_divergent_shipping_address = false;
-		$this->hide_when_b2b                        = false;
-		$this->test_transaction_classname           = '';
+		$this->id                         = $id;
+		$this->has_fields                 = true;
+		$this->supports                   = [ 'products', 'refunds' ];
+		$this->global_settings            = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
+        $this->supported_countries        = (new \WC_Countries())->get_countries();
+        $this->supported_currencies       = []; // all
+		$this->hide_when_no_shipping      = false;
+		$this->hide_when_b2b              = false;
+		$this->test_transaction_classname = '';
 
 		$this->init_settings();
 		$this->init_form_fields();
@@ -314,10 +308,6 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			$is_available = false;
 		}
 
-		if ( $is_available && $this->hide_when_divergent_shipping_address && $this->has_divergent_shipping_address() ) {
-			$is_available = false;
-		}
-
 		if ( $is_available ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
 
@@ -458,6 +448,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			unset( $this->form_fields['authorization_method']['options']['authorization'] );
 			$this->form_fields['authorization_method']['default'] = 'preauthorization';
 		}
+	}
+
+	protected function add_allow_different_shipping_address_field() {
+		$this->form_fields['allow_different_shopping_address'] = [
+			'title'   => __( 'Different shipping address', 'payone-woocommerce-3' ),
+			'label'   => __( 'Allow', 'payone-woocommerce-3' ),
+			'type'    => 'checkbox',
+			'default' => false,
+		];
 	}
 
 	public function validate_admin_options( $options ) {
@@ -796,7 +795,20 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @return bool
 	 */
-	private function has_divergent_shipping_address() {
+	protected function is_b2b() {
+		$post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
+		$post_data        = [];
+		parse_str( $post_data_string, $post_data );
+
+		$billing_company = isset( $post_data['billing_company'] ) ? $post_data['billing_company'] : '';
+
+		return $billing_company !== '';
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function has_divergent_shipping_address() {
 		$post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
 		$post_data        = [];
 		parse_str( $post_data_string, $post_data );
@@ -831,18 +843,5 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 
 		return false;
-	}
-
-	/**
-	 * @return bool
-	 */
-	private function is_b2b() {
-		$post_data_string = isset( $_POST['post_data'] ) ? $_POST['post_data'] : '';
-		$post_data        = [];
-		parse_str( $post_data_string, $post_data );
-
-		$billing_company = isset( $post_data['billing_company'] ) ? $post_data['billing_company'] : '';
-
-		return $billing_company !== '';
 	}
 }
