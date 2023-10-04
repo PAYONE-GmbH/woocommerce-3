@@ -3,8 +3,8 @@ Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
-Tested up to: 7.6.0
-Stable tag: 2.5.2
+Tested up to: 8.1.1
+Stable tag: 2.6.0
 Requires PHP: 7.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -70,6 +70,21 @@ If you have found anything security related, please contact our technical suppor
 
 
 == Changelog ==
+
+== 2.6.0 ==
+
+New Features
+ 
+* Secured Invoice (BNPL) extension for B2B customers, 
+  deviant delivery address allowed
+
+Maintenance
+ 
+* tested with
+ 
+Tested with wordpress version: 6.3.1
+woocommerce version: 8.1.1
+php version: 8.1.0 
 
 == 2.5.2 ==
 
