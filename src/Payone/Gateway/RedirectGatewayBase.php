@@ -83,18 +83,20 @@ abstract class RedirectGatewayBase extends GatewayBase {
 			// At this point a redirect was not required,
 			// we are processing the payment as regular.
 			if ( $response->has_error() ) {
-				// According to the WooCommerce docs we just return nothing to indicate a payment error
-				wc_add_notice( $this->get_error_message( $response ), 'error' );
-			} else {
-				// No error, complete the payment
-				$this->handle_successfull_payment( $order );
-				$target_url = $this->get_return_url( $order );
+				$order->update_status( 'failed', $this->get_error_message( $response ) );
+				wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ) , 'error' );
 
-				return [
-					'result'   => 'success',
-					'redirect' => $target_url,
-				];
+				return null;
 			}
+
+			// No error, complete the payment
+			$this->handle_successfull_payment( $order );
+			$target_url = $this->get_return_url( $order );
+
+			return [
+				'result'   => 'success',
+				'redirect' => $target_url,
+			];
 		}
 	}
 

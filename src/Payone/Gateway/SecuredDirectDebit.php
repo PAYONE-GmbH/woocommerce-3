@@ -46,11 +46,12 @@ class SecuredDirectDebit extends PaylaBase {
 		$response = $transaction->execute( $order );
 
 		if ( $response->has_error() ) {
-			wc_add_notice( $this->get_error_message( $response ), 'error' );
+			$order->update_status( 'failed', $this->get_error_message( $response ) );
+			wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ) , 'error' );
 
 			$this->payla_request_failed();
 
-			return;
+			return null;
 		}
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
