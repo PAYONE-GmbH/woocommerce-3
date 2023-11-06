@@ -66,9 +66,10 @@ class SepaDirectDebit extends GatewayBase {
 		$response = $transaction->execute( $order );
 
 		if ( $response->has_error() ) {
-			wc_add_notice( $this->get_error_message( $response ), 'error' );
+			$order->update_status( 'failed', $this->get_error_message( $response ) );
+			wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ) , 'error' );
 
-			return;
+			return null;
 		}
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
