@@ -22,18 +22,20 @@ class Ideal extends RedirectGatewayBase {
 
 	public function payment_fields() {
 		$bankgroups = [
-			'ABN_AMRO_BANK'         => 'ABN Amro',
-			'ASN_BANK'              => 'ASN Bank',
-			'BUNQ_BANK'             => 'Bunq',
-			'ING_BANK'              => 'ING Bank',
-			'KNAB_BANK'             => 'Knab',
-			'RABOBANK'              => 'Rabobank',
-			'REVOLUT'               => 'Revolut',
-			'SNS_BANK'              => 'SNS Bank',
-			'SNS_REGIO_BANK'        => 'Regio Bank',
-			'TRIODOS_BANK'          => 'Triodos Bank',
-			'VAN_LANSCHOT_BANKIERS' => 'van Lanschot',
-			'YOURSAFE'              => 'Yoursafe B.V',
+			'ABNANL2A' => 'ABN Amro',
+			'ASNBNL21' => 'ASN Bank',
+			'BUNQNL2A' => 'Bunq',
+			'INGBNL2A' => 'ING Bank',
+			'KNABNL2H' => 'Knab',
+			'NTSBDEB1' => 'N26',
+			'NNBANL2G' => 'Nationale-Nederlanden',
+			'RABONL2U' => 'Rabobank',
+			'RBRBNL21' => 'RegioBank',
+			'REVOLT21' => 'Revolut',
+			'SNSBNL2A' => 'SNS',
+			'TRIONL2U' => 'Triodos Bank',
+			'FVLBNL22' => 'van Lanschot',
+			'BITSNL2A' => 'Yoursafe',
 		];
 
 		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
