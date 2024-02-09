@@ -491,7 +491,7 @@ class CreditCard extends RedirectGatewayBase {
 	 * @return string
 	 */
 	public function calculate_hash( $options ) {
-		return hash(
+		return hash_hmac(
 			'sha384',
 			$options['account_id']
 			. 'UTF-8'
@@ -501,7 +501,8 @@ class CreditCard extends RedirectGatewayBase {
 			. 'creditcardcheck'
 			. 'JSON'
 			. 'yes'
-			. $options['key']
+			. $options['key'],
+			$options['key']
 		);
 	}
 }
