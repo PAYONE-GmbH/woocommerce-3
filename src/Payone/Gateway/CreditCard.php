@@ -500,8 +500,7 @@ class CreditCard extends RedirectGatewayBase {
 			. $options['portal_id']
 			. 'creditcardcheck'
 			. 'JSON'
-			. 'yes'
-			. $options['key'],
+			. 'yes',
 			$options['key']
 		);
 	}
