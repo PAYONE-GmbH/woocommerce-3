@@ -441,7 +441,7 @@ class Base extends Request {
 			$va             = Plugin::get_tax_rate_for_total( $refund_data['shipping_total'], $refund_data['shipping_tax'] );
 			$articles[ $n ] = [
 				'id' => 'shipment-' . $n,
-				'pr' => 100 * ( $refund_data['shipping_total'] + $refund_data['shipping_tax'] ),
+				'pr' => round( 100 * ( $refund_data['shipping_total'] + $refund_data['shipping_tax'] ) ),
 				'no' => 1,
 				'de' => __( 'Shipping', 'payone-woocommerce-3' ),
 				'va' => 100 * $va,
