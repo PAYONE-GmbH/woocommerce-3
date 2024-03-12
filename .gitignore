@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+assets/build/
+vendor
+
+# Node
+node_modules/
+yarn-error.log
+.yarn
+.cache
+.node_repl_history

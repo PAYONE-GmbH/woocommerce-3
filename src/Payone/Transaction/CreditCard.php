@@ -51,7 +51,7 @@ class CreditCard extends Base {
 		$this->set( 'currency', 'EUR' );
 		$this->set( 'pseudocardpan', '5500000000099999' );
 		$this->set( 'cardtype', 'M' );
-		$this->set( 'cardexpiredate', date('y') . '12');
+		$this->set( 'cardexpiredate', date( 'y' ) . '12' );
 		$this->set( 'cardpan', '5500000000000004' );
 		$this->set( 'lastname', 'Tester' );
 		$this->set( 'firstname', 'Tim' );

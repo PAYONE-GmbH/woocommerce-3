@@ -12,10 +12,11 @@ class PaylaBase extends GatewayBase {
 	public function __construct( $id ) {
 		parent::__construct( $id );
 
-		$this->supported_currencies  = [ 'EUR' ];
+		$this->supported_currencies = [ 'EUR' ];
 	}
 
 	public function is_available() {
+		return true;
 		$is_available = parent::is_available();
 
 		$failed_before = Plugin::get_session_value( self::SESSION_KEY_PAYLA_FAILED );
@@ -76,5 +77,21 @@ class PaylaBase extends GatewayBase {
 		}
 
 		return $response->get_error_message();
+	}
+
+	public function get_snippet_token() {
+		return '';
+	}
+
+	public function get_environment() {
+		return $this->get_mode() === 'live' ? 'p' : 't';
+	}
+
+	public function get_client_css() {
+		return 'https://d.payla.io/dcs/dcs.css?st='. esc_url($this->get_snippet_token()) . '&pi='.  esc_url(self::PAYLA_PARTNER_ID) . '&psi=' . esc_url($this->get_merchant_id()) . '&e='. $this->get_environment();
+	}
+
+	public function get_client_js() {
+		return 'https://d.payla.io/dcs/' . esc_attr( self::PAYLA_PARTNER_ID ) . '/' . esc_attr( $this->get_merchant_id() ) . '/dcs.js';
 	}
 }

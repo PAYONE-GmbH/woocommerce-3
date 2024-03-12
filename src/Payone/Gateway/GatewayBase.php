@@ -33,7 +33,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	/**
 	 * @var string[]
 	 */
-    protected $supported_currencies;
+	protected $supported_currencies;
 
 	/**
 	 * @var string
@@ -115,8 +115,8 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$this->has_fields                 = true;
 		$this->supports                   = [ 'products', 'refunds' ];
 		$this->global_settings            = get_option( \Payone\Admin\Option\Account::OPTION_NAME );
-        $this->supported_countries        = (new \WC_Countries())->get_countries();
-        $this->supported_currencies       = []; // all
+		$this->supported_countries        = ( new \WC_Countries() )->get_countries();
+		$this->supported_currencies       = []; // all
 		$this->hide_when_no_shipping      = false;
 		$this->hide_when_b2b              = false;
 		$this->test_transaction_classname = '';
@@ -149,7 +149,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
 	public function admin_options() {
 		if ( ! $this->payone_api_settings_are_valid() ) {
-            $this->add_error( __( 'Connection to PAYONE API failed', 'payone-woocommerce-3' ) );
+			$this->add_error( __( 'Connection to PAYONE API failed', 'payone-woocommerce-3' ) );
 			$this->display_errors();
 		}
 
@@ -168,22 +168,22 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		$test_result = true;
 
 		if ( $this->payone_is_testable() ) {
-            $test_result = ( new $this->test_transaction_classname( $this ) )
-                ->set( 'mode', 'test' )
-                ->test_request_successful();
+			$test_result = ( new $this->test_transaction_classname( $this ) )
+				->set( 'mode', 'test' )
+				->test_request_successful();
 
-            if ( ! $test_result ) {
-	            $this->enabled = 'no';
-	            $this->settings['enabled'] = 'no';
-	            $this->update_option( 'enabled', $this->enabled );
-            }
+			if ( ! $test_result ) {
+				$this->enabled             = 'no';
+				$this->settings['enabled'] = 'no';
+				$this->update_option( 'enabled', $this->enabled );
+			}
 		}
 
 		return $test_result;
 	}
 
-    protected function after_payment_successful() {
-    }
+	protected function after_payment_successful() {
+	}
 
 	/**
 	 * @param TransactionStatus $transaction_status
@@ -250,9 +250,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return $capture->execute( $order );
 	}
 
-    protected function get_error_message( \Payone\Payone\Api\Response $response ) {
-        return __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message();
-    }
+	protected function get_error_message( \Payone\Payone\Api\Response $response ) {
+		return __( 'Payment error: ', 'payone-woocommerce-3' ) . $response->get_error_message();
+	}
 
 	protected function add_data_to_capture( Capture $capture, \WC_Order $order ) {
 	}
@@ -294,9 +294,9 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			$is_available = false;
 		}
 
-        if ( $is_available && $this->supported_currencies ) {
-            $is_available = in_array( get_woocommerce_currency(), $this->supported_currencies, true );
-        }
+		if ( $is_available && $this->supported_currencies ) {
+			$is_available = in_array( get_woocommerce_currency(), $this->supported_currencies, true );
+		}
 
 		if ( $is_available && $this->hide_when_no_shipping ) {
 			if ( ! wc_shipping_enabled() || wc_get_shipping_method_count() < 1 ) {
@@ -352,7 +352,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			'description'               => [
 				'title'   => __( 'Customer Message', 'payone-woocommerce-3' ),
 				'type'    => 'textarea',
-                'css'       => 'width: 400px;',
+				'css'     => 'width: 400px;',
 				'default' => '',
 			],
 			'min_amount'                => [
@@ -654,7 +654,7 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		ob_start();
 		?>
         <fieldset>
-            <label style="display: block; font-weight: bold;"><?php echo ( isset( $title ) ? $title : $data['title'] ); ?></label>
+            <label style="display: block; font-weight: bold;"><?php echo( isset( $title ) ? $title : $data['title'] ); ?></label>
             <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
             <select class="select <?php echo esc_attr( $data['class'] ); ?>"
                     name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>"
@@ -711,62 +711,65 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		return ob_get_clean();
 	}
 
-    public function generate_cc_countries_html( $key, $data ) {
-        $defaults  = array(
-            'title'             => '',
-            'disabled'          => false,
-            'class'             => '',
-            'css'               => '',
-            'placeholder'       => '',
-            'type'              => 'text',
-            'desc_tip'          => false,
-            'description'       => '',
-            'custom_attributes' => array(),
-            'select_buttons'    => false,
-            'options'           => array(),
-        );
-        $settings  = wp_parse_args( $data, $defaults );
-        $value = (array) $this->get_option( $key, array() );
-        $field_key = $this->get_field_key( $key );
-        $selections = $value;
-        $description = \WC_Settings_API::get_description_html($settings);
-        $tooltip_html = \WC_Settings_API::get_tooltip_html($settings);
+	public function generate_cc_countries_html( $key, $data ) {
+		$defaults     = array(
+			'title'             => '',
+			'disabled'          => false,
+			'class'             => '',
+			'css'               => '',
+			'placeholder'       => '',
+			'type'              => 'text',
+			'desc_tip'          => false,
+			'description'       => '',
+			'custom_attributes' => array(),
+			'select_buttons'    => false,
+			'options'           => array(),
+		);
+		$settings     = wp_parse_args( $data, $defaults );
+		$value        = (array) $this->get_option( $key, array() );
+		$field_key    = $this->get_field_key( $key );
+		$selections   = $value;
+		$description  = \WC_Settings_API::get_description_html( $settings );
+		$tooltip_html = \WC_Settings_API::get_tooltip_html( $settings );
 
-        if ( ! empty( $settings['options'] ) ) {
-            $countries = $settings['options'];
-        } else {
-            $countries = WC()->countries->countries;
-        }
+		if ( ! empty( $settings['options'] ) ) {
+			$countries = $settings['options'];
+		} else {
+			$countries = WC()->countries->countries;
+		}
 
-        asort( $countries );
+		asort( $countries );
 
-        ob_start();
-        ?>
+		ob_start();
+		?>
         <tr valign="top">
             <th scope="row" class="titledesc">
-                <label for="<?php echo esc_attr( $field_key ); ?>"><?php echo esc_html( $settings['title'] ); ?> <?php echo $tooltip_html; // WPCS: XSS ok. ?></label>
+                <label for="<?php echo esc_attr( $field_key ); ?>"><?php echo esc_html( $settings['title'] ); ?><?php echo $tooltip_html; // WPCS: XSS ok. ?></label>
             </th>
             <td class="forminp">
-                <select multiple="multiple" name="<?php echo esc_attr( $field_key ); ?>[]" style="width:350px" data-placeholder="<?php esc_attr_e( 'Choose countries / regions&hellip;', 'woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Country / Region', 'woocommerce' ); ?>" class="wc-enhanced-select">
-                    <?php
-                    if ( ! empty( $countries ) ) {
-                        foreach ( $countries as $key => $val ) {
-                            echo '<option value="' . esc_attr( $key ) . '"' . wc_selected( $key, $selections ) . '>' . esc_html( $val ) . '</option>'; // WPCS: XSS ok.
-                        }
-                    }
-                    ?>
+                <select multiple="multiple" name="<?php echo esc_attr( $field_key ); ?>[]" style="width:350px"
+                        data-placeholder="<?php esc_attr_e( 'Choose countries / regions&hellip;', 'woocommerce' ); ?>"
+                        aria-label="<?php esc_attr_e( 'Country / Region', 'woocommerce' ); ?>"
+                        class="wc-enhanced-select">
+					<?php
+					if ( ! empty( $countries ) ) {
+						foreach ( $countries as $key => $val ) {
+							echo '<option value="' . esc_attr( $key ) . '"' . wc_selected( $key, $selections ) . '>' . esc_html( $val ) . '</option>'; // WPCS: XSS ok.
+						}
+					}
+					?>
                 </select> <?php echo ( $description ) ? $description : ''; // WPCS: XSS ok. ?>
-                <br /><a class="select_all button" href="#"><?php esc_html_e( 'Select all', 'woocommerce' ); ?></a>
+                <br/><a class="select_all button" href="#"><?php esc_html_e( 'Select all', 'woocommerce' ); ?></a>
                 <a class="select_none button" href="#"><?php esc_html_e( 'Select none', 'woocommerce' ); ?></a>
             </td>
         </tr>
-        <?php
-        return ob_get_clean();
-    }
+		<?php
+		return ob_get_clean();
+	}
 
-    public function validate_cc_countries_field( $key, $value ) {
-        return $this->validate_multiselect_field( $key, (array) $value );
-    }
+	public function validate_cc_countries_field( $key, $value ) {
+		return $this->validate_multiselect_field( $key, (array) $value );
+	}
 
 	/**
 	 * @param \WC_Order $order

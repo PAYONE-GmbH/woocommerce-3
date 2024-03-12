@@ -57,9 +57,9 @@ class PayPal extends Base {
 		$this->set( 'lastname', 'Tester' );
 		$this->set( 'firstname', 'Tim' );
 
-		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'success'] ) );
-		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'error'] ) );
-		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'back'] ) );
+		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'success' ] ) );
+		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'error' ] ) );
+		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'back' ] ) );
 
 		return $this->submit()->is_redirect();
 	}

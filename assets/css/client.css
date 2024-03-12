@@ -1,0 +1,19 @@
+.wc-block-components-text-input.payone-validated-date-input input {
+    background-color: #fff;
+    border: 1px solid #50575e;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #2b2d2f;
+    font-family: inherit;
+    font-size: 1em;
+    line-height: 1em;
+    margin: 0;
+    min-height: 0;
+    padding: 1.5em .5em .5em;
+    width: 100%;
+}
+
+.wc-block-components-text-input.payone-validated-checkbox label {
+    transform: none !important;
+    left: 1.25rem !important;
+}
