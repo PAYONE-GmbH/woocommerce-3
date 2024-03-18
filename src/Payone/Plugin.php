@@ -734,20 +734,16 @@ class Plugin {
 					exit;
 				case 'button':
 					$order_id = self::get_session_value( AmazonPayBase::SESSION_KEY_ORDER_ID );
-					self::delete_session_value( $order_id );
+					self::delete_session_value( AmazonPayBase::SESSION_KEY_ORDER_ID );
 					$gateway->process_button( $order_id );
 					exit;
 				case 'success':
 					self::delete_session_value( AmazonPayBase::SESSION_KEY_ORDER_ID );
 
 					$order_id = (int) $_GET['oid'];
-					$order   = new \WC_Order( $order_id );
-					$logged_in_user_id = wp_get_current_user()->ID;
-					if ( $logged_in_user_id ) {
-						$order_user = $order->get_user();
-						if ( $order_user && $order->get_user()->ID === $logged_in_user_id ) {
-							$gateway->process_success( $order_id );
-						}
+					$order    = new \WC_Order( $order_id );
+					if ( $order->get_status() === 'pending' ) {
+						$gateway->process_success( $order_id );
 					}
 
 					wp_redirect( wc_get_checkout_url() );
