@@ -135,10 +135,6 @@ var payone_klarna_actively_chosen = <?php echo \Payone\Plugin::get_session_value
             var current_gateway = jQuery('input[name=payment_method]:checked').val();
             var result = true;
             switch ( current_gateway ) {
-                case '<?php echo \Payone\Gateway\Giropay::GATEWAY_ID; ?>':
-                    payone_block();
-                    result = payone_checkout_clicked_<?php echo \Payone\Gateway\Giropay::GATEWAY_ID; ?>();
-                    break;
                 case '<?php echo \Payone\Gateway\RatepayDirectDebit::GATEWAY_ID; ?>':
                     payone_block();
                     result = payone_checkout_clicked_<?php echo \Payone\Gateway\RatepayDirectDebit::GATEWAY_ID; ?>();
@@ -162,6 +158,10 @@ var payone_klarna_actively_chosen = <?php echo \Payone\Plugin::get_session_value
                     break;
                 case '<?php echo \Payone\Gateway\SecuredInvoice::GATEWAY_ID; ?>':
                     result = payone_checkout_clicked_<?php echo \Payone\Gateway\SecuredInvoice::GATEWAY_ID; ?>();
+                    break;
+                case '<?php echo \Payone\Gateway\AmazonPay::GATEWAY_ID; ?>':
+                case '<?php echo \Payone\Gateway\AmazonPayExpress::GATEWAY_ID; ?>':
+                    result = payone_checkout_clicked_amazonpay_common();
                     break;
                 default:
                     payone_unblock();

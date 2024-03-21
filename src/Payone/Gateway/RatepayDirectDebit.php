@@ -2,9 +2,6 @@
 
 namespace Payone\Gateway;
 
-use Payone\Payone\Api\TransactionStatus;
-use Payone\Plugin;
-
 class RatepayDirectDebit extends RatepayBase {
 
 	const GATEWAY_ID = 'payone_ratepay_direct_debit';

@@ -196,14 +196,14 @@ class Account extends Helper {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 
-		$testable_gateways = [];
+		$testable_gateways  = [];
 		$available_gateways = WC()->payment_gateways->payment_gateways();
 		foreach ( $available_gateways as $gateway_id => $gateway ) {
 			if ( method_exists( $gateway, 'payone_is_testable' )
 			     && $gateway->payone_is_testable()
-				 && $gateway->enabled === 'yes'
+			     && $gateway->enabled === 'yes'
 			) {
-				$testable_gateways[$gateway_id] = $gateway->method_title;
+				$testable_gateways[ $gateway_id ] = $gateway->method_title;
 			}
 		}
 

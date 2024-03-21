@@ -1,0 +1,40 @@
+{
+    "name": "payone-woocommerce-3",
+    "version": "1.0.0",
+    "license": "MIT",
+    "scripts": {
+        "prebuild": "yarn install && composer install",
+        "start": "npm run start:webpack",
+        "start:webpack": "rimraf assets/build/* && wp-scripts start",
+        "build": "rimraf assets/build/* && npm run build:webpack",
+        "build:webpack": "wp-scripts build"
+    },
+    "dependencies": {
+        "@babel/core": "^7.23.5",
+        "@babel/preset-env": "^7.23.5",
+        "@babel/preset-react": "^7.23.3",
+        "@babel/preset-typescript": "^7.23.3",
+        "@typescript-eslint/eslint-plugin": "^6.13.2",
+        "@typescript-eslint/parser": "^6.13.2",
+        "@woocommerce/dependency-extraction-webpack-plugin": "^2.3.0",
+        "@wordpress/components": "^25.14.0",
+        "@wordpress/data": "^9.17.0",
+        "@wordpress/data-controls": "^3.16.0",
+        "@wordpress/element": "^5.24.0",
+        "@wordpress/hooks": "^3.47.0",
+        "@wordpress/i18n": "^4.47.0",
+        "@wordpress/is-shallow-equal": "^4.47.0",
+        "@wordpress/scripts": "^26.18.0",
+        "babel-eslint": "^10.1.0",
+        "babel-loader": "^9.1.3",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-loader": "^4.0.2",
+        "iban": "^0.0.14",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "rimraf": "^5.0.5",
+        "ts-loader": "^9.5.1",
+        "typescript": "^5.3.3",
+        "webpack": "^5.89.0"
+    }
+}

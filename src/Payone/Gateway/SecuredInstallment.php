@@ -29,9 +29,13 @@ class SecuredInstallment extends PaylaBase {
 		$this->form_fields['allow_different_shopping_address']['description'] = __( 'Attention: has to be enabled in the PAYONE account', 'payone-woocommerce-3' );
 	}
 
+	public function get_snippet_token() {
+		return self::PAYLA_PARTNER_ID . '_' . $this->get_merchant_id() . '_' . md5( uniqid( 'payone_secured_installment', true ) );
+	}
+
 	public function payment_fields() {
-		$environment = $this->get_mode() === 'live' ? 'p' : 't';
-		$snippet_token = self::PAYLA_PARTNER_ID . '_' . $this->get_merchant_id() . '_' . md5(uniqid('payone_secured_installment', true));
+		$environment   = $this->get_environment();
+		$snippet_token = $this->get_snippet_token();
 
 		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/payla/secured-installment-payment-form.php';
@@ -39,23 +43,23 @@ class SecuredInstallment extends PaylaBase {
 
 	public function process_secured_installment_options() {
 		$transaction = new \Payone\Transaction\SecuredInstallmentOptions( $this );
-		$response = $transaction->execute( WC()->cart );
+		$response    = $transaction->execute( WC()->cart );
 		if ( $response->get( 'status' ) === 'OK' ) {
 			$result = [];
-			$i = 0;
-			while ( $response->get('add_paydata[installment_option_id_'. $i . ']' ) ) {
-				$monthly_amount = round( $response->get('add_paydata[monthly_amount_value_'. $i . ']' ) / 100, 2 );
-				$result[] = [
-					'workorderid' => $response->get('workorderid'),
-					'option_id' => $response->get('add_paydata[installment_option_id_'. $i . ']' ),
-					'number_of_payments' => $response->get('add_paydata[number_of_payments_'. $i . ']' ),
-					'monthly_amount' => number_format_i18n( $monthly_amount, 2 ) . ' €',
-					'nominal_interest_rate' => number_format_i18n( $response->get('add_paydata[nominal_interest_rate_'. $i . ']' ) / 100, 2 ) . '&nbsp;%',
-					'effective_interest_rate' => number_format_i18n( $response->get('add_paydata[effective_interest_rate_'. $i . ']' ) / 100, 2 ) . '&nbsp;%',
-					'total_amount_value' => number_format_i18n( $response->get('add_paydata[total_amount_value_'. $i . ']' ) / 100, 2 ) . '&nbsp;€',
-					'info_url' => $response->get('add_paydata[link_credit_information_href_'. $i . ']' ),
+			$i      = 0;
+			while ( $response->get( 'add_paydata[installment_option_id_' . $i . ']' ) ) {
+				$monthly_amount = round( $response->get( 'add_paydata[monthly_amount_value_' . $i . ']' ) / 100, 2 );
+				$result[]       = [
+					'workorderid'             => $response->get( 'workorderid' ),
+					'option_id'               => $response->get( 'add_paydata[installment_option_id_' . $i . ']' ),
+					'number_of_payments'      => $response->get( 'add_paydata[number_of_payments_' . $i . ']' ),
+					'monthly_amount'          => number_format_i18n( $monthly_amount, 2 ) . ' €',
+					'nominal_interest_rate'   => number_format_i18n( $response->get( 'add_paydata[nominal_interest_rate_' . $i . ']' ) / 100, 2 ) . '&nbsp;%',
+					'effective_interest_rate' => number_format_i18n( $response->get( 'add_paydata[effective_interest_rate_' . $i . ']' ) / 100, 2 ) . '&nbsp;%',
+					'total_amount_value'      => number_format_i18n( $response->get( 'add_paydata[total_amount_value_' . $i . ']' ) / 100, 2 ) . '&nbsp;€',
+					'info_url'                => $response->get( 'add_paydata[link_credit_information_href_' . $i . ']' ),
 				];
-				$i++;
+				$i ++;
 			}
 
 			echo json_encode( $result );
@@ -75,7 +79,7 @@ class SecuredInstallment extends PaylaBase {
 
 		if ( $response->has_error() ) {
 			$order->update_status( 'failed', $this->get_error_message( $response ) );
-			wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ) , 'error' );
+			wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ), 'error' );
 
 			$this->payla_request_failed();
 

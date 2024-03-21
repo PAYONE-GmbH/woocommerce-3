@@ -35,7 +35,7 @@ class SafeInvoice extends GatewayBase {
 
 		if ( $response->has_error() ) {
 			$order->update_status( 'failed', $this->get_error_message( $response ) );
-			wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ) , 'error' );
+			wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ), 'error' );
 
 			return null;
 		}

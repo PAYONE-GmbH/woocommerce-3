@@ -29,7 +29,7 @@
             'month': jQuery('#ratepay_installments_months').val(),
             'rate': jQuery('#ratepay_installments_rate').val(),
         };
-        jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-ratepay-calculate' ] ); ?>', ratepay_installment_data, function (result) {
+        jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-ratepay-calculate' ]); ?>', ratepay_installment_data, function (result) {
             result = jQuery.parseJSON(result);
             jQuery('#ratepay_installments_birthday_field').show();
             jQuery('#ratepay_installments_iban_field').show();

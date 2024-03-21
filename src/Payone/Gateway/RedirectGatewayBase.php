@@ -84,7 +84,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 			// we are processing the payment as regular.
 			if ( $response->has_error() ) {
 				$order->update_status( 'failed', $this->get_error_message( $response ) );
-				wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ) , 'error' );
+				wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ), 'error' );
 
 				return null;
 			}
@@ -100,7 +100,7 @@ abstract class RedirectGatewayBase extends GatewayBase {
 		}
 	}
 
-	private function handle_successfull_payment( \WC_Order $order ) {
+	protected function handle_successfull_payment( \WC_Order $order ) {
 		global $woocommerce;
 
 		$authorization_method = $order->get_meta( '_authorization_method' );
