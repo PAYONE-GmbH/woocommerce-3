@@ -1,6 +1,5 @@
 .DS_Store
 .idea/
-assets/build/
 vendor
 
 # Node
