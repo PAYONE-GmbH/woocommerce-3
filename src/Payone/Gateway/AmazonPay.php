@@ -58,9 +58,14 @@ class AmazonPay extends AmazonPayBase {
 
 	public function process_button( $order_id ) {
 		$order = wc_get_order( $order_id );
-		$button_config = $this->create_button_config( $order );
+		if ( $order ) {
+			$button_config = $this->create_button_config( $order );
 
-		include PAYONE_VIEW_PATH . '/gateway/amazonpay/button-payment-form.php';
+			include PAYONE_VIEW_PATH . '/gateway/amazonpay/button-payment-form.php';
+			exit;
+		}
+
+		wp_redirect( wc_get_checkout_url() );
 		exit;
 	}
 

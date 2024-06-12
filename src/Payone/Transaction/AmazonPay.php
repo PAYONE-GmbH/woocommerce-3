@@ -36,6 +36,9 @@ class AmazonPay extends Base {
 		$this->set( 'currency', strtoupper( get_woocommerce_currency() ) );
 		$this->set_personal_data_from_order( $order );
 		$this->set_shipping_data_from_order( $order );
+		if ( $this->has_no_shipping_data() ) {
+			$this->copy_shipping_data_from_personal_data();
+		}
 
 		$this->set( 'add_paydata[checkoutMode]', 'ProcessOrder' );
 		$this->set( 'add_paydata[productType]', 'PayAndShip' );
