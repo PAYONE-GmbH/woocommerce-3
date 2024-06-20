@@ -29,9 +29,13 @@ class SecuredInvoice extends PaylaBase {
 		$this->form_fields['allow_different_shopping_address']['description'] = __( 'Attention: has to be enabled in the PAYONE account', 'payone-woocommerce-3' );
 	}
 
+	public function get_snippet_token() {
+		return self::PAYLA_PARTNER_ID . '_' . $this->get_merchant_id() . '_' . md5( uniqid( 'payone_secured_invoice', true ) );
+	}
+
 	public function payment_fields() {
-		$environment = $this->get_mode() === 'live' ? 'p' : 't';
-		$snippet_token = self::PAYLA_PARTNER_ID . '_' . $this->get_merchant_id() . '_' . md5(uniqid('payone_secured_invoice', true));
+		$environment   = $this->get_environment();
+		$snippet_token = $this->get_snippet_token();
 
 		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/payla/secured-invoice-payment-form.php';
@@ -47,7 +51,7 @@ class SecuredInvoice extends PaylaBase {
 
 		if ( $response->has_error() ) {
 			$order->update_status( 'failed', $this->get_error_message( $response ) );
-			wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ) , 'error' );
+			wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ), 'error' );
 
 			$this->payla_request_failed();
 

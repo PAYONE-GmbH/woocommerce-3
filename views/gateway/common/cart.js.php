@@ -24,3 +24,13 @@ $paypal_express_button_image = apply_filters( 'payone_paypal_express_button_imag
     return false;
 });
 </script>
+<?php
+$cart = WC()->cart;
+/** @var \Payone\Gateway\AmazonPayExpress $amazonpay_express_gateway */
+$amazonpay_express_gateway = \Payone\Plugin::find_gateway( \Payone\Gateway\AmazonPayExpress::GATEWAY_ID );
+$button_config = $amazonpay_express_gateway->process_create_checkout_session( $cart );
+?>
+<script src="https://static-eu.payments-amazon.com/checkout.js"></script>
+<script type="text/javascript" charset="utf-8">
+    const amazonPayExpressButton = amazon.Pay.renderButton('#payone-amazonpay-express-button', <?php echo wp_json_encode( $button_config ) ?>);
+</script>

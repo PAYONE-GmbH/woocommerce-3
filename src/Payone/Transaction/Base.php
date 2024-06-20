@@ -178,6 +178,39 @@ class Base extends Request {
 		}
 	}
 
+	protected function has_no_shipping_data()
+	{
+		return ! $this->get( 'shipping_lastname' )
+		       && ! $this->get( 'shipping_street' )
+		       && ! $this->get( 'shipping_zip' );
+	}
+
+	protected function copy_shipping_data_from_personal_data() {
+		// Collect order shipping information.
+		$data = [
+			'shipping_firstname'       => $this->get( 'firstname' ),
+			'shipping_lastname'        => $this->get( 'lastname' ),
+			'shipping_company'         => $this->get( 'company' ),
+			'shipping_street'          => $this->get( 'street' ),
+			'shipping_zip'             => $this->get( 'zip' ),
+			'shipping_addressaddition' => $this->get( 'addressaddition' ),
+			'shipping_city'            => $this->get( 'city' ),
+			'shipping_country'         => $this->get( 'country' ),
+		];
+
+		// Trim parameter values and set parameters null for empty strings.
+		$data = array_map( function ( $value ) {
+			return empty( $value = trim( $value ) ) ? null : $value;
+		}, $data );
+
+		// Set valid PAYONE API shipping data.
+		foreach ( $data as $name => $value ) {
+			if ( $value !== null ) {
+				$this->set( $name, $value );
+			}
+		}
+	}
+
 	/**
 	 * Sets PAYONE API customer IP from the provided WooCommerce order.
 	 *

@@ -97,6 +97,7 @@ abstract class RatepayBase extends RedirectGatewayBase {
 	}
 
 	public function process_start_session( $data ) {
+		// TODO: Klarna ist hier falsch benannt - evtl. RatepayProfile nutzen
 		$transaction = new \Payone\Transaction\KlarnaStartSession( $this );
 
 		$transaction

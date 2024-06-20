@@ -15,7 +15,9 @@
 		<?php _e( 'direct.debit.mandate.checkbox.label', 'payone-woocommerce-3' ); ?>
     </label>
 </div>
+
 <div id="direct_debit_error"></div>
+
 <script type="text/javascript">
     var mandate_ok = false;
     var mandate_identification = '';

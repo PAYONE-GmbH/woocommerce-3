@@ -3,8 +3,10 @@
 namespace Payone;
 
 use Payone\Database\Migration;
+use Payone\Gateway\AmazonPay;
+use Payone\Gateway\AmazonPayBase;
+use Payone\Gateway\AmazonPayExpress;
 use Payone\Gateway\GatewayBase;
-use Payone\Gateway\Invoice;
 use Payone\Gateway\KlarnaBase;
 use Payone\Gateway\KlarnaInstallments;
 use Payone\Gateway\KlarnaInvoice;
@@ -51,9 +53,8 @@ class Plugin {
 			$settings = new \Payone\Admin\Settings();
 			$settings->init();
 			$assets = new \Payone\Admin\Assets();
-            $assets->init();
+			$assets->init();
 		}
-
 		add_action( 'woocommerce_api_payoneplugin', [ $this, 'handle_callback' ] );
 
 		// @deprecated
@@ -66,7 +67,6 @@ class Plugin {
 			\Payone\Gateway\Eps::GATEWAY_ID                 => \Payone\Gateway\Eps::class,
 			\Payone\Gateway\Invoice::GATEWAY_ID             => \Payone\Gateway\Invoice::class,
 			\Payone\Gateway\Sofort::GATEWAY_ID              => \Payone\Gateway\Sofort::class,
-			\Payone\Gateway\Giropay::GATEWAY_ID             => \Payone\Gateway\Giropay::class,
 			\Payone\Gateway\SafeInvoice::GATEWAY_ID         => \Payone\Gateway\SafeInvoice::class,
 			\Payone\Gateway\PayPal::GATEWAY_ID              => \Payone\Gateway\PayPal::class,
 			\Payone\Gateway\PayPalExpress::GATEWAY_ID       => \Payone\Gateway\PayPalExpress::class,
@@ -85,6 +85,8 @@ class Plugin {
 			\Payone\Gateway\SecuredInvoice::GATEWAY_ID      => \Payone\Gateway\SecuredInvoice::class,
 			\Payone\Gateway\SecuredInstallment::GATEWAY_ID  => \Payone\Gateway\SecuredInstallment::class,
 			\Payone\Gateway\SecuredDirectDebit::GATEWAY_ID  => \Payone\Gateway\SecuredDirectDebit::class,
+			\Payone\Gateway\AmazonPayExpress::GATEWAY_ID    => \Payone\Gateway\AmazonPayExpress::class,
+			\Payone\Gateway\AmazonPay::GATEWAY_ID           => \Payone\Gateway\AmazonPay::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -310,6 +312,9 @@ class Plugin {
 		if ( $this->is_paypal_express_get_checkout() ) {
 			return $this->process_paypal_express_get_checkout();
 		}
+		if ( $this->is_amazonpay() ) {
+			return $this->process_amazonpay();
+		}
 		if ( $this->is_ratepay_calculate_callback() ) {
 			return $this->process_ratepay_calculate();
 		}
@@ -414,12 +419,12 @@ class Plugin {
 			$result = $gateway->payone_api_settings_are_valid();
 		}
 
-		$message = $result ? __( 'successful', 'payone-woocommerce-3' ) : __( 'failed', 'payone-woocommerce-3' ) ;
+		$message = $result ? __( 'successful', 'payone-woocommerce-3' ) : __( 'failed', 'payone-woocommerce-3' );
 
 		echo json_encode( [
 			'gateway_id' => $gateway_id,
-			'message' => $message,
-			'result' => $result,
+			'message'    => $message,
+			'result'     => $result,
 		] );
 		exit;
 	}
@@ -699,6 +704,64 @@ class Plugin {
 	/**
 	 * @return bool
 	 */
+	private function is_amazonpay() {
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'amazonpay' ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function process_amazonpay() {
+		$action = isset( $_GET['a'] ) ? $_GET['a'] : '';
+		if ( stripos( $action, 'express' ) === 0 ) {
+			$gateway = self::find_gateway( AmazonPayExpress::GATEWAY_ID );
+		} else {
+			$gateway = self::find_gateway( AmazonPay::GATEWAY_ID );
+		}
+		if ( $gateway ) {
+			switch ( $action ) {
+				case 'express-get-checkout':
+					$workorderid = self::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID );
+					$gateway->process_get_checkout( $workorderid );
+					exit;
+				case 'express-back':
+				case 'express-error':
+					wp_redirect( wc_get_cart_url() );
+					exit;
+				case 'button':
+					$order_id = self::get_session_value( AmazonPayBase::SESSION_KEY_ORDER_ID );
+					self::delete_session_value( AmazonPayBase::SESSION_KEY_ORDER_ID );
+					$gateway->process_button( $order_id );
+					exit;
+				case 'success':
+					self::delete_session_value( AmazonPayBase::SESSION_KEY_ORDER_ID );
+
+					$order_id = (int) $_GET['oid'];
+					$order    = new \WC_Order( $order_id );
+					if ( $order->get_status() === 'pending' ) {
+						$gateway->process_success( $order_id );
+					}
+
+					wp_redirect( wc_get_checkout_url() );
+					exit;
+				case 'back':
+				case 'error':
+					wp_redirect( wc_get_checkout_url() );
+					exit;
+			}
+
+		}
+
+		return null;
+	}
+
+	/**
+	 * @return bool
+	 */
 	private function is_ratepay_calculate_callback() {
 		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-ratepay-calculate' ) {
 			return true;
@@ -812,11 +875,11 @@ class Plugin {
 	 * @return float
 	 */
 	public static function get_tax_rate_for_item_data( $item_data ) {
-		return self::get_tax_rate_for_total($item_data['total'], $item_data['total_tax'] );
+		return self::get_tax_rate_for_total( $item_data['total'], $item_data['total_tax'] );
 	}
 
 	public static function get_tax_rate_for_total( $total, $tax ) {
-		if ( $tax == 0) {
+		if ( $tax == 0 ) {
 			return 0.0;
 		}
 
@@ -854,7 +917,7 @@ class Plugin {
 	 *
 	 * @return null|GatewayBase
 	 */
-	private static function find_gateway( $gateway_id ) {
+	public static function find_gateway( $gateway_id ) {
 		$payment_gateways = WC()->payment_gateways->payment_gateways();
 		foreach ( $payment_gateways as $payment_gateway_id => $payment_gateway ) {
 			if ( $gateway_id === $payment_gateway_id ) {

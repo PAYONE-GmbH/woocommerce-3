@@ -74,7 +74,7 @@ class DataTransfer {
 		if ( $key === 'amount' ) {
 			// make sure that $value is always an integer
 			$value = (int) round( $value, 0 );
-		} elseif( $key === 'iban' ) {
+		} elseif ( $key === 'iban' ) {
 			// remove all spaces
 			$value = trim( str_replace( ' ', '', $value ) );
 		}

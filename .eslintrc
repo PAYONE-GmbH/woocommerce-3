@@ -1,0 +1,82 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "env": {
+        "es6": true,
+        "browser": true,
+        "jquery": true
+    },
+    "globals": {
+        "wp": false,
+        "wc": false,
+        "jQuery": true,
+        "Payone": false
+    },
+    "extends": [
+        "airbnb/base",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "settings": {
+        // List of modules that are externals in our webpack config.
+        // This helps the `import/no-extraneous-dependencies` and
+        //`import/no-unresolved` rules account for them.
+        "import/core-modules": [
+            "@woocommerce/blocks-registry",
+            "@woocommerce/blocks-checkout",
+            "@woocommerce/settings",
+            "@wordpress/i18n",
+            "@wordpress/is-shallow-equal",
+            "@wordpress/element",
+            "@wordpress/data"
+        ],
+        "import/resolver": {
+            "node": {
+                "extensions": [
+                    ".js",
+                    ".jsx",
+                    ".ts",
+                    ".tsx"
+                ]
+            }
+        }
+    },
+    "rules": {
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "max-len": [
+            "error",
+            {
+                "code": 120
+            }
+        ],
+        "object-curly-spacing": [
+            "error",
+            "never"
+        ],
+        "arrow-body-style": 0,
+        "@typescript-eslint/no-inferrable-types": 0,
+        "@typescript-eslint/no-var-requires": 0,
+        "import/no-duplicates": 0,
+        "import/no-named-as-default": 0,
+        "import/no-named-as-default-member": 0,
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "js": "never",
+                "jsx": "never",
+                "ts": "never",
+                "tsx": "never"
+            }
+        ]
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "html",
+        "markdown"
+    ]
+}
