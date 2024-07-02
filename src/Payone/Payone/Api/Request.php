@@ -150,7 +150,7 @@ class Request extends DataTransfer {
 	 * @return Request
 	 */
 	public function set_key( $key ) {
-		$this->set( 'key', hash( 'md5', $key ) );
+		$this->set( 'key', hash( 'sha384', $key ) );
 
 		return $this;
 	}
