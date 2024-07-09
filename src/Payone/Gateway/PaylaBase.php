@@ -16,7 +16,6 @@ class PaylaBase extends GatewayBase {
 	}
 
 	public function is_available() {
-		return true;
 		$is_available = parent::is_available();
 
 		$failed_before = Plugin::get_session_value( self::SESSION_KEY_PAYLA_FAILED );
