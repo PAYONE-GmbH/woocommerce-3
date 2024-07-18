@@ -7,13 +7,13 @@ use Payone\Gateway\PayoneBlocksSupport;
 
 /**
  * Plugin Name: PAYONE Payment for WooCommerce
- * Version: 2.6.0
+ * Version: 2.7.0
  * Plugin URI: https://www.payone.com/
  * Description: Integration of PAYONE payment into your WooCommerce store.
  * Author: PAYONE GmbH
  * Author URI: https://www.payone.com/
  * Requires at least: 5.0
- * Tested up to: 8.3.0
+ * Tested up to: 9.1.2
  */
 
 defined( 'ABSPATH' ) or die( 'Direct access not allowed' );
