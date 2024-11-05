@@ -14,7 +14,6 @@ class Ideal extends Base {
 
 		$this->set( 'clearingtype', 'sb' );
 		$this->set( 'onlinebanktransfertype', 'IDL' );
-		$this->set( 'bankgrouptype', $_POST['bankgrouptype'] );
 	}
 
 	/**

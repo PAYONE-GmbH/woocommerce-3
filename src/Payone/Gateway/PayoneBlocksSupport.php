@@ -238,9 +238,5 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		if ( $context->payment_type === Eps::GATEWAY_ID ) {
 			$_POST['bankgrouptype'] = $data['bankgrouptype'];
 		}
-
-		if ( $context->payment_type === Ideal::GATEWAY_ID ) {
-			$_POST['bankgrouptype'] = $data['bankgrouptype'];
-		}
 	}
 }
