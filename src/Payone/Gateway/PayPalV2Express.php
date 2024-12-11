@@ -38,11 +38,30 @@ class PayPalV2Express extends PayPalV2Base {
 	public function init_form_fields() {
 		$this->init_common_form_fields( 'PAYONE ' . __( 'PayPal V2 Express', 'payone-woocommerce-3' ) );
 		$this->add_paypal_merchant_id_field();
+		$this->add_allow_paylater_field();
 	}
 
 	public function payment_fields() {
 		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
 		include PAYONE_VIEW_PATH . '/gateway/paypalv2/express-payment-form.php';
+	}
+
+	public function get_allow_paylater() {
+		$value = isset( $this->settings[ 'paypalv2_allow_paylater' ] ) ? $this->settings[ 'paypalv2_allow_paylater' ] : '1';
+
+		return '1' === $value;
+	}
+
+	protected function add_allow_paylater_field() {
+		$this->form_fields['paypalv2_allow_paylater'] = [
+			'title'   => __( 'Allow Pay Later', 'payone-woocommerce-3' ),
+			'type'    => 'select',
+			'options' => [
+				'0' => __( 'No', 'payone-woocommerce-3' ),
+				'1' => __( 'Yes', 'payone-woocommerce-3' ),
+			],
+			'default' => '1',
+		];
 	}
 
 	public function process_set_checkout_session() {

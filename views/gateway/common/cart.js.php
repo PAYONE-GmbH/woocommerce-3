@@ -42,10 +42,10 @@ $paypalv2_express_gateway = \Payone\Plugin::find_gateway( \Payone\Gateway\PayPal
 if ( $paypalv2_express_gateway->is_available() ) {
     #$button_config = $paypalv2_express_gateway->process_set_checkout_session( $cart );
     ?>
-    <script src="https://www.paypal.com/sdk/js?client-id=<?php echo $paypalv2_express_gateway->get_payone_client_id(); ?>&merchant-id=<?php echo $paypalv2_express_gateway->get_payone_merchant_id(); ?>&currency=EUR&intent=authorize&locale=de_DE&commit=false&vault=false&disable-funding=card,sepa,bancontact&enable-funding=paylater">
+    <script src="https://www.paypal.com/sdk/js?client-id=<?php echo $paypalv2_express_gateway->get_payone_client_id(); ?>&merchant-id=<?php echo $paypalv2_express_gateway->get_payone_merchant_id(); ?>&currency=EUR&intent=authorize&locale=de_DE&commit=false&vault=false&disable-funding=card,sepa,bancontact<?php if ( $paypalv2_express_gateway->get_allow_paylater() ) { ?>&enable-funding=paylater<?php } ?>">
     </script>
     <script type="text/javascript">
-        paypal.Buttons({
+    paypal.Buttons({
         style: {
         layout: 'vertical',
         color: 'gold',
@@ -53,7 +53,7 @@ if ( $paypalv2_express_gateway->is_available() ) {
         label: 'paypal',
         height: 55
     },
-        createOrder: function(data, actions) {
+    createOrder: function(data, actions) {
         return fetch('<?php echo Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-set-checkout' ] ); ?>', {
             method: 'post'
         }).then(function(res) {

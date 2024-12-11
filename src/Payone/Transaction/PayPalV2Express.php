@@ -18,7 +18,7 @@ class PayPalV2Express extends Base {
 
 		$workorderid = Plugin::get_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID );
 		if ( $workorderid ) {
-			#$this->set( 'workorderid', $workorderid );
+			$this->set( 'workorderid', $workorderid );
 		}
 	}
 

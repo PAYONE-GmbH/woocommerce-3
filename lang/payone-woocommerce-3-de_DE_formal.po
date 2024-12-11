@@ -9,7 +9,7 @@ msgstr ""
 "Language: de_DE_formal\n"
 "Language-Team: Deutsch (Sie)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2024-03-11 07:17+0000\n"
+"PO-Revision-Date: 2024-12-11 07:41+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: src/Payone/Admin/Option/CreditCheck.php:162
@@ -67,24 +67,28 @@ msgstr ""
 msgid "Allow"
 msgstr "Erlauben"
 
-#: src/Payone/Gateway/AmazonPayBase.php:116
+#: src/Payone/Gateway/AmazonPayBase.php:117
 msgid "Allow P.O. Boxes"
 msgstr "Versand in Postfiliale erlauben"
 
-#: src/Payone/Gateway/AmazonPayBase.php:98
+#: src/Payone/Gateway/AmazonPayBase.php:99
 msgid "Allow Packstations"
 msgstr "Versand an Packstationen erlauben"
 
-#: src/Payone/Gateway/AmazonPayBase.php:84
+#: src/Payone/Gateway/PayPalV2Express.php:57
+msgid "Allow Pay Later"
+msgstr "Erlaube \"Später Bezahlen\""
+
+#: src/Payone/Gateway/AmazonPayBase.php:85
 msgid "Amazon Merchant ID"
 msgstr "Amazon Merchant ID"
 
-#: src/Payone/Gateway/AmazonPay.php:17 src/Payone/Gateway/AmazonPay.php:36
+#: src/Payone/Gateway/AmazonPay.php:16 src/Payone/Gateway/AmazonPay.php:35
 msgid "Amazon Pay"
 msgstr "Amazon Pay"
 
-#: src/Payone/Gateway/AmazonPayExpress.php:17
-#: src/Payone/Gateway/AmazonPayExpress.php:39
+#: src/Payone/Gateway/AmazonPayExpress.php:18
+#: src/Payone/Gateway/AmazonPayExpress.php:40
 msgid "Amazon Pay Express"
 msgstr "Amazon Pay Express"
 
@@ -154,7 +158,7 @@ msgstr "BIC"
 msgid "Birthday"
 msgstr "Geburtstag"
 
-#: src/Payone/Gateway/AmazonPayBase.php:132
+#: src/Payone/Gateway/AmazonPayBase.php:133
 msgid "Button Color"
 msgstr "Farbe der Amazon Pay Schaltfläche"
 
@@ -255,23 +259,23 @@ msgstr "Weiter"
 msgid "Correct automatically"
 msgstr "Automatisch korrigieren"
 
-#: src/Payone/Plugin.php:550
+#: src/Payone/Plugin.php:556
 msgid "Could not find a file on server."
 msgstr ""
 
-#: src/Payone/Plugin.php:497 src/Payone/Plugin.php:522
+#: src/Payone/Plugin.php:503 src/Payone/Plugin.php:528
 msgid "Could not find order."
 msgstr ""
 
-#: src/Payone/Plugin.php:541
+#: src/Payone/Plugin.php:547
 msgid "Could not get invoice from PAYONE gateway."
 msgstr ""
 
-#: src/Payone/Plugin.php:532
+#: src/Payone/Plugin.php:538
 msgid "Could not get payment method for order."
 msgstr ""
 
-#: src/Payone/Plugin.php:557
+#: src/Payone/Plugin.php:563
 msgid "Could not read a file from server."
 msgstr ""
 
@@ -339,7 +343,7 @@ msgstr "CVC"
 msgid "CVC2"
 msgstr "CVC2"
 
-#: src/Payone/Gateway/AmazonPayBase.php:137
+#: src/Payone/Gateway/AmazonPayBase.php:138
 msgid "DarkGray"
 msgstr "Dunkelgrau"
 
@@ -389,7 +393,7 @@ msgstr "Lastschrift"
 msgid "direct.debit.mandate.checkbox.label"
 msgstr "Ich erteile das SEPA-Lastschriftmandat"
 
-#: src/Payone/Transaction/Base.php:304 src/Payone/Transaction/Base.php:398
+#: src/Payone/Transaction/Base.php:337 src/Payone/Transaction/Base.php:431
 msgid "Discount"
 msgstr "Rabatt"
 
@@ -458,7 +462,7 @@ msgstr "Fehlerausgabe Sprache"
 msgid "Expire Date"
 msgstr "Gültig bis"
 
-#: src/Payone/Plugin.php:424
+#: src/Payone/Plugin.php:430
 msgid "failed"
 msgstr "fehlgeschlagen"
 
@@ -475,7 +479,7 @@ msgstr "Deutschland"
 msgid "Global Settings"
 msgstr "Globale Einstellungen"
 
-#: src/Payone/Gateway/AmazonPayBase.php:135
+#: src/Payone/Gateway/AmazonPayBase.php:136
 msgid "Gold"
 msgstr "Gold"
 
@@ -605,7 +609,7 @@ msgstr ""
 msgid "Length"
 msgstr "Länge"
 
-#: src/Payone/Gateway/AmazonPayBase.php:136
+#: src/Payone/Gateway/AmazonPayBase.php:137
 msgid "Light Gray"
 msgstr "Hellgrau"
 
@@ -703,11 +707,12 @@ msgstr "Ratenhöhe"
 #: src/Payone/Gateway/SepaDirectDebit.php:37
 #: src/Payone/Gateway/SepaDirectDebit.php:46
 #: src/Payone/Gateway/CreditCard.php:146
-#: src/Payone/Gateway/AmazonPayBase.php:101
-#: src/Payone/Gateway/AmazonPayBase.php:119
+#: src/Payone/Gateway/AmazonPayBase.php:102
+#: src/Payone/Gateway/AmazonPayBase.php:120
 #: src/Payone/Gateway/GatewayBase.php:387
 #: src/Payone/Gateway/GatewayBase.php:416
 #: src/Payone/Gateway/GatewayBase.php:425
+#: src/Payone/Gateway/PayPalV2Express.php:60
 #: src/Payone/Admin/Option/AddressChecks.php:108
 #: src/Payone/Admin/Option/AddressChecks.php:156
 #: src/Payone/Admin/Option/CreditCheck.php:103
@@ -763,15 +768,15 @@ msgstr "Fehler bei Zahlung: "
 #: src/Payone/Gateway/RedirectGatewayBase.php:87
 #: src/Payone/Gateway/SepaDirectDebit.php:70
 #: src/Payone/Gateway/Bancontact.php:59 src/Payone/Gateway/PayDirekt.php:59
-#: src/Payone/Gateway/CreditCard.php:587
+#: src/Payone/Gateway/PayPalV2Base.php:60 src/Payone/Gateway/CreditCard.php:587
 #: src/Payone/Gateway/SecuredInstallment.php:82
 #: src/Payone/Gateway/Przelewy24.php:59 src/Payone/Gateway/SafeInvoice.php:38
 #: src/Payone/Gateway/SecuredDirectDebit.php:54
 #: src/Payone/Gateway/Sofort.php:58 src/Payone/Gateway/Invoice.php:39
-#: src/Payone/Gateway/SecuredInvoice.php:54 src/Payone/Gateway/Ideal.php:74
-#: src/Payone/Gateway/AmazonPayBase.php:55 src/Payone/Gateway/Alipay.php:62
+#: src/Payone/Gateway/SecuredInvoice.php:54 src/Payone/Gateway/Ideal.php:76
+#: src/Payone/Gateway/AmazonPayBase.php:56 src/Payone/Gateway/Alipay.php:62
 #: src/Payone/Gateway/Trustly.php:59 src/Payone/Gateway/RatepayBase.php:158
-#: src/Payone/Gateway/PayPalBase.php:59 src/Payone/Gateway/KlarnaBase.php:87
+#: src/Payone/Gateway/PayPalBase.php:82 src/Payone/Gateway/KlarnaBase.php:87
 msgid "Payment failed."
 msgstr "Zahlung fehlgeschlagen."
 
@@ -781,20 +786,22 @@ msgid "Payment is authorized and captured."
 msgstr "Zahlung wurde autorisiert und belastet."
 
 #: src/Payone/Gateway/Bancontact.php:51 src/Payone/Gateway/PayDirekt.php:51
-#: src/Payone/Gateway/CreditCard.php:581 src/Payone/Gateway/Przelewy24.php:51
-#: src/Payone/Gateway/Sofort.php:50 src/Payone/Gateway/Ideal.php:66
-#: src/Payone/Gateway/AmazonPayBase.php:47 src/Payone/Gateway/Alipay.php:54
-#: src/Payone/Gateway/Trustly.php:51 src/Payone/Gateway/RatepayBase.php:152
-#: src/Payone/Gateway/PayPalBase.php:51 src/Payone/Gateway/KlarnaBase.php:81
+#: src/Payone/Gateway/PayPalV2Base.php:52 src/Payone/Gateway/CreditCard.php:581
+#: src/Payone/Gateway/Przelewy24.php:51 src/Payone/Gateway/Sofort.php:50
+#: src/Payone/Gateway/Ideal.php:68 src/Payone/Gateway/AmazonPayBase.php:48
+#: src/Payone/Gateway/Alipay.php:54 src/Payone/Gateway/Trustly.php:51
+#: src/Payone/Gateway/RatepayBase.php:152 src/Payone/Gateway/PayPalBase.php:74
+#: src/Payone/Gateway/KlarnaBase.php:81
 msgid "Payment is authorized by PAYONE, payment is complete."
 msgstr "Die Zahlung ist von PAYONE autorisiert, die Zahlung ist abgeschlossen."
 
 #: src/Payone/Gateway/Bancontact.php:54 src/Payone/Gateway/PayDirekt.php:54
-#: src/Payone/Gateway/CreditCard.php:584 src/Payone/Gateway/Przelewy24.php:54
-#: src/Payone/Gateway/Sofort.php:53 src/Payone/Gateway/Ideal.php:69
-#: src/Payone/Gateway/AmazonPayBase.php:50 src/Payone/Gateway/Alipay.php:57
-#: src/Payone/Gateway/Trustly.php:54 src/Payone/Gateway/RatepayBase.php:155
-#: src/Payone/Gateway/PayPalBase.php:54 src/Payone/Gateway/KlarnaBase.php:84
+#: src/Payone/Gateway/PayPalV2Base.php:55 src/Payone/Gateway/CreditCard.php:584
+#: src/Payone/Gateway/Przelewy24.php:54 src/Payone/Gateway/Sofort.php:53
+#: src/Payone/Gateway/Ideal.php:71 src/Payone/Gateway/AmazonPayBase.php:51
+#: src/Payone/Gateway/Alipay.php:57 src/Payone/Gateway/Trustly.php:54
+#: src/Payone/Gateway/RatepayBase.php:155 src/Payone/Gateway/PayPalBase.php:77
+#: src/Payone/Gateway/KlarnaBase.php:84
 msgid "Payment is captured by PAYONE, payment is complete."
 msgstr "Die Zahlung ist von PAYONE eingezogen, die Zahlung ist abgeschlossen."
 
@@ -804,19 +811,19 @@ msgstr "Bezahldienst hat einen Fehler gemeldet"
 
 #: src/Payone/Gateway/Eps.php:88 src/Payone/Gateway/SepaDirectDebit.php:196
 #: src/Payone/Gateway/SepaDirectDebit.php:198
-#: src/Payone/Gateway/SafeInvoice.php:78 src/Payone/Gateway/PaylaBase.php:61
+#: src/Payone/Gateway/SafeInvoice.php:78 src/Payone/Gateway/PaylaBase.php:60
 #: src/Payone/Gateway/Invoice.php:82 src/Payone/Gateway/PrePayment.php:72
 msgid "Payment received."
 msgstr "Zahlung eingegangen."
 
 #: src/Payone/Gateway/Eps.php:83 src/Payone/Gateway/SafeInvoice.php:73
-#: src/Payone/Gateway/PaylaBase.php:56 src/Payone/Gateway/Invoice.php:77
+#: src/Payone/Gateway/PaylaBase.php:55 src/Payone/Gateway/Invoice.php:77
 #: src/Payone/Gateway/PrePayment.php:67
 msgid "Payment received. Customer overpaid!"
 msgstr "Bezahlung eingegangen. Kunde hat zu viel gezahlt!"
 
 #: src/Payone/Gateway/Eps.php:86 src/Payone/Gateway/SafeInvoice.php:76
-#: src/Payone/Gateway/PaylaBase.php:59 src/Payone/Gateway/Invoice.php:80
+#: src/Payone/Gateway/PaylaBase.php:58 src/Payone/Gateway/Invoice.php:80
 #: src/Payone/Gateway/PrePayment.php:70
 msgid "Payment received. Customer underpaid!"
 msgstr "Bezahlung eingegangen. Kunde hat zu wenig gezahlt!"
@@ -855,6 +862,19 @@ msgstr "PayPal"
 msgid "PayPal Express"
 msgstr ""
 
+#: src/Payone/Gateway/PayPalV2Base.php:93
+msgid "PayPal Merchant ID"
+msgstr ""
+
+#: src/Payone/Gateway/PayPalV2.php:16 src/Payone/Gateway/PayPalV2.php:35
+msgid "PayPal V2"
+msgstr ""
+
+#: src/Payone/Gateway/PayPalV2Express.php:17
+#: src/Payone/Gateway/PayPalV2Express.php:39
+msgid "PayPal V2 Express"
+msgstr ""
+
 #: src/Payone/Admin/Option/AddressChecks.php:168
 msgid "Perform follow-up credit check"
 msgstr ""
@@ -891,7 +911,7 @@ msgstr "Geben Sie bitte eine gültige IBAN ein!"
 msgid "Please enter your birthday!"
 msgstr "Geben Sie bitte Ihren Geburtstag ein!"
 
-#: views/gateway/amazonpay/common.php:7
+#: views/gateway/paypalv2/common.php:7 views/gateway/amazonpay/common.php:7
 msgid "Please enter your phone number!"
 msgstr "Geben Sir bitte ihre Telefonnummer ein!"
 
@@ -1040,7 +1060,7 @@ msgstr "Sequenznummer"
 msgid "Servicecharge"
 msgstr "Vertragsabschlussgebühr"
 
-#: src/Payone/Transaction/Base.php:446
+#: src/Payone/Transaction/Base.php:479
 msgid "Shipping"
 msgstr ""
 
@@ -1078,7 +1098,7 @@ msgstr "Subaccount ID"
 msgid "Submit cart"
 msgstr "Warenkorb übermitteln"
 
-#: src/Payone/Plugin.php:424
+#: src/Payone/Plugin.php:430
 msgid "successful"
 msgstr "erfolgreich"
 
@@ -1134,7 +1154,7 @@ msgstr "Die PAYONE Plattform hat zu dieser Bestellung einen Beleg generiert"
 msgid "The PAYONE platform has registered a rebooking"
 msgstr "Die PAYONE Plattform hat eine Umbuchung registriert"
 
-#: src/Payone/Gateway/PaylaBase.php:76
+#: src/Payone/Gateway/PaylaBase.php:75
 msgid "This payment method is not available. Please select another."
 msgstr ""
 "Die gewählte Zahlart steht nicht zur Verfügung. Bitte wählen Sie eine andere "
@@ -1179,7 +1199,7 @@ msgstr "Benutze die globalen Einstellungen"
 msgid "Use PAYONE Mandate Management"
 msgstr ""
 
-#: src/Payone/Plugin.php:508
+#: src/Payone/Plugin.php:514
 msgid "User is not logged in."
 msgstr ""
 
@@ -1236,11 +1256,12 @@ msgstr "Gelb"
 #: src/Payone/Gateway/SepaDirectDebit.php:38
 #: src/Payone/Gateway/SepaDirectDebit.php:47
 #: src/Payone/Gateway/CreditCard.php:147
-#: src/Payone/Gateway/AmazonPayBase.php:102
-#: src/Payone/Gateway/AmazonPayBase.php:120
+#: src/Payone/Gateway/AmazonPayBase.php:103
+#: src/Payone/Gateway/AmazonPayBase.php:121
 #: src/Payone/Gateway/GatewayBase.php:388
 #: src/Payone/Gateway/GatewayBase.php:417
 #: src/Payone/Gateway/GatewayBase.php:426
+#: src/Payone/Gateway/PayPalV2Express.php:61
 #: src/Payone/Admin/Option/AddressChecks.php:109
 #: src/Payone/Admin/Option/AddressChecks.php:157
 #: src/Payone/Admin/Option/CreditCheck.php:104

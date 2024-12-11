@@ -31,6 +31,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		if ( ! property_exists( $this, 'paylaSecuredDirectDebitGateway' ) ) {
 			$this->paylaSecuredDirectDebitGateway = new SecuredDirectDebit();
 		}
+
+        if ( ! property_exists( $this, 'paypalV2ExpressGateway' ) ) {
+            $this->paypalV2ExpressGateway = new PayPalV2Express();
+        }
 	}
 
 	public function is_active() {
@@ -110,6 +114,11 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			'tokenSecuredDirectDebit' => $this->paylaSecuredDirectDebitGateway->get_snippet_token(),
 			'urlSecuredInstallment'   => Plugin::get_callback_url( [ 'type' => 'ajax-secured-installment-options' ] ),
 		];
+        $data['paypalExpressConfig']          = [
+            'jsUrl' => 'https://www.paypal.com/sdk/js?client-id='.$this->paypalV2ExpressGateway->get_payone_client_id().'&merchant-id='.$this->paypalV2ExpressGateway->get_payone_merchant_id().'&currency=EUR&intent=authorize&locale=de_DE&commit=false&vault=false&disable-funding=card,sepa,bancontact&enable-funding=paylater',
+            'callbackUrl' => Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-set-checkout' ] ),
+            'redirectUrl' => Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-get-checkout' ] ),
+        ];
 
 
 		// TODO: installmentMonthOptions müssen hier befüllt werden

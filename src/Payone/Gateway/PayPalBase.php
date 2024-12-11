@@ -19,6 +19,29 @@ class PayPalBase extends RedirectGatewayBase {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function is_available() {
+		$is_available = parent::is_available();
+
+		// Disable the old gateways, when the new ones are used
+		if ( $is_available ) {
+			$payPalV2Gateway = Plugin::find_gateway( PayPalV2::GATEWAY_ID);
+			if ( $payPalV2Gateway && $payPalV2Gateway->is_available() ) {
+				$is_available = false;
+			}
+			if ( $is_available ) {
+				$payPalV2ExpressGateway = Plugin::find_gateway( PayPalV2Express::GATEWAY_ID);
+				if ( $payPalV2ExpressGateway && $payPalV2ExpressGateway->is_available() ) {
+					$is_available = false;
+				}
+			}
+		}
+
+		return $is_available;
+	}
+
+	/**
 	 * @param int $order_id
 	 *
 	 * @return array
