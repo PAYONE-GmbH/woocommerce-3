@@ -17,7 +17,8 @@ class PayPalV2 extends Base {
 		$this->set( 'wallettype', 'PAL' );
 
 		$workorderid = Plugin::get_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID );
-		if ( $workorderid ) {
+		$expressUsed = Plugin::get_session_value( \Payone\Gateway\PayPalV2Express::SESSION_KEY_PAYPALV2_EXPRESS_USED );
+		if ( $workorderid && $expressUsed ) {
 			$this->set( 'workorderid', $workorderid );
 		}
 	}
