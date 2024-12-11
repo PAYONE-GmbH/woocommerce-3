@@ -24,6 +24,7 @@ class PayPalV2ExpressSetCheckoutSession extends Base {
 	public function execute( \WC_Cart $cart ) {
 		$this->set_once( 'amount', $cart->get_total( 'non-view' ) * 100 );
 		$this->set( 'currency', strtoupper( get_woocommerce_currency() ) );
+		$this->add_article_list_to_transaction( $cart );
 
 		return $this->submit();
 	}
