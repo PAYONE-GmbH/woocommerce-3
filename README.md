@@ -46,5 +46,5 @@ development state from the `master` branch of this repository.
  3. Rename the extracted folder from `woocommerce-3-master` to `payone-woocommerce-3`
  4. Move the `payone-woocommerce-3` to your WordPress plugin directory (e.g. `wp-content/plugins`)
  5. Activate the plugin on your WordPress admin plugin page
- 6. Javascript Bundling: `yarn install` & `yarn start`
- 7. Build files for production: `yarn build` 
+ 6. Javascript Bundling: `npm install` & `npm start`
+ 7. Build files for production: `npm run build` 

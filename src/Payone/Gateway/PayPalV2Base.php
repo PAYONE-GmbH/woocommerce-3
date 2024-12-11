@@ -6,40 +6,17 @@ use Payone\Payone\Api\TransactionStatus;
 use Payone\Plugin;
 
 /**
- * PayPal and PayPalExpress share some functions. In order to not repeat the code, those functions are bundled in
- * this base class.
+ * PayPal V2 and PayPal V2 Express share some functions. In order to not repeat the code, those functions are bundled
+ * in this base class.
  */
-class PayPalBase extends RedirectGatewayBase {
+class PayPalV2Base extends RedirectGatewayBase {
 
-	const SESSION_KEY_WORKORDERID = 'payone_paypal_workorderid';
+	const SESSION_KEY_WORKORDERID = 'payone_paypalv2_workorderid';
+	const SESSION_KEY_ORDER_ID = 'payone_paypalv2_orderid';
 
-	public function payment_fields() {
-		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
-		include PAYONE_VIEW_PATH . '/gateway/paypal/payment-form.php';
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function is_available() {
-		$is_available = parent::is_available();
-
-		// Disable the old gateways, when the new ones are used
-		if ( $is_available ) {
-			$payPalV2Gateway = Plugin::find_gateway( PayPalV2::GATEWAY_ID);
-			if ( $payPalV2Gateway && $payPalV2Gateway->is_available() ) {
-				$is_available = false;
-			}
-			if ( $is_available ) {
-				$payPalV2ExpressGateway = Plugin::find_gateway( PayPalV2Express::GATEWAY_ID);
-				if ( $payPalV2ExpressGateway && $payPalV2ExpressGateway->is_available() ) {
-					$is_available = false;
-				}
-			}
-		}
-
-		return $is_available;
-	}
+	const PAYONE_CLIENT_ID_TEST = 'AUn5n-4qxBUkdzQBv6f8yd8F4AWdEvV6nLzbAifDILhKGCjOS62qQLiKbUbpIKH_O2Z3OL8CvX7ucZfh';
+	const PAYONE_CLIENT_ID_LIVE = 'AVNBj3ypjSFZ8jE7shhaY2mVydsWsSrjmHk0qJxmgJoWgHESqyoG35jLOhH3GzgEPHmw7dMFnspH6vim';
+	const PAYONE_MERCHANT_ID_TEST = '3QK84QGGJE5HW';
 
 	/**
 	 * @param int $order_id
@@ -48,13 +25,14 @@ class PayPalBase extends RedirectGatewayBase {
 	 * @throws \WC_Data_Exception
 	 */
 	public function process_payment( $order_id ) {
-		return $this->process_redirect( $order_id, \Payone\Transaction\PayPal::class );
+		return $this->process_redirect( $order_id, \Payone\Transaction\PayPalV2Express::class );
 	}
 
 	protected function after_payment_successful() {
 		parent::after_payment_successful();
 
 		Plugin::delete_session_value( self::SESSION_KEY_WORKORDERID );
+		Plugin::delete_session_value( PayPalV2Express::SESSION_KEY_PAYPALV2_EXPRESS_USED );
 	}
 
 
@@ -88,5 +66,33 @@ class PayPalBase extends RedirectGatewayBase {
 		if ( $authorization_method === 'preauthorization' && $to_status === 'processing' ) {
 			$this->capture( $order );
 		}
+	}
+
+	public function get_payone_client_id() {
+		if ( $this->get_mode() === 'test' ) {
+			return self::PAYONE_CLIENT_ID_TEST;
+		}
+
+		return self::PAYONE_CLIENT_ID_LIVE;
+	}
+
+	public function get_payone_merchant_id() {
+		if ( $this->get_mode() === 'test' ) {
+			return self::PAYONE_MERCHANT_ID_TEST;
+		}
+
+		return self::PAYONE_CLIENT_ID_LIVE;
+	}
+
+	protected function get_paypal_merchant_id() {
+		return isset( $this->settings[ 'paypal_merchant_id' ] ) ? $this->settings[ 'paypal_merchant_id' ] : '';
+	}
+
+	protected function add_paypal_merchant_id_field() {
+		$this->form_fields['paypal_merchant_id'] = [
+			'title'   => __( 'PayPal Merchant ID', 'payone-woocommerce-3' ),
+			'type'    => 'text',
+			'default' => false,
+		];
 	}
 }

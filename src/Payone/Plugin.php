@@ -12,6 +12,9 @@ use Payone\Gateway\KlarnaInstallments;
 use Payone\Gateway\KlarnaInvoice;
 use Payone\Gateway\KlarnaSofort;
 use Payone\Gateway\PayPalExpress;
+use Payone\Gateway\PayPalV2;
+use Payone\Gateway\PayPalV2Base;
+use Payone\Gateway\PayPalV2Express;
 use Payone\Gateway\RatepayInstallments;
 use Payone\Gateway\SecuredInstallment;
 use Payone\Gateway\SepaDirectDebit;
@@ -87,6 +90,8 @@ class Plugin {
 			\Payone\Gateway\SecuredDirectDebit::GATEWAY_ID  => \Payone\Gateway\SecuredDirectDebit::class,
 			\Payone\Gateway\AmazonPayExpress::GATEWAY_ID    => \Payone\Gateway\AmazonPayExpress::class,
 			\Payone\Gateway\AmazonPay::GATEWAY_ID           => \Payone\Gateway\AmazonPay::class,
+			\Payone\Gateway\PayPalV2::GATEWAY_ID            => \Payone\Gateway\PayPalV2::class,
+			\Payone\Gateway\PayPalV2Express::GATEWAY_ID     => \Payone\Gateway\PayPalV2Express::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -314,6 +319,9 @@ class Plugin {
 		}
 		if ( $this->is_amazonpay() ) {
 			return $this->process_amazonpay();
+		}
+		if ( $this->is_paypalv2() ) {
+			return $this->process_paypalv2();
 		}
 		if ( $this->is_ratepay_calculate_callback() ) {
 			return $this->process_ratepay_calculate();
@@ -739,6 +747,62 @@ class Plugin {
 					exit;
 				case 'success':
 					self::delete_session_value( AmazonPayBase::SESSION_KEY_ORDER_ID );
+
+					$order_id = (int) $_GET['oid'];
+					$order    = new \WC_Order( $order_id );
+					if ( $order->get_status() === 'pending' ) {
+						$gateway->process_success( $order_id );
+					}
+
+					wp_redirect( wc_get_checkout_url() );
+					exit;
+				case 'back':
+				case 'error':
+					wp_redirect( wc_get_checkout_url() );
+					exit;
+			}
+
+		}
+
+		return null;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function is_paypalv2() {
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'paypalv2' ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function process_paypalv2() {
+		$action = isset( $_GET['a'] ) ? $_GET['a'] : '';
+		if ( stripos( $action, 'express' ) === 0 ) {
+			$gateway = self::find_gateway( PayPalV2Express::GATEWAY_ID );
+		} else {
+			$gateway = self::find_gateway( PayPalV2::GATEWAY_ID );
+		}
+		if ( $gateway ) {
+			switch ( $action ) {
+				case 'express-back':
+				case 'express-error':
+					wp_redirect( wc_get_cart_url() );
+					exit;
+				case 'express-set-checkout':
+					$gateway->process_set_checkout_session();
+					exit;
+				case 'express-get-checkout':
+					$workorderid = self::get_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID );
+					$gateway->process_get_checkout( $workorderid );
+					exit;
+				case 'success':
+					self::delete_session_value( PayPalV2Base::SESSION_KEY_ORDER_ID );
 
 					$order_id = (int) $_GET['oid'];
 					$order    = new \WC_Order( $order_id );
