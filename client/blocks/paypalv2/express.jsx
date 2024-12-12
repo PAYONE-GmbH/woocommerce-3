@@ -21,9 +21,8 @@ const PayPalV2Express = () => {
                         label: 'paypal',
                         height: 55,
                     },
-                    createOrder(data, actions) {
-                        console.log('createOrder', data, actions);
-                        return fetch('', {
+                    createOrder() {
+                        return fetch(paypalExpressConfig.callbackUrl, {
                             method: 'post',
                         }).then((res) => {
                             return res.text();
@@ -31,9 +30,8 @@ const PayPalV2Express = () => {
                             return orderID;
                         });
                     },
-                    onApprove(data, actions) {
-                        console.log('onApprove', data, actions);
-                        window.location = '';
+                    onApprove() {
+                        window.location = paypalExpressConfig.redirectUrl;
                     },
                 }).render('#payone-paypalv2-express-button');
             }
@@ -47,10 +45,16 @@ const PayPalV2Express = () => {
 
 export default getPaymentMethodConfig(
     'payone_paypalv2_express',
-    __('PAYONE PayPal v2 Express', 'payone-woocommerce-3'),
+    __('PayPal v2 Express', 'payone-woocommerce-3'),
     icon,
     <PayPalV2Express />,
     {
         gatewayId: 'payone_paypalv2_express',
+        canMakePayment() {
+            return false;
+
+            const {paypalExpressConfig} = wc.wcSettings.getSetting('payone_data');
+            return paypalExpressConfig.isAvailable;
+        },
     },
 );

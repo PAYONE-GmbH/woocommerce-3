@@ -6,4 +6,11 @@ export default getPaymentMethodConfig(
     'bs_payone_paypal',
     __('PAYONE PayPal', 'payone-woocommerce-3'),
     `${PAYONE_ASSETS_URL}/icon-paypal.png`,
+    null,
+    {
+        canMakePayment() {
+            const {paypalConfig} = wc.wcSettings.getSetting('payone_data');
+            return paypalConfig.isAvailable;
+        },
+    },
 );
