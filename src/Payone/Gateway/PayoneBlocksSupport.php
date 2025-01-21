@@ -115,11 +115,14 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			'urlSecuredInstallment'   => Plugin::get_callback_url( [ 'type' => 'ajax-secured-installment-options' ] ),
 		];
         $data['paypalExpressConfig']          = [
-            'jsUrl' => 'https://www.paypal.com/sdk/js?client-id='.$this->paypalV2ExpressGateway->get_payone_client_id().'&merchant-id='.$this->paypalV2ExpressGateway->get_payone_merchant_id().'&currency=EUR&intent=authorize&locale=de_DE&commit=false&vault=false&disable-funding=card,sepa,bancontact&enable-funding=paylater',
+            'jsUrl' => 'https://www.paypal.com/sdk/js?client-id='.$this->paypalV2ExpressGateway->get_payone_client_id().'&merchant-id='.$this->paypalV2ExpressGateway->get_payone_merchant_id().'&currency=EUR&intent=authorize&locale=de_DE&commit=false&vault=false&disable-funding=card,sepa,bancontact'.( $this->paypalV2ExpressGateway->get_allow_paylater() ? '&enable-funding=paylater' : ''),
             'callbackUrl' => Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-set-checkout' ] ),
             'redirectUrl' => Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-get-checkout' ] ),
+            'isAvailable' => $this->paypalV2ExpressGateway->is_available(),
         ];
-
+        $data['paypalConfig']                 = [
+            'isAvailable' => Plugin::find_gateway(PayPal::GATEWAY_ID)->is_available(),
+        ];
 
 		// TODO: installmentMonthOptions müssen hier befüllt werden
 		$data['installmentMonthOptions'] = [
