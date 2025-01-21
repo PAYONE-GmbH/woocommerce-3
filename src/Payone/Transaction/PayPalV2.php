@@ -32,7 +32,7 @@ class PayPalV2 extends Base {
 		if ( $this->should_submit_cart() ) {
 			$this->add_article_list_to_transaction( $order );
 		}
-		$this->set( 'reference', uniqid( 'ref', false) );
+		$this->set_reference( $order );
 		$this->set_once( 'amount', $order->get_total('edit') * 100 );
 		$this->set( 'currency', strtoupper( get_woocommerce_currency() ) );
 		$this->set_personal_data_from_order( $order );
