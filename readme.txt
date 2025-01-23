@@ -3,8 +3,8 @@ Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
-Tested up to: 8.1.1
-Stable tag: 2.6.0
+Tested up to: 9.6.0
+Stable tag: 2.8.0
 Requires PHP: 7.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -21,7 +21,11 @@ Currently supported payment methods include:
 * Credit Card
 * PAYONE Direct Debit
 * PayPal
-* paydirekt
+* PayPal Express
+* PayPal v2
+* PayPal Express v2
+* Amazon Pay Express
+* Amazon Pay
 * PAYONE Secured Invoice
 * PAYONE Secured Direct Debit
 * PAYONE Secured Installment
@@ -30,12 +34,10 @@ Currently supported payment methods include:
 * PAYONE Prepayment
 * Klarna
 * Ratepay
-* Trustly
 * P24
 * iDEAL
 * Bancontact
 * Alipay
-* Amazon Pay
 
 PAYONE GmbH is headquartered in Frankfurt am Main and is one of the leading omnichannel-payment providers in Europe. In addition to providing customer support to numerous Savings Banks (Sparkasse) the full-service payment service provider also provides cashless payment transaction services to more than 255,000 customers from stationary trade to the automated and holistic processing of e-commerce and mobile payments.
 
@@ -71,6 +73,21 @@ If you have found anything security related, please contact our technical suppor
 
 
 == Changelog ==
+
+== 2.8.0 ==
+
+New Features
+ 
+* new payment method: PayPal v2
+* new payment method: PayPal Express v2
+
+Maintenance
+ 
+* removed iDEAL bankgroups in frontend
+* tested with
+Wordpress version: 6.7.1
+WooCommerce version: 9.6.0
+PHP version: 8.3 
 
 == 2.7.0 ==
 
