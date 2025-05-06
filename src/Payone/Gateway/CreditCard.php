@@ -175,7 +175,6 @@ class CreditCard extends RedirectGatewayBase {
 				'A' => __( 'AMEX', 'payone-woocommerce-3' ),
 				'D' => __( 'Diners', 'payone-woocommerce-3' ),
 				'J' => __( 'JCB', 'payone-woocommerce-3' ),
-				'O' => __( 'Maestro', 'payone-woocommerce-3' ),
 				'C' => __( 'Discover', 'payone-woocommerce-3' ),
 				'B' => __( 'Carte Bleue', 'payone-woocommerce-3' ),
 				'P' => __( 'China Union Pay', 'payone-woocommerce-3' ),
@@ -201,10 +200,6 @@ class CreditCard extends RedirectGatewayBase {
 		$this->form_fields['cc_brand_label_J']                = [
 			'type'    => 'no_display',
 			'default' => 'Japan Credit Bureau',
-		];
-		$this->form_fields['cc_brand_label_O']                = [
-			'type'    => 'no_display',
-			'default' => 'Maestro International',
 		];
 		$this->form_fields['cc_brand_label_C']                = [
 			'type'    => 'no_display',
