@@ -682,7 +682,7 @@ msgstr "Minimaler Wert der Bestellung"
 
 #: src/Payone/Gateway/CreditCard.php:222
 msgid "Minimum validity of card"
-msgstr "Minimale Gültigkeit der Karte in Tagen"
+msgstr "Minimale Gültigkeit der Karte in Tagen2"
 
 #: src/Payone/Admin/Option/AddressChecks.php:27
 #: src/Payone/Admin/Option/CreditCheck.php:27
