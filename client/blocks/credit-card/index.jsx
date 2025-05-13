@@ -61,8 +61,11 @@ const PayoneCreditCard = ({
     }, [cardType, payoneIFrames.current]);
 
     useEffect(() => {
-        if (cardHolderInput.current && payoneConfig?.fields?.cardholder?.style) {
+        if (cardHolderInput.current && payoneConfig?.fields?.cardholder) {
             cardHolderInput.current.setAttribute('style', payoneConfig.fields.cardholder.style);
+            cardHolderInput.current.setAttribute('size', payoneConfig.fields.cardholder.size);
+            cardHolderInput.current.setAttribute('maxlength', payoneConfig.fields.cardholder.maxlength);
+            cardHolderInput.current.setAttribute('type', payoneConfig.fields.cardholder.type);
         }
     }, [payoneConfig, cardHolderInput.current]);
 

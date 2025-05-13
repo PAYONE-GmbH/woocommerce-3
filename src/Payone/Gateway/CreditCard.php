@@ -285,7 +285,7 @@ class CreditCard extends RedirectGatewayBase {
             'title'   => __( 'Card Holder', 'payone-woocommerce-3' ),
             'type'    => 'style_input',
             'options' => $type_options,
-            'default' => 'numeric',
+            'default' => 'text',
         ];
         $this->form_fields['cc_field_cardholder_length']   = [
             'title'   => __( 'Length', 'payone-woocommerce-3' ),
