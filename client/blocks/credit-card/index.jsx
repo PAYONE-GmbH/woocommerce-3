@@ -31,6 +31,7 @@ const PayoneCreditCard = ({
     const [paymentMethodData, setPaymentMethodData] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const payoneIFrames = useRef(null);
+    const cardHolderInput = useRef(null);
 
     useEffect(() => {
         window.addEventListener('creditCardCheckCallbackEvent', ({detail}) => {
@@ -58,6 +59,15 @@ const PayoneCreditCard = ({
             payoneIFrames.current.setCardType(cardType);
         }
     }, [cardType, payoneIFrames.current]);
+
+    useEffect(() => {
+        if (cardHolderInput.current && payoneConfig?.fields?.cardholder) {
+            cardHolderInput.current.setAttribute('style', payoneConfig.fields.cardholder.style);
+            cardHolderInput.current.setAttribute('size', payoneConfig.fields.cardholder.size);
+            cardHolderInput.current.setAttribute('maxlength', payoneConfig.fields.cardholder.maxlength);
+            cardHolderInput.current.setAttribute('type', payoneConfig.fields.cardholder.type);
+        }
+    }, [payoneConfig, cardHolderInput.current]);
 
     useEffect(() => {
         payoneIFrames.current = new Payone.ClientApi.HostedIFrames(
@@ -157,6 +167,7 @@ const PayoneCreditCard = ({
 
                 <input
                     className="payoneInput"
+                    ref={cardHolderInput}
                     id="card_holder"
                     type="text"
                     name="card_holder"

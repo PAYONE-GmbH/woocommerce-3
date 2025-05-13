@@ -8,6 +8,10 @@ $cardnumber_css = '';
 if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
 	$cardnumber_css = $this->get_option( 'cc_field_cardnumber_css' );
 }
+$cardholder_css = '';
+if ( $this->get_option( 'cc_field_cardholder_style' ) === 'custom' ) {
+    $cardnumber_css = $this->get_option( 'cc_field_cardholder_css' );
+}
 $cvc2_css = '';
 if ( $this->get_option( 'cc_field_cvc2_style' ) === 'custom' ) {
 	$cvc2_css = $this->get_option( 'cc_field_cvc2_css' );
@@ -79,6 +83,13 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
                     height: "<?php echo $this->get_option( 'cc_field_cardnumber_height' ); ?>"
                 }
 				<?php } ?>
+            },
+            cardholder: {
+                selector: "card_holder",
+                type: "<?php echo $this->get_option( 'cc_field_cardholder_type' ); ?>",
+                style: "<?php echo $cardholder_css; ?>",
+                size: "<?php echo $this->get_option( 'cc_field_cardholder_length' ); ?>",
+                maxlength: "<?php echo $this->get_option( 'cc_field_cardholder_maxchars' ); ?>",
             },
             cardcvc2: {
                 selector: "cardcvc2",
