@@ -32,6 +32,8 @@ class CreditCard extends RedirectGatewayBase {
 	}
 
 	public function javascript_payone_config() {
+        $baseStyle = 'width: 100%; min-height: 30px; min-width: 100px;';
+
 		$cardnumber_css = '';
 		if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
 			$cardnumber_css = $this->get_option( 'cc_field_cardnumber_css' );
@@ -56,7 +58,7 @@ class CreditCard extends RedirectGatewayBase {
 		$cardpan = [
 			'selector'  => 'cardpan',
 			'type'      => $this->get_option( 'cc_field_cardnumber_type' ),
-			'style'     => $cardnumber_css,
+			'style'     => $baseStyle . $cardnumber_css,
 			'size'      => $this->get_option( 'cc_field_cardnumber_length' ),
 			'maxlength' => $this->get_option( 'cc_field_cardnumber_maxchars' ),
 		];
@@ -71,7 +73,7 @@ class CreditCard extends RedirectGatewayBase {
         $cardholder = [
             'selector'  => 'cardholder',
             'type'      => $this->get_option( 'cc_field_cardholder_type' ),
-            'style'     => $cardholder_css,
+            'style'     => $baseStyle . $cardholder_css,
             'size'      => $this->get_option( 'cc_field_cardholder_length' ),
             'maxlength' => $this->get_option( 'cc_field_cardholder_maxchars' ),
         ];
@@ -79,7 +81,7 @@ class CreditCard extends RedirectGatewayBase {
 		$cardcvc2 = [
 			'selector'  => 'cardcvc2',
 			'type'      => $this->get_option( 'cc_field_cvc2_type' ),
-			'style'     => $cvc2_css,
+			'style'     => $baseStyle . $cvc2_css,
 			'size'      => $this->get_option( 'cc_field_cvc2_length' ),
 			'maxlength' => $this->get_option( 'cc_field_cvc2_maxchars' ),
 			'length'    => [
@@ -104,7 +106,7 @@ class CreditCard extends RedirectGatewayBase {
 		$cardexpiremonth = [
 			'selector'  => 'cardexpiremonth',
 			'type'      => $this->get_option( 'cc_field_month_type' ),
-			'style'     => $month_css,
+			'style'     => $baseStyle . $month_css,
 			'size'      => $this->get_option( 'cc_field_month_length' ),
 			'maxlength' => $this->get_option( 'cc_field_month_maxchars' ),
 		];
@@ -119,7 +121,7 @@ class CreditCard extends RedirectGatewayBase {
 		$cardexpireyear = [
 			'selector'  => 'cardexpireyear',
 			'type'      => $this->get_option( 'cc_field_year_type' ),
-			'style'     => $year_css,
+			'style'     => $baseStyle . $year_css,
 			'size'      => $this->get_option( 'cc_field_year_length' ),
 			'maxlength' => $this->get_option( 'cc_field_year_maxchars' ),
 		];

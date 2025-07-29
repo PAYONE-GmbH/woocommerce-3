@@ -118,6 +118,7 @@ var PayoneCreditCard = function PayoneCreditCard(_ref) {
     setErrorMessage = _useState10[1];
   var payoneIFrames = (0, _element.useRef)(null);
   var cardHolderInput = (0, _element.useRef)(null);
+  var cardTypeInput = (0, _element.useRef)(null);
   (0, _element.useEffect)(function () {
     window.addEventListener('creditCardCheckCallbackEvent', function (_ref2) {
       var detail = _ref2.detail;
@@ -144,7 +145,10 @@ var PayoneCreditCard = function PayoneCreditCard(_ref) {
     }
   }, [cardType, payoneIFrames.current]);
   (0, _element.useEffect)(function () {
-    var _payoneConfig$fields;
+    var _payoneConfig$default, _payoneConfig$fields;
+    if (payoneConfig !== null && payoneConfig !== void 0 && (_payoneConfig$default = payoneConfig.defaultStyle) !== null && _payoneConfig$default !== void 0 && _payoneConfig$default.input) {
+      cardHolderInput.current.setAttribute('style', payoneConfig.fields.cardholder.input);
+    }
     if (cardHolderInput.current && payoneConfig !== null && payoneConfig !== void 0 && (_payoneConfig$fields = payoneConfig.fields) !== null && _payoneConfig$fields !== void 0 && _payoneConfig$fields.cardholder) {
       cardHolderInput.current.setAttribute('style', payoneConfig.fields.cardholder.style);
       cardHolderInput.current.setAttribute('size', payoneConfig.fields.cardholder.size);
@@ -152,6 +156,13 @@ var PayoneCreditCard = function PayoneCreditCard(_ref) {
       cardHolderInput.current.setAttribute('type', payoneConfig.fields.cardholder.type);
     }
   }, [payoneConfig, cardHolderInput.current]);
+  (0, _element.useEffect)(function () {
+    var _payoneConfig$default2;
+    if (cardTypeInput.current && payoneConfig !== null && payoneConfig !== void 0 && (_payoneConfig$default2 = payoneConfig.defaultStyle) !== null && _payoneConfig$default2 !== void 0 && _payoneConfig$default2.select) {
+      var _payoneConfig$default3;
+      cardTypeInput.current.setAttribute('style', payoneConfig === null || payoneConfig === void 0 || (_payoneConfig$default3 = payoneConfig.defaultStyle) === null || _payoneConfig$default3 === void 0 ? void 0 : _payoneConfig$default3.select);
+    }
+  }, [payoneConfig, cardTypeInput.current]);
   (0, _element.useEffect)(function () {
     payoneIFrames.current = new Payone.ClientApi.HostedIFrames(_objectSpread(_objectSpread({}, payoneConfig), {}, {
       returnType: 'handler',
@@ -262,6 +273,7 @@ var PayoneCreditCard = function PayoneCreditCard(_ref) {
     htmlFor: "cardtype"
   }, (0, _i18n.__)('Card type', 'payone-woocommerce-3')), /*#__PURE__*/React.createElement("select", {
     id: "cardtype",
+    ref: cardTypeInput,
     className: "payoneSelect",
     onChange: function onChange(e) {
       return setCardType(e.target.value);

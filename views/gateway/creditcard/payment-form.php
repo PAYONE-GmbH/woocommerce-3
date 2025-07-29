@@ -4,13 +4,15 @@
 <input type="hidden" name="card_expiredate" id="card_expiredate">
 
 <?php
+$baseStyle = 'width: 100%; min-height: 30px; min-width: 100px;';
+
 $cardnumber_css = '';
 if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
 	$cardnumber_css = $this->get_option( 'cc_field_cardnumber_css' );
 }
 $cardholder_css = '';
 if ( $this->get_option( 'cc_field_cardholder_style' ) === 'custom' ) {
-    $cardnumber_css = $this->get_option( 'cc_field_cardholder_css' );
+    $cardholder_css = $this->get_option( 'cc_field_cardholder_css' );
 }
 $cvc2_css = '';
 if ( $this->get_option( 'cc_field_cvc2_style' ) === 'custom' ) {
@@ -74,7 +76,7 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
             cardpan: {
                 selector: "cardpan",
                 type: "<?php echo $this->get_option( 'cc_field_cardnumber_type' ); ?>",
-                style: "<?php echo $cardnumber_css; ?>",
+                style: "<?php echo $baseStyle . $cardnumber_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_cardnumber_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_cardnumber_maxchars' ); ?>"
 				<?php if ($this->get_option( 'cc_field_cardnumber_iframe' ) === 'custom') { ?>
@@ -87,14 +89,14 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
             cardholder: {
                 selector: "card_holder",
                 type: "<?php echo $this->get_option( 'cc_field_cardholder_type' ); ?>",
-                style: "<?php echo $cardholder_css; ?>",
+                style: "<?php echo $baseStyle . $cardholder_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_cardholder_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_cardholder_maxchars' ); ?>",
             },
             cardcvc2: {
                 selector: "cardcvc2",
                 type: "<?php echo $this->get_option( 'cc_field_cvc2_type' ); ?>",
-                style: "<?php echo $cvc2_css; ?>",
+                style: "<?php echo $baseStyle . $cvc2_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_cvc2_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_cvc2_maxchars' ); ?>",
                 length: {"V": 3, "M": 3, "A": 4, "D": 3, "J": 0, "O": 3, "P": 3, "U": 3}
@@ -108,7 +110,7 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
             cardexpiremonth: {
                 selector: "cardexpiremonth",
                 type: "<?php echo $this->get_option( 'cc_field_month_type' ); ?>",
-                style: "<?php echo $month_css; ?>",
+                style: "<?php echo $baseStyle . $month_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_month_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_month_maxchars' ); ?>"
 				<?php if ($this->get_option( 'cc_field_month_iframe' ) === 'custom') { ?>
@@ -121,7 +123,7 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
             cardexpireyear: {
                 selector: "cardexpireyear",
                 type: "<?php echo $this->get_option( 'cc_field_year_type' ); ?>",
-                style: "<?php echo $year_css; ?>",
+                style: "<?php echo $baseStyle . $year_css; ?>",
                 size: "<?php echo $this->get_option( 'cc_field_year_length' ); ?>",
                 maxlength: "<?php echo $this->get_option( 'cc_field_year_maxchars' ); ?>"
 				<?php if ($this->get_option( 'cc_field_year_iframe' ) === 'custom') { ?>
