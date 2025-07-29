@@ -62,8 +62,8 @@ const PayoneCreditCard = ({
     }, [cardType, payoneIFrames.current]);
 
     useEffect(() => {
-        if (payoneConfig?.defaultStyle?.input) {
-            cardHolderInput.current.setAttribute('style', payoneConfig.fields.cardholder.input);
+        if (cardHolderInput.current && payoneConfig?.defaultStyle?.input) {
+            cardHolderInput.current.setAttribute('style', payoneConfig?.defaultStyle?.input);
         }
 
         if (cardHolderInput.current && payoneConfig?.fields?.cardholder) {
