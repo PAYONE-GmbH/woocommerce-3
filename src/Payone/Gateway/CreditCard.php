@@ -32,10 +32,16 @@ class CreditCard extends RedirectGatewayBase {
 	}
 
 	public function javascript_payone_config() {
+        $baseStyle = 'width: 100%; min-height: 30px; min-width: 100px;';
+
 		$cardnumber_css = '';
 		if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
 			$cardnumber_css = $this->get_option( 'cc_field_cardnumber_css' );
 		}
+        $cardholder_css = '';
+        if ( $this->get_option( 'cc_field_cardholder_style' ) === 'custom' ) {
+            $cardholder_css = $this->get_option( 'cc_field_cardholder_css' );
+        }
 		$cvc2_css = '';
 		if ( $this->get_option( 'cc_field_cvc2_style' ) === 'custom' ) {
 			$cvc2_css = $this->get_option( 'cc_field_cvc2_css' );
@@ -52,7 +58,7 @@ class CreditCard extends RedirectGatewayBase {
 		$cardpan = [
 			'selector'  => 'cardpan',
 			'type'      => $this->get_option( 'cc_field_cardnumber_type' ),
-			'style'     => $cardnumber_css,
+			'style'     => $baseStyle . $cardnumber_css,
 			'size'      => $this->get_option( 'cc_field_cardnumber_length' ),
 			'maxlength' => $this->get_option( 'cc_field_cardnumber_maxchars' ),
 		];
@@ -64,10 +70,18 @@ class CreditCard extends RedirectGatewayBase {
 			];
 		}
 
+        $cardholder = [
+            'selector'  => 'cardholder',
+            'type'      => $this->get_option( 'cc_field_cardholder_type' ),
+            'style'     => $baseStyle . $cardholder_css,
+            'size'      => $this->get_option( 'cc_field_cardholder_length' ),
+            'maxlength' => $this->get_option( 'cc_field_cardholder_maxchars' ),
+        ];
+
 		$cardcvc2 = [
 			'selector'  => 'cardcvc2',
 			'type'      => $this->get_option( 'cc_field_cvc2_type' ),
-			'style'     => $cvc2_css,
+			'style'     => $baseStyle . $cvc2_css,
 			'size'      => $this->get_option( 'cc_field_cvc2_length' ),
 			'maxlength' => $this->get_option( 'cc_field_cvc2_maxchars' ),
 			'length'    => [
@@ -92,7 +106,7 @@ class CreditCard extends RedirectGatewayBase {
 		$cardexpiremonth = [
 			'selector'  => 'cardexpiremonth',
 			'type'      => $this->get_option( 'cc_field_month_type' ),
-			'style'     => $month_css,
+			'style'     => $baseStyle . $month_css,
 			'size'      => $this->get_option( 'cc_field_month_length' ),
 			'maxlength' => $this->get_option( 'cc_field_month_maxchars' ),
 		];
@@ -107,7 +121,7 @@ class CreditCard extends RedirectGatewayBase {
 		$cardexpireyear = [
 			'selector'  => 'cardexpireyear',
 			'type'      => $this->get_option( 'cc_field_year_type' ),
-			'style'     => $year_css,
+			'style'     => $baseStyle . $year_css,
 			'size'      => $this->get_option( 'cc_field_year_length' ),
 			'maxlength' => $this->get_option( 'cc_field_year_maxchars' ),
 		];
@@ -122,6 +136,7 @@ class CreditCard extends RedirectGatewayBase {
 		return [
 			'fields'       => [
 				'cardpan'         => $cardpan,
+				'cardholder'      => $cardholder,
 				'cardcvc2'        => $cardcvc2,
 				'cardexpiremonth' => $cardexpiremonth,
 				'cardexpireyear'  => $cardexpireyear,
@@ -175,7 +190,6 @@ class CreditCard extends RedirectGatewayBase {
 				'A' => __( 'AMEX', 'payone-woocommerce-3' ),
 				'D' => __( 'Diners', 'payone-woocommerce-3' ),
 				'J' => __( 'JCB', 'payone-woocommerce-3' ),
-				'O' => __( 'Maestro', 'payone-woocommerce-3' ),
 				'C' => __( 'Discover', 'payone-woocommerce-3' ),
 				'B' => __( 'Carte Bleue', 'payone-woocommerce-3' ),
 				'P' => __( 'China Union Pay', 'payone-woocommerce-3' ),
@@ -201,10 +215,6 @@ class CreditCard extends RedirectGatewayBase {
 		$this->form_fields['cc_brand_label_J']                = [
 			'type'    => 'no_display',
 			'default' => 'Japan Credit Bureau',
-		];
-		$this->form_fields['cc_brand_label_O']                = [
-			'type'    => 'no_display',
-			'default' => 'Maestro International',
 		];
 		$this->form_fields['cc_brand_label_C']                = [
 			'type'    => 'no_display',
@@ -272,6 +282,34 @@ class CreditCard extends RedirectGatewayBase {
 			'type'    => 'no_display', // 'text',
 			'default' => '',
 		];
+
+        $this->form_fields['cc_field_cardholder_type']     = [
+            'title'   => __( 'Card Holder', 'payone-woocommerce-3' ),
+            'type'    => 'style_input',
+            'options' => $type_options,
+            'default' => 'text',
+        ];
+        $this->form_fields['cc_field_cardholder_length']   = [
+            'title'   => __( 'Length', 'payone-woocommerce-3' ),
+            'type'    => 'no_display',
+            'default' => '20',
+        ];
+        $this->form_fields['cc_field_cardholder_maxchars'] = [
+            'title'   => __( 'Max. chars', 'payone-woocommerce-3' ),
+            'type'    => 'no_display',
+            'default' => '20',
+        ];
+        $this->form_fields['cc_field_cardholder_style']    = [
+            'title'   => __( 'Style', 'payone-woocommerce-3' ),
+            'type'    => 'no_display',
+            'options' => $style_options,
+            'default' => 'default',
+        ];
+        $this->form_fields['cc_field_cardholder_css']      = [
+            'title'   => __( 'CSS', 'payone-woocommerce-3' ),
+            'type'    => 'no_display',
+            'default' => '',
+        ];
 
 		$this->form_fields['cc_field_cvc2_type']     = [
 			'title'   => __( 'CVC2', 'payone-woocommerce-3' ),
@@ -516,15 +554,21 @@ class CreditCard extends RedirectGatewayBase {
 
 		$key  = 'cc_field_' . $field . '_iframe';
 		$data = $this->form_fields[ $key ];
-		$out  .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data ) . '</td>';
+        if (!empty($data)) {
+		    $out  .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data ) . '</td>';
+        }
 
 		$key  = 'cc_field_' . $field . '_width';
 		$data = $this->form_fields[ $key ];
-		$out  .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
+        if (!empty($data)) {
+            $out .= '<td>' . $this->generate_text_html_without_table_markup($key, $data) . '</td>';
+        }
 
 		$key  = 'cc_field_' . $field . '_height';
 		$data = $this->form_fields[ $key ];
-		$out  .= '<td>' . $this->generate_text_html_without_table_markup( $key, $data ) . '</td>';
+        if (!empty($data)) {
+            $out .= '<td>' . $this->generate_text_html_without_table_markup($key, $data) . '</td>';
+        }
 
 		$out .= '</tr><tr>';
 

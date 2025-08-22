@@ -7,8 +7,9 @@
     color: black !important;
     outline: initial !important;
     box-shadow: none !important;
-    margin: 0 !important;
+    margin: 0 0 4px !important;
     font-family: system-ui !important;
+    min-height: 30px;
 }
 .payoneSelect {
     -webkit-appearance: menulist !important;
@@ -19,13 +20,25 @@
     color: black !important;
     outline: initial !important;
     box-shadow: none !important;
-    margin: 0 !important;
+    margin: 0 0 4px !important;
     font-family: system-ui !important;
+    min-height: 30px;
 }
+
+.inputIframe {
+    margin-bottom: 4px;
+
+    iframe {
+        display: block;
+        padding-right: 1px;
+    }
+}
+
 #expireInput {
     display: -webkit-box;
     display: -moz-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+    gap: 10px;
 }

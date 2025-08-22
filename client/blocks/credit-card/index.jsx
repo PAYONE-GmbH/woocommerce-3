@@ -31,6 +31,8 @@ const PayoneCreditCard = ({
     const [paymentMethodData, setPaymentMethodData] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const payoneIFrames = useRef(null);
+    const cardHolderInput = useRef(null);
+    const cardTypeInput = useRef(null);
 
     useEffect(() => {
         window.addEventListener('creditCardCheckCallbackEvent', ({detail}) => {
@@ -58,6 +60,25 @@ const PayoneCreditCard = ({
             payoneIFrames.current.setCardType(cardType);
         }
     }, [cardType, payoneIFrames.current]);
+
+    useEffect(() => {
+        if (cardHolderInput.current && payoneConfig?.defaultStyle?.input) {
+            cardHolderInput.current.setAttribute('style', payoneConfig?.defaultStyle?.input);
+        }
+
+        if (cardHolderInput.current && payoneConfig?.fields?.cardholder) {
+            cardHolderInput.current.setAttribute('style', payoneConfig.fields.cardholder.style);
+            cardHolderInput.current.setAttribute('size', payoneConfig.fields.cardholder.size);
+            cardHolderInput.current.setAttribute('maxlength', payoneConfig.fields.cardholder.maxlength);
+            cardHolderInput.current.setAttribute('type', payoneConfig.fields.cardholder.type);
+        }
+    }, [payoneConfig, cardHolderInput.current]);
+
+    useEffect(() => {
+        if (cardTypeInput.current && payoneConfig?.defaultStyle?.select) {
+            cardTypeInput.current.setAttribute('style', payoneConfig?.defaultStyle?.select);
+        }
+    }, [payoneConfig, cardTypeInput.current]);
 
     useEffect(() => {
         payoneIFrames.current = new Payone.ClientApi.HostedIFrames(
@@ -157,6 +178,7 @@ const PayoneCreditCard = ({
 
                 <input
                     className="payoneInput"
+                    ref={cardHolderInput}
                     id="card_holder"
                     type="text"
                     name="card_holder"
@@ -170,6 +192,7 @@ const PayoneCreditCard = ({
                 <label htmlFor="cardtype">{__('Card type', 'payone-woocommerce-3')}</label>
                 <select
                     id="cardtype"
+                    ref={cardTypeInput}
                     className="payoneSelect"
                     onChange={(e) => setCardType(e.target.value)}
                 >
