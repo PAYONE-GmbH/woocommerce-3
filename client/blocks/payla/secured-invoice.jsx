@@ -5,6 +5,7 @@ import {PAYONE_ASSETS_URL} from '../../constants';
 import IconLabel from '../../components/IconLabel';
 import AssetService from '../../services/AssetService';
 import PaylaDisclaimer from './disclaimer';
+import canMakePayment from './canMakePayment';
 
 const PAYMENT_METHOD_NAME = 'payone_secured_invoice';
 
@@ -97,7 +98,7 @@ export default {
     ariaLabel: label,
     content: <PaylaSecuredInvoice />,
     edit: <PaylaSecuredInvoice />,
-    canMakePayment: () => true,
+    canMakePayment,
     paymentMethodId: PAYMENT_METHOD_NAME,
     supports: {
         showSavedCards: false,

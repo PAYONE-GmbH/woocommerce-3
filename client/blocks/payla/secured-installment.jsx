@@ -6,6 +6,7 @@ import {PAYONE_ASSETS_URL} from '../../constants';
 import AssetService from '../../services/AssetService';
 import PaylaDisclaimer from './disclaimer';
 import getPaymentMethodConfig from '../../services/getPaymentMethodConfig';
+import canMakePayment from './canMakePayment';
 
 const InstallmentOptionsTable = ({
     options,
@@ -200,4 +201,5 @@ export default getPaymentMethodConfig(
     __('PAYONE Secured Installment', 'payone-woocommerce-3'),
     `${PAYONE_ASSETS_URL}/icon-rechnungskauf.png`,
     <PaylaSecuredInstallment />,
+    {canMakePayment},
 );

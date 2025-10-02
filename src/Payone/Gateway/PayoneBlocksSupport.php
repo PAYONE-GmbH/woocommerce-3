@@ -106,13 +106,14 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		$data['klarnaStartSessionUrl']        = Plugin::get_callback_url( [ 'type' => 'ajax-klarna-start-session' ] );
 		$data['sepaManageMandateUrl']         = Plugin::get_callback_url( [ 'type' => 'ajax-manage-mandate' ] );
 		$data['paylaConfig']                  = [
-			'environmentKey'          => $this->paylaSecuredInvoiceGateway->get_environment(),
-			'cssUrl'                  => $this->paylaSecuredInvoiceGateway->get_client_css(),
-			'jsUrl'                   => $this->paylaSecuredInvoiceGateway->get_client_js(),
-			'tokenSecuredInvoice'     => $this->paylaSecuredInvoiceGateway->get_snippet_token(),
-			'tokenSecuredInstallment' => $this->paylaSecuredInstallmentGateway->get_snippet_token(),
-			'tokenSecuredDirectDebit' => $this->paylaSecuredDirectDebitGateway->get_snippet_token(),
-			'urlSecuredInstallment'   => Plugin::get_callback_url( [ 'type' => 'ajax-secured-installment-options' ] ),
+			'environmentKey'                  => $this->paylaSecuredInvoiceGateway->get_environment(),
+			'cssUrl'                          => $this->paylaSecuredInvoiceGateway->get_client_css(),
+			'jsUrl'                           => $this->paylaSecuredInvoiceGateway->get_client_js(),
+			'tokenSecuredInvoice'             => $this->paylaSecuredInvoiceGateway->get_snippet_token(),
+			'tokenSecuredInstallment'         => $this->paylaSecuredInstallmentGateway->get_snippet_token(),
+			'tokenSecuredDirectDebit'         => $this->paylaSecuredDirectDebitGateway->get_snippet_token(),
+			'urlSecuredInstallment'           => Plugin::get_callback_url( [ 'type' => 'ajax-secured-installment-options' ] ),
+			'allowDifferentShippingAddress'   => $this->paylaSecuredInvoiceGateway->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
 		];
         $data['paypalExpressConfig']          = [
             'jsUrl' => 'https://www.paypal.com/sdk/js?client-id='.$this->paypalV2ExpressGateway->get_payone_client_id().'&merchant-id='.$this->paypalV2ExpressGateway->get_payone_merchant_id().'&currency=EUR&intent=authorize&locale=de_DE&commit=false&vault=false&disable-funding=card,sepa,bancontact'.( $this->paypalV2ExpressGateway->get_allow_paylater() ? '&enable-funding=paylater' : ''),
