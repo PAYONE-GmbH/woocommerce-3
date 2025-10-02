@@ -201,5 +201,5 @@ export default getPaymentMethodConfig(
     __('PAYONE Secured Installment', 'payone-woocommerce-3'),
     `${PAYONE_ASSETS_URL}/icon-rechnungskauf.png`,
     <PaylaSecuredInstallment />,
-    {canMakePayment},
+    {canMakePayment: () => canMakePayment('payone_secured_installment')},
 );

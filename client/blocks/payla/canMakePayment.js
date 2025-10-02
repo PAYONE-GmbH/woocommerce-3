@@ -10,13 +10,15 @@ import isShallowEqual from '@wordpress/is-shallow-equal';
  *
  * This mirrors the logic in PaylaBase::is_available() for traditional checkout.
  *
+ * @param {string} gatewayId - The payment gateway ID (e.g., 'payone_secured_invoice')
  * @returns {boolean} Whether the payment method can be used
  */
-export default function canMakePayment() {
+export default function canMakePayment(gatewayId) {
     const {paylaConfig} = wc.wcSettings.getSetting('payone_data');
+    const allowDifferentShippingAddress = paylaConfig.allowDifferentShippingAddress[gatewayId];
 
     // If different shipping addresses are allowed, payment method is always available
-    if (paylaConfig.allowDifferentShippingAddress) {
+    if (allowDifferentShippingAddress) {
         return true;
     }
 

@@ -951,14 +951,16 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
  *
  * This mirrors the logic in PaylaBase::is_available() for traditional checkout.
  *
+ * @param {string} gatewayId - The payment gateway ID (e.g., 'payone_secured_invoice')
  * @returns {boolean} Whether the payment method can be used
  */
-function canMakePayment() {
+function canMakePayment(gatewayId) {
   var _wc$wcSettings$getSet = wc.wcSettings.getSetting('payone_data'),
     paylaConfig = _wc$wcSettings$getSet.paylaConfig;
+  var allowDifferentShippingAddress = paylaConfig.allowDifferentShippingAddress[gatewayId];
 
   // If different shipping addresses are allowed, payment method is always available
-  if (paylaConfig.allowDifferentShippingAddress) {
+  if (allowDifferentShippingAddress) {
     return true;
   }
 
@@ -1033,7 +1035,7 @@ var _constants = __webpack_require__(/*! ../../constants */ "./client/constants.
 var _AssetService = _interopRequireDefault(__webpack_require__(/*! ../../services/AssetService */ "./client/services/AssetService.js"));
 var _disclaimer = _interopRequireDefault(__webpack_require__(/*! ./disclaimer */ "./client/blocks/payla/disclaimer.jsx"));
 var _getPaymentMethodConfig = _interopRequireDefault(__webpack_require__(/*! ../../services/getPaymentMethodConfig */ "./client/services/getPaymentMethodConfig.js"));
-var _canMakePayment = _interopRequireDefault(__webpack_require__(/*! ./canMakePayment */ "./client/blocks/payla/canMakePayment.js"));
+var _canMakePayment2 = _interopRequireDefault(__webpack_require__(/*! ./canMakePayment */ "./client/blocks/payla/canMakePayment.js"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1112,7 +1114,9 @@ var PaylaSecuredDirectDebit = function PaylaSecuredDirectDebit(_ref) {
   }), /*#__PURE__*/React.createElement(_disclaimer.default, null));
 };
 var _default = exports["default"] = (0, _getPaymentMethodConfig.default)('payone_secured_direct_debit', (0, _i18n.__)('PAYONE Secured Direct Debit', 'payone-woocommerce-3'), "".concat(_constants.PAYONE_ASSETS_URL, "/icon-secured-lastschrift.png"), /*#__PURE__*/React.createElement(PaylaSecuredDirectDebit, null), {
-  canMakePayment: _canMakePayment.default
+  canMakePayment: function canMakePayment() {
+    return (0, _canMakePayment2.default)('payone_secured_direct_debit');
+  }
 });
 
 /***/ }),
@@ -1138,7 +1142,7 @@ var _constants = __webpack_require__(/*! ../../constants */ "./client/constants.
 var _AssetService = _interopRequireDefault(__webpack_require__(/*! ../../services/AssetService */ "./client/services/AssetService.js"));
 var _disclaimer = _interopRequireDefault(__webpack_require__(/*! ./disclaimer */ "./client/blocks/payla/disclaimer.jsx"));
 var _getPaymentMethodConfig = _interopRequireDefault(__webpack_require__(/*! ../../services/getPaymentMethodConfig */ "./client/services/getPaymentMethodConfig.js"));
-var _canMakePayment = _interopRequireDefault(__webpack_require__(/*! ./canMakePayment */ "./client/blocks/payla/canMakePayment.js"));
+var _canMakePayment2 = _interopRequireDefault(__webpack_require__(/*! ./canMakePayment */ "./client/blocks/payla/canMakePayment.js"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1303,7 +1307,9 @@ var PaylaSecuredInstallment = function PaylaSecuredInstallment(_ref2) {
   })) : null, /*#__PURE__*/React.createElement(_disclaimer.default, null));
 };
 var _default = exports["default"] = (0, _getPaymentMethodConfig.default)('payone_secured_installment', (0, _i18n.__)('PAYONE Secured Installment', 'payone-woocommerce-3'), "".concat(_constants.PAYONE_ASSETS_URL, "/icon-rechnungskauf.png"), /*#__PURE__*/React.createElement(PaylaSecuredInstallment, null), {
-  canMakePayment: _canMakePayment.default
+  canMakePayment: function canMakePayment() {
+    return (0, _canMakePayment2.default)('payone_secured_installment');
+  }
 });
 
 /***/ }),
@@ -1328,7 +1334,7 @@ var _constants = __webpack_require__(/*! ../../constants */ "./client/constants.
 var _IconLabel = _interopRequireDefault(__webpack_require__(/*! ../../components/IconLabel */ "./client/components/IconLabel.jsx"));
 var _AssetService = _interopRequireDefault(__webpack_require__(/*! ../../services/AssetService */ "./client/services/AssetService.js"));
 var _disclaimer = _interopRequireDefault(__webpack_require__(/*! ./disclaimer */ "./client/blocks/payla/disclaimer.jsx"));
-var _canMakePayment = _interopRequireDefault(__webpack_require__(/*! ./canMakePayment */ "./client/blocks/payla/canMakePayment.js"));
+var _canMakePayment2 = _interopRequireDefault(__webpack_require__(/*! ./canMakePayment */ "./client/blocks/payla/canMakePayment.js"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1416,7 +1422,9 @@ var _default = exports["default"] = {
   ariaLabel: label,
   content: /*#__PURE__*/React.createElement(PaylaSecuredInvoice, null),
   edit: /*#__PURE__*/React.createElement(PaylaSecuredInvoice, null),
-  canMakePayment: _canMakePayment.default,
+  canMakePayment: function canMakePayment() {
+    return (0, _canMakePayment2.default)(PAYMENT_METHOD_NAME);
+  },
   paymentMethodId: PAYMENT_METHOD_NAME,
   supports: {
     showSavedCards: false,

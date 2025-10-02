@@ -98,7 +98,7 @@ export default {
     ariaLabel: label,
     content: <PaylaSecuredInvoice />,
     edit: <PaylaSecuredInvoice />,
-    canMakePayment,
+    canMakePayment: () => canMakePayment(PAYMENT_METHOD_NAME),
     paymentMethodId: PAYMENT_METHOD_NAME,
     supports: {
         showSavedCards: false,

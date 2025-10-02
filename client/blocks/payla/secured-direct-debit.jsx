@@ -97,5 +97,5 @@ export default getPaymentMethodConfig(
     __('PAYONE Secured Direct Debit', 'payone-woocommerce-3'),
     `${PAYONE_ASSETS_URL}/icon-secured-lastschrift.png`,
     <PaylaSecuredDirectDebit />,
-    {canMakePayment},
+    {canMakePayment: () => canMakePayment('payone_secured_direct_debit')},
 );
