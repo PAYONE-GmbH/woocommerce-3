@@ -77,8 +77,6 @@ const PayoneCreditCard = ({
     }, [payoneConfig, cardTypeInput.current]);
 
     useEffect(() => {
-        console.log('> PayoneCreditCard useEffect');
-
         const iframeConfig = {
             ...payoneConfig,
             returnType: 'handler',
@@ -98,8 +96,6 @@ const PayoneCreditCard = ({
             aid: creditCardCheckRequestConfig.account_id,
             portalid: creditCardCheckRequestConfig.portal_id,
         };
-
-        console.log('>> iframeConfig: ', iframeConfig);
 
         payoneIFrames.current = new Payone.ClientApi.HostedIFrames(iframeConfig, requestConfig);
     }, [creditCardCheckRequestConfig, payoneConfig]);
