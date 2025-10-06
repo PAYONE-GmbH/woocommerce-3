@@ -145,11 +145,7 @@ var PayoneCreditCard = function PayoneCreditCard(_ref) {
     }
   }, [cardType, payoneIFrames.current]);
   (0, _element.useEffect)(function () {
-    var _payoneConfig$default, _payoneConfig$fields;
-    if (cardHolderInput.current && payoneConfig !== null && payoneConfig !== void 0 && (_payoneConfig$default = payoneConfig.defaultStyle) !== null && _payoneConfig$default !== void 0 && _payoneConfig$default.input) {
-      var _payoneConfig$default2;
-      cardHolderInput.current.setAttribute('style', payoneConfig === null || payoneConfig === void 0 || (_payoneConfig$default2 = payoneConfig.defaultStyle) === null || _payoneConfig$default2 === void 0 ? void 0 : _payoneConfig$default2.input);
-    }
+    var _payoneConfig$fields;
     if (cardHolderInput.current && payoneConfig !== null && payoneConfig !== void 0 && (_payoneConfig$fields = payoneConfig.fields) !== null && _payoneConfig$fields !== void 0 && _payoneConfig$fields.cardholder) {
       cardHolderInput.current.setAttribute('style', payoneConfig.fields.cardholder.style);
       cardHolderInput.current.setAttribute('size', payoneConfig.fields.cardholder.size);
@@ -158,21 +154,32 @@ var PayoneCreditCard = function PayoneCreditCard(_ref) {
     }
   }, [payoneConfig, cardHolderInput.current]);
   (0, _element.useEffect)(function () {
-    var _payoneConfig$default3;
-    if (cardTypeInput.current && payoneConfig !== null && payoneConfig !== void 0 && (_payoneConfig$default3 = payoneConfig.defaultStyle) !== null && _payoneConfig$default3 !== void 0 && _payoneConfig$default3.select) {
-      var _payoneConfig$default4;
-      cardTypeInput.current.setAttribute('style', payoneConfig === null || payoneConfig === void 0 || (_payoneConfig$default4 = payoneConfig.defaultStyle) === null || _payoneConfig$default4 === void 0 ? void 0 : _payoneConfig$default4.select);
+    var _payoneConfig$default;
+    if (cardTypeInput.current && payoneConfig !== null && payoneConfig !== void 0 && (_payoneConfig$default = payoneConfig.defaultStyle) !== null && _payoneConfig$default !== void 0 && _payoneConfig$default.select) {
+      var _payoneConfig$default2;
+      cardTypeInput.current.setAttribute('style', payoneConfig === null || payoneConfig === void 0 || (_payoneConfig$default2 = payoneConfig.defaultStyle) === null || _payoneConfig$default2 === void 0 ? void 0 : _payoneConfig$default2.select);
     }
   }, [payoneConfig, cardTypeInput.current]);
   (0, _element.useEffect)(function () {
-    payoneIFrames.current = new Payone.ClientApi.HostedIFrames(_objectSpread(_objectSpread({}, payoneConfig), {}, {
+    console.log('> PayoneCreditCard useEffect');
+    var iframeConfig = _objectSpread(_objectSpread({}, payoneConfig), {}, {
       returnType: 'handler',
-      language: Payone.ClientApi.Language[payoneConfig.language]
-    }), _objectSpread(_objectSpread({}, creditCardCheckRequestConfig), {}, {
+      language: Payone.ClientApi.Language[payoneConfig.language],
+      events: {
+        rendered: function rendered() {
+          if (payoneIFrames.current && cardType) {
+            payoneIFrames.current.setCardType(cardType);
+          }
+        }
+      }
+    });
+    var requestConfig = _objectSpread(_objectSpread({}, creditCardCheckRequestConfig), {}, {
       mid: creditCardCheckRequestConfig.merchant_id,
       aid: creditCardCheckRequestConfig.account_id,
       portalid: creditCardCheckRequestConfig.portal_id
-    }));
+    });
+    console.log('>> iframeConfig: ', iframeConfig);
+    payoneIFrames.current = new Payone.ClientApi.HostedIFrames(iframeConfig, requestConfig);
   }, [creditCardCheckRequestConfig, payoneConfig]);
   (0, _element.useEffect)(function () {
     return onCheckoutValidation(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {

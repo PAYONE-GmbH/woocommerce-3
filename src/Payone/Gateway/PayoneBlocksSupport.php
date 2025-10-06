@@ -70,7 +70,7 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			true
 		);
 
-		wp_set_script_translations( 'wc-payone-blocks-integration', 'payone-woocommerce-3' );
+		wp_set_script_translations( 'wc-payone-blocks-integration', 'payone-woocommerce-3', PAYONE_PLUGIN_PATH . '/lang' );
 
 		return [ 'wc-payone-blocks-integration' ];
 	}
