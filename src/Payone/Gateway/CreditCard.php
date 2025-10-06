@@ -602,8 +602,7 @@ class CreditCard extends RedirectGatewayBase {
      *
      * @return string
      */
-	private function get_field_style_css($field_name, $default_style ): string
-    {
+	private function get_field_style_css($field_name, $default_style ) {
 		$style_option = $this->get_option( "cc_field_{$field_name}_style" );
 
 		if ( $style_option === 'custom' ) {
