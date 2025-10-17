@@ -32,6 +32,18 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			$this->paylaSecuredDirectDebitGateway = new SecuredDirectDebit();
 		}
 
+		if ( ! property_exists( $this, 'ratepayOpenInvoiceGateway' ) ) {
+			$this->ratepayOpenInvoiceGateway = new RatepayOpenInvoice();
+		}
+
+		if ( ! property_exists( $this, 'ratepayInstallmentsGateway' ) ) {
+			$this->ratepayInstallmentsGateway = new RatepayInstallments();
+		}
+
+		if ( ! property_exists( $this, 'ratepayDirectDebitGateway' ) ) {
+			$this->ratepayDirectDebitGateway = new RatepayDirectDebit();
+		}
+
         if ( ! property_exists( $this, 'paypalV2ExpressGateway' ) ) {
             $this->paypalV2ExpressGateway = new PayPalV2Express();
         }
@@ -117,6 +129,13 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
                 'payone_secured_invoice'      => $this->paylaSecuredInvoiceGateway->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
                 'payone_secured_installment'  => $this->paylaSecuredInstallmentGateway->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
                 'payone_secured_direct_debit' => $this->paylaSecuredDirectDebitGateway->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
+            ],
+		];
+		$data['ratepayConfig']                = [
+			'allowDifferentShippingAddress'   => [
+                'payone_ratepay_open_invoice'  => $this->ratepayOpenInvoiceGateway->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
+                'payone_ratepay_installments'  => $this->ratepayInstallmentsGateway->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
+                'payone_ratepay_direct_debit'  => $this->ratepayDirectDebitGateway->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
             ],
 		];
         $data['paypalExpressConfig']          = [

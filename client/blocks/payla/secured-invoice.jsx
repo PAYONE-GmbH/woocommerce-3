@@ -4,8 +4,10 @@ import {ValidatedTextInput} from '@woocommerce/blocks-checkout';
 import {PAYONE_ASSETS_URL} from '../../constants';
 import IconLabel from '../../components/IconLabel';
 import AssetService from '../../services/AssetService';
+import {createShippingAddressValidator} from '../../services/shippingAddressValidator';
 import PaylaDisclaimer from './disclaimer';
-import canMakePayment from './canMakePayment';
+
+const canMakePayment = createShippingAddressValidator('paylaConfig');
 
 const PAYMENT_METHOD_NAME = 'payone_secured_invoice';
 

@@ -5,10 +5,12 @@ import IBAN from 'iban';
 import RatepayDisclaimer from './disclaimer';
 import {PAYONE_ASSETS_URL} from '../../constants';
 import IconLabel from '../../components/IconLabel';
+import {createShippingAddressValidator} from '../../services/shippingAddressValidator';
 import InstallmentsCalculationLong from './installments/installments-calculation-long';
 import InstallmentsCalculationShort from './installments/installments-calculation-short';
 
 const PAYMENT_METHOD_NAME = 'payone_ratepay_installments';
+const canMakePayment = createShippingAddressValidator('ratepayConfig');
 
 // TODO: Auf Typescript umbauen
 /**
@@ -247,7 +249,7 @@ export default {
     ariaLabel: label,
     content: <RatepayInstallments />,
     edit: <RatepayInstallments />,
-    canMakePayment: () => true,
+    canMakePayment: () => canMakePayment(PAYMENT_METHOD_NAME),
     paymentMethodId: PAYMENT_METHOD_NAME,
     supports: {
         showSavedCards: false,

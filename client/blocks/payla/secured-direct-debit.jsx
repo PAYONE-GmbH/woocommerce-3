@@ -6,7 +6,9 @@ import {PAYONE_ASSETS_URL} from '../../constants';
 import AssetService from '../../services/AssetService';
 import PaylaDisclaimer from './disclaimer';
 import getPaymentMethodConfig from '../../services/getPaymentMethodConfig';
-import canMakePayment from './canMakePayment';
+import {createShippingAddressValidator} from '../../services/shippingAddressValidator';
+
+const canMakePayment = createShippingAddressValidator('paylaConfig');
 
 const PaylaSecuredDirectDebit = ({
     eventRegistration: {onPaymentSetup},
