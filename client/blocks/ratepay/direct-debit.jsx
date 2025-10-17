@@ -4,8 +4,10 @@ import {useEffect, useState} from '@wordpress/element';
 import {ValidatedTextInput} from '@woocommerce/blocks-checkout';
 import RatepayDisclaimer from './disclaimer';
 import {PAYONE_ASSETS_URL} from '../../constants';
+import {createShippingAddressValidator} from '../../services/shippingAddressValidator';
 
 const PAYMENT_METHOD_NAME = 'payone_ratepay_direct_debit';
+const canMakePayment = createShippingAddressValidator('ratepayConfig');
 
 const RatepayDirectDebit = ({
     eventRegistration: {onPaymentSetup},
@@ -97,7 +99,7 @@ export default {
     ariaLabel: __('Ratepay Direct Debit Zahlmethode', 'payone-woocommerce-3'),
     content: <RatepayDirectDebit />,
     edit: <RatepayDirectDebit />,
-    canMakePayment: () => true,
+    canMakePayment: () => canMakePayment(PAYMENT_METHOD_NAME),
     paymentMethodId: PAYMENT_METHOD_NAME,
     supports: {
         showSavedCards: false,

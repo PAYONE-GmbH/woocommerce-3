@@ -4,8 +4,10 @@ import {ValidatedTextInput} from '@woocommerce/blocks-checkout';
 import RatepayDisclaimer from './disclaimer';
 import {PAYONE_ASSETS_URL} from '../../constants';
 import IconLabel from '../../components/IconLabel';
+import {createShippingAddressValidator} from '../../services/shippingAddressValidator';
 
 const PAYMENT_METHOD_NAME = 'payone_ratepay_open_invoice';
+const canMakePayment = createShippingAddressValidator('ratepayConfig');
 
 const RatepayOpenInvoice = ({
     eventRegistration: {onPaymentSetup},
@@ -64,7 +66,7 @@ export default {
     ariaLabel: label,
     content: <RatepayOpenInvoice />,
     edit: <RatepayOpenInvoice />,
-    canMakePayment: () => true,
+    canMakePayment: () => canMakePayment(PAYMENT_METHOD_NAME),
     paymentMethodId: PAYMENT_METHOD_NAME,
     supports: {
         showSavedCards: false,
