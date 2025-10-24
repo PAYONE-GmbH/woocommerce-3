@@ -122,7 +122,7 @@ class AmazonPay extends AmazonPayBase {
 	 * @return array Button configuration for Amazon Pay SDK
 	 */
 	public function process_blocks_create_session() {
-		// Create a temporary order from cart for the transaction
+		// Create checkout session from cart (Blocks don't have an order yet)
 		$cart = WC()->cart;
 		if ( ! $cart ) {
 			return [
@@ -130,18 +130,27 @@ class AmazonPay extends AmazonPayBase {
 			];
 		}
 
-		$transaction = new \Payone\Transaction\AmazonPay( $this );
+		// Use Express transaction for cart-based sessions (same as Express checkout)
+		$transaction = new \Payone\Transaction\AmazonPayExpressCreateCheckoutSession( $this );
 		$transaction
-			->set( 'amount', $cart->get_total( 'edit' ) * 100 )
-			->set( 'currency', strtoupper( get_woocommerce_currency() ) )
 			->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-success' ] ) )
 			->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-error' ] ) )
-			->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-back' ] ) )
-			->set( 'add_paydata[checkoutMode]', 'ProcessOrder' )
-			->set( 'add_paydata[productType]', 'PayAndShip' );
+			->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-back' ] ) );
 
-		$response = $transaction->submit();
+		$response = $transaction->execute( $cart );
 		$workorderid = $response->get( 'workorderid' );
+
+		// Validate response data
+		$payload = $response->get( 'add_paydata[payload]' );
+		$signature = $response->get( 'add_paydata[signature]' );
+
+		if ( ! $payload || ! $signature ) {
+			error_log( 'PAYONE AmazonPay Blocks: Missing payload or signature. Response: ' . print_r( $response->toArray(), true ) );
+			return [
+				'error' => __( 'Payment configuration error. Please try another payment method or contact support.', 'payone-woocommerce-3' ),
+			];
+		}
+
 		Plugin::set_session_value( self::SESSION_KEY_WORKORDERID, $workorderid );
 		Plugin::delete_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED );
 
@@ -156,8 +165,8 @@ class AmazonPay extends AmazonPayBase {
 			'placement' => 'Checkout',
 			'buttonColor' => $this->get_button_color(),
 			'createCheckoutSessionConfig' => [
-				'payloadJSON' => $response->get( 'add_paydata[payload]' ),
-				'signature' => $response->get( 'add_paydata[signature]' ),
+				'payloadJSON' => $payload,
+				'signature' => $signature,
 			],
 		];
 	}

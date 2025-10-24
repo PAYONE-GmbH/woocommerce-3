@@ -11,9 +11,9 @@ const AmazonPayButton = ({
     const {amazonPayConfig} = wc.wcSettings.getSetting('payone_data');
     const {onPaymentSetup} = eventRegistration;
     const {responseTypes} = emitResponse;
-    const [buttonConfig, setButtonConfig] = useState(null);
     const [workorderId, setWorkorderId] = useState(null);
     const [isReady, setIsReady] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
         // Load Amazon SDK
@@ -27,7 +27,13 @@ const AmazonPayButton = ({
             })
                 .then((res) => res.json())
                 .then((config) => {
-                    setButtonConfig(config);
+                    // Check for backend error
+                    if (config.error) {
+                        setErrorMessage(config.error);
+                        setIsReady(false);
+                        return;
+                    }
+
                     setWorkorderId(config.workorderId);
                     setIsReady(true);
 
@@ -49,6 +55,8 @@ const AmazonPayButton = ({
                 })
                 .catch((error) => {
                     console.error('AmazonPay button config error:', error);
+                    setErrorMessage(__('Failed to initialize AmazonPay. Please try again.', 'payone-woocommerce-3'));
+                    setIsReady(false);
                 });
         });
     }, []);
@@ -77,8 +85,12 @@ const AmazonPayButton = ({
     return (
         <div className="payone-amazonpay-container">
             <p>{amazonPayConfig.description || ''}</p>
-            <div id="payone-amazonpay-button"></div>
-            <div id="amazonpay_error" style={{color: 'red', marginTop: '10px'}}></div>
+            {errorMessage && (
+                <div id="amazonpay_error" style={{color: 'red', marginTop: '10px'}}>
+                    {errorMessage}
+                </div>
+            )}
+            {!errorMessage && <div id="payone-amazonpay-button"></div>}
         </div>
     );
 };

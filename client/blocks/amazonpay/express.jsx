@@ -11,9 +11,9 @@ const AmazonPayExpressButton = ({
     const {amazonPayConfig} = wc.wcSettings.getSetting('payone_data');
     const {onPaymentSetup} = eventRegistration;
     const {responseTypes} = emitResponse;
-    const [buttonConfig, setButtonConfig] = useState(null);
     const [workorderId, setWorkorderId] = useState(null);
     const [isReady, setIsReady] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
         // Load Amazon SDK
@@ -27,7 +27,13 @@ const AmazonPayExpressButton = ({
             })
                 .then((res) => res.json())
                 .then((config) => {
-                    setButtonConfig(config);
+                    // Check for backend error
+                    if (config.error) {
+                        setErrorMessage(config.error);
+                        setIsReady(false);
+                        return;
+                    }
+
                     setWorkorderId(config.workorderId);
                     setIsReady(true);
 
@@ -50,6 +56,8 @@ const AmazonPayExpressButton = ({
                 })
                 .catch((error) => {
                     console.error('AmazonPay Express button config error:', error);
+                    setErrorMessage(__('Failed to initialize AmazonPay Express. Please try again.', 'payone-woocommerce-3'));
+                    setIsReady(false);
                 });
         });
     }, []);
@@ -78,8 +86,12 @@ const AmazonPayExpressButton = ({
 
     return (
         <div className="payone-amazonpay-express-container">
-            <div id="payone-amazonpay-express-button"></div>
-            <div id="amazonpay_express_error" style={{color: 'red', marginTop: '10px'}}></div>
+            {errorMessage && (
+                <div id="amazonpay_express_error" style={{color: 'red', marginTop: '10px'}}>
+                    {errorMessage}
+                </div>
+            )}
+            {!errorMessage && <div id="payone-amazonpay-express-button"></div>}
         </div>
     );
 };

@@ -9,16 +9,55 @@ use Payone\Plugin;
 class PayoneBlocksSupport extends AbstractPaymentMethodType {
 	protected $name = 'payone';
 
-	private ?CreditCard $creditCardGateway = null;
-	private ?SecuredInvoice $paylaSecuredInvoiceGateway = null;
-	private ?SecuredInstallment $paylaSecuredInstallmentGateway = null;
-	private ?SecuredDirectDebit $paylaSecuredDirectDebitGateway = null;
-	private ?RatepayOpenInvoice $ratepayOpenInvoiceGateway = null;
-	private ?RatepayInstallments $ratepayInstallmentsGateway = null;
-	private ?RatepayDirectDebit $ratepayDirectDebitGateway = null;
-	private ?PayPalV2Express $paypalV2ExpressGateway = null;
-	private ?AmazonPay $amazonPayGateway = null;
-	private ?AmazonPayExpress $amazonPayExpressGateway = null;
+	/**
+	 * @var CreditCard|null
+	 */
+	private $creditCardGateway = null;
+
+	/**
+	 * @var SecuredInvoice|null
+	 */
+	private $paylaSecuredInvoiceGateway = null;
+
+	/**
+	 * @var SecuredInstallment|null
+	 */
+	private $paylaSecuredInstallmentGateway = null;
+
+	/**
+	 * @var SecuredDirectDebit|null
+	 */
+	private $paylaSecuredDirectDebitGateway = null;
+
+	/**
+	 * @var RatepayOpenInvoice|null
+	 */
+	private $ratepayOpenInvoiceGateway = null;
+
+	/**
+	 * @var RatepayInstallments|null
+	 */
+	private $ratepayInstallmentsGateway = null;
+
+	/**
+	 * @var RatepayDirectDebit|null
+	 */
+	private $ratepayDirectDebitGateway = null;
+
+	/**
+	 * @var PayPalV2Express|null
+	 */
+	private $paypalV2ExpressGateway = null;
+
+	/**
+	 * @var AmazonPay|null
+	 */
+	private $amazonPayGateway = null;
+
+	/**
+	 * @var AmazonPayExpress|null
+	 */
+	private $amazonPayExpressGateway = null;
 
 	public function initialize() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'client_styles' ] );
@@ -36,9 +75,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 
 	/**
 	 * Lazy load gateways - initialize only when needed
-	 * Returns null if gateway instantiation fails
+	 *
+	 * @return CreditCard|null Returns null if gateway instantiation fails
 	 */
-	private function getCreditCardGateway(): ?CreditCard {
+	private function getCreditCardGateway() {
 		if ( $this->creditCardGateway === null ) {
 			try {
 				$this->creditCardGateway = new CreditCard();
@@ -50,7 +90,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		return $this->creditCardGateway;
 	}
 
-	private function getPaylaSecuredInvoiceGateway(): ?SecuredInvoice {
+	/**
+	 * @return SecuredInvoice|null Returns null if gateway instantiation fails
+	 */
+	private function getPaylaSecuredInvoiceGateway() {
 		if ( $this->paylaSecuredInvoiceGateway === null ) {
 			try {
 				$this->paylaSecuredInvoiceGateway = new SecuredInvoice();
@@ -62,7 +105,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		return $this->paylaSecuredInvoiceGateway;
 	}
 
-	private function getPaylaSecuredInstallmentGateway(): ?SecuredInstallment {
+	/**
+	 * @return SecuredInstallment|null Returns null if gateway instantiation fails
+	 */
+	private function getPaylaSecuredInstallmentGateway() {
 		if ( $this->paylaSecuredInstallmentGateway === null ) {
 			try {
 				$this->paylaSecuredInstallmentGateway = new SecuredInstallment();
@@ -74,7 +120,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		return $this->paylaSecuredInstallmentGateway;
 	}
 
-	private function getPaylaSecuredDirectDebitGateway(): ?SecuredDirectDebit {
+	/**
+	 * @return SecuredDirectDebit|null Returns null if gateway instantiation fails
+	 */
+	private function getPaylaSecuredDirectDebitGateway() {
 		if ( $this->paylaSecuredDirectDebitGateway === null ) {
 			try {
 				$this->paylaSecuredDirectDebitGateway = new SecuredDirectDebit();
@@ -86,7 +135,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		return $this->paylaSecuredDirectDebitGateway;
 	}
 
-	private function getRatepayOpenInvoiceGateway(): ?RatepayOpenInvoice {
+	/**
+	 * @return RatepayOpenInvoice|null Returns null if gateway instantiation fails
+	 */
+	private function getRatepayOpenInvoiceGateway() {
 		if ( $this->ratepayOpenInvoiceGateway === null ) {
 			try {
 				$this->ratepayOpenInvoiceGateway = new RatepayOpenInvoice();
@@ -98,7 +150,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		return $this->ratepayOpenInvoiceGateway;
 	}
 
-	private function getRatepayInstallmentsGateway(): ?RatepayInstallments {
+	/**
+	 * @return RatepayInstallments|null Returns null if gateway instantiation fails
+	 */
+	private function getRatepayInstallmentsGateway() {
 		if ( $this->ratepayInstallmentsGateway === null ) {
 			try {
 				$this->ratepayInstallmentsGateway = new RatepayInstallments();
@@ -110,7 +165,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		return $this->ratepayInstallmentsGateway;
 	}
 
-	private function getRatepayDirectDebitGateway(): ?RatepayDirectDebit {
+	/**
+	 * @return RatepayDirectDebit|null Returns null if gateway instantiation fails
+	 */
+	private function getRatepayDirectDebitGateway() {
 		if ( $this->ratepayDirectDebitGateway === null ) {
 			try {
 				$this->ratepayDirectDebitGateway = new RatepayDirectDebit();
@@ -122,7 +180,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		return $this->ratepayDirectDebitGateway;
 	}
 
-	private function getPaypalV2ExpressGateway(): ?PayPalV2Express {
+	/**
+	 * @return PayPalV2Express|null Returns null if gateway instantiation fails
+	 */
+	private function getPaypalV2ExpressGateway() {
 		if ( $this->paypalV2ExpressGateway === null ) {
 			try {
 				$this->paypalV2ExpressGateway = new PayPalV2Express();
@@ -134,7 +195,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		return $this->paypalV2ExpressGateway;
 	}
 
-	private function getAmazonPayGateway(): ?AmazonPay {
+	/**
+	 * @return AmazonPay|null Returns null if gateway instantiation fails
+	 */
+	private function getAmazonPayGateway() {
 		if ( $this->amazonPayGateway === null ) {
 			try {
 				$this->amazonPayGateway = new AmazonPay();
@@ -146,7 +210,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		return $this->amazonPayGateway;
 	}
 
-	private function getAmazonPayExpressGateway(): ?AmazonPayExpress {
+	/**
+	 * @return AmazonPayExpress|null Returns null if gateway instantiation fails
+	 */
+	private function getAmazonPayExpressGateway() {
 		if ( $this->amazonPayExpressGateway === null ) {
 			try {
 				$this->amazonPayExpressGateway = new AmazonPayExpress();
