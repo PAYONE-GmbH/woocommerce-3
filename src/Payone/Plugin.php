@@ -730,6 +730,14 @@ class Plugin {
 		}
 		if ( $gateway ) {
 			switch ( $action ) {
+				case 'blocks-create-session':
+					header( 'Content-Type: application/json' );
+					echo json_encode( $gateway->process_blocks_create_session() );
+					exit;
+				case 'blocks-express-create-session':
+					header( 'Content-Type: application/json' );
+					echo json_encode( $gateway->process_blocks_express_create_session() );
+					exit;
 				case 'express-get-checkout':
 					$workorderid = self::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID );
 					$gateway->process_get_checkout( $workorderid );

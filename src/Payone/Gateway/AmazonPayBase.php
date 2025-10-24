@@ -76,7 +76,7 @@ class AmazonPayBase extends RedirectGatewayBase {
 		return implode( ',', $restrictions );
 	}
 
-	protected function get_amazon_merchant_id() {
+	public function get_amazon_merchant_id() {
 		return isset( $this->settings[ 'amazon_merchant_id' ] ) ? $this->settings[ 'amazon_merchant_id' ] : '';
 	}
 
@@ -124,7 +124,7 @@ class AmazonPayBase extends RedirectGatewayBase {
 		];
 	}
 
-	protected function get_button_color() {
+	public function get_button_color() {
 		return isset( $this->settings[ 'amazon_button_color' ] ) ? $this->settings[ 'amazon_button_color' ] : 'Gold';
 	}
 

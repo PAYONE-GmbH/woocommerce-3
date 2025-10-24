@@ -15,6 +15,7 @@ class AmazonPay extends AmazonPayBase {
 		$this->icon               = PAYONE_PLUGIN_URL . 'assets/icon-amazon-pay.png';
 		$this->method_title       = 'PAYONE ' . __( 'Amazon Pay', 'payone-woocommerce-3' );
 		$this->method_description = '';
+		$this->supports[]         = 'blocks';
 	}
 
 	/**
@@ -107,6 +108,53 @@ class AmazonPay extends AmazonPayBase {
 				'amount' => $order->get_total( 'number' ),
 				'currencyCode' => get_woocommerce_currency(),
 			],
+			'createCheckoutSessionConfig' => [
+				'payloadJSON' => $response->get( 'add_paydata[payload]' ),
+				'signature' => $response->get( 'add_paydata[signature]' ),
+			],
+		];
+	}
+
+	/**
+	 * Process Blocks create session request.
+	 * This is called via AJAX from the Block frontend.
+	 *
+	 * @return array Button configuration for Amazon Pay SDK
+	 */
+	public function process_blocks_create_session() {
+		// Create a temporary order from cart for the transaction
+		$cart = WC()->cart;
+		if ( ! $cart ) {
+			return [
+				'error' => __( 'Cart not found', 'payone-woocommerce-3' ),
+			];
+		}
+
+		$transaction = new \Payone\Transaction\AmazonPay( $this );
+		$transaction
+			->set( 'amount', $cart->get_total( 'edit' ) * 100 )
+			->set( 'currency', strtoupper( get_woocommerce_currency() ) )
+			->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-success' ] ) )
+			->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-error' ] ) )
+			->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-back' ] ) )
+			->set( 'add_paydata[checkoutMode]', 'ProcessOrder' )
+			->set( 'add_paydata[productType]', 'PayAndShip' );
+
+		$response = $transaction->submit();
+		$workorderid = $response->get( 'workorderid' );
+		Plugin::set_session_value( self::SESSION_KEY_WORKORDERID, $workorderid );
+		Plugin::delete_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED );
+
+		return [
+			'workorderId' => $workorderid,
+			'sandbox' => $this->get_mode() === 'test',
+			'merchantId' => $this->get_amazon_merchant_id(),
+			'publicKeyId' => self::PUBLIC_KEY_ID,
+			'ledgerCurrency' => get_woocommerce_currency(),
+			'checkoutLanguage' => get_locale(),
+			'productType' => 'PayAndShip',
+			'placement' => 'Checkout',
+			'buttonColor' => $this->get_button_color(),
 			'createCheckoutSessionConfig' => [
 				'payloadJSON' => $response->get( 'add_paydata[payload]' ),
 				'signature' => $response->get( 'add_paydata[signature]' ),
