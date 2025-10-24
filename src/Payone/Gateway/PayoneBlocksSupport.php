@@ -314,10 +314,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
             'jsUrl' => 'https://www.paypal.com/sdk/js?client-id='.$this->getPaypalV2ExpressGateway()->get_payone_client_id().'&merchant-id='.$this->getPaypalV2ExpressGateway()->get_payone_merchant_id().'&currency=EUR&intent=authorize&locale=de_DE&commit=false&vault=false&disable-funding=card,sepa,bancontact'.( $this->getPaypalV2ExpressGateway()->get_allow_paylater() ? '&enable-funding=paylater' : ''),
             'callbackUrl' => Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-set-checkout' ] ),
             'redirectUrl' => Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-get-checkout' ] ),
-            'isAvailable' => $this->getPaypalV2ExpressGateway()->is_available() ?? false,
+            'isAvailable' => $this->getPaypalV2ExpressGateway()->is_available(),
         ];
         $data['paypalConfig']                 = [
-            'isAvailable' => Plugin::find_gateway(PayPal::GATEWAY_ID)->is_available() ?? false,
+            'isAvailable' => Plugin::find_gateway(PayPal::GATEWAY_ID)->is_available(),
         ];
 		$data['amazonPayConfig']              = [
 			'sdkUrl'                      => 'https://static-eu.payments-amazon.com/checkout.js',
@@ -328,8 +328,8 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			'buttonColor'                 => $this->getAmazonPayGateway()->get_button_color(),
 			'productType'                 => 'PayAndShip',
 			'sandbox'                     => $this->getAmazonPayGateway()->get_mode() === 'test',
-			'isAvailable'                 => $this->getAmazonPayGateway()->is_available() ?? false,
-			'isExpressAvailable'          => $this->getAmazonPayExpressGateway()->is_available() ?? false,
+			'isAvailable'                 => $this->getAmazonPayGateway()->is_available(),
+			'isExpressAvailable'          => $this->getAmazonPayExpressGateway()->is_available(),
 			'createSessionUrl'            => Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-create-session' ] ),
 			'createSessionExpressUrl'     => Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-express-create-session' ] ),
 			'description'                 => $this->getAmazonPayGateway()->get_option( 'description' ),
