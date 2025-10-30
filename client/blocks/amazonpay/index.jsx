@@ -1,5 +1,6 @@
 import {__} from '@wordpress/i18n';
 import {useEffect, useState} from '@wordpress/element';
+import {select} from '@wordpress/data';
 import {PAYONE_ASSETS_URL} from '../../constants';
 import getPaymentMethodConfig from '../../services/getPaymentMethodConfig';
 import AssetService from '../../services/AssetService';
@@ -67,6 +68,21 @@ const AmazonPayButton = ({
                 type: responseTypes.ERROR,
                 message: __(
                     'AmazonPay is not ready. Please try again.',
+                    'payone-woocommerce-3',
+                ),
+            };
+        }
+
+        // Validate that a phone number is provided for Amazon Pay
+        const {CART_STORE_KEY} = wc.wcBlocksData;
+        const store = select(CART_STORE_KEY);
+        const {shippingAddress} = store.getCartData();
+
+        if (!shippingAddress.phone || shippingAddress.phone.trim() === '') {
+            return {
+                type: responseTypes.ERROR,
+                message: __(
+                    'A phone number is required for Amazon Pay. Please add a phone number to your shipping address.',
                     'payone-woocommerce-3',
                 ),
             };

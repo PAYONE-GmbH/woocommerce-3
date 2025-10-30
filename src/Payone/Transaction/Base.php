@@ -163,6 +163,7 @@ class Base extends Request {
 			'shipping_city'            => $order->get_shipping_city(),
 			'shipping_state'           => $order->get_shipping_state(),
 			'shipping_country'         => $order->get_shipping_country(),
+			'shipping_telephonenumber' => $order->get_shipping_phone(),
 		];
 
 		// Trim parameter values and set parameters null for empty strings.
