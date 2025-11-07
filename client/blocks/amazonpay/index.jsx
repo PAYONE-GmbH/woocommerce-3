@@ -18,6 +18,7 @@ const AmazonPayButton = ({
 
     // Use refs instead of direct DOM access
     const buttonRef = useRef(null);
+    const wrapperRef = useRef(null);
     const amazonButtonInstance = useRef(null);
 
     useEffect(() => {
@@ -78,6 +79,16 @@ const AmazonPayButton = ({
         });
     }, []);
 
+    // Post-render style enforcement to prevent Amazon SDK from causing layout shift
+    useEffect(() => {
+        if (isReady && wrapperRef.current && buttonRef.current) {
+            wrapperRef.current.style.width = '0';
+            wrapperRef.current.style.height = '0';
+            wrapperRef.current.style.overflow = 'hidden';
+            buttonRef.current.style.position = 'absolute';
+        }
+    }, [isReady]);
+
     useEffect(() => onPaymentSetup(() => {
         if (!isReady || !workorderId) {
             return {
@@ -129,19 +140,29 @@ const AmazonPayButton = ({
             )}
             {!errorMessage && (
                 <div
-                    id="payone-amazonpay-button"
-                    ref={buttonRef}
+                    ref={wrapperRef}
                     style={{
-                        // Hide button like file input (not display:none)
-                        // This preserves button functionality while making it invisible
-                        position: 'absolute',
-                        opacity: 0,
-                        width: '0px !important',
-                        height: '0px !important',
-                        pointerEvents: 'none', // Prevent accidental user clicks
+                        // CSS Containment wrapper to isolate layout impact
+                        position: 'relative',
+                        width: 0,
+                        height: 0,
                         overflow: 'hidden',
+                        contain: 'layout style',
                     }}
-                />
+                >
+                    <div
+                        id="payone-amazonpay-button"
+                        ref={buttonRef}
+                        style={{
+                            // Hide button like file input (not display:none)
+                            // This preserves button functionality while making it invisible
+                            position: 'absolute',
+                            clipPath: 'polygon(0 0, 0 0, 0 0, 0 0)',
+                            pointerEvents: 'none', // Prevent accidental user clicks
+                            opacity: 0,
+                        }}
+                    />
+                </div>
             )}
         </div>
     );
