@@ -281,6 +281,9 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 	public function get_payment_method_data() {
 		$data = parent::get_payment_method_data();
 
+		// Pass plugin URL to JavaScript for dynamic asset path construction
+		$data['pluginUrl'] = PAYONE_PLUGIN_URL;
+
 		$data['creditCardCheckRequestConfig'] = $this->get_credit_card_check_request();
 		$data['payoneConfig']                 = $this->getCreditCardGateway()->javascript_payone_config();
 		$data['cardTypes']                    = $this->get_card_types();
