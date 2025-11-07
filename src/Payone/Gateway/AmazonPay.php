@@ -16,6 +16,11 @@ class AmazonPay extends AmazonPayBase {
 		$this->method_title       = 'PAYONE ' . __( 'Amazon Pay', 'payone-woocommerce-3' );
 		$this->method_description = '';
 		$this->supports[]         = 'blocks';
+
+		// Set a default description for better UX if none is configured
+		if ( empty( $this->get_option( 'description' ) ) ) {
+			$this->update_option( 'description', __( 'Sie werden zu Amazon weitergeleitet, um die Zahlung sicher zu autorisieren.', 'payone-woocommerce-3' ) );
+		}
 	}
 
 	/**
@@ -37,9 +42,46 @@ class AmazonPay extends AmazonPayBase {
 		$this->add_amazon_merchant_id_field();
 	}
 
+	/**
+	 * Check if we're in a Block-based checkout context.
+	 * For Blocks, payment_fields() is NOT called - the Block component handles rendering.
+	 * This method is only for Classic/Shortcode checkout.
+	 *
+	 * @return bool
+	 */
+	private function is_block_checkout() {
+		// Check if WooCommerce Blocks utility exists
+		if ( class_exists( '\Automattic\WooCommerce\Blocks\Package' ) &&
+		     class_exists( '\Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils' ) ) {
+			return \Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils::is_checkout_block_default();
+		}
+
+		// Fallback: Check if checkout page has the block
+		if ( function_exists( 'has_block' ) && is_checkout() ) {
+			return has_block( 'woocommerce/checkout' );
+		}
+
+		return false;
+	}
+
 	public function payment_fields() {
 		include PAYONE_VIEW_PATH . '/gateway/common/checkout-form-fields.php';
-		include PAYONE_VIEW_PATH . '/gateway/amazonpay/payment-form.php';
+
+		// For Classic/Shortcode checkout: Don't show button, only description
+		// User will be redirected to Amazon after clicking "Place order"
+		// This matches PayPal behavior
+		if ( ! $this->is_block_checkout() ) {
+			// Show description for Classic checkout
+			if ( $this->get_description() ) {
+				echo '<div class="payone-amazonpay-description">';
+				echo '<p>' . wp_kses_post( $this->get_description() ) . '</p>';
+				echo '</div>';
+			}
+		} else {
+			// For Blocks: Button is rendered by the Block component
+			// This code path should not be reached, but include the form as fallback
+			include PAYONE_VIEW_PATH . '/gateway/amazonpay/payment-form.php';
+		}
 	}
 
 	/**

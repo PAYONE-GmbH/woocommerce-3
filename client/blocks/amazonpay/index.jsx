@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import {useEffect, useState} from '@wordpress/element';
+import {useEffect, useState, useRef} from '@wordpress/element';
 import {select} from '@wordpress/data';
 import {PAYONE_ASSETS_URL} from '../../constants';
 import getPaymentMethodConfig from '../../services/getPaymentMethodConfig';
@@ -15,6 +15,10 @@ const AmazonPayButton = ({
     const [workorderId, setWorkorderId] = useState(null);
     const [isReady, setIsReady] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
+
+    // Use refs instead of direct DOM access
+    const buttonRef = useRef(null);
+    const amazonButtonInstance = useRef(null);
 
     useEffect(() => {
         // Load Amazon SDK
@@ -36,22 +40,34 @@ const AmazonPayButton = ({
                     }
 
                     setWorkorderId(config.workorderId);
-                    setIsReady(true);
 
-                    // Render Amazon Pay button
+                    // Render Amazon Pay button using DECOUPLED pattern
                     /* global amazon */
                     if (typeof amazon !== 'undefined' && amazon.Pay) {
-                        amazon.Pay.renderButton('#payone-amazonpay-button', {
-                            merchantId: config.merchantId,
-                            publicKeyId: config.publicKeyId,
-                            ledgerCurrency: config.ledgerCurrency,
-                            checkoutLanguage: config.checkoutLanguage,
-                            productType: config.productType,
-                            placement: config.placement,
-                            buttonColor: config.buttonColor,
-                            sandbox: config.sandbox,
-                            createCheckoutSessionConfig: config.createCheckoutSessionConfig,
+                        // Store button instance in ref for later programmatic access
+                        amazonButtonInstance.current = amazon.Pay.renderButton(
+                            '#payone-amazonpay-button',
+                            {
+                                merchantId: config.merchantId,
+                                publicKeyId: config.publicKeyId,
+                                ledgerCurrency: config.ledgerCurrency,
+                                checkoutLanguage: config.checkoutLanguage,
+                                productType: config.productType,
+                                placement: config.placement,
+                                buttonColor: config.buttonColor,
+                                sandbox: config.sandbox,
+                            },
+                        );
+
+                        // Set up decoupled click handler
+                        amazonButtonInstance.current.onClick(() => {
+                            // Initiate Amazon Pay checkout when button is clicked
+                            amazonButtonInstance.current.initCheckout({
+                                createCheckoutSessionConfig: config.createCheckoutSessionConfig,
+                            });
                         });
+
+                        setIsReady(true);
                     }
                 })
                 .catch((error) => {
@@ -88,6 +104,11 @@ const AmazonPayButton = ({
             };
         }
 
+        // Programmatically trigger Amazon Pay button click via ref
+        if (buttonRef.current) {
+            buttonRef.current.click();
+        }
+
         return {
             type: responseTypes.SUCCESS,
             meta: {
@@ -106,7 +127,22 @@ const AmazonPayButton = ({
                     {errorMessage}
                 </div>
             )}
-            {!errorMessage && <div id="payone-amazonpay-button"></div>}
+            {!errorMessage && (
+                <div
+                    id="payone-amazonpay-button"
+                    ref={buttonRef}
+                    style={{
+                        // Hide button like file input (not display:none)
+                        // This preserves button functionality while making it invisible
+                        position: 'absolute',
+                        opacity: 0,
+                        width: '0px !important',
+                        height: '0px !important',
+                        pointerEvents: 'none', // Prevent accidental user clicks
+                        overflow: 'hidden',
+                    }}
+                />
+            )}
         </div>
     );
 };
