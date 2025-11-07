@@ -723,7 +723,7 @@ class Plugin {
 	 */
 	private function process_amazonpay() {
 		$action = isset( $_GET['a'] ) ? $_GET['a'] : '';
-		if ( stripos( $action, 'express' ) === 0 ) {
+		if ( stripos( $action, 'express' ) !== false ) {
 			$gateway = self::find_gateway( AmazonPayExpress::GATEWAY_ID );
 		} else {
 			$gateway = self::find_gateway( AmazonPay::GATEWAY_ID );
@@ -737,6 +737,16 @@ class Plugin {
 				case 'blocks-express-create-session':
 					header( 'Content-Type: application/json' );
 					echo json_encode( $gateway->process_blocks_express_create_session() );
+					exit;
+				case 'blocks-success':
+					// Handle successful return from Amazon for Blocks checkout
+					$workorderid = self::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID );
+					$gateway->process_blocks_get_checkout( $workorderid );
+					exit;
+				case 'blocks-back':
+				case 'blocks-error':
+					// Handle cancellation or error from Amazon for Blocks checkout
+					wp_redirect( wc_get_checkout_url() );
 					exit;
 				case 'express-get-checkout':
 					$workorderid = self::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID );

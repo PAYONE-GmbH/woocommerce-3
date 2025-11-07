@@ -51,8 +51,6 @@ export default getPaymentMethodConfig(
     {
         gatewayId: 'payone_paypalv2_express',
         canMakePayment() {
-            return false;
-
             const {paypalExpressConfig} = wc.wcSettings.getSetting('payone_data');
             return paypalExpressConfig.isAvailable;
         },
