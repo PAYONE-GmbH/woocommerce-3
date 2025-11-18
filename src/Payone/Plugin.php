@@ -69,7 +69,6 @@ class Plugin {
 			\Payone\Gateway\PrePayment::GATEWAY_ID          => \Payone\Gateway\PrePayment::class,
 			\Payone\Gateway\Eps::GATEWAY_ID                 => \Payone\Gateway\Eps::class,
 			\Payone\Gateway\Invoice::GATEWAY_ID             => \Payone\Gateway\Invoice::class,
-			\Payone\Gateway\Sofort::GATEWAY_ID              => \Payone\Gateway\Sofort::class,
 			\Payone\Gateway\SafeInvoice::GATEWAY_ID         => \Payone\Gateway\SafeInvoice::class,
 			\Payone\Gateway\PayPal::GATEWAY_ID              => \Payone\Gateway\PayPal::class,
 			\Payone\Gateway\PayPalExpress::GATEWAY_ID       => \Payone\Gateway\PayPalExpress::class,
