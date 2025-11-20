@@ -20,6 +20,7 @@ class AmazonPayExpress extends AmazonPayBase {
 
 		$this->pay_button_id = 'payone-amazonpay-express-button';
 		$this->supports[]    = 'pay_button';
+		$this->supports[]    = 'blocks';
 	}
 
 	/**
@@ -58,10 +59,12 @@ class AmazonPayExpress extends AmazonPayBase {
 			->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'express-back' ] ) );
 
 		$response = $transaction->execute( WC()->cart );
-		Plugin::set_session_value( self::SESSION_KEY_WORKORDERID, $response->get( 'workorderid' ) );
+		$workorderid = $response->get( 'workorderid' );
+		Plugin::set_session_value( self::SESSION_KEY_WORKORDERID, $workorderid );
 		Plugin::delete_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED );
 
 		return [
+			'workorderId' => $workorderid,
 			'sandbox' => $this->get_mode() === 'test',
 			'merchantId' => $this->get_amazon_merchant_id(),
 			'publicKeyId' => self::PUBLIC_KEY_ID,
@@ -121,5 +124,64 @@ class AmazonPayExpress extends AmazonPayBase {
 
 		wp_redirect( wc_get_checkout_url() );
 		exit;
+	}
+
+	/**
+	 * Process Blocks Express create session request.
+	 * This is called via AJAX from the Express Block frontend.
+	 *
+	 * @return array Button configuration for Amazon Pay SDK
+	 */
+	public function process_blocks_express_create_session() {
+		$cart = WC()->cart;
+		if ( ! $cart ) {
+			return [
+				'error' => __( 'Cart not found', 'payone-woocommerce-3' ),
+			];
+		}
+
+		// Create checkout session
+		$transaction = new \Payone\Transaction\AmazonPayExpressCreateCheckoutSession( $this );
+		$transaction
+			->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'express-get-checkout' ] ) )
+			->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'express-error' ] ) )
+			->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'express-back' ] ) );
+
+		$response = $transaction->execute( $cart );
+
+		// Validate response data
+		$workorderid = $response->get( 'workorderid' );
+		$payload = $response->get( 'add_paydata[payload]' );
+		$signature = $response->get( 'add_paydata[signature]' );
+
+		if ( ! $payload || ! $signature ) {
+			error_log( 'PAYONE AmazonPay Express: Missing payload or signature. Response: ' . print_r( $response->toArray(), true ) );
+			return [
+				'error' => __( 'Payment configuration error. Please check your AmazonPay settings or try another payment method.', 'payone-woocommerce-3' ),
+			];
+		}
+
+		Plugin::set_session_value( self::SESSION_KEY_WORKORDERID, $workorderid );
+		Plugin::delete_session_value( self::SESSION_KEY_AMAZONPAY_EXPRESS_USED );
+
+		return [
+			'workorderId' => $workorderid,
+			'sandbox' => $this->get_mode() === 'test',
+			'merchantId' => $this->get_amazon_merchant_id(),
+			'publicKeyId' => self::PUBLIC_KEY_ID,
+			'ledgerCurrency' => get_woocommerce_currency(),
+			'checkoutLanguage' => get_locale(),
+			'productType' => 'PayAndShip',
+			'placement' => 'Cart',
+			'buttonColor' => $this->get_button_color(),
+			'estimatedOrderAmount' => [
+				'amount' => $cart->get_total( 'number' ),
+				'currencyCode' => get_woocommerce_currency(),
+			],
+			'createCheckoutSessionConfig' => [
+				'payloadJSON' => $payload,
+				'signature' => $signature,
+			],
+		];
 	}
 }

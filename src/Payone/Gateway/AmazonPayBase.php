@@ -76,8 +76,28 @@ class AmazonPayBase extends RedirectGatewayBase {
 		return implode( ',', $restrictions );
 	}
 
-	protected function get_amazon_merchant_id() {
-		return isset( $this->settings[ 'amazon_merchant_id' ] ) ? $this->settings[ 'amazon_merchant_id' ] : '';
+	/**
+	 * Get setting from this gateway, fallback to parent AmazonPay gateway if empty
+	 * and this is the Express gateway.
+	 *
+	 * @param string $key Setting key to retrieve
+	 * @param mixed $default Default value if not found
+	 * @return mixed Setting value
+	 */
+	protected function get_amazon_setting( $key, $default = '' ) {
+		$value = isset( $this->settings[$key] ) ? $this->settings[$key] : $default;
+
+		// If empty and this is Express gateway, try parent AmazonPay gateway
+		if ( empty( $value ) && $this instanceof AmazonPayExpress ) {
+			$parent_settings = get_option( 'woocommerce_payone_amazonpay_settings', [] );
+			$value = isset( $parent_settings[$key] ) ? $parent_settings[$key] : $default;
+		}
+
+		return $value;
+	}
+
+	public function get_amazon_merchant_id() {
+		return $this->get_amazon_setting( 'amazon_merchant_id', '' );
 	}
 
 	protected function add_amazon_merchant_id_field() {
@@ -89,8 +109,7 @@ class AmazonPayBase extends RedirectGatewayBase {
 	}
 
 	protected function get_allow_packstations() {
-		$value = isset( $this->settings[ 'amazon_allow_packstations' ] ) ? $this->settings[ 'amazon_allow_packstations' ] : '1';
-
+		$value = $this->get_amazon_setting( 'amazon_allow_packstations', '1' );
 		return '1' === $value;
 	}
 
@@ -107,8 +126,7 @@ class AmazonPayBase extends RedirectGatewayBase {
 	}
 
 	protected function get_allow_po_box() {
-		$value = isset( $this->settings[ 'amazon_allow_po_box' ] ) ? $this->settings[ 'amazon_allow_po_box' ] : '1';
-
+		$value = $this->get_amazon_setting( 'amazon_allow_po_box', '1' );
 		return '1' === $value;
 	}
 
@@ -124,8 +142,8 @@ class AmazonPayBase extends RedirectGatewayBase {
 		];
 	}
 
-	protected function get_button_color() {
-		return isset( $this->settings[ 'amazon_button_color' ] ) ? $this->settings[ 'amazon_button_color' ] : 'Gold';
+	public function get_button_color() {
+		return $this->get_amazon_setting( 'amazon_button_color', 'Gold' );
 	}
 
 	protected function add_button_color_field() {
