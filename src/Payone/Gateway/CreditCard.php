@@ -33,27 +33,14 @@ class CreditCard extends RedirectGatewayBase {
 
 	public function javascript_payone_config() {
         $baseStyle = 'width: 100%; min-height: 30px; min-width: 100px;';
+		$defaultInputStyle = $this->get_option( 'cc_default_style_input' );
+		$defaultSelectStyle = $this->get_option( 'cc_default_style_select' );
 
-		$cardnumber_css = '';
-		if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
-			$cardnumber_css = $this->get_option( 'cc_field_cardnumber_css' );
-		}
-        $cardholder_css = '';
-        if ( $this->get_option( 'cc_field_cardholder_style' ) === 'custom' ) {
-            $cardholder_css = $this->get_option( 'cc_field_cardholder_css' );
-        }
-		$cvc2_css = '';
-		if ( $this->get_option( 'cc_field_cvc2_style' ) === 'custom' ) {
-			$cvc2_css = $this->get_option( 'cc_field_cvc2_css' );
-		}
-		$month_css = '';
-		if ( $this->get_option( 'cc_field_month_style' ) === 'custom' ) {
-			$month_css = $this->get_option( 'cc_field_month_css' );
-		}
-		$year_css = '';
-		if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
-			$year_css = $this->get_option( 'cc_field_year_css' );
-		}
+		$cardnumber_css = $this->get_field_style_css( 'cardnumber', $defaultInputStyle );
+		$cardholder_css = $this->get_field_style_css( 'cardholder', $defaultInputStyle );
+		$cvc2_css = $this->get_field_style_css( 'cvc2', $defaultInputStyle );
+		$month_css = $this->get_field_style_css( 'month', $defaultSelectStyle );
+		$year_css = $this->get_field_style_css( 'year', $defaultSelectStyle );
 
 		$cardpan = [
 			'selector'  => 'cardpan',
@@ -609,9 +596,29 @@ class CreditCard extends RedirectGatewayBase {
 		return $this->process_redirect( $order_id, \Payone\Transaction\CreditCard::class );
 	}
 
-	/**
-	 * @param TransactionStatus $transaction_status
-	 */
+    /**
+     * @param string $field_name
+     * @param string $default_style
+     *
+     * @return string
+     */
+	private function get_field_style_css($field_name, $default_style ) {
+		$style_option = $this->get_option( "cc_field_{$field_name}_style" );
+
+		if ( $style_option === 'custom' ) {
+			return $this->get_option( "cc_field_{$field_name}_css" );
+		}
+
+		if ( $style_option === 'default' && ! empty( $default_style ) ) {
+			return $default_style;
+		}
+
+		return '';
+	}
+
+    /**
+     * @param TransactionStatus $transaction_status
+     */
 	public function process_transaction_status( TransactionStatus $transaction_status ) {
 		parent::process_transaction_status( $transaction_status );
 

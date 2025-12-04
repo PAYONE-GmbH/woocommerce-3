@@ -6,8 +6,9 @@
         "prebuild": "npm install && composer install",
         "start": "npm run start:webpack",
         "start:webpack": "rimraf assets/build/* && wp-scripts start",
-        "build": "rimraf assets/build/* && npm run build:webpack",
-        "build:webpack": "wp-scripts build"
+        "build": "rimraf assets/build/* && npm run build:webpack && npm run postbuild",
+        "build:webpack": "wp-scripts build",
+        "postbuild": "bash scripts/generate-translations.sh"
     },
     "dependencies": {
         "@babel/core": "^7.26.0",

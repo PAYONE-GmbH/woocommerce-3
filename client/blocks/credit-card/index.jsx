@@ -62,10 +62,6 @@ const PayoneCreditCard = ({
     }, [cardType, payoneIFrames.current]);
 
     useEffect(() => {
-        if (cardHolderInput.current && payoneConfig?.defaultStyle?.input) {
-            cardHolderInput.current.setAttribute('style', payoneConfig?.defaultStyle?.input);
-        }
-
         if (cardHolderInput.current && payoneConfig?.fields?.cardholder) {
             cardHolderInput.current.setAttribute('style', payoneConfig.fields.cardholder.style);
             cardHolderInput.current.setAttribute('size', payoneConfig.fields.cardholder.size);
@@ -81,19 +77,27 @@ const PayoneCreditCard = ({
     }, [payoneConfig, cardTypeInput.current]);
 
     useEffect(() => {
-        payoneIFrames.current = new Payone.ClientApi.HostedIFrames(
-            {
-                ...payoneConfig,
-                returnType: 'handler',
-                language: Payone.ClientApi.Language[payoneConfig.language],
+        const iframeConfig = {
+            ...payoneConfig,
+            returnType: 'handler',
+            language: Payone.ClientApi.Language[payoneConfig.language],
+            events: {
+                rendered: () => {
+                    if (payoneIFrames.current && cardType) {
+                        payoneIFrames.current.setCardType(cardType);
+                    }
+                },
             },
-            {
-                ...creditCardCheckRequestConfig,
-                mid: creditCardCheckRequestConfig.merchant_id,
-                aid: creditCardCheckRequestConfig.account_id,
-                portalid: creditCardCheckRequestConfig.portal_id,
-            },
-        );
+        };
+
+        const requestConfig = {
+            ...creditCardCheckRequestConfig,
+            mid: creditCardCheckRequestConfig.merchant_id,
+            aid: creditCardCheckRequestConfig.account_id,
+            portalid: creditCardCheckRequestConfig.portal_id,
+        };
+
+        payoneIFrames.current = new Payone.ClientApi.HostedIFrames(iframeConfig, requestConfig);
     }, [creditCardCheckRequestConfig, payoneConfig]);
 
     useEffect(() => onCheckoutValidation(async () => {

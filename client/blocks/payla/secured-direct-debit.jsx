@@ -6,6 +6,9 @@ import {PAYONE_ASSETS_URL} from '../../constants';
 import AssetService from '../../services/AssetService';
 import PaylaDisclaimer from './disclaimer';
 import getPaymentMethodConfig from '../../services/getPaymentMethodConfig';
+import {createShippingAddressValidator} from '../../services/shippingAddressValidator';
+
+const canMakePayment = createShippingAddressValidator('paylaConfig');
 
 const PaylaSecuredDirectDebit = ({
     eventRegistration: {onPaymentSetup},
@@ -96,4 +99,5 @@ export default getPaymentMethodConfig(
     __('PAYONE Secured Direct Debit', 'payone-woocommerce-3'),
     `${PAYONE_ASSETS_URL}/icon-secured-lastschrift.png`,
     <PaylaSecuredDirectDebit />,
+    {canMakePayment: () => canMakePayment('payone_secured_direct_debit')},
 );
