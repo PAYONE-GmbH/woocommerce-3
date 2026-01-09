@@ -502,10 +502,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		];
 
 		if ( in_array( $context->payment_type, $klarnaGatewayIds, true ) ) {
-			$_POST['klarna_authorization_token']      = $data['klarna_authorization_token'] ?? '';
-			$_POST['klarna_workorderid']              = $data['klarna_workorderid'] ?? '';
-			$_POST['klarna_shipping_email']           = $data['klarna_shipping_email'] ?? '';
-			$_POST['klarna_shipping_telephonenumber'] = $data['klarna_shipping_telephonenumber'] ?? '';
+			$_POST['klarna_authorization_token']      = isset( $data['klarna_authorization_token'] ) ? $data['klarna_authorization_token'] : '';
+			$_POST['klarna_workorderid']              = isset( $data['klarna_workorderid'] ) ? $data['klarna_workorderid'] : '';
+			$_POST['klarna_shipping_email']           = isset( $data['klarna_shipping_email'] ) ? $data['klarna_shipping_email'] : '';
+			$_POST['klarna_shipping_telephonenumber'] = isset( $data['klarna_shipping_telephonenumber'] ) ? $data['klarna_shipping_telephonenumber'] : '';
 		}
 	}
 }
