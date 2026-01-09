@@ -494,5 +494,18 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 				Plugin::set_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED, true );
 			}
 		}
+
+		$klarnaGatewayIds = [
+			KlarnaInvoice::GATEWAY_ID,
+			KlarnaInstallments::GATEWAY_ID,
+			KlarnaSofort::GATEWAY_ID,
+		];
+
+		if ( in_array( $context->payment_type, $klarnaGatewayIds, true ) ) {
+			$_POST['klarna_authorization_token']      = $data['klarna_authorization_token'] ?? '';
+			$_POST['klarna_workorderid']              = $data['klarna_workorderid'] ?? '';
+			$_POST['klarna_shipping_email']           = $data['klarna_shipping_email'] ?? '';
+			$_POST['klarna_shipping_telephonenumber'] = $data['klarna_shipping_telephonenumber'] ?? '';
+		}
 	}
 }

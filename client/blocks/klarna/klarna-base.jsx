@@ -114,7 +114,7 @@ export default function KlarnaBase(props) {
                 } else {
                     setErrorMessage(null);
                     setPaymentMethodData({
-                        klarna_authorization_token: klarnaResult.klarna_authorization_token,
+                        klarna_authorization_token: klarnaResult.authorization_token,
                         klarna_workorderid: klarnaWorkOrderId,
                         klarna_shipping_email: billingAddress.email,
                         klarna_shipping_telephonenumber: billingAddress.phone,
