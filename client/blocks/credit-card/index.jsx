@@ -40,7 +40,7 @@ const PayoneCreditCard = ({
                 setPayoneCheckSucceeded(true);
 
                 setPaymentMethodData({
-                    card_holder: cardHolder,
+                    card_holder: cardHolderInput.current?.value || '',
                     card_pseudopan: detail.pseudocardpan,
                     card_truncatedpan: detail.truncatedcardpan,
                     card_type: detail.cardtype,
@@ -90,14 +90,7 @@ const PayoneCreditCard = ({
             },
         };
 
-        const requestConfig = {
-            ...creditCardCheckRequestConfig,
-            mid: creditCardCheckRequestConfig.merchant_id,
-            aid: creditCardCheckRequestConfig.account_id,
-            portalid: creditCardCheckRequestConfig.portal_id,
-        };
-
-        payoneIFrames.current = new Payone.ClientApi.HostedIFrames(iframeConfig, requestConfig);
+        payoneIFrames.current = new Payone.ClientApi.HostedIFrames(iframeConfig, creditCardCheckRequestConfig);
     }, [creditCardCheckRequestConfig, payoneConfig]);
 
     useEffect(() => onCheckoutValidation(async () => {
