@@ -91,7 +91,9 @@ export default function KlarnaBase(props) {
         }
 
         if (errorMessage) {
-            return false;
+            return {
+                errorMessage,
+            };
         }
 
         const store = select(CART_STORE_KEY);
@@ -121,16 +123,19 @@ export default function KlarnaBase(props) {
                     });
 
                     setKlarnaCheckSucceeded(true);
-
-                    // Re-Trigger payment processing
-                    onSubmit();
                 }
             },
         );
 
         // Prevent automatical submit
         return false;
-    }), [onCheckoutValidation, klarnaCheckSucceeded, klarnaWorkOrderId, errorMessage]);
+    }), [onCheckoutValidation, klarnaCheckSucceeded, klarnaWorkOrderId, klarnaData, errorMessage]);
+
+    useEffect(() => {
+        if (klarnaCheckSucceeded) {
+            onSubmit();
+        }
+    }, [klarnaCheckSucceeded]);
 
     useEffect(() => {
         return onPaymentSetup(() => {
@@ -154,7 +159,13 @@ export default function KlarnaBase(props) {
                 };
             }
 
-            return false;
+            return {
+                type: responseTypes.ERROR,
+                message: __(
+                    'Die Zahlung konnte nicht erfolgreich durchgeführt werden.',
+                    'payone-woocommerce-3',
+                ),
+            };
         });
     }, [onPaymentSetup, klarnaCheckSucceeded, paymentMethodData]);
 
