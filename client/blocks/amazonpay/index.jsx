@@ -174,9 +174,24 @@ export default getPaymentMethodConfig(
     `${PAYONE_ASSETS_URL}/icon-amazon-pay.png`,
     <AmazonPayButton />,
     {
-        canMakePayment() {
+        canMakePayment({billingAddress}) {
             const {amazonPayConfig} = wc.wcSettings.getSetting('payone_data');
-            return amazonPayConfig.isAvailable;
+
+            if (!amazonPayConfig.isAvailable) {
+                return false;
+            }
+
+            const countries = amazonPayConfig.countries;
+            if (!countries || countries.length === 0) {
+                return true;
+            }
+
+            const country = billingAddress?.country;
+            if (!country) {
+                return false;
+            }
+
+            return countries.includes(country);
         },
     },
 );
