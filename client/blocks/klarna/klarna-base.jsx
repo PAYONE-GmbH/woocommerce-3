@@ -1,4 +1,4 @@
-import {useEffect, useState} from '@wordpress/element';
+import {useEffect, useRef, useState} from '@wordpress/element';
 import {select} from '@wordpress/data';
 import {__} from '@wordpress/i18n';
 import KlarnaService from './KlarnaService';
@@ -20,6 +20,9 @@ export default function KlarnaBase(props) {
     const [klarnaData, setKlarnaData] = useState(null);
     const {klarnaStartSessionUrl} = wc.wcSettings.getSetting('payone_data');
     const {CART_STORE_KEY} = wc.wcBlocksData;
+
+    const paymentMethodDataRef = useRef(null);
+    const klarnaCheckSucceededRef = useRef(false);
 
     const initKlarnaWidget = () => {
         KlarnaService.loadKlarnaScript();
@@ -85,7 +88,7 @@ export default function KlarnaBase(props) {
     useEffect(() => initKlarnaWidget(), []);
 
     useEffect(() => onCheckoutValidation(async () => {
-        if (klarnaCheckSucceeded) {
+        if (klarnaCheckSucceededRef.current) {
             // Skip the test, as it already succeeded.
             return true;
         }
@@ -114,14 +117,18 @@ export default function KlarnaBase(props) {
                         'payone-woocommerce-3',
                     ));
                 } else {
-                    setErrorMessage(null);
-                    setPaymentMethodData({
+                    const data = {
                         klarna_authorization_token: klarnaResult.authorization_token,
                         klarna_workorderid: klarnaWorkOrderId,
                         klarna_shipping_email: billingAddress.email,
                         klarna_shipping_telephonenumber: billingAddress.phone,
-                    });
+                    };
 
+                    paymentMethodDataRef.current = data;
+                    klarnaCheckSucceededRef.current = true;
+
+                    setErrorMessage(null);
+                    setPaymentMethodData(data);
                     setKlarnaCheckSucceeded(true);
                 }
             },
@@ -132,13 +139,7 @@ export default function KlarnaBase(props) {
     }), [onCheckoutValidation, klarnaCheckSucceeded, klarnaWorkOrderId, klarnaData, errorMessage]);
 
     useEffect(() => {
-        if (klarnaCheckSucceeded) {
-            onSubmit();
-        }
-    }, [klarnaCheckSucceeded]);
-
-    useEffect(() => {
-        return onPaymentSetup(() => {
+        const unsubscribe = onPaymentSetup(() => {
             if (errorMessage) {
                 return {
                     type: responseTypes.ERROR,
@@ -150,11 +151,11 @@ export default function KlarnaBase(props) {
                 initKlarnaWidget();
             }
 
-            if (klarnaCheckSucceeded && paymentMethodData) {
+            if (klarnaCheckSucceededRef.current && paymentMethodDataRef.current) {
                 return {
                     type: responseTypes.SUCCESS,
                     meta: {
-                        paymentMethodData,
+                        paymentMethodData: paymentMethodDataRef.current,
                     },
                 };
             }
@@ -167,6 +168,12 @@ export default function KlarnaBase(props) {
                 ),
             };
         });
+
+        if (klarnaCheckSucceeded && paymentMethodData) {
+            onSubmit();
+        }
+
+        return unsubscribe;
     }, [onPaymentSetup, klarnaCheckSucceeded, paymentMethodData]);
 
     return (
