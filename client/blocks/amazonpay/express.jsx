@@ -4,40 +4,24 @@ import {PAYONE_ASSETS_URL} from '../../constants';
 import getPaymentMethodConfig from '../../services/getPaymentMethodConfig';
 import AssetService from '../../services/AssetService';
 
-const AmazonPayExpressButton = ({
-    eventRegistration,
-    emitResponse,
-}) => {
+const AmazonPayExpressButton = () => {
     const {amazonPayConfig} = wc.wcSettings.getSetting('payone_data');
-    const {onPaymentSetup} = eventRegistration;
-    const {responseTypes} = emitResponse;
-    const [workorderId, setWorkorderId] = useState(null);
-    const [isReady, setIsReady] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
-        // Load Amazon SDK
+        // Load Amazon SDK and create new session for Express Button
         AssetService.loadJsScript(amazonPayConfig.sdkUrl, () => {
-            // Fetch button configuration from backend for Express checkout
             fetch(amazonPayConfig.createSessionExpressUrl, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: {'Content-Type': 'application/json'},
             })
                 .then((res) => res.json())
                 .then((config) => {
-                    // Check for backend error
                     if (config.error) {
                         setErrorMessage(config.error);
-                        setIsReady(false);
                         return;
                     }
 
-                    setWorkorderId(config.workorderId);
-                    setIsReady(true);
-
-                    // Render Amazon Pay Express button
                     /* global amazon */
                     if (typeof amazon !== 'undefined' && amazon.Pay) {
                         amazon.Pay.renderButton('#payone-amazonpay-express-button', {
@@ -56,34 +40,12 @@ const AmazonPayExpressButton = ({
                 })
                 .catch((error) => {
                     console.error('AmazonPay Express button config error:', error);
-                    setErrorMessage(__('Failed to initialize AmazonPay Express. Please try again.', 'payone-woocommerce-3'));
-                    setIsReady(false);
+                    setErrorMessage(__('Failed to initialize AmazonPay Express.', 'payone-woocommerce-3'));
                 });
         });
     }, []);
 
-    useEffect(() => onPaymentSetup(() => {
-        if (!isReady || !workorderId) {
-            return {
-                type: responseTypes.ERROR,
-                message: __(
-                    'AmazonPay Express is not ready. Please try again.',
-                    'payone-woocommerce-3',
-                ),
-            };
-        }
-
-        return {
-            type: responseTypes.SUCCESS,
-            meta: {
-                paymentMethodData: {
-                    amazonpay_workorderid: workorderId,
-                    amazonpay_express_used: true,
-                },
-            },
-        };
-    }), [onPaymentSetup, isReady, workorderId]);
-
+    // Show Amazon Pay button or error
     return (
         <div className="payone-amazonpay-express-container">
             {errorMessage && (
@@ -97,14 +59,19 @@ const AmazonPayExpressButton = ({
 };
 
 export default getPaymentMethodConfig(
-    'payone_amazonpay_express',
+    'payone_amazonpay_express_button',
     __('PAYONE Amazon Pay Express', 'payone-woocommerce-3'),
     `${PAYONE_ASSETS_URL}/icon-amazon-pay.png`,
     <AmazonPayExpressButton />,
     {
         gatewayId: 'payone_amazonpay_express',
+        // Only show on Cart page (before Amazon flow), NOT after return
         canMakePayment() {
             const {amazonPayConfig} = wc.wcSettings.getSetting('payone_data');
+            // Hide if Express session is already active (user returned from Amazon)
+            if (amazonPayConfig.hasExpressSession && amazonPayConfig.expressWorkorderId) {
+                return false;
+            }
             return amazonPayConfig.isExpressAvailable;
         },
     },

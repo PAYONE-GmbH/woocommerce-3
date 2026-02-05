@@ -4,6 +4,7 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Plugin;
 use Payone\Transaction\Capture;
 use Payone\Transaction\Debit;
 
@@ -289,6 +290,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	 */
 	public function is_available() {
 		$is_available = parent::is_available();
+
+		// If Amazon Pay Express session is active on checkout page, only AmazonPayExpress gateway is available
+		// We exclude cart page to allow normal cart functionality
+		if ( $is_available && ! is_cart() && $this->id !== AmazonPayExpress::GATEWAY_ID ) {
+			if ( Plugin::get_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED ) === true
+			     && Plugin::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID ) !== null ) {
+				return false;
+			}
+		}
 
 		if ( $is_available && WC()->cart && $this->min_amount > $this->get_order_total() ) {
 			$is_available = false;
