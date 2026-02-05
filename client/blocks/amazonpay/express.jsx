@@ -1,15 +1,30 @@
 import {__} from '@wordpress/i18n';
-import {useEffect, useState} from '@wordpress/element';
+import {useEffect, useState, useRef} from '@wordpress/element';
 import {PAYONE_ASSETS_URL} from '../../constants';
 import getPaymentMethodConfig from '../../services/getPaymentMethodConfig';
 import AssetService from '../../services/AssetService';
 
-const AmazonPayExpressButton = () => {
+const AmazonPayExpressButton = ({
+    onSubmit,
+    eventRegistration,
+    emitResponse,
+}) => {
     const {amazonPayConfig} = wc.wcSettings.getSetting('payone_data');
+    const {onPaymentSetup} = eventRegistration;
+    const {responseTypes} = emitResponse;
     const [errorMessage, setErrorMessage] = useState(null);
 
+    // useRef for stable values in callbacks
+    const workorderIdRef = useRef(amazonPayConfig.expressWorkorderId || null);
+
     useEffect(() => {
-        // Load Amazon SDK and create new session for Express Button
+        // If Express session is active (returned from Amazon), don't create new session
+        if (amazonPayConfig.hasExpressSession && amazonPayConfig.expressWorkorderId) {
+            workorderIdRef.current = amazonPayConfig.expressWorkorderId;
+            return;
+        }
+
+        // Cart page: Load Amazon SDK and create new session for Express Button
         AssetService.loadJsScript(amazonPayConfig.sdkUrl, () => {
             fetch(amazonPayConfig.createSessionExpressUrl, {
                 method: 'POST',
@@ -21,6 +36,8 @@ const AmazonPayExpressButton = () => {
                         setErrorMessage(config.error);
                         return;
                     }
+
+                    workorderIdRef.current = config.workorderId;
 
                     /* global amazon */
                     if (typeof amazon !== 'undefined' && amazon.Pay) {
@@ -45,7 +62,49 @@ const AmazonPayExpressButton = () => {
         });
     }, []);
 
-    // Show Amazon Pay button or error
+    // Payment setup callback - called when checkout is submitted via Express button
+    useEffect(() => {
+        const unsubscribe = onPaymentSetup(() => {
+            if (!workorderIdRef.current) {
+                return {
+                    type: responseTypes.ERROR,
+                    message: __('AmazonPay Express Session nicht gefunden.', 'payone-woocommerce-3'),
+                };
+            }
+
+            return {
+                type: responseTypes.SUCCESS,
+                meta: {
+                    paymentMethodData: {
+                        amazonpay_workorderid: workorderIdRef.current,
+                        amazonpay_express_used: true,
+                    },
+                },
+            };
+        });
+
+        return unsubscribe;
+    }, [onPaymentSetup, responseTypes]);
+
+    // Checkout page after Amazon return: Show confirmation + button
+    if (amazonPayConfig.hasExpressSession && amazonPayConfig.expressWorkorderId) {
+        return (
+            <div className="payone-amazonpay-express-container payone-amazonpay-ready wc-block-checkout__actions_row">
+                <p style={{marginBottom: '15px', color: '#067D62', fontWeight: 'bold'}}>
+                    {__('Sie haben Amazon Pay Express gewählt.', 'payone-woocommerce-3')}
+                </p>
+                <button
+                    type="button"
+                    onClick={() => onSubmit && onSubmit()}
+                    className={`wc-block-components-button wp-element-button wc-block-components-checkout-place-order-button contained`}
+                >
+                    <div className={`wc-block-components-checkout-place-order-button__text`}>{__('Bestellung abschließen', 'payone-woocommerce-3')}</div>
+                </button>
+            </div>
+        );
+    }
+
+    // Cart page: Show Amazon Pay button or error
     return (
         <div className="payone-amazonpay-express-container">
             {errorMessage && (
@@ -65,13 +124,8 @@ export default getPaymentMethodConfig(
     <AmazonPayExpressButton />,
     {
         gatewayId: 'payone_amazonpay_express',
-        // Only show on Cart page (before Amazon flow), NOT after return
         canMakePayment() {
             const {amazonPayConfig} = wc.wcSettings.getSetting('payone_data');
-            // Hide if Express session is already active (user returned from Amazon)
-            if (amazonPayConfig.hasExpressSession && amazonPayConfig.expressWorkorderId) {
-                return false;
-            }
             return amazonPayConfig.isExpressAvailable;
         },
     },
