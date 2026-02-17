@@ -4,6 +4,7 @@ import {registerPaymentMethod, registerExpressPaymentMethod} from '@woocommerce/
 import AlipayPaymentMethod from './alipay';
 import AmazonPay from './amazonpay';
 import AmazonPayExpress from './amazonpay/express';
+import AmazonPayExpressCheckout from './amazonpay/express-checkout';
 import Bancontact from './bancontact';
 import RatepayDirectDebit from './ratepay/direct-debit';
 import RatepayOpenInvoice from './ratepay/open-invoice';
@@ -29,6 +30,7 @@ import SepaDirectDebit from './sepa';
 registerPaymentMethod(AlipayPaymentMethod);
 registerPaymentMethod(AmazonPay);
 registerExpressPaymentMethod(AmazonPayExpress);
+registerPaymentMethod(AmazonPayExpressCheckout);
 registerPaymentMethod(Bancontact);
 registerPaymentMethod(Przelewy24);
 registerPaymentMethod(RatepayDirectDebit);
