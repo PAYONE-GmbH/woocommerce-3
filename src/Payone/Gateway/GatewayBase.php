@@ -308,7 +308,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			$is_available = false;
 		}
 
-		if ( $is_available ) {
+        /**
+         * Check if customer made the order from a country that was set in the gateway settings.
+         * We do not check when we are on the cart page and the gateway supports `pay_button` aka "Express Payment"
+         */
+		if ( $is_available && ! is_cart() && ! $this->supports( 'pay_button' ) ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
 
 			if ( $order_id ) {
