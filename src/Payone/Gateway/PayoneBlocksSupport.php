@@ -333,9 +333,13 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			'sandbox'                     => $this->getAmazonPayGateway()->get_mode() === 'test',
 			'isAvailable'                 => $this->getAmazonPayGateway()->is_available(),
 			'isExpressAvailable'          => $this->getAmazonPayExpressGateway()->is_available(),
+			'countries'                   => $this->getAmazonPayGateway()->settings['countries'] ?: [],
 			'createSessionUrl'            => Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-create-session' ] ),
 			'createSessionExpressUrl'     => Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-express-create-session' ] ),
 			'description'                 => $this->getAmazonPayGateway()->get_option( 'description' ),
+			'hasExpressSession'           => Plugin::get_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED ) === true
+			                                 && Plugin::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID ) !== null,
+			'expressWorkorderId'          => Plugin::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID ),
 		];
 
 		// TODO: installmentMonthOptions müssen hier befüllt werden

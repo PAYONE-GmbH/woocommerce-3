@@ -4,6 +4,7 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Plugin;
 use Payone\Transaction\Capture;
 use Payone\Transaction\Debit;
 
@@ -310,9 +311,10 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 
         /**
          * Check if customer made the order from a country that was set in the gateway settings.
-         * We do not check when we are on the cart page and the gateway supports `pay_button` aka "Express Payment"
+         * We do not check when we are on the cart page and the gateway supports `pay_button` aka "Express Payment".
+         * For Block checkout, the country check is handled dynamically in JavaScript (canMakePayment).
          */
-		if ( $is_available && ! is_cart() && ! $this->supports( 'pay_button' ) ) {
+		if ( $is_available && ! is_cart() && ! $this->supports( 'pay_button' ) && ! $this->is_block_checkout_request() ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
 
 			if ( $order_id ) {
@@ -328,6 +330,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 
 		return $is_available;
+	}
+
+	/**
+	 * Checks if the current request originates from the WooCommerce Block checkout (Store API).
+	 *
+	 * @return bool
+	 */
+	protected function is_block_checkout_request() {
+		return $this->supports( 'blocks' ) && ( wp_is_serving_rest_request() || has_block( 'woocommerce/checkout' ) );
 	}
 
 	/**
