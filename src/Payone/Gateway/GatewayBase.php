@@ -221,10 +221,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				$order->update_meta_data( '_refunded', time() );
 				$order->save_meta_data();
 			}
-		} elseif ( $transaction_status->is_cancelation() || $transaction_status->is_failed() ) {
-			// Set order status to failed if we get a CANCELED of FAILED TX status notification
-			$order->update_status( 'wc-failed', __( 'Received status CANCELATION from PAYONE with reason: ', 'payone-woocommerce-3' ) . $transaction_status->get( 'failedcause' ) );
-		} elseif ( $transaction_status->is_invoice() ) {
+		} elseif ( $transaction_status->is_cancelation()) {
+			$order->update_status( 'wc-cancelled', __( 'Received status CANCELATION from PAYONE', 'payone-woocommerce-3' ) );
+		} elseif ( $transaction_status->is_failed() ) {
+            $order->update_status( 'wc-failed', __( 'Received status FAILED from PAYONE with reason: ', 'payone-woocommerce-3' ) . $transaction_status->get( 'failedcause' ) );
+        } elseif ( $transaction_status->is_invoice() ) {
 			$order->add_order_note( __( 'The PAYONE platform has generated a receipt for this order', 'payone-woocommerce-3' ) );
 		} elseif ( $transaction_status->is_reminder() ) {
 			$order->add_order_note( __( 'The PAYONE dunning status has changed', 'payone-woocommerce-3' ) );
