@@ -378,21 +378,25 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			return [];
 		}
 
-		$payoneRequestOptions = [
-			'mode'          => esc_attr( $gateway->get_mode() ),
-			'merchant_id'   => esc_attr( $gateway->get_merchant_id() ),
-			'account_id'    => esc_attr( $gateway->get_account_id() ),
-			'portal_id'     => esc_attr( $gateway->get_portal_id() ),
-			'key'           => esc_attr( $gateway->get_key() ),
-			'request'       => 'creditcardcheck',
-			'responsetype'  => 'JSON',
-			'encoding'      => 'UTF-8',
-			'storecarddata' => 'yes',
+		$hashOptions = [
+			'mode'        => $gateway->get_mode(),
+			'merchant_id' => $gateway->get_merchant_id(),
+			'account_id'  => $gateway->get_account_id(),
+			'portal_id'   => $gateway->get_portal_id(),
+			'key'         => $gateway->get_key(),
 		];
 
-		return array_merge( $payoneRequestOptions, [
-			'hash' => $gateway->calculate_hash( $payoneRequestOptions )
-		] );
+		return [
+			'request'       => 'creditcardcheck',
+			'responsetype'  => 'JSON',
+			'mode'          => $gateway->get_mode(),
+			'mid'           => $gateway->get_merchant_id(),
+			'aid'           => $gateway->get_account_id(),
+			'portalid'      => $gateway->get_portal_id(),
+			'encoding'      => 'UTF-8',
+			'storecarddata' => 'yes',
+			'hash'          => $gateway->calculate_hash( $hashOptions ),
+		];
 	}
 
 	// TODO: Derzeit einfach kopiert aus Gateway/Eps.php
