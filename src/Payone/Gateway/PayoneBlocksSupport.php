@@ -382,21 +382,25 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			return [];
 		}
 
-		$payoneRequestOptions = [
-			'mode'          => esc_attr( $gateway->get_mode() ),
-			'merchant_id'   => esc_attr( $gateway->get_merchant_id() ),
-			'account_id'    => esc_attr( $gateway->get_account_id() ),
-			'portal_id'     => esc_attr( $gateway->get_portal_id() ),
-			'key'           => esc_attr( $gateway->get_key() ),
-			'request'       => 'creditcardcheck',
-			'responsetype'  => 'JSON',
-			'encoding'      => 'UTF-8',
-			'storecarddata' => 'yes',
+		$hashOptions = [
+			'mode'        => $gateway->get_mode(),
+			'merchant_id' => $gateway->get_merchant_id(),
+			'account_id'  => $gateway->get_account_id(),
+			'portal_id'   => $gateway->get_portal_id(),
+			'key'         => $gateway->get_key(),
 		];
 
-		return array_merge( $payoneRequestOptions, [
-			'hash' => $gateway->calculate_hash( $payoneRequestOptions )
-		] );
+		return [
+			'request'       => 'creditcardcheck',
+			'responsetype'  => 'JSON',
+			'mode'          => $gateway->get_mode(),
+			'mid'           => $gateway->get_merchant_id(),
+			'aid'           => $gateway->get_account_id(),
+			'portalid'      => $gateway->get_portal_id(),
+			'encoding'      => 'UTF-8',
+			'storecarddata' => 'yes',
+			'hash'          => $gateway->calculate_hash( $hashOptions ),
+		];
 	}
 
 	// TODO: Derzeit einfach kopiert aus Gateway/Eps.php
@@ -497,6 +501,19 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			if ( isset( $data['amazonpay_express_used'] ) && $data['amazonpay_express_used'] ) {
 				Plugin::set_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED, true );
 			}
+		}
+
+		$klarnaGatewayIds = [
+			KlarnaInvoice::GATEWAY_ID,
+			KlarnaInstallments::GATEWAY_ID,
+			KlarnaSofort::GATEWAY_ID,
+		];
+
+		if ( in_array( $context->payment_type, $klarnaGatewayIds, true ) ) {
+			$_POST['klarna_authorization_token']      = isset( $data['klarna_authorization_token'] ) ? $data['klarna_authorization_token'] : '';
+			$_POST['klarna_workorderid']              = isset( $data['klarna_workorderid'] ) ? $data['klarna_workorderid'] : '';
+			$_POST['klarna_shipping_email']           = isset( $data['klarna_shipping_email'] ) ? $data['klarna_shipping_email'] : '';
+			$_POST['klarna_shipping_telephonenumber'] = isset( $data['klarna_shipping_telephonenumber'] ) ? $data['klarna_shipping_telephonenumber'] : '';
 		}
 	}
 }
