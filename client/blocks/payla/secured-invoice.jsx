@@ -1,5 +1,6 @@
 import {__} from '@wordpress/i18n';
 import {useEffect, useState} from '@wordpress/element';
+import {select, subscribe} from '@wordpress/data';
 import {ValidatedTextInput} from '@woocommerce/blocks-checkout';
 import {PAYONE_ASSETS_URL} from '../../constants';
 import IconLabel from '../../components/IconLabel';
@@ -19,6 +20,26 @@ const PaylaSecuredInvoice = ({
 
     const [birthday, setBirthday] = useState('');
     const [vatId, setVatId] = useState('');
+    const [isB2B, setIsB2B] = useState(false);
+
+    // B2B detection: Check if billing company is filled
+    useEffect(() => {
+        const {CART_STORE_KEY} = wc.wcBlocksData;
+
+        const checkB2B = () => {
+            const store = select(CART_STORE_KEY);
+            const {billingAddress} = store.getCartData();
+            const hasCompany = billingAddress.company && billingAddress.company.trim() !== '';
+            setIsB2B(hasCompany);
+        };
+
+        // Initial check
+        checkB2B();
+
+        // Subscribe to store changes
+        const unsubscribe = subscribe(checkB2B);
+        return () => unsubscribe();
+    }, []);
 
     useEffect(() => {
         return onPaymentSetup(() => {
@@ -27,16 +48,6 @@ const PaylaSecuredInvoice = ({
                     type: responseTypes.ERROR,
                     message: __(
                         'Please enter a valid birthday!',
-                        'payone-woocommerce-3',
-                    ),
-                };
-            }
-
-            if (!vatId) {
-                return {
-                    type: responseTypes.ERROR,
-                    message: __(
-                        'Please enter a valid VAT-ID!',
                         'payone-woocommerce-3',
                     ),
                 };
@@ -78,14 +89,15 @@ const PaylaSecuredInvoice = ({
                 required
             />
 
-            <ValidatedTextInput
-                type="text"
-                id="payone_secured_invoice_vatid"
-                label={__('VAT-ID', 'payone-woocommerce-3')}
-                onChange={(value) => setVatId(value)}
-                value={vatId}
-                required
-            />
+            {isB2B && (
+                <ValidatedTextInput
+                    type="text"
+                    id="payone_secured_invoice_vatid"
+                    label={__('VAT-ID', 'payone-woocommerce-3')}
+                    onChange={(value) => setVatId(value)}
+                    value={vatId}
+                />
+            )}
 
             <PaylaDisclaimer />
         </div>
