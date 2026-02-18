@@ -25,6 +25,7 @@ import PaylaSecuredInvoice from './payla/secured-invoice';
 import PaylaSecuredInstallment from './payla/secured-installment';
 import PaylaSecuredDirectDebit from './payla/secured-direct-debit';
 import SepaDirectDebit from './sepa';
+import Wero from './wero';
 
 registerPaymentMethod(AlipayPaymentMethod);
 registerPaymentMethod(AmazonPay);
@@ -50,3 +51,4 @@ registerPaymentMethod(PaylaSecuredInvoice);
 registerPaymentMethod(PaylaSecuredInstallment);
 registerPaymentMethod(PaylaSecuredDirectDebit);
 registerPaymentMethod(SepaDirectDebit);
+registerPaymentMethod(Wero);

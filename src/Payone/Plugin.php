@@ -89,6 +89,7 @@ class Plugin {
 			\Payone\Gateway\AmazonPay::GATEWAY_ID           => \Payone\Gateway\AmazonPay::class,
 			\Payone\Gateway\PayPalV2::GATEWAY_ID            => \Payone\Gateway\PayPalV2::class,
 			\Payone\Gateway\PayPalV2Express::GATEWAY_ID     => \Payone\Gateway\PayPalV2Express::class,
+			\Payone\Gateway\Wero::GATEWAY_ID                => \Payone\Gateway\Wero::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
