@@ -4,6 +4,7 @@ namespace Payone\Gateway;
 
 use Payone\Payone\Api\Request;
 use Payone\Payone\Api\TransactionStatus;
+use Payone\Plugin;
 use Payone\Transaction\Capture;
 use Payone\Transaction\Debit;
 
@@ -220,10 +221,11 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 				$order->update_meta_data( '_refunded', time() );
 				$order->save_meta_data();
 			}
-		} elseif ( $transaction_status->is_cancelation() || $transaction_status->is_failed() ) {
-			// Set order status to failed if we get a CANCELED of FAILED TX status notification
-			$order->update_status( 'wc-failed', __( 'Received status CANCELATION from PAYONE with reason: ', 'payone-woocommerce-3' ) . $transaction_status->get( 'failedcause' ) );
-		} elseif ( $transaction_status->is_invoice() ) {
+		} elseif ( $transaction_status->is_cancelation()) {
+			$order->update_status( 'wc-cancelled', __( 'Received status CANCELATION from PAYONE', 'payone-woocommerce-3' ) );
+		} elseif ( $transaction_status->is_failed() ) {
+            $order->update_status( 'wc-failed', __( 'Received status FAILED from PAYONE with reason: ', 'payone-woocommerce-3' ) . $transaction_status->get( 'failedcause' ) );
+        } elseif ( $transaction_status->is_invoice() ) {
 			$order->add_order_note( __( 'The PAYONE platform has generated a receipt for this order', 'payone-woocommerce-3' ) );
 		} elseif ( $transaction_status->is_reminder() ) {
 			$order->add_order_note( __( 'The PAYONE dunning status has changed', 'payone-woocommerce-3' ) );
@@ -308,7 +310,20 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 			$is_available = false;
 		}
 
-		if ( $is_available ) {
+        /**
+         * Check if customer made the order from a country that was set in the gateway settings.
+         * We do not check when we are on the cart page and the gateway supports `pay_button` aka "Express Payment".
+         * For Block checkout, the country check is handled dynamically in JavaScript (canMakePayment).
+         */
+		// If PayPal V2 Express session is active on checkout, only allow PayPalV2Express gateway
+		if ( $is_available && ! is_cart() && $this->id !== PayPalV2Express::GATEWAY_ID ) {
+			if ( Plugin::get_session_value( PayPalV2Express::SESSION_KEY_PAYPALV2_EXPRESS_USED ) === true
+			     && Plugin::get_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID ) !== null ) {
+				return false;
+			}
+		}
+
+		if ( $is_available && ! is_cart() && ! $this->supports( 'pay_button' ) && ! $this->is_block_checkout_request() ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
 
 			if ( $order_id ) {
@@ -324,6 +339,15 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 		}
 
 		return $is_available;
+	}
+
+	/**
+	 * Checks if the current request originates from the WooCommerce Block checkout (Store API).
+	 *
+	 * @return bool
+	 */
+	protected function is_block_checkout_request() {
+		return $this->supports( 'blocks' ) && ( wp_is_serving_rest_request() || has_block( 'woocommerce/checkout' ) );
 	}
 
 	/**
