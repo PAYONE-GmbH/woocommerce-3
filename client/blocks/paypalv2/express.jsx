@@ -52,6 +52,10 @@ export default getPaymentMethodConfig(
         gatewayId: 'payone_paypalv2_express',
         canMakePayment() {
             const {paypalExpressConfig} = wc.wcSettings.getSetting('payone_data');
+            // Hide Express button when returning from PayPal (continuation component handles checkout)
+            if (paypalExpressConfig.hasExpressSession) {
+                return false;
+            }
             return paypalExpressConfig.isAvailable;
         },
     },
