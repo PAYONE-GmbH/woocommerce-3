@@ -3,7 +3,7 @@ Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
-Tested up to: 9.6.0
+Tested up to: 10.5.2
 Stable tag: 2.8.0
 Requires PHP: 7.4.0
 License: MIT
@@ -29,7 +29,6 @@ Currently supported payment methods include:
 * PAYONE Secured Invoice
 * PAYONE Secured Direct Debit
 * PAYONE Secured Installment
-* Sofort
 * PAYONE Open Invoice
 * PAYONE Prepayment
 * Klarna
@@ -71,8 +70,20 @@ If you have found anything security related, please contact our technical suppor
 
 == Screenshots ==
 
-
 == Changelog ==
+
+== 2.9.0 ==
+
+New Features
+
+* all payment methods for block support have been updated
+
+Maintenance
+
+* removed deprecated payment methods
+* tested with 
+Wordpress version: 6.9.1
+WooCommerce version: 10.5.2
 
 == 2.8.0 ==
 
