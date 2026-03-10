@@ -86,7 +86,10 @@ abstract class RedirectGatewayBase extends GatewayBase {
 				$order->update_status( 'failed', $this->get_error_message( $response ) );
 				wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ), 'error' );
 
-				return null;
+                return [
+					'result'  => 'failure',
+					'message' => $this->get_error_message( $response ),
+				];
 			}
 
 			// No error, complete the payment

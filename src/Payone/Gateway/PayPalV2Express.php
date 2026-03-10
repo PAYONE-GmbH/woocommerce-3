@@ -19,6 +19,7 @@ class PayPalV2Express extends PayPalV2Base {
 
 		$this->pay_button_id = 'payone-paypalv2-express-button';
 		$this->supports[]    = 'pay_button';
+		$this->supports[]    = 'blocks';
 	}
 
 	/**
@@ -78,6 +79,34 @@ class PayPalV2Express extends PayPalV2Base {
 		Plugin::delete_session_value( PayPalV2Express::SESSION_KEY_PAYPALV2_EXPRESS_USED );
 
 		echo $response->get( 'add_paydata[orderId]' );
+		exit;
+	}
+
+	/**
+	 * @param int $order_id
+	 *
+	 * @return array
+	 * @throws \WC_Data_Exception
+	 */
+	public function process_payment( $order_id ) {
+		$result = parent::process_payment( $order_id );
+
+		// Clean up express session on payment failure so other payment methods become available again
+		if ( isset( $result['result'] ) && $result['result'] === 'failure' ) {
+			Plugin::delete_session_value( self::SESSION_KEY_WORKORDERID );
+			Plugin::delete_session_value( self::SESSION_KEY_PAYPALV2_EXPRESS_USED );
+		}
+
+		return $result;
+	}
+
+	public function process_success( $order_id ) {
+		$order = wc_get_order( $order_id );
+		$this->handle_successfull_payment( $order );
+
+		$target_url = $this->get_return_url( $order );
+
+		wp_redirect( $target_url );
 		exit;
 	}
 
