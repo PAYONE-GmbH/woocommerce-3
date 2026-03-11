@@ -90,6 +90,7 @@ class Plugin {
 			\Payone\Gateway\PayPalV2::GATEWAY_ID            => \Payone\Gateway\PayPalV2::class,
 			\Payone\Gateway\PayPalV2Express::GATEWAY_ID     => \Payone\Gateway\PayPalV2Express::class,
 			\Payone\Gateway\Wero::GATEWAY_ID                => \Payone\Gateway\Wero::class,
+			\Payone\Gateway\GooglePay::GATEWAY_ID           => \Payone\Gateway\GooglePay::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
@@ -331,6 +332,10 @@ class Plugin {
 			$this->process_check_api_settings_callback();
 			exit;
 		}
+		if ( $this->is_cart_info_callback() ) {
+			$this->process_cart_info_callback();
+			exit;
+		}
 
 		$response = 'ERROR';
 		if ( $this->request_is_from_payone() ) {
@@ -432,6 +437,29 @@ class Plugin {
 			'message'    => $message,
 			'result'     => $result,
 		] );
+		exit;
+	}
+
+	private function is_cart_info_callback() {
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-cart-info' ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private function process_cart_info_callback() {
+		$cart = WC()->cart;
+		$info = [
+			'currency' => get_woocommerce_currency(),
+			'country'  => '',
+			'amount'   => '0.0',
+		];
+		if ( $cart ) {
+			$info['country'] = WC()->cart->get_customer()->get_billing_country( 'edit' );
+			$info['amount'] = (string)WC()->cart->get_total( 'edit' );
+		}
+		echo json_encode( $info );
 		exit;
 	}
 

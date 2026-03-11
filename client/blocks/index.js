@@ -28,6 +28,7 @@ import PaylaSecuredInstallment from './payla/secured-installment';
 import PaylaSecuredDirectDebit from './payla/secured-direct-debit';
 import SepaDirectDebit from './sepa';
 import Wero from './wero';
+import GooglePay from './googlepay';
 
 registerPaymentMethod(AlipayPaymentMethod);
 registerPaymentMethod(AmazonPay);
@@ -56,3 +57,4 @@ registerPaymentMethod(PaylaSecuredInstallment);
 registerPaymentMethod(PaylaSecuredDirectDebit);
 registerPaymentMethod(SepaDirectDebit);
 registerPaymentMethod(Wero);
+registerPaymentMethod(GooglePay);
