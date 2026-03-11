@@ -90,7 +90,7 @@ class Plugin {
 			\Payone\Gateway\PayPalV2::GATEWAY_ID            => \Payone\Gateway\PayPalV2::class,
 			\Payone\Gateway\PayPalV2Express::GATEWAY_ID     => \Payone\Gateway\PayPalV2Express::class,
 			\Payone\Gateway\Wero::GATEWAY_ID                => \Payone\Gateway\Wero::class,
-			\Payone\Gateway\GooglePay::GATEWAY_ID           => \Payone\Gateway\GooglePay::class,
+			#\Payone\Gateway\GooglePay::GATEWAY_ID           => \Payone\Gateway\GooglePay::class,
 		];
 
 		foreach ( $gateways as $gateway ) {
