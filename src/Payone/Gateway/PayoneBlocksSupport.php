@@ -318,6 +318,9 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
             'callbackUrl' => Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-set-checkout' ] ),
             'redirectUrl' => Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-get-checkout' ] ),
             'isAvailable' => $this->getPaypalV2ExpressGateway()->is_available(),
+            'hasExpressSession' => Plugin::get_session_value( PayPalV2Express::SESSION_KEY_PAYPALV2_EXPRESS_USED ) === true
+                                   && Plugin::get_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID ) !== null,
+            'expressWorkorderId' => Plugin::get_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID ),
         ];
         $data['paypalConfig']                 = [
             'isAvailable' => Plugin::find_gateway(PayPal::GATEWAY_ID)->is_available(),
@@ -500,6 +503,15 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			}
 			if ( isset( $data['amazonpay_express_used'] ) && $data['amazonpay_express_used'] ) {
 				Plugin::set_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED, true );
+			}
+		}
+
+		if ( $context->payment_type === PayPalV2Express::GATEWAY_ID ) {
+			if ( isset( $data['paypalv2_workorderid'] ) ) {
+				Plugin::set_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID, $data['paypalv2_workorderid'] );
+			}
+			if ( isset( $data['paypalv2_express_used'] ) && $data['paypalv2_express_used'] ) {
+				Plugin::set_session_value( PayPalV2Express::SESSION_KEY_PAYPALV2_EXPRESS_USED, true );
 			}
 		}
 

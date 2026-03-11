@@ -35,9 +35,9 @@ class PayPalV2Express extends Base {
 		$this->set_personal_data_from_order( $order );
 		$this->set_shipping_data_from_order( $order );
 
-		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'success', 'oid' => $order->get_id() ] ) );
-		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'error', 'oid' => $order->get_id() ] ) );
-		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'back', 'oid' => $order->get_id() ] ) );
+		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-success', 'oid' => $order->get_id() ] ) );
+		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-error', 'oid' => $order->get_id() ] ) );
+		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-back', 'oid' => $order->get_id() ] ) );
 
 		return $this->submit();
 	}

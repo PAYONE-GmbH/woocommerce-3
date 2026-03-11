@@ -817,6 +817,16 @@ class Plugin {
 					$workorderid = self::get_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID );
 					$gateway->process_get_checkout( $workorderid );
 					exit;
+				case 'express-success':
+					$order_id = (int) $_GET['oid'];
+					$order    = new \WC_Order( $order_id );
+					if ( $order->get_status() === 'pending' ) {
+						$gateway->process_success( $order_id );
+					}
+					// Always redirect to thank-you page, even if order was already
+					// processed by PAYONE callback (race condition)
+					wp_redirect( $gateway->get_return_url( $order ) );
+					exit;
 				case 'success':
 					self::delete_session_value( PayPalV2Base::SESSION_KEY_ORDER_ID );
 
@@ -826,7 +836,7 @@ class Plugin {
 						$gateway->process_success( $order_id );
 					}
 
-					wp_redirect( wc_get_checkout_url() );
+					wp_redirect( $gateway->get_return_url( $order ) );
 					exit;
 				case 'back':
 				case 'error':

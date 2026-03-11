@@ -315,6 +315,14 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
          * We do not check when we are on the cart page and the gateway supports `pay_button` aka "Express Payment".
          * For Block checkout, the country check is handled dynamically in JavaScript (canMakePayment).
          */
+		// If PayPal V2 Express session is active on checkout, only allow PayPalV2Express gateway
+		if ( $is_available && ! is_cart() && $this->id !== PayPalV2Express::GATEWAY_ID ) {
+			if ( Plugin::get_session_value( PayPalV2Express::SESSION_KEY_PAYPALV2_EXPRESS_USED ) === true
+			     && Plugin::get_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID ) !== null ) {
+				return false;
+			}
+		}
+
 		if ( $is_available && ! is_cart() && ! $this->supports( 'pay_button' ) && ! $this->is_block_checkout_request() ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
 
