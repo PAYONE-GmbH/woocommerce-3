@@ -163,6 +163,9 @@ var payone_klarna_actively_chosen = <?php echo \Payone\Plugin::get_session_value
                 case '<?php echo \Payone\Gateway\AmazonPayExpress::GATEWAY_ID; ?>':
                     result = payone_checkout_clicked_amazonpay_common();
                     break;
+                case '<?php echo \Payone\Gateway\GooglePay::GATEWAY_ID; ?>':
+                    result = payone_checkout_clicked_<?php echo \Payone\Gateway\GooglePay::GATEWAY_ID; ?>();
+                    break;
                 default:
                     payone_unblock();
             }

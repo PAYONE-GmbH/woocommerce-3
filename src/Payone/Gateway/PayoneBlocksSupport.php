@@ -318,6 +318,9 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
             'callbackUrl' => Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-set-checkout' ] ),
             'redirectUrl' => Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'express-get-checkout' ] ),
             'isAvailable' => $this->getPaypalV2ExpressGateway()->is_available(),
+            'hasExpressSession' => Plugin::get_session_value( PayPalV2Express::SESSION_KEY_PAYPALV2_EXPRESS_USED ) === true
+                                   && Plugin::get_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID ) !== null,
+            'expressWorkorderId' => Plugin::get_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID ),
         ];
         $data['paypalConfig']                 = [
             'isAvailable' => Plugin::find_gateway(PayPal::GATEWAY_ID)->is_available(),
@@ -333,9 +336,13 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			'sandbox'                     => $this->getAmazonPayGateway()->get_mode() === 'test',
 			'isAvailable'                 => $this->getAmazonPayGateway()->is_available(),
 			'isExpressAvailable'          => $this->getAmazonPayExpressGateway()->is_available(),
+			'countries'                   => $this->getAmazonPayGateway()->settings['countries'] ?: [],
 			'createSessionUrl'            => Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-create-session' ] ),
 			'createSessionExpressUrl'     => Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'blocks-express-create-session' ] ),
 			'description'                 => $this->getAmazonPayGateway()->get_option( 'description' ),
+			'hasExpressSession'           => Plugin::get_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED ) === true
+			                                 && Plugin::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID ) !== null,
+			'expressWorkorderId'          => Plugin::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID ),
 		];
 
 		// TODO: installmentMonthOptions müssen hier befüllt werden
@@ -378,21 +385,25 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			return [];
 		}
 
-		$payoneRequestOptions = [
-			'mode'          => esc_attr( $gateway->get_mode() ),
-			'merchant_id'   => esc_attr( $gateway->get_merchant_id() ),
-			'account_id'    => esc_attr( $gateway->get_account_id() ),
-			'portal_id'     => esc_attr( $gateway->get_portal_id() ),
-			'key'           => esc_attr( $gateway->get_key() ),
-			'request'       => 'creditcardcheck',
-			'responsetype'  => 'JSON',
-			'encoding'      => 'UTF-8',
-			'storecarddata' => 'yes',
+		$hashOptions = [
+			'mode'        => $gateway->get_mode(),
+			'merchant_id' => $gateway->get_merchant_id(),
+			'account_id'  => $gateway->get_account_id(),
+			'portal_id'   => $gateway->get_portal_id(),
+			'key'         => $gateway->get_key(),
 		];
 
-		return array_merge( $payoneRequestOptions, [
-			'hash' => $gateway->calculate_hash( $payoneRequestOptions )
-		] );
+		return [
+			'request'       => 'creditcardcheck',
+			'responsetype'  => 'JSON',
+			'mode'          => $gateway->get_mode(),
+			'mid'           => $gateway->get_merchant_id(),
+			'aid'           => $gateway->get_account_id(),
+			'portalid'      => $gateway->get_portal_id(),
+			'encoding'      => 'UTF-8',
+			'storecarddata' => 'yes',
+			'hash'          => $gateway->calculate_hash( $hashOptions ),
+		];
 	}
 
 	// TODO: Derzeit einfach kopiert aus Gateway/Eps.php
@@ -493,6 +504,28 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			if ( isset( $data['amazonpay_express_used'] ) && $data['amazonpay_express_used'] ) {
 				Plugin::set_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED, true );
 			}
+		}
+
+		if ( $context->payment_type === PayPalV2Express::GATEWAY_ID ) {
+			if ( isset( $data['paypalv2_workorderid'] ) ) {
+				Plugin::set_session_value( PayPalV2Base::SESSION_KEY_WORKORDERID, $data['paypalv2_workorderid'] );
+			}
+			if ( isset( $data['paypalv2_express_used'] ) && $data['paypalv2_express_used'] ) {
+				Plugin::set_session_value( PayPalV2Express::SESSION_KEY_PAYPALV2_EXPRESS_USED, true );
+			}
+		}
+
+		$klarnaGatewayIds = [
+			KlarnaInvoice::GATEWAY_ID,
+			KlarnaInstallments::GATEWAY_ID,
+			KlarnaSofort::GATEWAY_ID,
+		];
+
+		if ( in_array( $context->payment_type, $klarnaGatewayIds, true ) ) {
+			$_POST['klarna_authorization_token']      = isset( $data['klarna_authorization_token'] ) ? $data['klarna_authorization_token'] : '';
+			$_POST['klarna_workorderid']              = isset( $data['klarna_workorderid'] ) ? $data['klarna_workorderid'] : '';
+			$_POST['klarna_shipping_email']           = isset( $data['klarna_shipping_email'] ) ? $data['klarna_shipping_email'] : '';
+			$_POST['klarna_shipping_telephonenumber'] = isset( $data['klarna_shipping_telephonenumber'] ) ? $data['klarna_shipping_telephonenumber'] : '';
 		}
 	}
 }

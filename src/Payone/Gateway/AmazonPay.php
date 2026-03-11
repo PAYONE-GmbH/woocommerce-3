@@ -8,6 +8,7 @@ class AmazonPay extends AmazonPayBase {
 
 	const GATEWAY_ID = 'payone_amazonpay';
 	const PUBLIC_KEY_ID = 'AE5E5B7B2SAERURYEH6DKDAZ';
+	const SESSION_KEY_AMAZONPAY_SESSION_ID = 'payone_amazonpay_session_id';
 
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
