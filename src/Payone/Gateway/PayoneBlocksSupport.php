@@ -59,6 +59,11 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 	 */
 	private $amazonPayExpressGateway = null;
 
+	/**
+	 * @var GooglePay|null
+	 */
+	private $googlePayGateway = null;
+
 	public function initialize() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'client_styles' ] );
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [
@@ -226,6 +231,21 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 	}
 
 	/**
+	 * @return GooglePay|null Returns null if gateway instantiation fails
+	 */
+	private function getGooglePayGateway() {
+		if ( $this->googlePayGateway === null ) {
+			try {
+				$this->googlePayGateway = new GooglePay();
+			} catch ( \Exception $e ) {
+				error_log( 'PAYONE: Failed to instantiate GooglePay Gateway: ' . $e->getMessage() );
+				return null;
+			}
+		}
+		return $this->googlePayGateway;
+	}
+
+	/**
 	 * In this function you should register your payment method scripts (using wp_register_script) and then return the
 	 * script handles you registered with. This will be used to add your payment method as a dependency of the checkout
 	 * script and thus take sure of loading it correctly.
@@ -343,6 +363,12 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			'hasExpressSession'           => Plugin::get_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED ) === true
 			                                 && Plugin::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID ) !== null,
 			'expressWorkorderId'          => Plugin::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID ),
+		];
+
+		$data['googlePayConfig']              = [
+			'sdkUrl'            => 'https://pay.google.com/gp/p/js/pay.js',
+			'gatewayMerchantId' => $this->getGooglePayGateway()->get_merchant_id(),
+			'environment'       => $this->getGooglePayGateway()->get_mode() === 'test' ? 'TEST' : 'PRODUCTION',
 		];
 
 		// TODO: installmentMonthOptions müssen hier befüllt werden
@@ -504,6 +530,10 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			if ( isset( $data['amazonpay_express_used'] ) && $data['amazonpay_express_used'] ) {
 				Plugin::set_session_value( AmazonPayExpress::SESSION_KEY_AMAZONPAY_EXPRESS_USED, true );
 			}
+		}
+
+		if ( $context->payment_type === GooglePay::GATEWAY_ID ) {
+			$_POST['payone_googlepay_token'] = $data['payone_googlepay_token'];
 		}
 
 		if ( $context->payment_type === PayPalV2Express::GATEWAY_ID ) {

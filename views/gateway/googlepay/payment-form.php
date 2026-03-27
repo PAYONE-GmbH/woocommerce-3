@@ -25,7 +25,9 @@
             type: 'CARD',
             parameters: {
                 allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-                allowedCardNetworks: ["MASTERCARD", "VISA"]
+                allowedCardNetworks: ["MASTERCARD", "VISA"],
+                allowPrepaidCards: true,
+                allowCreditCards: true
             }
         };
         const cardPaymentMethod = Object.assign(
@@ -53,7 +55,7 @@
                         };
                         paymentsClient.loadPaymentData(paymentDataRequest).then(function(paymentData){
                             paymentToken = paymentData.paymentMethodData.tokenizationData.token;
-                            document.getElementById("payone_googlepay_token").value = paymentData.paymentMethodData.tokenizationData.token;
+                            document.getElementById("payone_googlepay_token").value = btoa(paymentData.paymentMethodData.tokenizationData.token);
                             payone_google_pay_finished = true;
                             jQuery('#place_order').parents('form').submit();
                         }).catch(function(err){

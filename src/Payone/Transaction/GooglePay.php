@@ -15,7 +15,7 @@ class GooglePay extends Base {
 		$this->set( 'clearingtype', 'wlt' );
 		$this->set( 'wallettype', 'GGP' );
 
-		$this->set( 'add_paydata[paymentmethod_token_data]', base64_encode( $_POST['payone_googlepay_token'] ) );
+		$this->set( 'add_paydata[paymentmethod_token_data]', $_POST['payone_googlepay_token'] );
 	}
 
 	/**
