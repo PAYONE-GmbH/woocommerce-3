@@ -365,10 +365,13 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			'expressWorkorderId'          => Plugin::get_session_value( AmazonPayBase::SESSION_KEY_WORKORDERID ),
 		];
 
+		$googlePayGateway                     = $this->getGooglePayGateway();
 		$data['googlePayConfig']              = [
-			'sdkUrl'            => 'https://pay.google.com/gp/p/js/pay.js',
-			'gatewayMerchantId' => $this->getGooglePayGateway()->get_merchant_id(),
-			'environment'       => $this->getGooglePayGateway()->get_mode() === 'test' ? 'TEST' : 'PRODUCTION',
+			'sdkUrl'              => 'https://pay.google.com/gp/p/js/pay.js',
+			'gatewayMerchantId'   => $googlePayGateway->get_merchant_id(),
+			'googlePayMerchantId' => $googlePayGateway->get_googlepay_merchant_id(),
+			'merchantName'        => $googlePayGateway->get_googlepay_merchant_name(),
+			'environment'         => $googlePayGateway->get_mode() === 'test' ? 'TEST' : 'PRODUCTION',
 		];
 
 		// TODO: installmentMonthOptions müssen hier befüllt werden

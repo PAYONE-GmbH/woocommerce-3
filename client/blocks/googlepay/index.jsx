@@ -5,6 +5,8 @@ import {PAYONE_ASSETS_URL} from '../../constants';
 import getPaymentMethodConfig from '../../services/getPaymentMethodConfig';
 import AssetService from '../../services/AssetService';
 
+const PLACE_ORDER_BUTTON_SELECTOR = '.wc-block-components-checkout-place-order-button';
+
 const PayoneGooglePay = ({
     eventRegistration,
     emitResponse,
@@ -21,6 +23,7 @@ const PayoneGooglePay = ({
 
     const googlePayFinishedRef = useRef(false);
     const googlePayTokenRef = useRef(null);
+    const buttonContainerRef = useRef(null);
 
     // Load Google Pay SDK via AssetService
     useEffect(() => {
@@ -32,23 +35,67 @@ const PayoneGooglePay = ({
         });
     }, []);
 
-    // Intercept checkout validation — open Google Pay popup
-    useEffect(() => onCheckoutValidation(async () => {
-        if (googlePayFinishedRef.current) {
-            return true;
+    // Render Google Pay button once SDK is ready
+    useEffect(() => {
+        if (!sdkReady || !buttonContainerRef.current) {
+            return;
         }
 
-        if (!sdkReady) {
-            setErrorMessage(__('Google Pay wird geladen, bitte versuchen Sie es erneut.', 'payone-woocommerce-3'));
-            return false;
-        }
+        const baseCardPaymentMethod = {
+            type: 'CARD',
+            parameters: {
+                allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                allowedCardNetworks: ['MASTERCARD', 'VISA'],
+                allowPrepaidCards: true,
+                allowCreditCards: true,
+            },
+        };
 
+        const paymentsClient = new google.payments.api.PaymentsClient({
+            environment: googlePayConfig.environment,
+        });
+
+        paymentsClient.isReadyToPay({
+            apiVersion: 2,
+            apiVersionMinor: 0,
+            allowedPaymentMethods: [baseCardPaymentMethod],
+        }).then((response) => {
+            if (response.result) {
+                const button = paymentsClient.createButton({
+                    onClick: handleGooglePayClick,
+                    buttonColor: 'black',
+                    buttonType: 'buy',
+                    buttonSizeMode: 'fill',
+                    buttonLocale: 'de',
+                    allowedPaymentMethods: [baseCardPaymentMethod],
+                });
+                buttonContainerRef.current.innerHTML = '';
+                buttonContainerRef.current.appendChild(button);
+                togglePlaceOrderButton(false);
+            }
+        }).catch((err) => {
+            console.error('Google Pay isReadyToPay error:', err);
+        });
+
+        return () => {
+            togglePlaceOrderButton(true);
+        };
+    }, [sdkReady]);
+
+    const togglePlaceOrderButton = (show) => {
+        const placeOrderButton = document.querySelector(PLACE_ORDER_BUTTON_SELECTOR);
+        if (placeOrderButton) {
+            placeOrderButton.style.display = show ? '' : 'none';
+        }
+    };
+
+    const handleGooglePayClick = () => {
         const baseRequest = {apiVersion: 2, apiVersionMinor: 0};
         const tokenizationSpecification = {
             type: 'PAYMENT_GATEWAY',
             parameters: {
-                gateway: 'payonegmbh',
-                gatewayMerchantId: googlePayConfig.gatewayMerchantId,
+                gateway: googlePayConfig.merchantName,
+                gatewayMerchantId: googlePayConfig.googlePayMerchantId,
             },
         };
         const baseCardPaymentMethod = {
@@ -65,13 +112,11 @@ const PayoneGooglePay = ({
             tokenizationSpecification,
         };
 
-        // Get cart totals from WooCommerce Blocks store
         const {CART_STORE_KEY} = wc.wcBlocksData;
         const store = select(CART_STORE_KEY);
         const cartTotals = store.getCartTotals();
         const cartData = store.getCartData();
 
-        // total_price is in minor units as string (e.g. "1999" for 19.99 EUR)
         const totalPrice = (parseInt(cartTotals.total_price, 10) / 100).toFixed(2);
         const currencyCode = cartTotals.currency_code;
         const countryCode = cartData.billingAddress.country;
@@ -80,35 +125,24 @@ const PayoneGooglePay = ({
             environment: googlePayConfig.environment,
         });
 
-        try {
-            const readyResponse = await paymentsClient.isReadyToPay({
-                ...baseRequest,
-                allowedPaymentMethods: [baseCardPaymentMethod],
-            });
-
-            if (readyResponse.result) {
-                const paymentData = await paymentsClient.loadPaymentData({
-                    ...baseRequest,
-                    allowedPaymentMethods: [cardPaymentMethod],
-                    transactionInfo: {
-                        totalPriceStatus: 'FINAL',
-                        totalPrice,
-                        currencyCode,
-                        countryCode,
-                    },
-                });
-
-                const token = btoa(paymentData.paymentMethodData.tokenizationData.token);
-                googlePayTokenRef.current = token;
-                googlePayFinishedRef.current = true;
-                setGooglePayToken(token);
-                setGooglePayFinished(true);
-            }
-        } catch (err) {
+        paymentsClient.loadPaymentData({
+            ...baseRequest,
+            allowedPaymentMethods: [cardPaymentMethod],
+            transactionInfo: {
+                totalPriceStatus: 'FINAL',
+                totalPrice,
+                currencyCode,
+                countryCode,
+            },
+        }).then((paymentData) => {
+            const token = btoa(paymentData.paymentMethodData.tokenizationData.token);
+            googlePayTokenRef.current = token;
+            googlePayFinishedRef.current = true;
+            setGooglePayToken(token);
+            setGooglePayFinished(true);
+        }).catch((err) => {
             googlePayFinishedRef.current = false;
             setGooglePayFinished(false);
-
-            // User cancelled the popup — silently reset, no error message
             if (err.statusCode !== 'CANCELED') {
                 setErrorMessage(
                     err.message
@@ -116,12 +150,15 @@ const PayoneGooglePay = ({
                 );
                 console.error('Google Pay error:', err);
             }
-        }
+        });
+    };
 
-        return false;
-    }), [onCheckoutValidation, googlePayFinished, sdkReady]);
+    // Validate checkout — only allow submit when token is present
+    useEffect(() => onCheckoutValidation(() => {
+        return !!(googlePayFinishedRef.current && googlePayTokenRef.current);
+    }), [onCheckoutValidation]);
 
-    // Register onPaymentSetup and trigger re-submit when token arrives (Klarna pattern)
+    // Provide token on payment setup and trigger re-submit
     useEffect(() => {
         const unsubscribe = onPaymentSetup(() => {
             if (errorMessage) {
@@ -158,7 +195,7 @@ const PayoneGooglePay = ({
         return unsubscribe;
     }, [onPaymentSetup, googlePayFinished, googlePayToken]);
 
-    return null;
+    return <div ref={buttonContainerRef} />;
 };
 
 export default getPaymentMethodConfig(
