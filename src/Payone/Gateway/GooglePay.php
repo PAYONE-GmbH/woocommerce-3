@@ -67,11 +67,31 @@ class GooglePay extends RedirectGatewayBase {
 	}
 
 	public function get_googlepay_merchant_id() {
-		return isset( $this->settings[ 'googlepay_merchant_id' ] ) ? $this->settings[ 'googlepay_merchant_id' ] : '';
+		$default = '';
+		if ( $this->get_mode() === 'test' ) {
+			$default = $this->get_merchant_id();
+		}
+
+		$value = isset( $this->settings[ 'googlepay_merchant_id' ] ) ? $this->settings[ 'googlepay_merchant_id' ] : '';
+		if ( ! $value ) {
+			$value = $default;
+		}
+
+		return $value;
 	}
 
 	public function get_googlepay_merchant_name() {
-		return isset( $this->settings[ 'googlepay_merchant_name' ] ) ? $this->settings[ 'googlepay_merchant_name' ] : '';
+		$default = '';
+		if ( $this->get_mode() === 'test' ) {
+			$default = 'payonegmbh';
+		}
+
+		$value = isset( $this->settings[ 'googlepay_merchant_name' ] ) ? $this->settings[ 'googlepay_merchant_name' ] : '';
+		if ( ! $value ) {
+			$value = $default;
+		}
+
+		return $value;
 	}
 
 	protected function add_googlepay_merchant_info_fields() {
