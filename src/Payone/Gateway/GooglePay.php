@@ -17,6 +17,7 @@ class GooglePay extends RedirectGatewayBase {
 
 	public function init_form_fields() {
 		$this->init_common_form_fields( 'PAYONE ' . __( 'Google Pay', 'payone-woocommerce-3' ) );
+		$this->add_googlepay_merchant_info_fields();
 		$this->form_fields['countries']['default'] = [ 'DE', 'AT' ];
 	}
 
@@ -63,5 +64,46 @@ class GooglePay extends RedirectGatewayBase {
 		if ( $from_status === 'on-hold' && $to_status === 'processing' ) {
 			$this->capture( $order );
 		}
+	}
+
+	public function get_googlepay_merchant_id() {
+		$default = '';
+		if ( $this->get_mode() === 'test' ) {
+			$default = $this->get_merchant_id();
+		}
+
+		$value = isset( $this->settings[ 'googlepay_merchant_id' ] ) ? $this->settings[ 'googlepay_merchant_id' ] : '';
+		if ( ! $value ) {
+			$value = $default;
+		}
+
+		return $value;
+	}
+
+	public function get_googlepay_merchant_name() {
+		$default = '';
+		if ( $this->get_mode() === 'test' ) {
+			$default = 'payonegmbh';
+		}
+
+		$value = isset( $this->settings[ 'googlepay_merchant_name' ] ) ? $this->settings[ 'googlepay_merchant_name' ] : '';
+		if ( ! $value ) {
+			$value = $default;
+		}
+
+		return $value;
+	}
+
+	protected function add_googlepay_merchant_info_fields() {
+		$this->form_fields['googlepay_merchant_id'] = [
+			'title'   => __( 'Google Pay Merchant ID', 'payone-woocommerce-3' ),
+			'type'    => 'text',
+			'default' => false,
+		];
+		$this->form_fields['googlepay_merchant_name'] = [
+			'title'   => __( 'Google Pay Merchant Name', 'payone-woocommerce-3' ),
+			'type'    => 'text',
+			'default' => false,
+		];
 	}
 }
