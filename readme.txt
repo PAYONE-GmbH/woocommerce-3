@@ -3,7 +3,7 @@ Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
-Tested up to: 10.6.0
+Tested up to: 10.6.2
 Stable tag: 2.8.0
 Requires PHP: 7.4.0
 License: MIT
@@ -38,6 +38,7 @@ Currently supported payment methods include:
 * Bancontact
 * Alipay
 * WERO
+* Google Pay
 
 PAYONE GmbH is headquartered in Frankfurt am Main and is one of the leading omnichannel-payment providers in Europe. In addition to providing customer support to numerous Savings Banks (Sparkasse) the full-service payment service provider also provides cashless payment transaction services to more than 255,000 customers from stationary trade to the automated and holistic processing of e-commerce and mobile payments.
 
@@ -72,6 +73,18 @@ If you have found anything security related, please contact our technical suppor
 == Screenshots ==
 
 == Changelog ==
+
+== 2.11.0 ==
+
+New Features
+
+* new payment method: Google Pay
+
+Maintenance
+
+* tested with
+Wordpress version: 6.9.4
+WooCommerce version: 10.6.2
 
 == 2.10.0 ==
 
