@@ -7,6 +7,8 @@ jobs:
   tag:
     name: New release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -20,11 +22,13 @@ jobs:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SLUG: bs-payone-woocommerce
     - name: Upload release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: github.event_name == 'release'
+      uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ${{ steps.deploy.outputs.zip-path }}
-        asset_name: ${{ github.event.repository.name }}.zip
-        asset_content_type: application/zip
+        files: ${{ steps.deploy.outputs.zip-path }}
+    - name: Upload zip as workflow artifact
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ github.event.repository.name }}
+        path: ${{ steps.deploy.outputs.zip-path }}
