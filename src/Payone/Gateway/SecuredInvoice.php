@@ -55,7 +55,7 @@ class SecuredInvoice extends PaylaBase {
 
 			$this->payla_request_failed();
 
-			return null;
+			return [ 'result' => 'failure' ];
 		}
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
