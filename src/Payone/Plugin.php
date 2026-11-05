@@ -65,7 +65,8 @@ class Plugin {
 
 		$gateways = [
 			\Payone\Gateway\CreditCard::GATEWAY_ID          => \Payone\Gateway\CreditCard::class,
-			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID     => \Payone\Gateway\SepaDirectDebit::class,
+			\Payone\Gateway\CreditCardHtp::GATEWAY_ID       => \Payone\Gateway\CreditCardHtp::class,
+			\Payone\Gateway\SepaDirectDebit::GATEWAY_ID    => \Payone\Gateway\SepaDirectDebit::class,
 			\Payone\Gateway\PrePayment::GATEWAY_ID          => \Payone\Gateway\PrePayment::class,
 			\Payone\Gateway\Eps::GATEWAY_ID                 => \Payone\Gateway\Eps::class,
 			\Payone\Gateway\Invoice::GATEWAY_ID             => \Payone\Gateway\Invoice::class,
@@ -334,6 +335,13 @@ class Plugin {
 		}
 		if ( $this->is_cart_info_callback() ) {
 			$this->process_cart_info_callback();
+			exit;
+		}
+		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-htp-jwt' ) {
+			$gateway = self::find_gateway( \Payone\Gateway\CreditCardHtp::GATEWAY_ID );
+			if ( $gateway ) {
+				$gateway->process_jwt_callback();
+			}
 			exit;
 		}
 

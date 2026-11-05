@@ -1636,3 +1636,43 @@ msgstr ""
 #: client/blocks/sofort/index.jsx:7
 msgid "PAYONE Sofort"
 msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Credit Card (new)"
+msgstr "Kreditkarte (neu)"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Credit card payment with the PAYONE Hosted Tokenization form, optionally with Click to Pay."
+msgstr "Kreditkartenzahlung mit dem PAYONE Hosted-Tokenization-Formular, optional mit Click to Pay."
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Show card holder field"
+msgstr "Feld für Karteninhaber anzeigen"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay"
+msgstr "Click to Pay"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay requires an onboarding with the card schemes. You receive the following values from PAYONE."
+msgstr "Click to Pay setzt ein Onboarding bei den Kartenorganisationen voraus. Die folgenden Werte erhältst du von PAYONE."
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Enable Click to Pay"
+msgstr "Click to Pay aktivieren"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Allow customer registration for Click to Pay"
+msgstr "Registrierung für Click to Pay erlauben"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Merchant presentation name"
+msgstr "Angezeigter Händlername"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "The credit card form could not be loaded. Please reload the page or choose another payment method."
+msgstr "Das Kreditkartenformular konnte nicht geladen werden. Bitte lade die Seite neu oder wähle eine andere Zahlungsart."
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Please check your credit card details."
+msgstr "Bitte prüfe deine Kreditkartendaten."

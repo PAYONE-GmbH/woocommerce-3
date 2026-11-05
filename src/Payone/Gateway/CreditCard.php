@@ -24,7 +24,7 @@ class CreditCard extends RedirectGatewayBase {
 	public function is_available() {
 		$is_available = parent::is_available();
 
-		if ( $is_available && count( $this->settings['cc_brands'] ) === 0 ) {
+		if ( $is_available && count( (array) $this->get_option( 'cc_brands', [] ) ) === 0 ) {
 			$is_available = false;
 		}
 
@@ -120,6 +120,8 @@ class CreditCard extends RedirectGatewayBase {
 			];
 		}
 
+		$cc_brands = (array) $this->get_option( 'cc_brands', [] );
+
 		return [
 			'fields'       => [
 				'cardpan'         => $cardpan,
@@ -138,7 +140,7 @@ class CreditCard extends RedirectGatewayBase {
 			],
 			'error'        => $this->get_option( 'cc_error_output_active' ) ? 'errorOutput' : '',
 			'language'     => $this->get_option( 'cc_error_output_language' ),
-			'cardType'     => esc_attr( $this->get_option( 'cc_brands' )[0] ),
+			'cardType'     => isset( $cc_brands[0] ) ? esc_attr( $cc_brands[0] ) : '',
 		];
 	}
 
