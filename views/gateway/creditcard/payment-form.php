@@ -4,152 +4,96 @@
 <input type="hidden" name="card_expiredate" id="card_expiredate">
 
 <?php
-$baseStyle = 'width: 100%; min-height: 30px; min-width: 100px;';
-
-$cardnumber_css = '';
-if ( $this->get_option( 'cc_field_cardnumber_style' ) === 'custom' ) {
-	$cardnumber_css = $this->get_option( 'cc_field_cardnumber_css' );
-}
-$cardholder_css = '';
-if ( $this->get_option( 'cc_field_cardholder_style' ) === 'custom' ) {
-    $cardholder_css = $this->get_option( 'cc_field_cardholder_css' );
-}
-$cvc2_css = '';
-if ( $this->get_option( 'cc_field_cvc2_style' ) === 'custom' ) {
-	$cvc2_css = $this->get_option( 'cc_field_cvc2_css' );
-}
-$month_css = '';
-if ( $this->get_option( 'cc_field_month_style' ) === 'custom' ) {
-	$month_css = $this->get_option( 'cc_field_month_css' );
-}
-$year_css = '';
-if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
-	$year_css = $this->get_option( 'cc_field_year_css' );
-}
+$payone_cc_config = $this->javascript_payone_config();
+// Classic checkout uses the card holder input of the form below.
+$payone_cc_config['fields']['cardholder']['selector'] = 'card_holder';
+$payone_cc_auto_detection = isset( $payone_cc_config['autoCardtypeDetection'] );
+$payone_cc_brands         = $this->get_card_brands();
 ?>
 <p>
 	<?php echo nl2br( $this->get_option( 'description' ) ); ?>
 </p>
-<fieldset>
+<fieldset class="payone-cc-form<?php echo $payone_cc_config['modernStyle'] ? ' payone-cc-form--modern' : ''; ?>">
     <p class="form-row form-row-wide">
         <label for="card_holder"
                title="<?php _e( 'as printed on card', 'payone-woocommerce-3' ) ?>"><?php _e( 'Card Holder', 'payone-woocommerce-3' ) ?></label>
-        <input class="payoneInput" id="card_holder" type="text" name="card_holder" value="" maxlength="50">
+        <input class="payoneInput" id="card_holder" type="text" name="card_holder" value="" maxlength="50" autocomplete="cc-name">
     </p>
 
+	<?php if ( ! $payone_cc_auto_detection ) { ?>
     <p class="form-row form-row-wide">
-        <label for="cardtypeInput"><?php _e( 'Card type', 'payone-woocommerce-3' ) ?></label>
+        <label for="cardtype"><?php _e( 'Card type', 'payone-woocommerce-3' ) ?></label>
         <select class="payoneSelect" id="cardtype">
-			<?php foreach ( $this->get_option( 'cc_brands' ) as $cc_brand ) { ?>
-                <option value="<?php echo $cc_brand; ?>">
-					<?php echo $this->get_option( 'cc_brand_label_' . $cc_brand ); ?>
+			<?php foreach ( $payone_cc_brands as $cc_brand ) { ?>
+                <option value="<?php echo esc_attr( $cc_brand['value'] ); ?>">
+					<?php echo esc_html( $cc_brand['title'] ); ?>
                 </option>
 			<?php } ?>
         </select>
     </p>
+	<?php } ?>
 
     <p class="form-row form-row-wide">
-        <label for="cardpan"><?php _e( 'Cardpan', 'payone-woocommerce-3' ) ?></label>
+        <span class="payone-cc-label-row">
+            <label for="cardpan"><?php _e( 'Cardpan', 'payone-woocommerce-3' ) ?></label>
+			<?php if ( $payone_cc_auto_detection ) { ?>
+                <span class="payone-cc-brands" id="payone-cc-brands">
+				<?php foreach ( $payone_cc_brands as $cc_brand ) { ?>
+                    <span class="payone-cc-brand" data-brand="<?php echo esc_attr( $cc_brand['value'] ); ?>" title="<?php echo esc_attr( $cc_brand['title'] ); ?>">
+					<?php if ( $cc_brand['logo'] !== '' ) { ?>
+                        <img src="<?php echo esc_url( $cc_brand['logo'] ); ?>" alt="<?php echo esc_attr( $cc_brand['title'] ); ?>">
+					<?php } else { ?>
+                        <span class="payone-cc-brand__text"><?php echo esc_html( $cc_brand['title'] ); ?></span>
+					<?php } ?>
+                    </span>
+				<?php } ?>
+                </span>
+			<?php } ?>
+        </span>
         <span class="inputIframe" id="cardpan"></span>
     </p>
 
-    <p class="form-row form-row-wide">
-        <label for="cvcInput"><?php _e( 'CVC', 'payone-woocommerce-3' ) ?></label>
-        <span id="cardcvc2" class="inputIframe"></span>
-    </p>
+    <div class="payone-cc-row">
+        <p class="form-row form-row-wide">
+            <label for="expireInput"><?php _e( 'Expire Date', 'payone-woocommerce-3' ) ?></label>
+            <span id="expireInput" class="inputIframe">
+                <span id="cardexpiremonth"></span>
+                <span id="cardexpireyear"></span>
+            </span>
+        </p>
 
-    <p class="form-row form-row-wide">
-        <label for="expireInput"><?php _e( 'Expire Date', 'payone-woocommerce-3' ) ?></label>
-        <span id="expireInput" class="inputIframe">
-            <span id="cardexpiremonth"></span>
-            <span id="cardexpireyear"></span>
-        </span>
-    </p>
+        <p class="form-row form-row-wide">
+            <label for="cardcvc2"><?php _e( 'CVC', 'payone-woocommerce-3' ) ?></label>
+            <span id="cardcvc2" class="inputIframe"></span>
+        </p>
+    </div>
 
     <div id="errorOutput"></div>
 </fieldset>
 <div id="paymentform"></div>
 <script>
     var payone_request, payone_config;
-    payone_config = {
-        fields: {
-            cardpan: {
-                selector: "cardpan",
-                type: "<?php echo $this->get_option( 'cc_field_cardnumber_type' ); ?>",
-                style: "<?php echo $baseStyle . $cardnumber_css; ?>",
-                size: "<?php echo $this->get_option( 'cc_field_cardnumber_length' ); ?>",
-                maxlength: "<?php echo $this->get_option( 'cc_field_cardnumber_maxchars' ); ?>"
-				<?php if ($this->get_option( 'cc_field_cardnumber_iframe' ) === 'custom') { ?>
-                , iframe: {
-                    width: "<?php echo $this->get_option( 'cc_field_cardnumber_width' ); ?>",
-                    height: "<?php echo $this->get_option( 'cc_field_cardnumber_height' ); ?>"
-                }
-				<?php } ?>
-            },
-            cardholder: {
-                selector: "card_holder",
-                type: "<?php echo $this->get_option( 'cc_field_cardholder_type' ); ?>",
-                style: "<?php echo $baseStyle . $cardholder_css; ?>",
-                size: "<?php echo $this->get_option( 'cc_field_cardholder_length' ); ?>",
-                maxlength: "<?php echo $this->get_option( 'cc_field_cardholder_maxchars' ); ?>",
-            },
-            cardcvc2: {
-                selector: "cardcvc2",
-                type: "<?php echo $this->get_option( 'cc_field_cvc2_type' ); ?>",
-                style: "<?php echo $baseStyle . $cvc2_css; ?>",
-                size: "<?php echo $this->get_option( 'cc_field_cvc2_length' ); ?>",
-                maxlength: "<?php echo $this->get_option( 'cc_field_cvc2_maxchars' ); ?>",
-                length: {"V": 3, "M": 3, "A": 4, "D": 3, "J": 0, "O": 3, "P": 3, "U": 3}
-				<?php if ($this->get_option( 'cc_field_cvc2_iframe' ) === 'custom') { ?>
-                , iframe: {
-                    width: "<?php echo $this->get_option( 'cc_field_cvc2_width' ); ?>",
-                    height: "<?php echo $this->get_option( 'cc_field_cvc2_height' ); ?>"
-                }
-				<?php } ?>
-            },
-            cardexpiremonth: {
-                selector: "cardexpiremonth",
-                type: "<?php echo $this->get_option( 'cc_field_month_type' ); ?>",
-                style: "<?php echo $baseStyle . $month_css; ?>",
-                size: "<?php echo $this->get_option( 'cc_field_month_length' ); ?>",
-                maxlength: "<?php echo $this->get_option( 'cc_field_month_maxchars' ); ?>"
-				<?php if ($this->get_option( 'cc_field_month_iframe' ) === 'custom') { ?>
-                , iframe: {
-                    width: "<?php echo $this->get_option( 'cc_field_month_width' ); ?>",
-                    height: "<?php echo $this->get_option( 'cc_field_month_height' ); ?>"
-                }
-				<?php } ?>
-            },
-            cardexpireyear: {
-                selector: "cardexpireyear",
-                type: "<?php echo $this->get_option( 'cc_field_year_type' ); ?>",
-                style: "<?php echo $baseStyle . $year_css; ?>",
-                size: "<?php echo $this->get_option( 'cc_field_year_length' ); ?>",
-                maxlength: "<?php echo $this->get_option( 'cc_field_year_maxchars' ); ?>"
-				<?php if ($this->get_option( 'cc_field_year_iframe' ) === 'custom') { ?>
-                , iframe: {
-                    width: "<?php echo $this->get_option( 'cc_field_year_width' ); ?>",
-                    height: "<?php echo $this->get_option( 'cc_field_year_height' ); ?>"
-                }
-				<?php } ?>
-            }
-        },
-        defaultStyle: {
-            input: "<?php echo $this->get_option( 'cc_default_style_input' ); ?>",
-            select: "<?php echo $this->get_option( 'cc_default_style_select' ); ?>",
-            iframe: {
-                width: "<?php echo $this->get_option( 'cc_default_style_iframe_width' ); ?>",
-                height: "<?php echo $this->get_option( 'cc_default_style_iframe_height' ); ?>"
-            }
-        },
-        error: "<?php echo $this->get_option( 'cc_error_output_active' ) ? 'errorOutput' : ''; ?>",
-        language: Payone.ClientApi.Language.<?php echo $this->get_option( 'cc_error_output_language' ); ?>,
-        events: {
-            rendered: function () {
-                payone_iframes.setCardType('<?php $cc_brand_choices = $this->get_option( 'cc_brands' ); echo esc_attr( $cc_brand_choices[0] ); ?>');
+    payone_config = <?php echo wp_json_encode( $payone_cc_config ); ?>;
+    payone_config.language = Payone.ClientApi.Language[payone_config.language] || Payone.ClientApi.Language.de;
+    payone_config.events = {
+        rendered: function () {
+            if (!payone_config.autoCardtypeDetection && payone_config.cardType) {
+                payone_iframes.setCardType(payone_config.cardType);
             }
         }
     };
+    if (payone_config.autoCardtypeDetection) {
+        payone_config.autoCardtypeDetection.callback = function (detectedCardtype) {
+            var brands = document.querySelectorAll('#payone-cc-brands .payone-cc-brand');
+            var known = false;
+            for (var i = 0; i < brands.length; i++) {
+                var match = brands[i].getAttribute('data-brand') === detectedCardtype;
+                known = known || match;
+                brands[i].classList.toggle('is-active', match);
+            }
+            document.getElementById('payone-cc-brands').classList.toggle('has-active', known);
+        };
+    }
     payone_request = {
         request: 'creditcardcheck',
         responsetype: 'JSON',
@@ -162,9 +106,11 @@ if ( $this->get_option( 'cc_field_year_style' ) === 'custom' ) {
         hash: '<?php echo esc_attr( $hash ); ?>'
     };
     var payone_iframes = new Payone.ClientApi.HostedIFrames(payone_config, payone_request);
-    document.getElementById('cardtype').onchange = function () {
-        payone_iframes.setCardType(this.value);
-    };
+    if (document.getElementById('cardtype')) {
+        document.getElementById('cardtype').onchange = function () {
+            payone_iframes.setCardType(this.value);
+        };
+    }
     jQuery(document).on('click', '#place_order', function () {
         var currentGateway = jQuery('input[name=payment_method]:checked').val();
         return currentGateway === '<?php echo \Payone\Gateway\CreditCard::GATEWAY_ID; ?>'

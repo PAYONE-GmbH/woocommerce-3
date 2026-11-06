@@ -8,6 +8,36 @@ class CreditCard extends RedirectGatewayBase {
 
 	const GATEWAY_ID = 'bs_payone_creditcard';
 
+	/**
+	 * Card brand logos that WooCommerce ships in assets/images/payment-methods.
+	 */
+	const BRAND_LOGOS = [
+		'V' => 'visa',
+		'M' => 'mastercard',
+		'A' => 'amex',
+		'D' => 'diners',
+		'J' => 'jcb',
+		'C' => 'discover',
+		'P' => 'unionpay',
+	];
+
+	/**
+	 * Former default styles. Shops that never changed them get the modern look.
+	 */
+	const LEGACY_DEFAULT_STYLES = [
+		'cc_default_style_input'         => 'font-size: 1em; border: 1px solid #000; width: 175px;',
+		'cc_default_style_select'        => 'font-size: 1em; border: 1px solid #000;',
+		'cc_default_style_iframe_width'  => '180px',
+		'cc_default_style_iframe_height' => '33px',
+	];
+
+	const MODERN_DEFAULT_STYLES = [
+		'cc_default_style_input'         => 'font-size: 16px; color: #1e1e1e; border: 0; outline: none; width: 100%; height: 100%; padding: 0 12px; box-sizing: border-box; background: transparent;',
+		'cc_default_style_select'        => 'font-size: 16px; color: #1e1e1e; border: 0; outline: none; width: 100%; height: 100%; padding: 0 8px; box-sizing: border-box; background: transparent;',
+		'cc_default_style_iframe_width'  => '100%',
+		'cc_default_style_iframe_height' => '42px',
+	];
+
 	public function __construct() {
 		parent::__construct( self::GATEWAY_ID );
 
@@ -31,10 +61,76 @@ class CreditCard extends RedirectGatewayBase {
 		return $is_available;
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function is_auto_cardtype_detection_enabled() {
+		return $this->get_option( 'cc_auto_cardtype_detection', '1' ) === '1';
+	}
+
+	/**
+	 * Uses the modern look as long as the default styles were not changed by the merchant.
+	 *
+	 * @return bool
+	 */
+	public function uses_modern_style() {
+		foreach ( self::MODERN_DEFAULT_STYLES as $key => $modern ) {
+			$value = (string) $this->get_option( $key );
+			if ( $value !== $modern && $value !== self::LEGACY_DEFAULT_STYLES[ $key ] ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param string $key One of the cc_default_style_* options
+	 *
+	 * @return string
+	 */
+	public function get_default_style( $key ) {
+		if ( $this->uses_modern_style() ) {
+			return self::MODERN_DEFAULT_STYLES[ $key ];
+		}
+
+		return (string) $this->get_option( $key );
+	}
+
+	/**
+	 * Active card brands with label and logo (empty if WooCommerce has none for this brand).
+	 *
+	 * @return array[]
+	 */
+	public function get_card_brands() {
+		$brands = $this->get_option( 'cc_brands' );
+		if ( ! is_array( $brands ) ) {
+			return [];
+		}
+
+		$result = [];
+		foreach ( $brands as $brand ) {
+			$logo = '';
+			if ( isset( self::BRAND_LOGOS[ $brand ] ) && function_exists( 'WC' ) ) {
+				$file = '/assets/images/payment-methods/' . self::BRAND_LOGOS[ $brand ] . '.svg';
+				if ( file_exists( WC()->plugin_path() . $file ) ) {
+					$logo = WC()->plugin_url() . $file;
+				}
+			}
+			$result[] = [
+				'value' => $brand,
+				'title' => (string) $this->get_option( 'cc_brand_label_' . $brand ),
+				'logo'  => $logo,
+			];
+		}
+
+		return $result;
+	}
+
 	public function javascript_payone_config() {
         $baseStyle = 'width: 100%; min-height: 30px; min-width: 100px;';
-		$defaultInputStyle = $this->get_option( 'cc_default_style_input' );
-		$defaultSelectStyle = $this->get_option( 'cc_default_style_select' );
+		$defaultInputStyle = $this->get_default_style( 'cc_default_style_input' );
+		$defaultSelectStyle = $this->get_default_style( 'cc_default_style_select' );
 
 		$cardnumber_css = $this->get_field_style_css( 'cardnumber', $defaultInputStyle );
 		$cardholder_css = $this->get_field_style_css( 'cardholder', $defaultInputStyle );
@@ -120,7 +216,9 @@ class CreditCard extends RedirectGatewayBase {
 			];
 		}
 
-		return [
+		$brands = (array) $this->get_option( 'cc_brands' );
+
+		$config = [
 			'fields'       => [
 				'cardpan'         => $cardpan,
 				'cardholder'      => $cardholder,
@@ -129,17 +227,27 @@ class CreditCard extends RedirectGatewayBase {
 				'cardexpireyear'  => $cardexpireyear,
 			],
 			'defaultStyle' => [
-				'input'  => $this->get_option( 'cc_default_style_input' ),
-				'select' => $this->get_option( 'cc_default_style_select' ),
+				'input'  => $defaultInputStyle,
+				'select' => $defaultSelectStyle,
 				'iframe' => [
-					'width'  => $this->get_option( 'cc_default_style_iframe_width' ),
-					'height' => $this->get_option( 'cc_default_style_iframe_height' ),
+					'width'  => $this->get_default_style( 'cc_default_style_iframe_width' ),
+					'height' => $this->get_default_style( 'cc_default_style_iframe_height' ),
 				],
 			],
 			'error'        => $this->get_option( 'cc_error_output_active' ) ? 'errorOutput' : '',
 			'language'     => $this->get_option( 'cc_error_output_language' ),
-			'cardType'     => esc_attr( $this->get_option( 'cc_brands' )[0] ),
+			'cardType'     => isset( $brands[0] ) ? esc_attr( $brands[0] ) : '',
+			'modernStyle'  => $this->uses_modern_style(),
 		];
+
+		if ( $this->is_auto_cardtype_detection_enabled() ) {
+			// The callback is added in JavaScript.
+			$config['autoCardtypeDetection'] = [
+				'supportedCardtypes' => array_values( $brands ),
+			];
+		}
+
+		return $config;
 	}
 
 	public function init_form_fields() {
@@ -214,6 +322,13 @@ class CreditCard extends RedirectGatewayBase {
 		$this->form_fields['cc_brand_label_P']                = [
 			'type'    => 'no_display',
 			'default' => 'China Union Pay',
+		];
+		$this->form_fields['cc_auto_cardtype_detection']      = [
+			'title'       => __( 'Automatic card type detection', 'payone-woocommerce-3' ),
+			'type'        => 'select',
+			'options'     => $yesno_options,
+			'default'     => '1',
+			'description' => __( 'Detects the card brand from the card number and shows its logo. The customer no longer selects the card type.', 'payone-woocommerce-3' ),
 		];
 		$this->form_fields['minimum_validity_of_card']        = [
 			'title'   => __( 'Minimum validity of card', 'payone-woocommerce-3' ),
@@ -438,22 +553,22 @@ class CreditCard extends RedirectGatewayBase {
 		$this->form_fields['cc_default_style_input']         = [
 			'title'   => __( 'Text input', 'payone-woocommerce-3' ),
 			'type'    => 'text',
-			'default' => 'font-size: 1em; border: 1px solid #000; width: 175px;',
+			'default' => self::MODERN_DEFAULT_STYLES['cc_default_style_input'],
 		];
 		$this->form_fields['cc_default_style_select']        = [
 			'title'   => __( 'Select', 'payone-woocommerce-3' ),
 			'type'    => 'text',
-			'default' => 'font-size: 1em; border: 1px solid #000;',
+			'default' => self::MODERN_DEFAULT_STYLES['cc_default_style_select'],
 		];
 		$this->form_fields['cc_default_style_iframe_width']  = [
 			'title'   => __( 'Iframe width', 'payone-woocommerce-3' ),
 			'type'    => 'text',
-			'default' => '180px',
+			'default' => self::MODERN_DEFAULT_STYLES['cc_default_style_iframe_width'],
 		];
 		$this->form_fields['cc_default_style_iframe_height'] = [
 			'title'   => __( 'Iframe height', 'payone-woocommerce-3' ),
 			'type'    => 'text',
-			'default' => '33px',
+			'default' => self::MODERN_DEFAULT_STYLES['cc_default_style_iframe_height'],
 		];
 
 		$this->form_fields['cc_error_output_label'] = [
