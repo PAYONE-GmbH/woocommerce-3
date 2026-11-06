@@ -5,6 +5,7 @@ namespace Payone\Transaction;
 use Automattic\WooCommerce\Admin\Overrides\OrderRefund;
 use Payone\Gateway\GatewayBase;
 use Payone\Payone\Api\Request;
+use Payone\Payone\Api\StateCode;
 use Payone\Plugin;
 
 class Base extends Request {
@@ -161,7 +162,7 @@ class Base extends Request {
 			'shipping_zip'             => $order->get_shipping_postcode(),
 			'shipping_addressaddition' => $order->get_shipping_address_2(),
 			'shipping_city'            => $order->get_shipping_city(),
-			'shipping_state'           => $order->get_shipping_state(),
+			'shipping_state'           => $this->get_shipping_state_from_order( $order ),
 			'shipping_country'         => $order->get_shipping_country(),
 			'shipping_telephonenumber' => $order->get_shipping_phone(),
 		];
@@ -177,6 +178,22 @@ class Base extends Request {
 				$this->set( $name, $value );
 			}
 		}
+	}
+
+	/**
+	 * WooCommerce does not store ISO 3166-2 codes for every country, see \Payone\Payone\Api\StateCode.
+	 * Shop owners can correct further values with the filter "payone_fix_shipping_state".
+	 *
+	 * @param \WC_Order $order
+	 *
+	 * @return string
+	 */
+	protected function get_shipping_state_from_order( \WC_Order $order ) {
+		$original_shipping_state = $order->get_shipping_state();
+		$shipping_country        = $order->get_shipping_country();
+		$fixed_shipping_state    = StateCode::to_iso( $shipping_country, $original_shipping_state );
+
+		return (string) apply_filters( 'payone_fix_shipping_state', $fixed_shipping_state, $original_shipping_state, $shipping_country );
 	}
 
 	protected function has_no_shipping_data()
