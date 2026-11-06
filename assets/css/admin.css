@@ -99,13 +99,16 @@
 
 .payone-header__logo {
     flex: 0 0 auto;
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: .04em;
-    color: #fff;
-    background: #1b1b3a;
-    border-radius: 6px;
-    padding: 10px 14px;
+    display: block;
+    width: 120px;
+    height: auto;
+}
+
+.payone-header__brand {
+    display: block;
+    width: 80px;
+    height: auto;
+    margin-bottom: 4px;
 }
 
 .payone-header__text {
@@ -460,5 +463,134 @@
 
     .payone-card .form-table th {
         width: auto;
+    }
+}
+
+/* Log pages */
+.payone-admin--wide {
+    max-width: 1400px;
+}
+
+.payone-muted {
+    color: var(--payone-muted);
+}
+
+.payone-card__header--static {
+    cursor: default;
+}
+
+.payone-card__header--static::after {
+    display: none;
+}
+
+.payone-card__header--static:hover {
+    background: transparent;
+}
+
+.payone-card--table {
+    padding: 8px 16px 12px;
+}
+
+.payone-card--table .tablenav {
+    margin: 4px 0 8px;
+}
+
+.payone-card--table .wp-list-table {
+    border: 0;
+    box-shadow: none;
+}
+
+.payone-card--table .wp-list-table thead th,
+.payone-card--table .wp-list-table tfoot th {
+    font-weight: 600;
+    color: #50575e;
+    border-color: #f0f0f1;
+}
+
+.payone-card--table .wp-list-table tbody th,
+.payone-card--table .wp-list-table td {
+    vertical-align: middle;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.payone-card--table .wp-list-table.striped > tbody > :nth-child(odd) {
+    background-color: #f9f9fa;
+}
+
+.payone-card--table .wp-list-table tbody tr:hover {
+    background-color: #f0f6fc;
+}
+
+.payone-card--table .column-id {
+    width: 70px;
+}
+
+.payone-card--table .column-created_at {
+    width: 130px;
+}
+
+.payone-card--table code {
+    display: inline-block;
+    white-space: nowrap;
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+.payone-log__id {
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.payone-log__error {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #b32d2e;
+}
+
+.payone-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 16px;
+    align-items: start;
+}
+
+.payone-grid .payone-card {
+    margin-bottom: 0;
+}
+
+.payone-kv {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.payone-kv th,
+.payone-kv td {
+    padding: 7px 0;
+    border-bottom: 1px solid #f0f0f1;
+    text-align: left;
+    vertical-align: top;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+.payone-kv th {
+    width: 38%;
+    padding-right: 12px;
+    font-weight: 400;
+    color: var(--payone-muted);
+}
+
+.payone-kv tr:last-child th,
+.payone-kv tr:last-child td {
+    border-bottom: 0;
+}
+
+@media screen and (max-width: 782px) {
+    .payone-grid {
+        grid-template-columns: 1fr;
     }
 }

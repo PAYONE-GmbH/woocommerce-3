@@ -20,7 +20,7 @@ $is_enabled = $gateway->enabled === 'yes';
             <div class="payone-header__icon"><img src="<?php echo esc_url( $gateway->icon ); ?>" alt=""></div>
 		<?php } ?>
         <div class="payone-header__text">
-            <p class="payone-header__eyebrow">PAYONE</p>
+            <p class="payone-header__eyebrow"><img class="payone-header__brand" src="<?php echo esc_url( PAYONE_PLUGIN_URL . 'assets/payone-logo.svg' ); ?>" width="80" height="20" alt="PAYONE"></p>
             <h2 class="payone-header__title"><?php echo esc_html( $gateway->get_method_title() ); ?></h2>
 			<?php if ( $gateway->get_method_description() ) { ?>
                 <p class="payone-header__description"><?php echo wp_kses_post( $gateway->get_method_description() ); ?></p>

@@ -1860,3 +1860,57 @@ msgstr ""
 #: src/Payone/Gateway/GatewayBase.php
 msgid "Payment methods"
 msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "No log entries yet."
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "All requests to the PAYONE API and their responses."
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Logging active"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Logging inactive"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Status notifications that PAYONE sent to the shop."
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "API log entry #%d"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Back to API-Log"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Transaction status log entry #%d"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Transaction"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Back to Transaction Status Log"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Data"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Log entry not found."
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "%d entry"
+msgid_plural "%d entries"
+msgstr[0] ""
+msgstr[1] ""

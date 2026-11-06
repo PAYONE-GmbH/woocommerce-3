@@ -1860,3 +1860,57 @@ msgstr "Kontodaten unvollständig"
 #: src/Payone/Gateway/GatewayBase.php
 msgid "Payment methods"
 msgstr "Zahlarten"
+
+#: views/admin/api-log-list.php
+msgid "No log entries yet."
+msgstr "Noch keine Logeinträge vorhanden."
+
+#: views/admin/api-log-list.php
+msgid "All requests to the PAYONE API and their responses."
+msgstr "Alle Anfragen an die PAYONE API und ihre Antworten."
+
+#: views/admin/api-log-list.php
+msgid "Logging active"
+msgstr "Protokollierung aktiv"
+
+#: views/admin/api-log-list.php
+msgid "Logging inactive"
+msgstr "Protokollierung inaktiv"
+
+#: views/admin/api-log-list.php
+msgid "Status notifications that PAYONE sent to the shop."
+msgstr "Statusmeldungen, die PAYONE an den Shop gesendet hat."
+
+#: views/admin/api-log-list.php
+msgid "API log entry #%d"
+msgstr "API-Logeintrag #%d"
+
+#: views/admin/api-log-list.php
+msgid "Back to API-Log"
+msgstr "Zurück zum API-Log"
+
+#: views/admin/api-log-list.php
+msgid "Transaction status log entry #%d"
+msgstr "Transaktionsstatus-Logeintrag #%d"
+
+#: views/admin/api-log-list.php
+msgid "Transaction"
+msgstr "Transaktion"
+
+#: views/admin/api-log-list.php
+msgid "Back to Transaction Status Log"
+msgstr "Zurück zum Transaktionsstatus-Log"
+
+#: views/admin/api-log-list.php
+msgid "Data"
+msgstr "Daten"
+
+#: views/admin/api-log-list.php
+msgid "Log entry not found."
+msgstr "Logeintrag nicht gefunden."
+
+#: views/admin/api-log-list.php
+msgid "%d entry"
+msgid_plural "%d entries"
+msgstr[0] "%d Eintrag"
+msgstr[1] "%d Einträge"

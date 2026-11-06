@@ -35,4 +35,54 @@ abstract class AbstractListTable extends \WP_List_Table {
 			'total_pages' => ceil( $total_items / $this->per_page ),
 		] );
 	}
+
+	/**
+	 * @return int
+	 */
+	public function get_total_items() {
+		return (int) $this->get_pagination_arg( 'total_items' );
+	}
+
+	/**
+	 * Badge for a PAYONE status (APPROVED, REDIRECT, ERROR, ...).
+	 *
+	 * @param string $status
+	 *
+	 * @return string
+	 */
+	public static function status_badge( $status ) {
+		$status = (string) $status;
+		if ( $status === '' ) {
+			return '<span class="payone-muted">&ndash;</span>';
+		}
+		$types = [
+			'APPROVED' => 'success',
+			'OK'       => 'success',
+			'REDIRECT' => 'live',
+			'PENDING'  => 'test',
+			'ERROR'    => 'error',
+			'INVALID'  => 'error',
+		];
+		$type  = isset( $types[ strtoupper( $status ) ] ) ? $types[ strtoupper( $status ) ] : 'neutral';
+
+		return '<span class="payone-badge payone-badge--' . $type . '">' . esc_html( $status ) . '</span>';
+	}
+
+	/**
+	 * @param string $mode "test" or "live"
+	 *
+	 * @return string
+	 */
+	public static function mode_badge( $mode ) {
+		$mode = (string) $mode;
+		if ( $mode === '' ) {
+			return '<span class="payone-muted">&ndash;</span>';
+		}
+
+		return '<span class="payone-badge payone-badge--' . ( $mode === 'live' ? 'live' : 'test' ) . '">' . esc_html( ucfirst( $mode ) ) . '</span>';
+	}
+
+	public function no_items() {
+		esc_html_e( 'No log entries yet.', 'payone-woocommerce-3' );
+	}
 }

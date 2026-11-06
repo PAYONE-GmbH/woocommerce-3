@@ -14,7 +14,7 @@ $payone_sections = isset( $wp_settings_sections['payone-settings-account'] ) ? $
     <h1 class="screen-reader-text"><?php esc_html_e( 'PAYONE Settings', 'payone-woocommerce-3' ); ?></h1>
 
     <div class="payone-header">
-        <div class="payone-header__logo" aria-hidden="true">PAYONE</div>
+        <img class="payone-header__logo" src="<?php echo esc_url( PAYONE_PLUGIN_URL . 'assets/payone-logo.svg' ); ?>" width="120" height="30" alt="PAYONE">
         <div class="payone-header__text">
             <p class="payone-header__eyebrow">WooCommerce</p>
             <h2 class="payone-header__title"><?php esc_html_e( 'Settings', 'payone-woocommerce-3' ); ?></h2>
