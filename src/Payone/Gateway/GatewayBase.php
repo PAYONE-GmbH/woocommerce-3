@@ -149,12 +149,207 @@ abstract class GatewayBase extends \WC_Payment_Gateway {
 	}
 
 	public function admin_options() {
-		if ( ! $this->payone_api_settings_are_valid() ) {
-			$this->add_error( __( 'Connection to PAYONE API failed', 'payone-woocommerce-3' ) );
-			$this->display_errors();
+		$connection_ok = null;
+		if ( $this->payone_is_testable() ) {
+			$connection_ok = $this->payone_api_settings_are_valid();
 		}
 
-		parent::admin_options();
+		$gateway  = $this;
+		$sections = $this->get_admin_sections();
+		include PAYONE_VIEW_PATH . '/admin/gateway-options.php';
+	}
+
+	/**
+	 * Groups the form fields into the cards of the settings page.
+	 * Fields of type "title" start a new card; "payone_collapsed" on such a field closes it by default.
+	 *
+	 * @return array[] Each with title, description, collapsed and fields
+	 */
+	public function get_admin_sections() {
+		$groups = [
+			'general'  => [ 'enabled', 'title', 'description' ],
+			'checkout' => [ 'min_amount', 'max_amount', 'authorization_method', 'countries', 'allow_different_shopping_address' ],
+			'account'  => [
+				'use_global_settings', 'merchant_id', 'portal_id', 'account_id', 'key', 'submit_cart',
+				'activate_pdf_download', 'dynamic_invoice_text', 'dynamic_refund_text', 'text_on_booking_statement',
+			],
+		];
+
+		$sections = [
+			'general'  => [
+				'title'       => __( 'General', 'payone-woocommerce-3' ),
+				'description' => '',
+				'collapsed'   => false,
+				'fields'      => [],
+			],
+			'checkout' => [
+				'title'       => __( 'Availability in checkout', 'payone-woocommerce-3' ),
+				'description' => '',
+				'collapsed'   => false,
+				'fields'      => [],
+			],
+		];
+
+		$account_fields = [];
+		$current        = null;
+		foreach ( $this->get_form_fields() as $key => $field ) {
+			$type = isset( $field['type'] ) ? $field['type'] : 'text';
+			foreach ( $groups as $group => $keys ) {
+				if ( in_array( $key, $keys, true ) ) {
+					if ( $group === 'account' ) {
+						$account_fields[ $key ] = $field;
+					} else {
+						$sections[ $group ]['fields'][ $key ] = $field;
+					}
+					continue 2;
+				}
+			}
+
+			if ( $type === 'title' ) {
+				$current              = 'section_' . $key;
+				$sections[ $current ] = [
+					'title'       => isset( $field['title'] ) ? $field['title'] : '',
+					'description' => isset( $field['description'] ) ? $field['description'] : '',
+					'collapsed'   => ! empty( $field['payone_collapsed'] ),
+					'fields'      => [],
+				];
+				continue;
+			}
+
+			if ( $current === null ) {
+				$current              = 'section_payment';
+				$sections[ $current ] = [
+					'title'       => __( 'Payment method settings', 'payone-woocommerce-3' ),
+					'description' => '',
+					'collapsed'   => false,
+					'fields'      => [],
+				];
+			}
+			$sections[ $current ]['fields'][ $key ] = $field;
+		}
+
+		if ( $account_fields ) {
+			$sections['account'] = [
+				'title'       => __( 'PAYONE account and receipts', 'payone-woocommerce-3' ),
+				'description' => $this->use_global_settings
+					? __( 'This payment method uses the global PAYONE settings.', 'payone-woocommerce-3' )
+					: __( 'This payment method uses its own PAYONE account.', 'payone-woocommerce-3' ),
+				'collapsed'   => (bool) $this->use_global_settings,
+				'fields'      => $account_fields,
+			];
+		}
+
+		return array_filter( $sections, function ( $section ) {
+			return count( $section['fields'] ) > 0;
+		} );
+	}
+
+	/**
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	public static function is_yes_no_options( $options ) {
+		if ( ! is_array( $options ) || count( $options ) !== 2 ) {
+			return false;
+		}
+		$keys = array_map( 'strval', array_keys( $options ) );
+		sort( $keys );
+
+		return $keys === [ '0', '1' ];
+	}
+
+	/**
+	 * Selects with the options 0/1 (No/Yes) are shown as a switch. The stored value stays "0" or "1".
+	 */
+	public function generate_select_html( $key, $data ) {
+		if ( isset( $data['options'] ) && self::is_yes_no_options( $data['options'] ) ) {
+			return $this->generate_payone_switch_html( $key, $data );
+		}
+
+		return parent::generate_select_html( $key, $data );
+	}
+
+	public function generate_checkbox_html( $key, $data ) {
+		$data['class'] = trim( ( isset( $data['class'] ) ? $data['class'] : '' ) . ' payone-switch' );
+
+		return parent::generate_checkbox_html( $key, $data );
+	}
+
+	public function generate_payone_switch_html( $key, $data ) {
+		$field_key = $this->get_field_key( $key );
+		$defaults  = [
+			'title'       => '',
+			'description' => '',
+			'desc_tip'    => false,
+			'default'     => '0',
+		];
+		$data      = wp_parse_args( $data, $defaults );
+		$checked   = (string) $this->get_option( $key, $data['default'] ) === '1';
+
+		ob_start();
+		?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <label for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $data['title'] ); ?><?php echo $this->get_tooltip_html( $data ); // WPCS: XSS ok. ?></label>
+            </th>
+            <td class="forminp">
+                <fieldset>
+                    <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+                    <input type="hidden" name="<?php echo esc_attr( $field_key ); ?>" value="0">
+                    <input type="checkbox" class="payone-switch" name="<?php echo esc_attr( $field_key ); ?>"
+                           id="<?php echo esc_attr( $field_key ); ?>" value="1" <?php checked( $checked ); ?>>
+					<?php echo $this->get_description_html( $data ); // WPCS: XSS ok. ?>
+                </fieldset>
+            </td>
+        </tr>
+		<?php
+
+		return ob_get_clean();
+	}
+
+	/**
+	 * Hex color with a color picker. The text field keeps empty values possible ("use default").
+	 */
+	public function generate_payone_color_html( $key, $data ) {
+		$field_key = $this->get_field_key( $key );
+		$defaults  = [
+			'title'       => '',
+			'description' => '',
+			'desc_tip'    => false,
+			'placeholder' => '',
+		];
+		$data      = wp_parse_args( $data, $defaults );
+		$value     = (string) $this->get_option( $key );
+		$hex       = '/^#[0-9a-f]{6}$/i';
+		$preview   = preg_match( $hex, $value ) ? $value : ( preg_match( $hex, $data['placeholder'] ) ? $data['placeholder'] : '#ffffff' );
+
+		ob_start();
+		?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <label for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $data['title'] ); ?><?php echo $this->get_tooltip_html( $data ); // WPCS: XSS ok. ?></label>
+            </th>
+            <td class="forminp">
+                <div class="payone-color">
+                    <input type="color" class="payone-color__picker" value="<?php echo esc_attr( strtolower( $preview ) ); ?>"
+                           aria-label="<?php echo esc_attr( $data['title'] ); ?>">
+                    <input type="text" class="input-text payone-color__value" name="<?php echo esc_attr( $field_key ); ?>"
+                           id="<?php echo esc_attr( $field_key ); ?>" value="<?php echo esc_attr( $value ); ?>"
+                           placeholder="<?php echo esc_attr( $data['placeholder'] ); ?>" maxlength="9" spellcheck="false">
+                </div>
+				<?php echo $this->get_description_html( $data ); // WPCS: XSS ok. ?>
+            </td>
+        </tr>
+		<?php
+
+		return ob_get_clean();
+	}
+
+	public function validate_payone_color_field( $key, $value ) {
+		$value = trim( (string) $value );
+
+		return preg_match( '/^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i', $value ) ? $value : '';
 	}
 
 	public function payone_is_testable() {
