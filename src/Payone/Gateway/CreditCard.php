@@ -108,11 +108,13 @@ class CreditCard extends RedirectGatewayBase {
 			return [];
 		}
 
+		// PHP 5.6 does not allow isset() on a class constant expression.
+		$logos  = self::BRAND_LOGOS;
 		$result = [];
 		foreach ( $brands as $brand ) {
 			$logo = '';
-			if ( isset( self::BRAND_LOGOS[ $brand ] ) && function_exists( 'WC' ) ) {
-				$file = '/assets/images/payment-methods/' . self::BRAND_LOGOS[ $brand ] . '.svg';
+			if ( isset( $logos[ $brand ] ) && function_exists( 'WC' ) ) {
+				$file = '/assets/images/payment-methods/' . $logos[ $brand ] . '.svg';
 				if ( file_exists( WC()->plugin_path() . $file ) ) {
 					$logo = WC()->plugin_url() . $file;
 				}
