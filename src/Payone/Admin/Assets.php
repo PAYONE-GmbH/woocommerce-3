@@ -12,16 +12,22 @@ class Assets {
 	}
 
 	/**
-	 * Enqueue styles.
+	 * Enqueue styles and scripts on WooCommerce and PAYONE admin pages.
 	 */
 	public function admin_styles() {
-		// Register admin styles.
-		wp_register_style( 'payone_admin_styles', PAYONE_PLUGIN_URL . '/assets/css/admin.css', [], PAYONE_PLUGIN_VERSION );
+		wp_register_style( 'payone_admin_styles', PAYONE_PLUGIN_URL . 'assets/css/admin.css', [], PAYONE_PLUGIN_VERSION );
+		wp_register_script( 'payone_admin_scripts', PAYONE_PLUGIN_URL . 'assets/js/admin.js', [], PAYONE_PLUGIN_VERSION, true );
 
-		// Admin styles for WC pages only.
 		$screen = get_current_screen();
-		if ( $screen && in_array( $screen->id, wc_get_screen_ids(), true ) ) {
+		if ( ! $screen ) {
+			return;
+		}
+
+		$is_wc_screen     = function_exists( 'wc_get_screen_ids' ) && in_array( $screen->id, wc_get_screen_ids(), true );
+		$is_payone_screen = strpos( $screen->id, 'payone' ) !== false;
+		if ( $is_wc_screen || $is_payone_screen ) {
 			wp_enqueue_style( 'payone_admin_styles' );
+			wp_enqueue_script( 'payone_admin_scripts' );
 		}
 	}
 }

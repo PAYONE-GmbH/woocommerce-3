@@ -1,61 +1,90 @@
-<div class="wrap">
-    <h1>
-        PAYONE - Einstellungen
-        <?php if ( count( $testable_gateways ) > 0 ) { ?>
-            <a href="#TB_inline?&width=400&height=300&inlineId=payone-modal-test-api-settings" class="button thickbox">
-                <?php _e( 'Test API settings', 'payone-woocommerce-3'); ?>
+<?php
+/**
+ * Global PAYONE settings.
+ *
+ * @var array $testable_gateways gateway id => name
+ * @var bool $is_live
+ * @var bool $is_complete
+ */
+
+global $wp_settings_sections;
+$payone_sections = isset( $wp_settings_sections['payone-settings-account'] ) ? $wp_settings_sections['payone-settings-account'] : [];
+?>
+<div class="wrap payone-admin">
+    <h1 class="screen-reader-text"><?php esc_html_e( 'PAYONE Settings', 'payone-woocommerce-3' ); ?></h1>
+
+    <div class="payone-header">
+        <div class="payone-header__logo" aria-hidden="true">PAYONE</div>
+        <div class="payone-header__text">
+            <p class="payone-header__eyebrow">WooCommerce</p>
+            <h2 class="payone-header__title"><?php esc_html_e( 'Settings', 'payone-woocommerce-3' ); ?></h2>
+            <p class="payone-header__description">
+				<?php esc_html_e( 'These settings apply to all PAYONE payment methods that use the global settings.', 'payone-woocommerce-3' ); ?>
+            </p>
+        </div>
+        <div class="payone-header__status">
+            <span class="payone-badge <?php echo $is_live ? 'payone-badge--live' : 'payone-badge--test'; ?>">
+                <?php echo $is_live ? esc_html__( 'Live mode', 'payone-woocommerce-3' ) : esc_html__( 'Test mode', 'payone-woocommerce-3' ); ?>
+            </span>
+            <span class="payone-badge <?php echo $is_complete ? 'payone-badge--success' : 'payone-badge--error'; ?>">
+                <?php echo $is_complete ? esc_html__( 'Account data complete', 'payone-woocommerce-3' ) : esc_html__( 'Account data incomplete', 'payone-woocommerce-3' ); ?>
+            </span>
+            <a class="payone-header__link" href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ); ?>">
+				<?php esc_html_e( 'Payment methods', 'payone-woocommerce-3' ); ?>
             </a>
-        <?php } ?>
-    </h1>
-    <?php settings_errors(); ?>
+        </div>
+    </div>
+
+	<?php settings_errors(); ?>
 
     <form method="post" action="options.php">
-		<?php
-		settings_fields( 'payone' );
-		do_settings_sections( 'payone-settings-account' );
-		submit_button();
-		?>
-    </form>
-</div>
+		<?php settings_fields( 'payone' ); ?>
 
-<div id="payone-modal-test-api-settings" style="display:none;">
-    <p>
-		<?php _e( 'The following payment methods are enabled and can be tested:', 'payone-woocommerce-3' ); ?>
-    </p>
-    <form onsubmit="return payone_test_api_settings( event );">
-        <ul>
-            <?php foreach ( $testable_gateways as $gateway_id => $gateway_name ) { ?>
-                <li>
-                    <strong><?php echo $gateway_name; ?></strong>
-                    <span id="gw-status-<?php echo $gateway_id; ?>">
-                </li>
-            <?php } ?>
-        </ul>
-        <p id="payone_test_api_settings_submit_button" class="submit">
-            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Run tests', 'payone-woocommerce-3' ); ?>">
-        </p>
-    </form>
-</div>
+		<?php foreach ( $payone_sections as $section ) { ?>
+            <details class="payone-card" id="<?php echo esc_attr( $section['id'] ); ?>" open>
+                <summary class="payone-card__header">
+                    <span class="payone-card__title"><?php echo esc_html( $section['title'] ); ?></span>
+                </summary>
+                <div class="payone-card__body">
+					<?php
+					if ( $section['callback'] ) {
+						call_user_func( $section['callback'], $section );
+					}
+					?>
+                    <table class="form-table" role="presentation">
+						<?php do_settings_fields( 'payone-settings-account', $section['id'] ); ?>
+                    </table>
+                </div>
+            </details>
+		<?php } ?>
 
-<script>
-    function payone_test_api_settings( e ) {
-        e.preventDefault();
-        var testable_gateways = <?php echo json_encode( $testable_gateways ); ?>;
-        jQuery( '#payone_test_api_settings_submit_button' ).html( '<strong><?php _e( 'Running tests...', 'payone-woocommerce-3' ) ?></strong>' );
-        var ajax_url = '<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-test-api-settings' ] ); ?>';
-        var num_gateways_to_test = Object.keys( testable_gateways ).length;
-        for ( gateway_id in testable_gateways ) {
-            jQuery('#gw-status-' + gateway_id ).text(' is being tested...');
-            jQuery.post(ajax_url, {gateway_id: gateway_id}, function (result) {
-                var json = jQuery.parseJSON( result );
-                var message = ( json.result ? '<span style="color:green">' : '<span style="color:red">' ) + json.message + '</span>';
-                jQuery('#gw-status-' + json.gateway_id ).html( message );
-                num_gateways_to_test--;
-                if ( num_gateways_to_test < 1 ) {
-                    jQuery( '#payone_test_api_settings_submit_button' ).html( '<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Re-Run tests', 'payone-woocommerce-3' ); ?>">' );
-                }
-            });
-        }
-        return false;
-    }
-</script>
+		<?php submit_button(); ?>
+    </form>
+
+	<?php if ( count( $testable_gateways ) > 0 ) { ?>
+        <details class="payone-card" open>
+            <summary class="payone-card__header">
+                <span class="payone-card__title"><?php esc_html_e( 'Test API settings', 'payone-woocommerce-3' ); ?></span>
+                <span class="payone-card__description"><?php esc_html_e( 'The following payment methods are enabled and can be tested:', 'payone-woocommerce-3' ); ?></span>
+            </summary>
+            <div class="payone-card__body">
+                <ul class="payone-test" id="payone-connection-results">
+					<?php foreach ( $testable_gateways as $gateway_id => $gateway_name ) { ?>
+                        <li data-gateway="<?php echo esc_attr( $gateway_id ); ?>">
+                            <strong><?php echo esc_html( $gateway_name ); ?></strong>
+                            <span class="payone-test__status"></span>
+                        </li>
+					<?php } ?>
+                </ul>
+            </div>
+            <div class="payone-card__footer">
+                <button type="button" class="button button-secondary payone-connection-test"
+                        data-url="<?php echo esc_url( \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-test-api-settings' ] ) ); ?>"
+                        data-running="<?php esc_attr_e( 'Running tests...', 'payone-woocommerce-3' ); ?>"
+                        data-failed="<?php esc_attr_e( 'failed', 'payone-woocommerce-3' ); ?>">
+					<?php esc_html_e( 'Run tests', 'payone-woocommerce-3' ); ?>
+                </button>
+            </div>
+        </details>
+	<?php } ?>
+</div>

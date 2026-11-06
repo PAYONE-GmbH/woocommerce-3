@@ -630,7 +630,7 @@ msgstr "Rechnung wurde verschickt"
 
 #: src/Payone/Admin/Option/Account.php:82
 msgid "Is PAYONE Invoice module enabled?"
-msgstr ""
+msgstr "PAYONE-Rechnungsmodul aktiviert?"
 
 #: src/Payone/Gateway/CreditCard.php:179
 msgid "JCB"
@@ -1760,3 +1760,103 @@ msgstr "Akzentfarbe bei Click to Pay"
 #: src/Payone/Gateway/CreditCardHtp.php
 msgid "Click to Pay button radius"
 msgstr "Eckenradius des Click-to-Pay-Buttons"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "PAYONE Settings"
+msgstr "PAYONE-Einstellungen"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "General"
+msgstr "Allgemein"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Availability in checkout"
+msgstr "Verfügbarkeit im Checkout"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Payment method settings"
+msgstr "Einstellungen der Zahlart"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "PAYONE account and receipts"
+msgstr "PAYONE-Konto und Belege"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "This payment method uses the global PAYONE settings."
+msgstr "Diese Zahlart verwendet die globalen PAYONE-Einstellungen."
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "This payment method uses its own PAYONE account."
+msgstr "Diese Zahlart verwendet ein eigenes PAYONE-Konto."
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Back to payments"
+msgstr "Zurück zu den Zahlungen"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Live mode"
+msgstr "Live-Modus"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Test mode"
+msgstr "Testmodus"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Connection OK"
+msgstr "Verbindung OK"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "No connection"
+msgstr "Keine Verbindung"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Global PAYONE settings"
+msgstr "Globale PAYONE-Einstellungen"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "The payment method was deactivated. Please check the PAYONE account data."
+msgstr "Die Zahlart wurde deaktiviert. Bitte prüfen Sie die PAYONE-Kontodaten."
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Orders and receipts"
+msgstr "Bestellungen und Belege"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Logging"
+msgstr "Protokollierung"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "The logs are shown under PAYONE > API-Log and PAYONE > Transaction Status Log."
+msgstr "Die Protokolle finden Sie unter PAYONE > API-Log und PAYONE > Transaktionsstatus-Log."
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Show"
+msgstr "Anzeigen"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Hide"
+msgstr "Verbergen"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "These settings apply to all PAYONE payment methods that use the global settings."
+msgstr "Diese Einstellungen gelten für alle PAYONE-Zahlarten, die die globalen Einstellungen verwenden."
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Account data complete"
+msgstr "Kontodaten vollständig"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Account data incomplete"
+msgstr "Kontodaten unvollständig"
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Payment methods"
+msgstr "Zahlarten"
