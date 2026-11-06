@@ -1654,10 +1654,6 @@ msgid "Click to Pay"
 msgstr ""
 
 #: src/Payone/Gateway/CreditCardHtp.php
-msgid "Click to Pay requires an onboarding with the card schemes. You receive the following values from PAYONE."
-msgstr ""
-
-#: src/Payone/Gateway/CreditCardHtp.php
 msgid "Enable Click to Pay"
 msgstr ""
 
@@ -1675,4 +1671,92 @@ msgstr ""
 
 #: src/Payone/Gateway/CreditCardHtp.php
 msgid "Please check your credit card details."
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay is only shown in live mode."
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Appearance of the credit card form"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Empty fields use the PAYONE default. Colors as hex code, e.g. #3B82F6."
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Form background color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field background color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field border (CSS)"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field outline on focus (CSS)"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Label color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Placeholder color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Text color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Error color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field border radius"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Font family"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Font URL"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button style"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Filled"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Outlined"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button text color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay link color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay accent color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button radius"
 msgstr ""

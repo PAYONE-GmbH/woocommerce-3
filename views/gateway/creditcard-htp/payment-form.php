@@ -91,10 +91,16 @@
                     showCardholderName: config.showCardholderName,
                     isSecurityCodeMasked: true
                 };
+                if (config.uiConfig && Object.keys(config.uiConfig).length) {
+                    pageConfig.uiConfig = config.uiConfig;
+                }
                 if (config.ctp) {
                     pageConfig.CTPConfig = Object.assign({}, config.ctp, {
                         transactionAmount: {amount: String(amount), currencyCode: currency}
                     });
+                    if (!config.ctp.uiConfig || !Object.keys(config.ctp.uiConfig).length) {
+                        delete pageConfig.CTPConfig.uiConfig;
+                    }
                     var email = document.getElementById('billing_email');
                     if (email && email.value) {
                         pageConfig.email = email.value;

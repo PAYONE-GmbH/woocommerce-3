@@ -107,11 +107,17 @@ const PayoneCreditCardHtp = ({
                     showCardholderName: config.showCardholderName,
                     isSecurityCodeMasked: true,
                 };
+                if (config.uiConfig && Object.keys(config.uiConfig).length) {
+                    pageConfig.uiConfig = config.uiConfig;
+                }
                 if (config.ctp) {
                     pageConfig.CTPConfig = {
                         ...config.ctp,
                         transactionAmount: {amount, currencyCode: currency},
                     };
+                    if (!config.ctp.uiConfig || !Object.keys(config.ctp.uiConfig).length) {
+                        delete pageConfig.CTPConfig.uiConfig;
+                    }
                     if (email) {
                         pageConfig.email = email;
                     }

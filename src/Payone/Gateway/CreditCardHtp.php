@@ -74,7 +74,7 @@ class CreditCardHtp extends RedirectGatewayBase {
 		$this->form_fields['htp_ctp_label'] = [
 			'title'       => __( 'Click to Pay', 'payone-woocommerce-3' ),
 			'type'        => 'title',
-			'description' => __( 'Click to Pay requires an onboarding with the card schemes. You receive the following values from PAYONE.', 'payone-woocommerce-3' ),
+			'description' => __( 'Click to Pay is only shown in live mode.', 'payone-woocommerce-3' ),
 		];
 		$this->form_fields['htp_ctp_enabled'] = [
 			'title'   => __( 'Enable Click to Pay', 'payone-woocommerce-3' ),
@@ -93,36 +93,65 @@ class CreditCardHtp extends RedirectGatewayBase {
 			'type'    => 'text',
 			'default' => get_bloginfo( 'name' ),
 		];
-		$this->form_fields['htp_ctp_visa_initiator_id'] = [
-			'title'   => 'Visa srcInitiatorId',
-			'type'    => 'text',
-			'default' => '',
+		$this->form_fields['htp_style_label'] = [
+			'title'       => __( 'Appearance of the credit card form', 'payone-woocommerce-3' ),
+			'type'        => 'title',
+			'description' => __( 'Empty fields use the PAYONE default. Colors as hex code, e.g. #3B82F6.', 'payone-woocommerce-3' ),
 		];
-		$this->form_fields['htp_ctp_visa_dpa_id'] = [
-			'title'   => 'Visa srcDpaId',
-			'type'    => 'text',
-			'default' => '',
+		foreach ( self::get_style_fields() as $key => $field ) {
+			$this->form_fields[ $key ] = [
+				'title'       => $field['title'],
+				'type'        => isset( $field['options'] ) ? 'select' : 'text',
+				'options'     => isset( $field['options'] ) ? $field['options'] : [],
+				'placeholder' => isset( $field['placeholder'] ) ? $field['placeholder'] : '',
+				'default'     => '',
+			];
+		}
+	}
+
+	/**
+	 * Appearance settings: setting key => SDK option.
+	 * "form" options go to uiConfig, "ctp" options to CTPConfig.uiConfig.
+	 *
+	 * @return array
+	 */
+	public static function get_style_fields() {
+		return [
+			'htp_style_form_bg_color'          => [ 'target' => 'form', 'option' => 'formBgColor', 'title' => __( 'Form background color', 'payone-woocommerce-3' ), 'placeholder' => '#FFFFFF' ],
+			'htp_style_field_bg_color'         => [ 'target' => 'form', 'option' => 'fieldBgColor', 'title' => __( 'Field background color', 'payone-woocommerce-3' ), 'placeholder' => '#FFFFFF' ],
+			'htp_style_field_border'           => [ 'target' => 'form', 'option' => 'fieldBorder', 'title' => __( 'Field border (CSS)', 'payone-woocommerce-3' ), 'placeholder' => '1px solid #8FA8C8' ],
+			'htp_style_field_outline'          => [ 'target' => 'form', 'option' => 'fieldOutline', 'title' => __( 'Field outline on focus (CSS)', 'payone-woocommerce-3' ), 'placeholder' => '#3B82F6 solid 2px' ],
+			'htp_style_field_label_color'      => [ 'target' => 'form', 'option' => 'fieldLabelColor', 'title' => __( 'Label color', 'payone-woocommerce-3' ), 'placeholder' => '#334155' ],
+			'htp_style_field_placeholder_color' => [ 'target' => 'form', 'option' => 'fieldPlaceholderColor', 'title' => __( 'Placeholder color', 'payone-woocommerce-3' ), 'placeholder' => '#6B7280' ],
+			'htp_style_field_text_color'       => [ 'target' => 'form', 'option' => 'fieldTextColor', 'title' => __( 'Text color', 'payone-woocommerce-3' ), 'placeholder' => '#1E293B' ],
+			'htp_style_field_error_color'      => [ 'target' => 'form', 'option' => 'fieldErrorCodeColor', 'title' => __( 'Error color', 'payone-woocommerce-3' ), 'placeholder' => '#D97706' ],
+			'htp_style_input_border_radius'    => [ 'target' => 'form', 'option' => 'inputBorderRadius', 'title' => __( 'Field border radius', 'payone-woocommerce-3' ), 'placeholder' => '8px' ],
+			'htp_style_font_family'            => [ 'target' => 'form', 'option' => 'fontFamily', 'title' => __( 'Font family', 'payone-woocommerce-3' ), 'placeholder' => 'Roboto' ],
+			'htp_style_font_url'               => [ 'target' => 'form', 'option' => 'fontUrl', 'title' => __( 'Font URL', 'payone-woocommerce-3' ), 'placeholder' => 'https://fonts.googleapis.com/css2?family=Roboto' ],
+			'htp_style_ctp_button_style'       => [ 'target' => 'ctp', 'option' => 'buttonStyle', 'title' => __( 'Click to Pay button style', 'payone-woocommerce-3' ), 'options' => [ '' => __( 'Default', 'payone-woocommerce-3' ), 'FILLED' => __( 'Filled', 'payone-woocommerce-3' ), 'OUTLINED' => __( 'Outlined', 'payone-woocommerce-3' ) ] ],
+			'htp_style_ctp_button_color'       => [ 'target' => 'ctp', 'option' => 'buttonAndBadgeColor', 'title' => __( 'Click to Pay button color', 'payone-woocommerce-3' ), 'placeholder' => '#3B82F6' ],
+			'htp_style_ctp_button_text_color'  => [ 'target' => 'ctp', 'option' => 'buttonAndBadgeTextColor', 'title' => __( 'Click to Pay button text color', 'payone-woocommerce-3' ), 'placeholder' => '#FFFFFF' ],
+			'htp_style_ctp_link_color'         => [ 'target' => 'ctp', 'option' => 'linkTextColor', 'title' => __( 'Click to Pay link color', 'payone-woocommerce-3' ), 'placeholder' => '#3B82F6' ],
+			'htp_style_ctp_accent_color'       => [ 'target' => 'ctp', 'option' => 'accentColor', 'title' => __( 'Click to Pay accent color', 'payone-woocommerce-3' ), 'placeholder' => '#6390F2' ],
+			'htp_style_ctp_radius'             => [ 'target' => 'ctp', 'option' => 'buttonAndInputRadius', 'title' => __( 'Click to Pay button radius', 'payone-woocommerce-3' ), 'placeholder' => '1rem' ],
 		];
-		$this->form_fields['htp_ctp_visa_encryption_key'] = [
-			'title'   => 'Visa encryptionKey',
-			'type'    => 'text',
-			'default' => '',
-		];
-		$this->form_fields['htp_ctp_visa_n_modulus'] = [
-			'title'   => 'Visa nModulus',
-			'type'    => 'textarea',
-			'default' => '',
-		];
-		$this->form_fields['htp_ctp_mastercard_initiator_id'] = [
-			'title'   => 'Mastercard srcInitiatorId',
-			'type'    => 'text',
-			'default' => '',
-		];
-		$this->form_fields['htp_ctp_mastercard_dpa_id'] = [
-			'title'   => 'Mastercard srcDpaId',
-			'type'    => 'text',
-			'default' => '',
-		];
+	}
+
+	/**
+	 * @param string $target "form" or "ctp"
+	 *
+	 * @return array Only the options that are set
+	 */
+	public function get_ui_config( $target ) {
+		$ui_config = [];
+		foreach ( self::get_style_fields() as $key => $field ) {
+			$value = trim( (string) $this->get_option( $key, '' ) );
+			if ( $field['target'] === $target && $value !== '' ) {
+				$ui_config[ $field['option'] ] = $value;
+			}
+		}
+
+		return $ui_config;
 	}
 
 	/**
@@ -151,14 +180,7 @@ class CreditCardHtp extends RedirectGatewayBase {
 	 * @return bool
 	 */
 	public function is_click_to_pay_enabled() {
-		if ( $this->get_option( 'htp_ctp_enabled' ) !== '1' ) {
-			return false;
-		}
-
-		$has_visa       = $this->get_option( 'htp_ctp_visa_initiator_id' ) && $this->get_option( 'htp_ctp_visa_dpa_id' );
-		$has_mastercard = $this->get_option( 'htp_ctp_mastercard_initiator_id' ) && $this->get_option( 'htp_ctp_mastercard_dpa_id' );
-
-		return $has_visa || $has_mastercard;
+		return $this->get_option( 'htp_ctp_enabled' ) === '1';
 	}
 
 	/**
@@ -177,33 +199,19 @@ class CreditCardHtp extends RedirectGatewayBase {
 			'locale'             => strpos( get_locale(), 'de' ) === 0 ? 'de_DE' : 'en_US',
 			'allowedCardSchemes' => $this->get_card_schemes(),
 			'showCardholderName' => $this->get_option( 'htp_show_cardholder' ) === '1',
+			'uiConfig'           => (object) $this->get_ui_config( 'form' ),
 			'ctp'                => null,
 		];
 
 		if ( $this->is_click_to_pay_enabled() ) {
-			$scheme_config = [
-				'merchantPresentationName' => (string) $this->get_option( 'htp_ctp_merchant_name' ),
-			];
-			if ( $this->get_option( 'htp_ctp_visa_initiator_id' ) ) {
-				$scheme_config['visaConfig'] = [
-					'srcInitiatorId' => (string) $this->get_option( 'htp_ctp_visa_initiator_id' ),
-					'srcDpaId'       => (string) $this->get_option( 'htp_ctp_visa_dpa_id' ),
-					'encryptionKey'  => (string) $this->get_option( 'htp_ctp_visa_encryption_key' ),
-					'nModulus'       => (string) $this->get_option( 'htp_ctp_visa_n_modulus' ),
-				];
-			}
-			if ( $this->get_option( 'htp_ctp_mastercard_initiator_id' ) ) {
-				$scheme_config['mastercardConfig'] = [
-					'srcInitiatorId' => (string) $this->get_option( 'htp_ctp_mastercard_initiator_id' ),
-					'srcDpaId'       => (string) $this->get_option( 'htp_ctp_mastercard_dpa_id' ),
-				];
-			}
+			$merchant_name = (string) $this->get_option( 'htp_ctp_merchant_name' );
 
 			$config['ctp'] = [
 				'enableCTP'                => true,
 				'enableCustomerOnboarding' => $this->get_option( 'htp_ctp_customer_onboarding' ) === '1',
-				'schemeConfig'             => $scheme_config,
-				'shopName'                 => (string) $this->get_option( 'htp_ctp_merchant_name' ),
+				'schemeConfig'             => [ 'merchantPresentationName' => $merchant_name ],
+				'shopName'                 => $merchant_name,
+				'uiConfig'                 => (object) $this->get_ui_config( 'ctp' ),
 			];
 		}
 

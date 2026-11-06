@@ -1654,10 +1654,6 @@ msgid "Click to Pay"
 msgstr "Click to Pay"
 
 #: src/Payone/Gateway/CreditCardHtp.php
-msgid "Click to Pay requires an onboarding with the card schemes. You receive the following values from PAYONE."
-msgstr "Click to Pay setzt ein Onboarding bei den Kartenorganisationen voraus. Die folgenden Werte erhältst du von PAYONE."
-
-#: src/Payone/Gateway/CreditCardHtp.php
 msgid "Enable Click to Pay"
 msgstr "Click to Pay aktivieren"
 
@@ -1676,3 +1672,91 @@ msgstr "Das Kreditkartenformular konnte nicht geladen werden. Bitte lade die Sei
 #: src/Payone/Gateway/CreditCardHtp.php
 msgid "Please check your credit card details."
 msgstr "Bitte prüfe deine Kreditkartendaten."
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay is only shown in live mode."
+msgstr "Click to Pay wird nur im Live-Modus angezeigt."
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Appearance of the credit card form"
+msgstr "Aussehen des Kreditkartenformulars"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Empty fields use the PAYONE default. Colors as hex code, e.g. #3B82F6."
+msgstr "Leere Felder verwenden die PAYONE-Vorgabe. Farben als Hex-Code, z. B. #3B82F6."
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Form background color"
+msgstr "Hintergrundfarbe des Formulars"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field background color"
+msgstr "Hintergrundfarbe der Felder"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field border (CSS)"
+msgstr "Rahmen der Felder (CSS)"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field outline on focus (CSS)"
+msgstr "Umrandung bei Fokus (CSS)"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Label color"
+msgstr "Farbe der Beschriftungen"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Placeholder color"
+msgstr "Farbe der Platzhalter"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Text color"
+msgstr "Textfarbe"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Error color"
+msgstr "Farbe der Fehlermeldungen"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field border radius"
+msgstr "Eckenradius der Felder"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Font family"
+msgstr "Schriftart"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Font URL"
+msgstr "URL der Schriftart"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button style"
+msgstr "Stil des Click-to-Pay-Buttons"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Filled"
+msgstr "Gefüllt"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Outlined"
+msgstr "Umrandet"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button color"
+msgstr "Farbe des Click-to-Pay-Buttons"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button text color"
+msgstr "Textfarbe des Click-to-Pay-Buttons"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay link color"
+msgstr "Linkfarbe bei Click to Pay"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay accent color"
+msgstr "Akzentfarbe bei Click to Pay"
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button radius"
+msgstr "Eckenradius des Click-to-Pay-Buttons"
