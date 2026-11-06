@@ -26,9 +26,6 @@ Currently supported payment methods include:
 * PayPal Express v2
 * Amazon Pay Express
 * Amazon Pay
-* PAYONE Secured Invoice
-* PAYONE Secured Direct Debit
-* PAYONE Secured Installment
 * PAYONE Open Invoice
 * PAYONE Prepayment
 * Klarna

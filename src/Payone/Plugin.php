@@ -16,7 +16,6 @@ use Payone\Gateway\PayPalV2;
 use Payone\Gateway\PayPalV2Base;
 use Payone\Gateway\PayPalV2Express;
 use Payone\Gateway\RatepayInstallments;
-use Payone\Gateway\SecuredInstallment;
 use Payone\Gateway\SepaDirectDebit;
 use Payone\Payone\Api\TransactionStatus;
 use Payone\Transaction\Log;
@@ -24,6 +23,16 @@ use Payone\Transaction\Log;
 class Plugin {
 	// @deprecated
 	const CALLBACK_SLUG = 'payone-callback';
+
+	/**
+	 * Payment methods that were removed from the plugin (PAYONE Secured / Payla).
+	 * Orders paid with them still exist, so their transaction status has to be accepted.
+	 */
+	const REMOVED_GATEWAY_IDS = [
+		'payone_secured_invoice',
+		'payone_secured_installment',
+		'payone_secured_direct_debit',
+	];
 
 	const PAYONE_IP_RANGES = [
 		'213.178.72.196',
@@ -82,9 +91,6 @@ class Plugin {
 			\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID  => \Payone\Gateway\RatepayDirectDebit::class,
 			\Payone\Gateway\RatepayInstallments::GATEWAY_ID => \Payone\Gateway\RatepayInstallments::class,
 			\Payone\Gateway\Przelewy24::GATEWAY_ID          => \Payone\Gateway\Przelewy24::class,
-			\Payone\Gateway\SecuredInvoice::GATEWAY_ID      => \Payone\Gateway\SecuredInvoice::class,
-			\Payone\Gateway\SecuredInstallment::GATEWAY_ID  => \Payone\Gateway\SecuredInstallment::class,
-			\Payone\Gateway\SecuredDirectDebit::GATEWAY_ID  => \Payone\Gateway\SecuredDirectDebit::class,
 			\Payone\Gateway\AmazonPayExpress::GATEWAY_ID    => \Payone\Gateway\AmazonPayExpress::class,
 			\Payone\Gateway\AmazonPay::GATEWAY_ID           => \Payone\Gateway\AmazonPay::class,
 			\Payone\Gateway\PayPalV2::GATEWAY_ID            => \Payone\Gateway\PayPalV2::class,
@@ -325,9 +331,6 @@ class Plugin {
 		if ( $this->is_ratepay_calculate_callback() ) {
 			return $this->process_ratepay_calculate();
 		}
-		if ( $this->is_secured_installment_options_callback() ) {
-			return $this->process_secured_installment_options();
-		}
 		if ( $this->is_api_settings_callback() ) {
 			$this->process_check_api_settings_callback();
 			exit;
@@ -363,6 +366,11 @@ class Plugin {
 		$transaction_status = TransactionStatus::construct_from_post_parameters();
 
 		if ( ! $transaction_status->has_valid_order() ) {
+			$removed_gateway_response = $this->process_callback_for_removed_gateway( $transaction_status );
+			if ( $removed_gateway_response !== null ) {
+				return $removed_gateway_response;
+			}
+
 			if ( ! apply_filters( 'payone_do_throw_error_on_invalid_order', true ) ) {
 				return 'TSOK';
 			}
@@ -381,6 +389,39 @@ class Plugin {
 				return 'ERROR: Wrong key';
 			}
 		}
+
+		return 'TSOK';
+	}
+
+	/**
+	 * Accepts the transaction status of an order whose payment method was removed from the plugin.
+	 * Without this PAYONE would get an error and send the status again and again.
+	 *
+	 * @param TransactionStatus $transaction_status
+	 *
+	 * @return string|null Response for PAYONE, null if the order does not use a removed payment method
+	 */
+	private function process_callback_for_removed_gateway( TransactionStatus $transaction_status ) {
+		$order_id = $transaction_status->get_order_id();
+		$order    = $order_id ? wc_get_order( $order_id ) : null;
+		if ( ! $order || ! in_array( $order->get_payment_method(), self::REMOVED_GATEWAY_IDS, true ) ) {
+			return null;
+		}
+
+		$settings = get_option( 'woocommerce_' . $order->get_payment_method() . '_settings', [] );
+		if ( ! is_array( $settings ) || ! isset( $settings['use_global_settings'] ) || $settings['use_global_settings'] ) {
+			$settings = get_option( \Payone\Admin\Option\Account::OPTION_NAME, [] );
+		}
+		$key = is_array( $settings ) && isset( $settings['key'] ) ? $settings['key'] : '';
+		if ( $key === '' || $transaction_status->get( 'key' ) !== hash( 'md5', $key ) ) {
+			return 'ERROR: Wrong key';
+		}
+
+		$order->add_order_note( sprintf(
+		/* translators: %s: PAYONE txaction, e.g. paid */
+			__( 'PAYONE transaction status "%s" received. This payment method is no longer supported by the plugin, please check the payment in the PAYONE Merchant Interface.', 'payone-woocommerce-3' ),
+			$transaction_status->get_action()
+		) );
 
 		return 'TSOK';
 	}
@@ -895,29 +936,6 @@ class Plugin {
 		$gateway = self::find_gateway( RatepayInstallments::GATEWAY_ID );
 		if ( $gateway ) {
 			return $gateway->process_calculate( $_POST );
-		}
-
-		return null;
-	}
-
-	/**
-	 * @return bool
-	 */
-	private function is_secured_installment_options_callback() {
-		if ( isset( $_GET['type'] ) && $_GET['type'] === 'ajax-secured-installment-options' ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * @return array
-	 */
-	private function process_secured_installment_options() {
-		$gateway = self::find_gateway( SecuredInstallment::GATEWAY_ID );
-		if ( $gateway ) {
-			return $gateway->process_secured_installment_options();
 		}
 
 		return null;

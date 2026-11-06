@@ -1656,3 +1656,7 @@ msgstr "Für Amazon Pay ist eine Telefonnummer erforderlich. Bitte fügen Sie Ih
 #: client/blocks/amazonpay/index.jsx:116
 msgid "PAYONE Amazon Pay"
 msgstr "PAYONE Amazon Pay"
+
+#: src/Payone/Plugin.php
+msgid "PAYONE transaction status \"%s\" received. This payment method is no longer supported by the plugin, please check the payment in the PAYONE Merchant Interface."
+msgstr "PAYONE-Transaktionsstatus \"%s\" empfangen. Diese Zahlart wird vom Plugin nicht mehr unterstützt, bitte prüfen Sie die Zahlung im PAYONE Merchant Interface."
