@@ -8,18 +8,18 @@ import isShallowEqual from '@wordpress/is-shallow-equal';
  * 1. The backend setting "allow_different_shopping_address" being enabled, OR
  * 2. The billing and shipping addresses being identical
  *
- * This mirrors the logic in PaylaBase::is_available() and RatepayBase::is_available() for traditional checkout.
+ * This mirrors the logic in RatepayBase::is_available() for traditional checkout.
  *
- * @param {string} configKey - The config key in payone_data (e.g., 'paylaConfig' or 'ratepayConfig')
+ * @param {string} configKey - The config key in payone_data (e.g. 'ratepayConfig')
  * @returns {function(string): boolean} A canMakePayment function that accepts a gateway ID
  *
  * @example
  * // In a payment block:
  * import {createShippingAddressValidator} from '../../services/shippingAddressValidator';
- * const canMakePayment = createShippingAddressValidator('paylaConfig');
+ * const canMakePayment = createShippingAddressValidator('ratepayConfig');
  * export default {
- *   name: 'payone_secured_invoice',
- *   canMakePayment: () => canMakePayment('payone_secured_invoice'),
+ *   name: 'payone_ratepay_open_invoice',
+ *   canMakePayment: () => canMakePayment('payone_ratepay_open_invoice'),
  * };
  */
 export function createShippingAddressValidator(configKey) {
