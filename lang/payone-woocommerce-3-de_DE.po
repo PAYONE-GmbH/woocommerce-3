@@ -1656,3 +1656,11 @@ msgstr "Für Amazon Pay ist eine Telefonnummer erforderlich. Bitte fügen Sie Ih
 #: client/blocks/amazonpay/index.jsx:116
 msgid "PAYONE Amazon Pay"
 msgstr "PAYONE Amazon Pay"
+
+#: src/Payone/Gateway/CreditCard.php
+msgid "Automatic card type detection"
+msgstr "Automatische Kartentyp-Erkennung"
+
+#: src/Payone/Gateway/CreditCard.php
+msgid "Detects the card brand from the card number and shows its logo. The customer no longer selects the card type."
+msgstr "Erkennt die Kartenmarke an der Kartennummer und zeigt ihr Logo. Der Kunde muss den Kartentyp nicht mehr auswählen."

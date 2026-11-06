@@ -1636,3 +1636,11 @@ msgstr ""
 #: client/blocks/sofort/index.jsx:7
 msgid "PAYONE Sofort"
 msgstr ""
+
+#: src/Payone/Gateway/CreditCard.php
+msgid "Automatic card type detection"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCard.php
+msgid "Detects the card brand from the card number and shows its logo. The customer no longer selects the card type."
+msgstr ""
