@@ -206,10 +206,12 @@ class CreditCardHtp extends RedirectGatewayBase {
 		if ( $this->is_click_to_pay_enabled() ) {
 			$merchant_name = (string) $this->get_option( 'htp_ctp_merchant_name' );
 
+			// No schemeConfig: the payment page only fetches the Visa/Mastercard SRC credentials
+			// for the portal when schemeConfig is empty. Any value there replaces them and Click to Pay
+			// fails with "No SRC attributes were passed".
 			$config['ctp'] = [
 				'enableCTP'                => true,
 				'enableCustomerOnboarding' => $this->get_option( 'htp_ctp_customer_onboarding' ) === '1',
-				'schemeConfig'             => [ 'merchantPresentationName' => $merchant_name ],
 				'shopName'                 => $merchant_name,
 				'uiConfig'                 => (object) $this->get_ui_config( 'ctp' ),
 			];
