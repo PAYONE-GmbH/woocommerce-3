@@ -49,6 +49,11 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 	 */
 	private $googlePayGateway = null;
 
+	/**
+	 * @var CreditCardHtp|null
+	 */
+	private $creditCardHtpGateway = null;
+
 	public function initialize() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'client_styles' ] );
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [
@@ -186,6 +191,21 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 	}
 
 	/**
+	 * @return CreditCardHtp|null Returns null if gateway instantiation fails
+	 */
+	private function getCreditCardHtpGateway() {
+		if ( $this->creditCardHtpGateway === null ) {
+			try {
+				$this->creditCardHtpGateway = new CreditCardHtp();
+			} catch ( \Exception $e ) {
+				error_log( 'PAYONE: Failed to instantiate CreditCardHtp Gateway: ' . $e->getMessage() );
+				return null;
+			}
+		}
+		return $this->creditCardHtpGateway;
+	}
+
+	/**
 	 * In this function you should register your payment method scripts (using wp_register_script) and then return the
 	 * script handles you registered with. This will be used to add your payment method as a dependency of the checkout
 	 * script and thus take sure of loading it correctly.
@@ -299,6 +319,9 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			'merchantName'        => $googlePayGateway->get_googlepay_merchant_name(),
 			'environment'         => $googlePayGateway->get_mode() === 'test' ? 'TEST' : 'PRODUCTION',
 		];
+
+		$creditCardHtpGateway = $this->getCreditCardHtpGateway();
+		$data['creditCardHtpConfig'] = $creditCardHtpGateway ? $creditCardHtpGateway->get_htp_config() : null;
 
 		// TODO: installmentMonthOptions müssen hier befüllt werden
 		$data['installmentMonthOptions'] = [
@@ -440,6 +463,12 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		if ( $context->payment_type === CreditCard::GATEWAY_ID ) {
 			$_POST['card_pseudopan'] = $data['card_pseudopan'];
 			$_POST['card_holder']    = $data['card_holder'];
+		}
+
+		if ( $context->payment_type === CreditCardHtp::GATEWAY_ID ) {
+			foreach ( [ 'card_pseudopan', 'card_holder', 'card_input_mode', 'card_type' ] as $field ) {
+				$_POST[ $field ] = isset( $data[ $field ] ) ? $data[ $field ] : '';
+			}
 		}
 
 		if ( $context->payment_type === Eps::GATEWAY_ID ) {

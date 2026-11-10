@@ -24,7 +24,7 @@ class CreditCard extends RedirectGatewayBase {
 	public function is_available() {
 		$is_available = parent::is_available();
 
-		if ( $is_available && count( $this->settings['cc_brands'] ) === 0 ) {
+		if ( $is_available && count( (array) $this->get_option( 'cc_brands', [] ) ) === 0 ) {
 			$is_available = false;
 		}
 
@@ -120,6 +120,8 @@ class CreditCard extends RedirectGatewayBase {
 			];
 		}
 
+		$cc_brands = (array) $this->get_option( 'cc_brands', [] );
+
 		return [
 			'fields'       => [
 				'cardpan'         => $cardpan,
@@ -138,7 +140,7 @@ class CreditCard extends RedirectGatewayBase {
 			],
 			'error'        => $this->get_option( 'cc_error_output_active' ) ? 'errorOutput' : '',
 			'language'     => $this->get_option( 'cc_error_output_language' ),
-			'cardType'     => esc_attr( $this->get_option( 'cc_brands' )[0] ),
+			'cardType'     => isset( $cc_brands[0] ) ? esc_attr( $cc_brands[0] ) : '',
 		];
 	}
 
@@ -540,19 +542,19 @@ class CreditCard extends RedirectGatewayBase {
 		$out .= '</tr><tr>';
 
 		$key  = 'cc_field_' . $field . '_iframe';
-		$data = $this->form_fields[ $key ];
+		$data = isset( $this->form_fields[ $key ] ) ? $this->form_fields[ $key ] : null;
         if (!empty($data)) {
 		    $out  .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data ) . '</td>';
         }
 
 		$key  = 'cc_field_' . $field . '_width';
-		$data = $this->form_fields[ $key ];
+		$data = isset( $this->form_fields[ $key ] ) ? $this->form_fields[ $key ] : null;
         if (!empty($data)) {
             $out .= '<td>' . $this->generate_text_html_without_table_markup($key, $data) . '</td>';
         }
 
 		$key  = 'cc_field_' . $field . '_height';
-		$data = $this->form_fields[ $key ];
+		$data = isset( $this->form_fields[ $key ] ) ? $this->form_fields[ $key ] : null;
         if (!empty($data)) {
             $out .= '<td>' . $this->generate_text_html_without_table_markup($key, $data) . '</td>';
         }

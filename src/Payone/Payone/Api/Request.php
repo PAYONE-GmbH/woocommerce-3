@@ -18,6 +18,13 @@ class Request extends DataTransfer {
 
 	private $api_log_enabled = false;
 
+	/**
+	 * Optional Accept header. Some requests (e.g. getJWT) are rejected without it.
+	 *
+	 * @var string|null
+	 */
+	protected $accept_header = null;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -60,15 +67,19 @@ class Request extends DataTransfer {
 	public function submit() {
 		$this->maybe_remove_state_parameter();
 
+		$curl_options = [
+			CURLOPT_CUSTOMREQUEST  => 'POST',
+			CURLOPT_POST           => 1,
+			CURLOPT_FOLLOWLOCATION => 1,
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_POSTFIELDS     => $this->get_postfields_from_parameters(),
+		];
+		if ( $this->accept_header ) {
+			$curl_options[ CURLOPT_HTTPHEADER ] = [ 'Accept: ' . $this->accept_header ];
+		}
+
 		$ch = curl_init( self::API_URL );
-		curl_setopt_array( $ch,
-			[
-				CURLOPT_CUSTOMREQUEST  => 'POST',
-				CURLOPT_POST           => 1,
-				CURLOPT_FOLLOWLOCATION => 1,
-				CURLOPT_RETURNTRANSFER => 1,
-				CURLOPT_POSTFIELDS     => $this->get_postfields_from_parameters(),
-			] );
+		curl_setopt_array( $ch, $curl_options );
 
 		$result = curl_exec( $ch );
 

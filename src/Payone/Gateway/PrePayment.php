@@ -32,7 +32,12 @@ class PrePayment extends GatewayBase {
 		$transaction = new \Payone\Transaction\PrePayment( $this );
 		$response    = $transaction->execute( $order );
 
-		// @todo Fehler abfangen
+		if ( $response->has_error() ) {
+			$order->update_status( 'failed', $this->get_error_message( $response ) );
+			wc_add_notice( __( 'Payment failed.', 'payone-woocommerce-3' ), 'error' );
+
+			return [ 'result' => 'failure' ];
+		}
 
 		$order->set_transaction_id( $response->get( 'txid' ) );
 		$response->store_clearing_info( $order );
