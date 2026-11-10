@@ -14,6 +14,11 @@ class ApiLog implements ListTableInterface {
 
 	public function displaySingle( $id ) {
 		$entry = $this->getEntry( $id );
+		if ( ! $entry ) {
+			echo '<div class="wrap"><div class="notice notice-error"><p>' . esc_html__( 'Log entry not found.', 'payone-woocommerce-3' ) . '</p></div></div>';
+
+			return;
+		}
 		include PAYONE_VIEW_PATH . '/admin/api-log-single.php';
 	}
 
@@ -55,7 +60,7 @@ class ApiLog implements ListTableInterface {
 	/**
 	 * @param int $id
 	 *
-	 * @return \Payone\Payone\Api\Log
+	 * @return \Payone\Payone\Api\Log|null
 	 */
 	private function getEntry( $id ) {
 		global $wpdb;
@@ -65,6 +70,6 @@ class ApiLog implements ListTableInterface {
                   WHERE id=' . (int) $id;
 		$row   = $wpdb->get_row( $query, ARRAY_A );
 
-		return \Payone\Payone\Api\Log::constructFromDatabase( $row );
+		return $row ? \Payone\Payone\Api\Log::constructFromDatabase( $row ) : null;
 	}
 }

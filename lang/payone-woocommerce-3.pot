@@ -1636,3 +1636,281 @@ msgstr ""
 #: client/blocks/sofort/index.jsx:7
 msgid "PAYONE Sofort"
 msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Credit Card (new)"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Credit card payment with the PAYONE Hosted Tokenization form, optionally with Click to Pay."
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Show card holder field"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Enable Click to Pay"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Allow customer registration for Click to Pay"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Merchant presentation name"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "The credit card form could not be loaded. Please reload the page or choose another payment method."
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Please check your credit card details."
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay is only shown in live mode."
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Appearance of the credit card form"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Empty fields use the PAYONE default. Colors as hex code, e.g. #3B82F6."
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Form background color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field background color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field border (CSS)"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field outline on focus (CSS)"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Label color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Placeholder color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Text color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Error color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Field border radius"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Font family"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Font URL"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button style"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Filled"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Outlined"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button text color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay link color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay accent color"
+msgstr ""
+
+#: src/Payone/Gateway/CreditCardHtp.php
+msgid "Click to Pay button radius"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "PAYONE Settings"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Settings"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "General"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Availability in checkout"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Payment method settings"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "PAYONE account and receipts"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "This payment method uses the global PAYONE settings."
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "This payment method uses its own PAYONE account."
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Back to payments"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Inactive"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Live mode"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Test mode"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Connection OK"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "No connection"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Global PAYONE settings"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "The payment method was deactivated. Please check the PAYONE account data."
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Orders and receipts"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Logging"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "The logs are shown under PAYONE > API-Log and PAYONE > Transaction Status Log."
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Show"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Hide"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "These settings apply to all PAYONE payment methods that use the global settings."
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Account data complete"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Account data incomplete"
+msgstr ""
+
+#: src/Payone/Gateway/GatewayBase.php
+msgid "Payment methods"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "No log entries yet."
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "All requests to the PAYONE API and their responses."
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Logging active"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Logging inactive"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Status notifications that PAYONE sent to the shop."
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "API log entry #%d"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Back to API-Log"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Transaction status log entry #%d"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Transaction"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Back to Transaction Status Log"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Data"
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "Log entry not found."
+msgstr ""
+
+#: views/admin/api-log-list.php
+msgid "%d entry"
+msgid_plural "%d entries"
+msgstr[0] ""
+msgstr[1] ""
