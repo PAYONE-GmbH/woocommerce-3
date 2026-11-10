@@ -97,11 +97,12 @@ class CreditCardHtp extends RedirectGatewayBase {
 			'title'       => __( 'Appearance of the credit card form', 'payone-woocommerce-3' ),
 			'type'        => 'title',
 			'description' => __( 'Empty fields use the PAYONE default. Colors as hex code, e.g. #3B82F6.', 'payone-woocommerce-3' ),
+			'payone_collapsed' => true,
 		];
 		foreach ( self::get_style_fields() as $key => $field ) {
 			$this->form_fields[ $key ] = [
 				'title'       => $field['title'],
-				'type'        => isset( $field['options'] ) ? 'select' : 'text',
+				'type'        => isset( $field['options'] ) ? 'select' : ( self::is_color_field( $field ) ? 'payone_color' : 'text' ),
 				'options'     => isset( $field['options'] ) ? $field['options'] : [],
 				'placeholder' => isset( $field['placeholder'] ) ? $field['placeholder'] : '',
 				'default'     => '',
@@ -135,6 +136,15 @@ class CreditCardHtp extends RedirectGatewayBase {
 			'htp_style_ctp_accent_color'       => [ 'target' => 'ctp', 'option' => 'accentColor', 'title' => __( 'Click to Pay accent color', 'payone-woocommerce-3' ), 'placeholder' => '#6390F2' ],
 			'htp_style_ctp_radius'             => [ 'target' => 'ctp', 'option' => 'buttonAndInputRadius', 'title' => __( 'Click to Pay button radius', 'payone-woocommerce-3' ), 'placeholder' => '1rem' ],
 		];
+	}
+
+	/**
+	 * @param array $field Entry of get_style_fields()
+	 *
+	 * @return bool
+	 */
+	private static function is_color_field( $field ) {
+		return isset( $field['placeholder'] ) && preg_match( '/^#[0-9a-f]{6}$/i', $field['placeholder'] );
 	}
 
 	/**

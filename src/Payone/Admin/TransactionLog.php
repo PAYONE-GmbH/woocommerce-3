@@ -14,6 +14,11 @@ class TransactionLog implements ListTableInterface {
 
 	public function displaySingle( $id ) {
 		$entry = $this->getEntry( $id );
+		if ( ! $entry ) {
+			echo '<div class="wrap"><div class="notice notice-error"><p>' . esc_html__( 'Log entry not found.', 'payone-woocommerce-3' ) . '</p></div></div>';
+
+			return;
+		}
 		include PAYONE_VIEW_PATH . '/admin/transaction-log-single.php';
 	}
 
@@ -55,7 +60,7 @@ class TransactionLog implements ListTableInterface {
 	/**
 	 * @param int $id
 	 *
-	 * @return \Payone\Transaction\Log
+	 * @return \Payone\Transaction\Log|null
 	 */
 	private function getEntry( $id ) {
 		global $wpdb;
@@ -65,6 +70,6 @@ class TransactionLog implements ListTableInterface {
                   WHERE id=' . (int) $id;
 		$row   = $wpdb->get_row( $query, ARRAY_A );
 
-		return \Payone\Transaction\Log::construct_from_database( $row );
+		return $row ? \Payone\Transaction\Log::construct_from_database( $row ) : null;
 	}
 }

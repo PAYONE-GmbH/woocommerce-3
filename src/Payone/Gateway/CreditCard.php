@@ -542,19 +542,19 @@ class CreditCard extends RedirectGatewayBase {
 		$out .= '</tr><tr>';
 
 		$key  = 'cc_field_' . $field . '_iframe';
-		$data = $this->form_fields[ $key ];
+		$data = isset( $this->form_fields[ $key ] ) ? $this->form_fields[ $key ] : null;
         if (!empty($data)) {
 		    $out  .= '<td>' . $this->generate_select_html_without_table_markup( $key, $data ) . '</td>';
         }
 
 		$key  = 'cc_field_' . $field . '_width';
-		$data = $this->form_fields[ $key ];
+		$data = isset( $this->form_fields[ $key ] ) ? $this->form_fields[ $key ] : null;
         if (!empty($data)) {
             $out .= '<td>' . $this->generate_text_html_without_table_markup($key, $data) . '</td>';
         }
 
 		$key  = 'cc_field_' . $field . '_height';
-		$data = $this->form_fields[ $key ];
+		$data = isset( $this->form_fields[ $key ] ) ? $this->form_fields[ $key ] : null;
         if (!empty($data)) {
             $out .= '<td>' . $this->generate_text_html_without_table_markup($key, $data) . '</td>';
         }

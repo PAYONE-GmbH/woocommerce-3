@@ -43,46 +43,54 @@ class Account extends Helper {
 			[ $this, 'field_mode' ],
 			'payone-settings-account',
 			'payone_account_settings' );
+		add_settings_section( 'payone_order_settings',
+			__( 'Orders and receipts', 'payone-woocommerce-3' ),
+			'__return_false',
+			'payone-settings-account' );
 		add_settings_field( 'submit_cart',
 			__( 'Submit cart', 'payone-woocommerce-3' ),
 			[ $this, 'field_submit_cart' ],
 			'payone-settings-account',
-			'payone_account_settings' );
+			'payone_order_settings' );
 		add_settings_field( 'activate_pdf_download',
 			__( 'Activate PDF download', 'payone-woocommerce-3' ),
 			[ $this, 'field_activate_pdf_download' ],
 			'payone-settings-account',
-			'payone_account_settings' );
+			'payone_order_settings' );
 		add_settings_field( 'dynamic_invoice_text',
 			__( 'Dynamic invoice text', 'payone-woocommerce-3' ),
 			[ $this, 'field_dynamic_invoice_text' ],
 			'payone-settings-account',
-			'payone_account_settings' );
+			'payone_order_settings' );
 		add_settings_field( 'dynamic_refund_text',
 			__( 'Dynamic refund text', 'payone-woocommerce-3' ),
 			[ $this, 'field_dynamic_refund_text' ],
 			'payone-settings-account',
-			'payone_account_settings' );
+			'payone_order_settings' );
 		add_settings_field( 'text_on_booking_statement',
 			__( 'Text on booking statement', 'payone-woocommerce-3' ),
 			[ $this, 'field_text_on_booking_statement' ],
 			'payone-settings-account',
-			'payone_account_settings' );
+			'payone_order_settings' );
+		add_settings_section( 'payone_log_settings',
+			__( 'Logging', 'payone-woocommerce-3' ),
+			[ $this, 'log_info' ],
+			'payone-settings-account' );
 		add_settings_field( 'api_log',
 			__( 'API-Log', 'payone-woocommerce-3' ),
 			[ $this, 'field_api_log' ],
 			'payone-settings-account',
-			'payone_account_settings' );
+			'payone_log_settings' );
 		add_settings_field( 'transaction_log',
 			__( 'Transaction Status Log', 'payone-woocommerce-3' ),
 			[ $this, 'field_transaction_log' ],
 			'payone-settings-account',
-			'payone_account_settings' );
+			'payone_log_settings' );
 		add_settings_field( 'payone_invoice_module_enabled',
 			__( 'Is PAYONE Invoice module enabled?', 'payone-woocommerce-3' ),
 			[ $this, 'payone_invoice_module_enabled' ],
 			'payone-settings-account',
-			'payone_account_settings' );
+			'payone_order_settings' );
 	}
 
 	/**
@@ -108,7 +116,13 @@ class Account extends Helper {
 	}
 
 	public function account_info() {
+		echo '<p>';
 		_e( 'Don\'t have a PAYONE Account yet? Click <a href="https://www.payone.com/DE-de/kampagne/ecom-testaccount" target="_blank" rel="noopener">here</a> to apply for test credentials.', 'payone-woocommerce-3' );
+		echo '</p>';
+	}
+
+	public function log_info() {
+		echo '<p>' . esc_html__( 'The logs are shown under PAYONE > API-Log and PAYONE > Transaction Status Log.', 'payone-woocommerce-3' ) . '</p>';
 	}
 
 	public function field_account_id() {
@@ -124,11 +138,11 @@ class Account extends Helper {
 	}
 
 	public function field_key() {
-		$this->textField( self::OPTION_NAME, 'key' );
+		$this->secretField( self::OPTION_NAME, 'key' );
 	}
 
 	public function field_mode() {
-		$this->selectField( self::OPTION_NAME,
+		$this->segmentedField( self::OPTION_NAME,
 			'mode',
 			[
 				'test' => __( 'Test', 'payone-woocommerce-3' ),
@@ -137,21 +151,11 @@ class Account extends Helper {
 	}
 
 	public function field_submit_cart() {
-		$this->selectField( self::OPTION_NAME,
-			'submit_cart',
-			[
-				'0' => __( 'No', 'payone-woocommerce-3' ),
-				'1' => __( 'Yes', 'payone-woocommerce-3' ),
-			] );
+		$this->switchField( self::OPTION_NAME, 'submit_cart' );
 	}
 
 	public function field_activate_pdf_download() {
-		$this->selectField( self::OPTION_NAME,
-			'activate_pdf_download',
-			[
-				'0' => __( 'No', 'payone-woocommerce-3' ),
-				'1' => __( 'Yes', 'payone-woocommerce-3' ),
-			] );
+		$this->switchField( self::OPTION_NAME, 'activate_pdf_download' );
 	}
 
 	public function field_dynamic_invoice_text() {
@@ -167,28 +171,15 @@ class Account extends Helper {
 	}
 
 	public function field_api_log() {
-		$this->selectField( self::OPTION_NAME,
-			'api_log',
-			[
-				'0' => __( 'Deactivated', 'payone-woocommerce-3' ),
-				'1' => __( 'Activated', 'payone-woocommerce-3' ),
-			] );
+		$this->switchField( self::OPTION_NAME, 'api_log' );
 	}
 
 	public function field_transaction_log() {
-		$this->selectField( self::OPTION_NAME,
-			'transaction_log',
-			[
-				'0' => __( 'Deactivated', 'payone-woocommerce-3' ),
-				'1' => __( 'Activated', 'payone-woocommerce-3' ),
-			] );
+		$this->switchField( self::OPTION_NAME, 'transaction_log' );
 	}
 
 	public function payone_invoice_module_enabled() {
-		$this->selectField( self::OPTION_NAME, 'payone_invoice_module_enabled', [
-			'0' => __( 'No', 'payone-woocommerce-3' ),
-			'1' => __( 'Yes', 'payone-woocommerce-3' ),
-		] );
+		$this->switchField( self::OPTION_NAME, 'payone_invoice_module_enabled' );
 	}
 
 	public function render() {
@@ -207,7 +198,15 @@ class Account extends Helper {
 			}
 		}
 
-		add_thickbox();
+		$options     = is_array( $this->options ) ? $this->options : [];
+		$is_live     = isset( $options['mode'] ) && $options['mode'] === 'live';
+		$is_complete = true;
+		foreach ( [ 'merchant_id', 'portal_id', 'account_id', 'key' ] as $required ) {
+			if ( empty( $options[ $required ] ) ) {
+				$is_complete = false;
+			}
+		}
+
 		include PAYONE_VIEW_PATH . '/admin/options.php';
 	}
 }
