@@ -1914,3 +1914,7 @@ msgid "%d entry"
 msgid_plural "%d entries"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/Payone/Plugin.php
+msgid "PAYONE transaction status \"%s\" received. This payment method is no longer supported by the plugin, please check the payment in the PAYONE Merchant Interface."
+msgstr ""

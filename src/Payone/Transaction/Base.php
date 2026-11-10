@@ -48,18 +48,6 @@ class Base extends Request {
 				\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID,
 				\Payone\Gateway\RatepayInstallments::GATEWAY_ID,
 				\Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID,
-				\Payone\Gateway\SecuredInvoice::GATEWAY_ID,
-				\Payone\Gateway\SecuredInstallment::GATEWAY_ID,
-			], true )
-		) {
-			return true;
-		}
-
-		// Für diese Gateways bei Capture immer die detaillierte Artikelliste mitsenden
-		if ( $this->get( 'request' ) === 'capture'
-		     && in_array( $this->gateway->id, [
-				\Payone\Gateway\SecuredInvoice::GATEWAY_ID,
-				\Payone\Gateway\SecuredInstallment::GATEWAY_ID,
 			], true )
 		) {
 			return true;

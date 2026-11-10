@@ -15,21 +15,6 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 	private $creditCardGateway = null;
 
 	/**
-	 * @var SecuredInvoice|null
-	 */
-	private $paylaSecuredInvoiceGateway = null;
-
-	/**
-	 * @var SecuredInstallment|null
-	 */
-	private $paylaSecuredInstallmentGateway = null;
-
-	/**
-	 * @var SecuredDirectDebit|null
-	 */
-	private $paylaSecuredDirectDebitGateway = null;
-
-	/**
 	 * @var RatepayOpenInvoice|null
 	 */
 	private $ratepayOpenInvoiceGateway = null;
@@ -98,51 +83,6 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			}
 		}
 		return $this->creditCardGateway;
-	}
-
-	/**
-	 * @return SecuredInvoice|null Returns null if gateway instantiation fails
-	 */
-	private function getPaylaSecuredInvoiceGateway() {
-		if ( $this->paylaSecuredInvoiceGateway === null ) {
-			try {
-				$this->paylaSecuredInvoiceGateway = new SecuredInvoice();
-			} catch ( \Exception $e ) {
-				error_log( 'PAYONE: Failed to instantiate SecuredInvoice Gateway: ' . $e->getMessage() );
-				return null;
-			}
-		}
-		return $this->paylaSecuredInvoiceGateway;
-	}
-
-	/**
-	 * @return SecuredInstallment|null Returns null if gateway instantiation fails
-	 */
-	private function getPaylaSecuredInstallmentGateway() {
-		if ( $this->paylaSecuredInstallmentGateway === null ) {
-			try {
-				$this->paylaSecuredInstallmentGateway = new SecuredInstallment();
-			} catch ( \Exception $e ) {
-				error_log( 'PAYONE: Failed to instantiate SecuredInstallment Gateway: ' . $e->getMessage() );
-				return null;
-			}
-		}
-		return $this->paylaSecuredInstallmentGateway;
-	}
-
-	/**
-	 * @return SecuredDirectDebit|null Returns null if gateway instantiation fails
-	 */
-	private function getPaylaSecuredDirectDebitGateway() {
-		if ( $this->paylaSecuredDirectDebitGateway === null ) {
-			try {
-				$this->paylaSecuredDirectDebitGateway = new SecuredDirectDebit();
-			} catch ( \Exception $e ) {
-				error_log( 'PAYONE: Failed to instantiate SecuredDirectDebit Gateway: ' . $e->getMessage() );
-				return null;
-			}
-		}
-		return $this->paylaSecuredDirectDebitGateway;
 	}
 
 	/**
@@ -332,20 +272,6 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		$data['ratepayCalculationUrl']        = Plugin::get_callback_url( [ 'type' => 'ajax-ratepay-calculate' ] );
 		$data['klarnaStartSessionUrl']        = Plugin::get_callback_url( [ 'type' => 'ajax-klarna-start-session' ] );
 		$data['sepaManageMandateUrl']         = Plugin::get_callback_url( [ 'type' => 'ajax-manage-mandate' ] );
-		$data['paylaConfig']                  = [
-			'environmentKey'                  => $this->getPaylaSecuredInvoiceGateway()->get_environment(),
-			'cssUrl'                          => $this->getPaylaSecuredInvoiceGateway()->get_client_css(),
-			'jsUrl'                           => $this->getPaylaSecuredInvoiceGateway()->get_client_js(),
-			'tokenSecuredInvoice'             => $this->getPaylaSecuredInvoiceGateway()->get_snippet_token(),
-			'tokenSecuredInstallment'         => $this->getPaylaSecuredInstallmentGateway()->get_snippet_token(),
-			'tokenSecuredDirectDebit'         => $this->getPaylaSecuredDirectDebitGateway()->get_snippet_token(),
-			'urlSecuredInstallment'           => Plugin::get_callback_url( [ 'type' => 'ajax-secured-installment-options' ] ),
-			'allowDifferentShippingAddress'   => [
-                'payone_secured_invoice'      => $this->getPaylaSecuredInvoiceGateway()->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
-                'payone_secured_installment'  => $this->getPaylaSecuredInstallmentGateway()->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
-                'payone_secured_direct_debit' => $this->getPaylaSecuredDirectDebitGateway()->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
-            ],
-		];
 		$data['ratepayConfig']                = [
 			'allowDifferentShippingAddress'   => [
                 'payone_ratepay_open_invoice'  => $this->getRatepayOpenInvoiceGateway()->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
