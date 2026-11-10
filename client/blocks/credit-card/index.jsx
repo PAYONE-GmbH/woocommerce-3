@@ -10,7 +10,6 @@ window.creditCardCheckCallbackEventProxy = (response) => {
 const PayoneCreditCard = ({
     eventRegistration,
     emitResponse,
-    onSubmit,
 }) => {
     // Data from PayoneBlocksSupport.php - get_payment_method_data()
     const {
@@ -30,32 +29,26 @@ const PayoneCreditCard = ({
     const [detectedCardType, setDetectedCardType] = useState('');
     const autoDetection = Boolean(payoneConfig?.autoCardtypeDetection);
     const modernStyle = Boolean(payoneConfig?.modernStyle);
-    const [payoneCheckSucceeded, setPayoneCheckSucceeded] = useState(false);
-    const [paymentMethodData, setPaymentMethodData] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(null);
+    // Result of the last successful credit card check; read by onPaymentSetup.
+    const paymentMethodData = useRef(null);
+    // Resolves the pending credit card check started in onCheckoutValidation.
+    const pendingCheck = useRef(null);
     const payoneIFrames = useRef(null);
     const cardHolderInput = useRef(null);
     const cardTypeInput = useRef(null);
 
     useEffect(() => {
-        window.addEventListener('creditCardCheckCallbackEvent', ({detail}) => {
-            if (detail.status === 'VALID') {
-                setPayoneCheckSucceeded(true);
-
-                setPaymentMethodData({
-                    card_holder: cardHolderInput.current?.value || '',
-                    card_pseudopan: detail.pseudocardpan,
-                    card_truncatedpan: detail.truncatedcardpan,
-                    card_type: detail.cardtype,
-                    card_expiredate: detail.cardexpiredate,
-                });
-
-                // Re-Trigger payment processing
-                onSubmit();
-            } else if (detail.errormessage) {
-                setErrorMessage(detail.errormessage);
+        const handleCheckResult = ({detail}) => {
+            if (!pendingCheck.current) {
+                return;
             }
-        });
+            const resolve = pendingCheck.current;
+            pendingCheck.current = null;
+            resolve(detail);
+        };
+        window.addEventListener('creditCardCheckCallbackEvent', handleCheckResult);
+
+        return () => window.removeEventListener('creditCardCheckCallbackEvent', handleCheckResult);
     }, []);
 
     useEffect(() => {
@@ -104,46 +97,61 @@ const PayoneCreditCard = ({
         payoneIFrames.current = new Payone.ClientApi.HostedIFrames(iframeConfig, creditCardCheckRequestConfig);
     }, [creditCardCheckRequestConfig, payoneConfig]);
 
+    // WooCommerce waits for this observer, so the credit card check runs before the order is placed.
+    // Errors must be returned as an observer response, plain `false` does not stop the checkout.
     useEffect(() => onCheckoutValidation(async () => {
-        if (payoneCheckSucceeded) {
-            // Skip the test, as it already succeeded.
-            return true;
-        }
+        const validationError = (errorMessage) => ({
+            type: responseTypes.ERROR,
+            errorMessage,
+            context: noticeContexts.PAYMENTS,
+        });
+
+        paymentMethodData.current = null;
 
         if (cardHolder.length > 50 || cardHolder.match(/[^a-zA-Z \-äöüÄÖÜß]/g)) {
-            return setErrorMessage(__(
+            return validationError(__(
                 // eslint-disable-next-line max-len
                 'Bitte geben Sie maximal 50 Zeichen für den Karteninhaber ein, Sonderzeichen außer Deutsche Umlaute und einem Bindestrich sind nicht erlaubt.',
                 'payone-woocommerce-3',
             ));
         }
 
-        if (!payoneIFrames.current.isComplete()) {
-            return setErrorMessage(__(
+        if (!payoneIFrames.current || !payoneIFrames.current.isComplete()) {
+            return validationError(__(
                 'Bitte Formular vollständig ausfüllen!',
                 'payone-woocommerce-3',
             ));
         }
 
-        payoneIFrames.current.creditCardCheck('creditCardCheckCallbackEventProxy');
+        const detail = await new Promise((resolve) => {
+            pendingCheck.current = resolve;
+            payoneIFrames.current.creditCardCheck('creditCardCheckCallbackEventProxy');
+        });
 
-        // Prevent automatical submit
-        return false;
-    }), [onCheckoutValidation, payoneCheckSucceeded, cardHolder]);
-
-    useEffect(() => onPaymentSetup(() => {
-        if (errorMessage) {
-            return {
-                type: responseTypes.ERROR,
-                message: errorMessage,
-            };
+        if (detail?.status !== 'VALID') {
+            return validationError(detail?.errormessage || __(
+                'Die Zahlung konnte nicht erfolgreich durchgeführt werden.',
+                'payone-woocommerce-3',
+            ));
         }
 
-        if (payoneCheckSucceeded) {
+        paymentMethodData.current = {
+            card_holder: cardHolderInput.current?.value || '',
+            card_pseudopan: detail.pseudocardpan,
+            card_truncatedpan: detail.truncatedcardpan,
+            card_type: detail.cardtype,
+            card_expiredate: detail.cardexpiredate,
+        };
+
+        return true;
+    }), [onCheckoutValidation, cardHolder]);
+
+    useEffect(() => onPaymentSetup(() => {
+        if (paymentMethodData.current) {
             return {
                 type: responseTypes.SUCCESS,
                 meta: {
-                    paymentMethodData,
+                    paymentMethodData: paymentMethodData.current,
                 },
             };
         }
@@ -155,7 +163,7 @@ const PayoneCreditCard = ({
                 'payone-woocommerce-3',
             ),
         };
-    }), [onPaymentSetup, paymentMethodData, errorMessage]);
+    }), [onPaymentSetup]);
 
     // hook into and register callbacks for events.
     useEffect(() => {
