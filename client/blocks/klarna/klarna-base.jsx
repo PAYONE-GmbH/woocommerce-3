@@ -7,15 +7,12 @@ import KlarnaService from './KlarnaService';
 export default function KlarnaBase(props) {
     const {
         eventRegistration: {onPaymentSetup, onCheckoutValidation},
-        emitResponse: {responseTypes},
-        onSubmit,
+        emitResponse: {responseTypes, noticeContexts},
     } = props;
     const {klarnaCategory, label} = props;
 
     const [widgetShown, setWidgetShown] = useState(false);
     const [klarnaWorkOrderId, setKlarnaWorkOrderId] = useState(null);
-    const [paymentMethodData, setPaymentMethodData] = useState(null);
-    const [klarnaCheckSucceeded, setKlarnaCheckSucceeded] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
     const [klarnaData, setKlarnaData] = useState(null);
     const {klarnaStartSessionUrl} = wc.wcSettings.getSetting('payone_data');
@@ -87,94 +84,95 @@ export default function KlarnaBase(props) {
 
     useEffect(() => initKlarnaWidget(), []);
 
+    // WooCommerce waits for this observer, so Klarna authorizes before the order is placed.
+    // Errors must be returned as an observer response, plain `false` does not stop the checkout.
     useEffect(() => onCheckoutValidation(async () => {
+        const validationError = (message) => ({
+            type: responseTypes.ERROR,
+            errorMessage: message,
+            context: noticeContexts.PAYMENTS,
+        });
+
         if (klarnaCheckSucceededRef.current) {
             // Skip the test, as it already succeeded.
             return true;
         }
 
         if (errorMessage) {
-            return {
-                errorMessage,
-            };
+            if (!widgetShown) {
+                initKlarnaWidget();
+            }
+
+            return validationError(errorMessage);
+        }
+
+        if (!widgetShown) {
+            initKlarnaWidget();
+
+            return validationError(__(
+                'Die Zahlung konnte nicht erfolgreich durchgeführt werden.',
+                'payone-woocommerce-3',
+            ));
         }
 
         const store = select(CART_STORE_KEY);
         const {billingAddress} = store.getCartData();
 
-        Klarna.Payments.authorize(
-            {payment_method_category: klarnaCategory},
-            klarnaData,
-            (klarnaResult) => {
-                if (!klarnaResult.approved && !klarnaResult.show_form) {
-                    setErrorMessage(__(
-                        `${label} kann nicht genutzt werden!`,
-                        'payone-woocommerce-3',
-                    ));
-                } else if (!klarnaResult.approved) {
-                    setErrorMessage(__(
-                        'Der Vorgang wurde abgebrochen',
-                        'payone-woocommerce-3',
-                    ));
-                } else {
-                    const data = {
-                        klarna_authorization_token: klarnaResult.authorization_token,
-                        klarna_workorderid: klarnaWorkOrderId,
-                        klarna_shipping_email: billingAddress.email,
-                        klarna_shipping_telephonenumber: billingAddress.phone,
-                    };
-
-                    paymentMethodDataRef.current = data;
-                    klarnaCheckSucceededRef.current = true;
-
-                    setErrorMessage(null);
-                    setPaymentMethodData(data);
-                    setKlarnaCheckSucceeded(true);
-                }
-            },
-        );
-
-        // Prevent automatical submit
-        return false;
-    }), [onCheckoutValidation, klarnaCheckSucceeded, klarnaWorkOrderId, klarnaData, errorMessage]);
-
-    useEffect(() => {
-        const unsubscribe = onPaymentSetup(() => {
-            if (errorMessage) {
-                return {
-                    type: responseTypes.ERROR,
-                    message: errorMessage,
-                };
-            }
-
-            if (!widgetShown) {
-                initKlarnaWidget();
-            }
-
-            if (klarnaCheckSucceededRef.current && paymentMethodDataRef.current) {
-                return {
-                    type: responseTypes.SUCCESS,
-                    meta: {
-                        paymentMethodData: paymentMethodDataRef.current,
-                    },
-                };
-            }
-
-            return {
-                type: responseTypes.ERROR,
-                message: __(
-                    'Die Zahlung konnte nicht erfolgreich durchgeführt werden.',
-                    'payone-woocommerce-3',
-                ),
-            };
+        const klarnaResult = await new Promise((resolve) => {
+            Klarna.Payments.authorize(
+                {payment_method_category: klarnaCategory},
+                klarnaData,
+                resolve,
+            );
         });
 
-        if (klarnaCheckSucceeded && paymentMethodData) {
-            onSubmit();
+        if (!klarnaResult.approved && !klarnaResult.show_form) {
+            const message = __(
+                `${label} kann nicht genutzt werden!`,
+                'payone-woocommerce-3',
+            );
+            setErrorMessage(message);
+
+            return validationError(message);
         }
 
-        return unsubscribe;
-    }, [onPaymentSetup, klarnaCheckSucceeded, paymentMethodData]);
+        if (!klarnaResult.approved) {
+            return validationError(__(
+                'Der Vorgang wurde abgebrochen',
+                'payone-woocommerce-3',
+            ));
+        }
+
+        paymentMethodDataRef.current = {
+            klarna_authorization_token: klarnaResult.authorization_token,
+            klarna_workorderid: klarnaWorkOrderId,
+            klarna_shipping_email: billingAddress.email,
+            klarna_shipping_telephonenumber: billingAddress.phone,
+        };
+        klarnaCheckSucceededRef.current = true;
+        setErrorMessage(null);
+
+        return true;
+    }), [onCheckoutValidation, klarnaWorkOrderId, klarnaData, errorMessage, widgetShown]);
+
+    useEffect(() => onPaymentSetup(() => {
+        if (klarnaCheckSucceededRef.current && paymentMethodDataRef.current) {
+            return {
+                type: responseTypes.SUCCESS,
+                meta: {
+                    paymentMethodData: paymentMethodDataRef.current,
+                },
+            };
+        }
+
+        return {
+            type: responseTypes.ERROR,
+            message: __(
+                'Die Zahlung konnte nicht erfolgreich durchgeführt werden.',
+                'payone-woocommerce-3',
+            ),
+        };
+    }), [onPaymentSetup]);
 
     return (
         <>

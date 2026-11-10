@@ -1,4 +1,4 @@
-import {useEffect, useState} from '@wordpress/element';
+import {useEffect, useRef, useState} from '@wordpress/element';
 import {select} from '@wordpress/data';
 import {__} from '@wordpress/i18n';
 import IBAN from 'iban';
@@ -10,29 +10,40 @@ const PAYONE_TEST_IBAN = 'DE00123456782599100003';
 
 const SepaDirectDebit = ({
     eventRegistration: {onPaymentSetup, onCheckoutValidation},
-    emitResponse: {responseTypes},
-    onSubmit,
+    emitResponse: {responseTypes, noticeContexts},
 }) => {
     const {sepaManageMandateUrl} = wc.wcSettings.getSetting('payone_data');
     const {CART_STORE_KEY} = wc.wcBlocksData;
 
     const [iban, setIban] = useState('');
-    const [mandateCheckSucceeded, setMandateCheckSucceeded] = useState(false);
     const [showConfirmationCheck, setShowConfirmationCheck] = useState(false);
     const [confirmationChecked, setConfirmationChecked] = useState(true);
     const [mandateConfirmationText, setMandateConfirmationText] = useState('');
     const [mandateReference, setMandateReference] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    // Payment data of the confirmed mandate; read by onPaymentSetup.
+    const paymentMethodData = useRef(null);
 
+    // WooCommerce waits for this observer, so the mandate is managed before the order is placed.
+    // Errors must be returned as an observer response, plain `false` does not stop the checkout.
     useEffect(() => onCheckoutValidation(async () => {
-        if (mandateCheckSucceeded) {
-            // Skip the test, as it already succeeded.
+        const validationError = (errorMessage) => ({
+            type: responseTypes.ERROR,
+            errorMessage,
+            context: noticeContexts.PAYMENTS,
+        });
+        const confirmationRequired = () => validationError(__(
+            'Du musst diese Checkbox ankreuzen, um fortfahren zu können\n',
+            'payone-woocommerce-3',
+        ));
+
+        if (paymentMethodData.current?.direct_debit_iban === iban) {
+            // Mandate for this IBAN already confirmed.
             return true;
         }
+        paymentMethodData.current = null;
 
-        if (errorMessage) {
-            setErrorMessage('');
-            return false;
+        if (showConfirmationCheck && !confirmationChecked) {
+            return confirmationRequired();
         }
 
         const store = select(CART_STORE_KEY);
@@ -43,102 +54,81 @@ const SepaDirectDebit = ({
         body.append('lastname', billingAddress.last_name);
         body.append('country', billingAddress.country);
         body.append('city', billingAddress.city);
-        body.append('confirmation_check', confirmationChecked ? 1 : 0);
+        body.append('confirmation_check', showConfirmationCheck ? (confirmationChecked ? 1 : 0) : -1);
         body.append('mandate_identification', mandateReference);
         body.append('iban', iban);
 
-        if (!showConfirmationCheck) {
-            body.set('confirmation_check', -1);
+        let json;
+        try {
+            const response = await fetch(sepaManageMandateUrl, {
+                method: 'POST',
+                body,
+            });
+            json = await response.json();
+        } catch (e) {
+            json = null;
         }
 
-        setMandateCheckSucceeded(false);
-
-        fetch(sepaManageMandateUrl, {
-            method: 'POST',
-            body,
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                if (json.status === 'error') {
-                    setErrorMessage(json.message);
-                } else if (json.status === 'active') {
-                    setMandateReference(json.reference);
-                    setMandateCheckSucceeded(true);
-                    setMandateConfirmationText('');
-                    setShowConfirmationCheck(false);
-
-                    // Re-Trigger payment processing
-                    onSubmit();
-                } else if (json.status === 'pending') {
-                    setMandateReference(json.reference);
-
-                    // If has re-submitted after confirmation
-                    if (showConfirmationCheck && confirmationChecked) {
-                        setMandateCheckSucceeded(true);
-                        setMandateConfirmationText('');
-                        setShowConfirmationCheck(false);
-                    } else {
-                        setConfirmationChecked(false);
-                        setMandateConfirmationText(json.text);
-                        setShowConfirmationCheck(true);
-                    }
-                }
-            });
-
-        // Prevent automatical submit
-        return false;
-    }), [onCheckoutValidation, mandateCheckSucceeded, confirmationChecked, mandateReference, iban, errorMessage]);
-
-    useEffect(() => {
-        return onPaymentSetup(() => {
-            if (errorMessage) {
-                return {
-                    type: responseTypes.ERROR,
-                    message: errorMessage,
-                };
-            }
-
-            if (showConfirmationCheck && !confirmationChecked) {
-                return {
-                    type: responseTypes.ERROR,
-                    message: __(
-                        'Du musst diese Checkbox ankreuzen, um fortfahren zu können\n',
-                        'payone-woocommerce-3',
-                    ),
-                };
-            }
-
-            if (mandateReference) {
-                return {
-                    type: responseTypes.SUCCESS,
-                    meta: {
-                        paymentMethodData: {
-                            direct_debit_iban: iban,
-                            direct_debit_confirmation_check: confirmationChecked ? 1 : 0,
-                            direct_debit_reference: mandateReference,
-                        },
-                    },
-                };
-            }
-
-            return {
-                type: responseTypes.ERROR,
+        const confirmMandate = (reference) => {
+            paymentMethodData.current = {
+                direct_debit_iban: iban,
+                direct_debit_confirmation_check: confirmationChecked ? 1 : 0,
+                direct_debit_reference: reference,
             };
-        });
-    }, [
-        onPaymentSetup,
-        mandateCheckSucceeded,
-        errorMessage,
-        iban,
-        mandateReference,
-        confirmationChecked,
-        showConfirmationCheck,
-    ]);
+            setMandateConfirmationText('');
+            setShowConfirmationCheck(false);
+
+            return true;
+        };
+
+        if (json?.status === 'active') {
+            setMandateReference(json.reference);
+
+            return confirmMandate(json.reference);
+        }
+
+        if (json?.status === 'pending') {
+            setMandateReference(json.reference);
+
+            // Re-submitted after the customer confirmed the mandate text.
+            if (showConfirmationCheck && confirmationChecked) {
+                return confirmMandate(json.reference);
+            }
+
+            setConfirmationChecked(false);
+            setMandateConfirmationText(json.text);
+            setShowConfirmationCheck(true);
+
+            return confirmationRequired();
+        }
+
+        return validationError(json?.message || __(
+            'Die Zahlung konnte nicht erfolgreich durchgeführt werden.',
+            'payone-woocommerce-3',
+        ));
+    }), [onCheckoutValidation, confirmationChecked, showConfirmationCheck, mandateReference, iban]);
+
+    useEffect(() => onPaymentSetup(() => {
+        if (paymentMethodData.current) {
+            return {
+                type: responseTypes.SUCCESS,
+                meta: {
+                    paymentMethodData: paymentMethodData.current,
+                },
+            };
+        }
+
+        return {
+            type: responseTypes.ERROR,
+            message: __(
+                'Die Zahlung konnte nicht erfolgreich durchgeführt werden.',
+                'payone-woocommerce-3',
+            ),
+        };
+    }), [onPaymentSetup]);
 
     return (
         <>
-            {errorMessage ? <strong style={{color: 'red'}}>{errorMessage}</strong> : null}
-
             <ValidatedTextInput
                 id="direct_debit_iban_field"
                 type="text"
