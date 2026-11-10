@@ -48,18 +48,6 @@ class Base extends Request {
 				\Payone\Gateway\RatepayDirectDebit::GATEWAY_ID,
 				\Payone\Gateway\RatepayInstallments::GATEWAY_ID,
 				\Payone\Gateway\RatepayOpenInvoice::GATEWAY_ID,
-				\Payone\Gateway\SecuredInvoice::GATEWAY_ID,
-				\Payone\Gateway\SecuredInstallment::GATEWAY_ID,
-			], true )
-		) {
-			return true;
-		}
-
-		// Für diese Gateways bei Capture immer die detaillierte Artikelliste mitsenden
-		if ( $this->get( 'request' ) === 'capture'
-		     && in_array( $this->gateway->id, [
-				\Payone\Gateway\SecuredInvoice::GATEWAY_ID,
-				\Payone\Gateway\SecuredInstallment::GATEWAY_ID,
 			], true )
 		) {
 			return true;
@@ -492,7 +480,7 @@ class Base extends Request {
 			$va             = Plugin::get_tax_rate_for_total( $refund_data['shipping_total'], $refund_data['shipping_tax'] );
 			$articles[ $n ] = [
 				'id' => 'shipment-' . $n,
-				'pr' => 100 * ( $refund_data['shipping_total'] + $refund_data['shipping_tax'] ),
+				'pr' => (int) round( 100 * ( $refund_data['shipping_total'] + $refund_data['shipping_tax'] ) ),
 				'no' => 1,
 				'de' => __( 'Shipping', 'payone-woocommerce-3' ),
 				'va' => 100 * $va,

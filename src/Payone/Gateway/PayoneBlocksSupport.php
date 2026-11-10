@@ -15,21 +15,6 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 	private $creditCardGateway = null;
 
 	/**
-	 * @var SecuredInvoice|null
-	 */
-	private $paylaSecuredInvoiceGateway = null;
-
-	/**
-	 * @var SecuredInstallment|null
-	 */
-	private $paylaSecuredInstallmentGateway = null;
-
-	/**
-	 * @var SecuredDirectDebit|null
-	 */
-	private $paylaSecuredDirectDebitGateway = null;
-
-	/**
 	 * @var RatepayOpenInvoice|null
 	 */
 	private $ratepayOpenInvoiceGateway = null;
@@ -64,6 +49,11 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 	 */
 	private $googlePayGateway = null;
 
+	/**
+	 * @var CreditCardHtp|null
+	 */
+	private $creditCardHtpGateway = null;
+
 	public function initialize() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'client_styles' ] );
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [
@@ -93,51 +83,6 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			}
 		}
 		return $this->creditCardGateway;
-	}
-
-	/**
-	 * @return SecuredInvoice|null Returns null if gateway instantiation fails
-	 */
-	private function getPaylaSecuredInvoiceGateway() {
-		if ( $this->paylaSecuredInvoiceGateway === null ) {
-			try {
-				$this->paylaSecuredInvoiceGateway = new SecuredInvoice();
-			} catch ( \Exception $e ) {
-				error_log( 'PAYONE: Failed to instantiate SecuredInvoice Gateway: ' . $e->getMessage() );
-				return null;
-			}
-		}
-		return $this->paylaSecuredInvoiceGateway;
-	}
-
-	/**
-	 * @return SecuredInstallment|null Returns null if gateway instantiation fails
-	 */
-	private function getPaylaSecuredInstallmentGateway() {
-		if ( $this->paylaSecuredInstallmentGateway === null ) {
-			try {
-				$this->paylaSecuredInstallmentGateway = new SecuredInstallment();
-			} catch ( \Exception $e ) {
-				error_log( 'PAYONE: Failed to instantiate SecuredInstallment Gateway: ' . $e->getMessage() );
-				return null;
-			}
-		}
-		return $this->paylaSecuredInstallmentGateway;
-	}
-
-	/**
-	 * @return SecuredDirectDebit|null Returns null if gateway instantiation fails
-	 */
-	private function getPaylaSecuredDirectDebitGateway() {
-		if ( $this->paylaSecuredDirectDebitGateway === null ) {
-			try {
-				$this->paylaSecuredDirectDebitGateway = new SecuredDirectDebit();
-			} catch ( \Exception $e ) {
-				error_log( 'PAYONE: Failed to instantiate SecuredDirectDebit Gateway: ' . $e->getMessage() );
-				return null;
-			}
-		}
-		return $this->paylaSecuredDirectDebitGateway;
 	}
 
 	/**
@@ -246,6 +191,21 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 	}
 
 	/**
+	 * @return CreditCardHtp|null Returns null if gateway instantiation fails
+	 */
+	private function getCreditCardHtpGateway() {
+		if ( $this->creditCardHtpGateway === null ) {
+			try {
+				$this->creditCardHtpGateway = new CreditCardHtp();
+			} catch ( \Exception $e ) {
+				error_log( 'PAYONE: Failed to instantiate CreditCardHtp Gateway: ' . $e->getMessage() );
+				return null;
+			}
+		}
+		return $this->creditCardHtpGateway;
+	}
+
+	/**
 	 * In this function you should register your payment method scripts (using wp_register_script) and then return the
 	 * script handles you registered with. This will be used to add your payment method as a dependency of the checkout
 	 * script and thus take sure of loading it correctly.
@@ -312,20 +272,6 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		$data['ratepayCalculationUrl']        = Plugin::get_callback_url( [ 'type' => 'ajax-ratepay-calculate' ] );
 		$data['klarnaStartSessionUrl']        = Plugin::get_callback_url( [ 'type' => 'ajax-klarna-start-session' ] );
 		$data['sepaManageMandateUrl']         = Plugin::get_callback_url( [ 'type' => 'ajax-manage-mandate' ] );
-		$data['paylaConfig']                  = [
-			'environmentKey'                  => $this->getPaylaSecuredInvoiceGateway()->get_environment(),
-			'cssUrl'                          => $this->getPaylaSecuredInvoiceGateway()->get_client_css(),
-			'jsUrl'                           => $this->getPaylaSecuredInvoiceGateway()->get_client_js(),
-			'tokenSecuredInvoice'             => $this->getPaylaSecuredInvoiceGateway()->get_snippet_token(),
-			'tokenSecuredInstallment'         => $this->getPaylaSecuredInstallmentGateway()->get_snippet_token(),
-			'tokenSecuredDirectDebit'         => $this->getPaylaSecuredDirectDebitGateway()->get_snippet_token(),
-			'urlSecuredInstallment'           => Plugin::get_callback_url( [ 'type' => 'ajax-secured-installment-options' ] ),
-			'allowDifferentShippingAddress'   => [
-                'payone_secured_invoice'      => $this->getPaylaSecuredInvoiceGateway()->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
-                'payone_secured_installment'  => $this->getPaylaSecuredInstallmentGateway()->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
-                'payone_secured_direct_debit' => $this->getPaylaSecuredDirectDebitGateway()->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
-            ],
-		];
 		$data['ratepayConfig']                = [
 			'allowDifferentShippingAddress'   => [
                 'payone_ratepay_open_invoice'  => $this->getRatepayOpenInvoiceGateway()->get_option( 'allow_different_shopping_address', 'no' ) === 'yes',
@@ -373,6 +319,9 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			'merchantName'        => $googlePayGateway->get_googlepay_merchant_name(),
 			'environment'         => $googlePayGateway->get_mode() === 'test' ? 'TEST' : 'PRODUCTION',
 		];
+
+		$creditCardHtpGateway = $this->getCreditCardHtpGateway();
+		$data['creditCardHtpConfig'] = $creditCardHtpGateway ? $creditCardHtpGateway->get_htp_config() : null;
 
 		// TODO: installmentMonthOptions müssen hier befüllt werden
 		$data['installmentMonthOptions'] = [
@@ -501,6 +450,12 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 		if ( $context->payment_type === CreditCard::GATEWAY_ID ) {
 			$_POST['card_pseudopan'] = $data['card_pseudopan'];
 			$_POST['card_holder']    = $data['card_holder'];
+		}
+
+		if ( $context->payment_type === CreditCardHtp::GATEWAY_ID ) {
+			foreach ( [ 'card_pseudopan', 'card_holder', 'card_input_mode', 'card_type' ] as $field ) {
+				$_POST[ $field ] = isset( $data[ $field ] ) ? $data[ $field ] : '';
+			}
 		}
 
 		if ( $context->payment_type === Eps::GATEWAY_ID ) {

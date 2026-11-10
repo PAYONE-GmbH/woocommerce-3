@@ -1,11 +1,17 @@
 name: gitleaks
 
-on: [push,pull_request]
+on: [push, pull_request]
+
+permissions:
+  contents: read
 
 jobs:
   gitleaks:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: gitleaks-action
-      uses: gitleaks/gitleaks-action
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    # Runs the gitleaks CLI directly; gitleaks-action v2 needs a license key for organization repositories.
+    - name: gitleaks
+      run: docker run --rm -v "$GITHUB_WORKSPACE:/repo" ghcr.io/gitleaks/gitleaks:v8.28.0 git /repo --redact --no-banner -v
