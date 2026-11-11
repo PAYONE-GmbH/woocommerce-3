@@ -341,20 +341,7 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
 			return [];
 		}
 
-		$brands = $gateway->get_option( 'cc_brands' );
-		if ( ! is_array( $brands ) ) {
-			return [];
-		}
-
-		return array_map(
-			function ( $brand ) use ( $gateway ) {
-				return [
-					'value' => $brand,
-					'title' => $gateway->get_option( 'cc_brand_label_' . $brand ),
-				];
-			},
-			$brands
-		);
+		return $gateway->get_card_brands();
 	}
 
 	private function get_credit_card_check_request() {

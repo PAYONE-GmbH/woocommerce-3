@@ -42,3 +42,144 @@
     display: flex;
     gap: 10px;
 }
+
+/* Credit card: brand logos for automatic card type detection */
+.payone-cc-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+}
+
+.payone-cc-brands {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.payone-cc-brand {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    transition: opacity .15s ease, filter .15s ease;
+}
+
+.payone-cc-brand img {
+    display: block;
+    height: 22px;
+    width: auto;
+    border-radius: 3px;
+}
+
+.payone-cc-brand__text {
+    font-size: 11px;
+    line-height: 20px;
+    padding: 0 5px;
+    border: 1px solid #c3c4c7;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.payone-cc-brands.has-active .payone-cc-brand:not(.is-active) {
+    opacity: .25;
+    filter: grayscale(1);
+}
+
+/* Credit card: modern look (as long as the default styles were not changed) */
+.payone-cc-form--modern {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.payone-cc-form--modern .form-row {
+    margin: 0 0 14px;
+    padding: 0;
+}
+
+.payone-cc-form--modern label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: .9em;
+}
+
+.payone-cc-form--modern .payone-cc-label-row label {
+    margin-bottom: 0;
+}
+
+.payone-cc-form--modern .payone-cc-label-row {
+    margin-bottom: 4px;
+}
+
+.payone-cc-form--modern .payoneInput,
+.payone-cc-form--modern .payoneSelect {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 12px !important;
+    margin: 0 !important;
+    font-size: 16px !important;
+    font-family: inherit !important;
+    color: #1e1e1e !important;
+    background-color: #fff !important;
+    border: 1px solid #8c8f94 !important;
+    border-radius: 6px !important;
+}
+
+.payone-cc-form--modern .payoneInput:focus,
+.payone-cc-form--modern .payoneSelect:focus {
+    border-color: #2271b1 !important;
+    box-shadow: 0 0 0 1px #2271b1 !important;
+}
+
+.payone-cc-form--modern #cardpan,
+.payone-cc-form--modern #cardcvc2,
+.payone-cc-form--modern #cardexpiremonth,
+.payone-cc-form--modern #cardexpireyear {
+    display: block;
+    box-sizing: border-box;
+    height: 44px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #8c8f94;
+    border-radius: 6px;
+}
+
+.payone-cc-form--modern .inputIframe {
+    margin-bottom: 0;
+}
+
+.payone-cc-form--modern .inputIframe iframe {
+    padding-right: 0;
+    width: 100%;
+}
+
+.payone-cc-form--modern #expireInput {
+    gap: 8px;
+}
+
+.payone-cc-form--modern #cardexpiremonth,
+.payone-cc-form--modern #cardexpireyear {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.payone-cc-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+}
+
+.payone-cc-row .form-row {
+    width: auto !important;
+    float: none !important;
+}
+
+@media (max-width: 480px) {
+    .payone-cc-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}

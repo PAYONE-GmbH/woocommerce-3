@@ -1938,3 +1938,11 @@ msgstr[1] "%d Einträge"
 #: src/Payone/Plugin.php
 msgid "PAYONE transaction status \"%s\" received. This payment method is no longer supported by the plugin, please check the payment in the PAYONE Merchant Interface."
 msgstr "PAYONE-Transaktionsstatus \"%s\" empfangen. Diese Zahlart wird vom Plugin nicht mehr unterstützt, bitte prüfen Sie die Zahlung im PAYONE Merchant Interface."
+
+#: src/Payone/Gateway/CreditCard.php
+msgid "Automatic card type detection"
+msgstr "Automatische Kartentyp-Erkennung"
+
+#: src/Payone/Gateway/CreditCard.php
+msgid "Detects the card brand from the card number and shows its logo. The customer no longer selects the card type."
+msgstr "Erkennt die Kartenmarke an der Kartennummer und zeigt ihr Logo. Der Kunde muss den Kartentyp nicht mehr auswählen."
