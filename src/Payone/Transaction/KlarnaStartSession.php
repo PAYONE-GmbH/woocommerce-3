@@ -31,7 +31,8 @@ class KlarnaStartSession extends Base {
 	public function get_data_for_authorization( \WC_Cart $cart ) {
 		$tax_totals = $cart->get_tax_totals();
 		$tax_item   = array_shift( $tax_totals ); // @todo
-		$tax_amount = $tax_item->amount;
+		// Shops without taxes have no tax totals.
+		$tax_amount = $tax_item ? $tax_item->amount : 0;
 
 		$data = [
 			'purchase_country'  => $this->get( 'country' ),
