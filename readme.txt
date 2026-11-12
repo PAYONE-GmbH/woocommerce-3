@@ -3,7 +3,7 @@ Contributors: PAYONE
 Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
-Tested up to: 10.6.2
+Tested up to: 11.2.1
 Stable tag: 2.8.0
 Requires PHP: 7.4.0
 License: MIT
@@ -70,6 +70,31 @@ If you have found anything security related, please contact our technical suppor
 == Screenshots ==
 
 == Changelog ==
+
+== 2.12.0 ==
+
+New Features
+
+* new payment method: Click-to-pay
+* credit card: automatic card type detection and modernized form
+* SEPA Direct Debit (blocks): the mandate is shown right after entering the IBAN
+* modernized admin settings and log pages
+
+Bugfixes
+
+* PayPal Express (v1): button was missing in the cart and checkout blocks
+* credit card, SEPA and Klarna (blocks): the order is only placed after the payment check has finished
+* Klarna: session start works in shops without taxes
+* prepayment: API errors are handled and shown to the customer
+* fixed shipping state for JP, TH, CN, MX and IN (error 1369)
+* fixed rounding issues with shipping costs and refunds
+
+Maintenance
+
+* removed PAYONE Secured Invoice, Secured Installment and Secured Direct Debit
+* tested with
+Wordpress version: 7.1.3
+WooCommerce version: 11.2.1
 
 == 2.11.0 ==
 
