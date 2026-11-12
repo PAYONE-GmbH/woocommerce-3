@@ -17,6 +17,16 @@ class PayPalExpress extends PayPalBase {
 
 		$this->pay_button_id = 'payone-paypal-express-button';
 		$this->supports[]    = 'pay_button';
+		$this->supports[]    = 'blocks';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_button_image_url() {
+		$image_url = PAYONE_PLUGIN_URL . 'assets/' . __( 'checkout-paypal-en.png', 'payone-woocommerce-3' );
+
+		return apply_filters( 'payone_paypal_express_button_image_url', $image_url );
 	}
 
 	/**

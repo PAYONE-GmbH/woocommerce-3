@@ -291,6 +291,19 @@ class PayoneBlocksSupport extends AbstractPaymentMethodType {
         $data['paypalConfig']                 = [
             'isAvailable' => Plugin::find_gateway(PayPal::GATEWAY_ID)->is_available(),
         ];
+
+		// Like the classic cart (views/gateway/common/cart.js.php): opening the cart starts a new
+		// PayPal Express checkout, so an unfinished one does not hide the button.
+		if ( is_cart() ) {
+			Plugin::delete_session_value( PayPalExpress::SESSION_KEY_WORKORDERID );
+		}
+		$paypalExpressGateway          = Plugin::find_gateway( PayPalExpress::GATEWAY_ID );
+		$data['paypalV1ExpressConfig'] = [
+			'isAvailable'       => $paypalExpressGateway ? $paypalExpressGateway->is_available() : false,
+			'hasExpressSession' => Plugin::get_session_value( PayPalExpress::SESSION_KEY_WORKORDERID ) !== null,
+			'setCheckoutUrl'    => Plugin::get_callback_url( [ 'type' => 'ajax-paypal-express-set-checkout' ] ),
+			'buttonImage'       => $paypalExpressGateway ? $paypalExpressGateway->get_button_image_url() : '',
+		];
 		$data['amazonPayConfig']              = [
 			'sdkUrl'                      => 'https://static-eu.payments-amazon.com/checkout.js',
 			'merchantId'                  => $this->getAmazonPayGateway()->get_amazon_merchant_id(),
