@@ -71,7 +71,7 @@ If you have found anything security related, please contact our technical suppor
 
 == Changelog ==
 
-== 2.12.0 ==
+= 2.12.0 =
 
 New Features
 
@@ -96,7 +96,7 @@ Maintenance
 Wordpress version: 7.1.3
 WooCommerce version: 11.2.1
 
-== 2.11.0 ==
+= 2.11.0 =
 
 New Features
 
@@ -108,7 +108,7 @@ Maintenance
 Wordpress version: 6.9.4
 WooCommerce version: 10.6.2
 
-== 2.10.0 ==
+= 2.10.0 =
 
 New Features
 
@@ -120,7 +120,7 @@ Maintenance
 Wordpress version: 6.9.3
 WooCommerce version: 10.6.0
 
-== 2.9.0 ==
+= 2.9.0 =
 
 New Features
 
@@ -133,7 +133,7 @@ Maintenance
 Wordpress version: 6.9.1
 WooCommerce version: 10.5.2
 
-== 2.8.0 ==
+= 2.8.0 =
 
 New Features
  
@@ -148,7 +148,7 @@ Wordpress version: 6.7.1
 WooCommerce version: 9.6.0
 PHP version: 8.3 
 
-== 2.7.0 ==
+= 2.7.0 =
 
 New Features
  
@@ -166,7 +166,7 @@ wordpress version: 6.6
 woocommerce version: 9.1.2
 php version: 8.1
 
-== 2.6.0 ==
+= 2.6.0 =
 
 New Features
  
@@ -181,7 +181,7 @@ Tested with wordpress version: 6.3.1
 woocommerce version: 8.1.1
 php version: 8.1.0 
 
-== 2.5.2 ==
+= 2.5.2 =
 
 New Features
  
@@ -207,7 +207,7 @@ wordpress version: 6.2
 woocommerce version: 7.6.0
 php version: 8.1.0
 
-== 2.4.1 ==
+= 2.4.1 =
 
 Bugfixes
 
@@ -223,7 +223,7 @@ wordpress version: 6.1.1
 woocommerce version: 7.4.0
 php version: 8.1.0
 
-== 2.4.0 ==
+= 2.4.0 =
 
 New Features
 
@@ -242,7 +242,7 @@ wordpress version: 6.1.1
 woocommerce version: 7.4.0
 php version: 8.1.0
 
-== 2.3.0 ==
+= 2.3.0 =
 
 New Features
 
@@ -266,7 +266,7 @@ wordpress version: 6.0.2
 woocommerce version: 6.9.4
 php version: 8.1
 
-== 2.2.0 ==
+= 2.2.0 =
 
 New Features
 
@@ -289,7 +289,7 @@ wordpress version: 6.0.1
 woocommerce version: 6.8.0
 php version: 8.1.0
 
-== 2.1.0 ==
+= 2.1.0 =
 
 New Features
  
@@ -309,13 +309,13 @@ tested with
 wordpress version: 5.9.2
 woocommerce version: 6.4.0
 
-== 2.0.3 ==
+= 2.0.3 =
 
 Bugfixes
 
 * payment method logos are now shown correctly in checkout
 
-== 2.0.0 ==
+= 2.0.0 =
 
 New Features
 
@@ -346,7 +346,7 @@ Tested with:
 wordpress version: 5.9.2
 woocommerce version: 6.3.1
 
-== 1.7.1 ==
+= 1.7.1 =
 
 Bugfixes
 
