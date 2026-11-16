@@ -43,7 +43,7 @@ class PayPalV2 extends Base {
 
 		#$this->set('add_paydata[redirection_mode', 'DIRECT_TO_MERCHANT');
 
-		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'success', 'oid' => $order->get_id() ] ) );
+		$this->set( 'successurl', Plugin::get_success_url( $order, [ 'type' => 'paypalv2', 'a' => 'success' ] ) );
 		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'error', 'oid' => $order->get_id() ] ) );
 		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'paypalv2', 'a' => 'back', 'oid' => $order->get_id() ] ) );
 

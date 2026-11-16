@@ -2,6 +2,8 @@
 
 namespace Payone\Gateway;
 
+use Payone\Plugin;
+
 abstract class RedirectGatewayBase extends GatewayBase {
 
 	/**
@@ -19,12 +21,16 @@ abstract class RedirectGatewayBase extends GatewayBase {
 		$order = new \WC_Order( $order_id );
 
 		if ( $this->is_redirect( 'success' ) ) {
-			// We are back in the shop via the provided successurl
+			// We are back in the shop via the provided successurl. Only PAYONE knows the token
+			// of this URL, so the customer cannot complete the order by calling it directly.
+			if ( ! Plugin::verify_success_token( $order ) ) {
+				Plugin::redirect_after_invalid_success_token( $order, $this );
+			}
 
 			// Log missing appointed flag for this order.
 			// Maybe the shop was too slow returning TSOK for the APPOINTED
 			// TX status notification.
-			if ( $order->get_meta( '_appointed' ) > 0 ) {
+			if ( ! $order->get_meta( '_appointed' ) ) {
 				error_log( "No appointed flag set for order {$order->get_id()} before the customer received the checkout success page." );
 			}
 

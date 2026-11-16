@@ -78,7 +78,7 @@ class SepaDirectDebit extends GatewayBase {
 		$authorization_method = $transaction->get( 'request' );
 		$order->update_meta_data( '_authorization_method', $authorization_method );
 		$order->update_meta_data( '_mandate_identification', $transaction->get( 'mandate_identification' ) );
-		$order->update_meta_data( '_mandate_identification_hash', uniqid( $order_id, true ) );
+		$order->update_meta_data( '_mandate_identification_hash', wp_generate_password( 32, false ) );
 		$order->save_meta_data();
 		$order->save();
 
@@ -143,7 +143,8 @@ class SepaDirectDebit extends GatewayBase {
 				$result = [
 					'status'        => 'pending',
 					'reference'     => $response->get( 'mandate_identification' ),
-					'text'          => urldecode( $response->get( 'mandate_text' ) ),
+					// The mandate text is HTML, only allow the tags of regular post content.
+					'text'          => wp_kses_post( urldecode( $response->get( 'mandate_text' ) ) ),
 					'error_message' => '',
 				];
 			}
@@ -157,9 +158,27 @@ class SepaDirectDebit extends GatewayBase {
 	}
 
 	public function process_manage_mandate_getfile( $data ) {
-		$mandate_identification_hash = isset ( $data['hash'] ) ? $data['hash'] : '';
-		$transaction                 = new \Payone\Transaction\GetFile( $this );
-		$response                    = $transaction->execute( $mandate_identification_hash );
+		$order_id  = isset( $data['oid'] ) ? (int) $data['oid'] : 0;
+		$order_key = isset( $data['key'] ) ? (string) wp_unslash( $data['key'] ) : '';
+		$hash      = isset( $data['hash'] ) ? (string) wp_unslash( $data['hash'] ) : '';
+		$order     = $order_id ? wc_get_order( $order_id ) : false;
+
+		// The download needs the order key and the random mandate hash of the order.
+		$expected_hash = $order ? (string) $order->get_meta( '_mandate_identification_hash' ) : '';
+		if ( ! $order || $order_key === '' || $hash === '' || $expected_hash === ''
+		     || ! hash_equals( $order->get_order_key(), $order_key )
+		     || ! hash_equals( $expected_hash, $hash )
+		) {
+			status_header( 404 );
+			exit;
+		}
+
+		$transaction = new \Payone\Transaction\GetFile( $this );
+		$response    = $transaction->execute( $order );
+		if ( ! $response || $response->has_error() ) {
+			status_header( 404 );
+			exit;
+		}
 
 		header( "Content-type:application/pdf" );
 		header( "Content-Disposition:attachment;filename=SEPA-Lastschriftmandat.pdf" );
@@ -173,10 +192,14 @@ class SepaDirectDebit extends GatewayBase {
 	public function add_content_to_thankyou_page( \WC_Order $order ) {
 		$hash = $order->get_meta( '_mandate_identification_hash' );
 		if ( $hash ) {
-			$url = Plugin::get_callback_url( [ 'type' => 'manage-mandate-getfile' ] );
-			$url .= '&hash=' . $hash;
+			$url = Plugin::get_callback_url( [
+				'type' => 'manage-mandate-getfile',
+				'oid'  => $order->get_id(),
+				'key'  => $order->get_order_key(),
+				'hash' => $hash,
+			] );
 
-			echo '<p><a href="' . $url . '">Ihr SEPA-Mandat als PDF herunterladen</a>';
+			echo '<p><a href="' . esc_url( $url ) . '">Ihr SEPA-Mandat als PDF herunterladen</a>';
 		}
 	}
 

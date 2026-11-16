@@ -47,7 +47,7 @@
         jQuery.post('<?php echo \Payone\Plugin::get_callback_url( [ 'type' => 'ajax-manage-mandate' ] ); ?>', data, function (result) {
             result = jQuery.parseJSON(result);
             if (result.status === 'error') {
-                jQuery('#direct_debit_error').html('<strong style="color:red">' + result.message + '</strong>');
+                jQuery('#direct_debit_error').empty().append(jQuery('<strong style="color:red"></strong>').text(result.message || ''));
             } else if (result.status === 'active') {
                 mandate_identification = result['reference'];
                 document.getElementById("direct_debit_reference").value = result['reference'];

@@ -32,7 +32,7 @@ class Alipay extends Base {
 		$this->add_article_list_to_transaction( $order );
 		$this->set_business_relation( $order );
 
-		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'success', 'oid' => $order->get_id() ] ) );
+		$this->set( 'successurl', Plugin::get_success_url( $order, [ 'type' => 'success' ] ) );
 		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'error', 'oid' => $order->get_id() ] ) );
 		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'back', 'oid' => $order->get_id() ] ) );
 
