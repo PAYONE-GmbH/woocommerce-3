@@ -71,6 +71,20 @@ If you have found anything security related, please contact our technical suppor
 
 == Changelog ==
 
+= 2.12.1 =
+
+Bugfixes
+
+* improved validation of payment return URLs
+* improved SEPA mandate handling and download
+* changelog is shown on wordpress.org again
+
+Maintenance
+
+* tested with
+Wordpress version: 7.1.3
+WooCommerce version: 11.2.1
+
 = 2.12.0 =
 
 New Features
