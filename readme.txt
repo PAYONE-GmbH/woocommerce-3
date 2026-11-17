@@ -1,6 +1,5 @@
 === PAYONE WooCommerce ===
 Contributors: PAYONE
-Donate link: https://www.payone.com/
 Tags: woocommerce, payment
 Requires at least: 5.0
 Tested up to: 11.2.1
@@ -13,35 +12,56 @@ This plugin connects your WooCommerce shop to the PAYONE payment API. You can re
 
 == Description ==
 
-With the PAYONE Plugin for WooCommerce we aim to provide you with an easy to use payment plugin that supports the most relevant payment methods.
-This plugin is thoroughly tested but still in an early stage, so any feedback is very much appreciated.
+Accept the most relevant payment methods in your WooCommerce shop with one plugin and one contract: PAYONE, the leading payment provider in Germany and Austria.
 
-Seamless integration into the checkout. Supports simplified PCI DSS conformity in accordance with SAQ A.
-Currently supported payment methods include:
-* Credit Card
-* PAYONE Direct Debit
-* PayPal
-* PayPal Express
-* PayPal v2
-* PayPal Express v2
-* Amazon Pay Express
-* Amazon Pay
-* PAYONE Open Invoice
-* PAYONE Prepayment
-* Klarna
-* Ratepay
-* P24
-* iDEAL
-* Bancontact
-* Alipay
-* WERO
+= Highlights =
+
+* Works with the WooCommerce cart and checkout blocks as well as with the classic checkout
+* Express checkout buttons for PayPal and Amazon Pay directly in the cart
+* Credit card form with PAYONE Hosted Tokenization, automatic card type detection and Click to Pay
+* SEPA Direct Debit with the mandate shown right in the checkout
+* Capture and refund payments from the WooCommerce order screen
+* Seamless integration into the checkout, supports simplified PCI DSS conformity in accordance with SAQ A
+* Test mode for setting up and testing your shop
+
+= Supported payment methods =
+
+**Cards and wallets**
+
+* Credit Card (Visa, Mastercard, American Express) incl. Click to Pay
+* PayPal and PayPal Express
+* Amazon Pay and Amazon Pay Express
 * Google Pay
 
-PAYONE GmbH is headquartered in Frankfurt am Main and is one of the leading omnichannel-payment providers in Europe. In addition to providing customer support to numerous Savings Banks (Sparkasse) the full-service payment service provider also provides cashless payment transaction services to more than 255,000 customers from stationary trade to the automated and holistic processing of e-commerce and mobile payments.
+**Bank transfer and direct debit**
+
+* SEPA Direct Debit
+* Prepayment
+* Wero
+* iDEAL
+* Bancontact
+* eps
+* Przelewy24
+
+**Invoice and installments**
+
+* Invoice
+* Klarna (Invoice, Installments, Pay Now)
+* Ratepay (Invoice, Direct Debit, Installments)
+
+**International**
+
+* Alipay
+
+= About PAYONE =
+
+With more than 277,000 customers and 7.65 billion transactions processed a year, PAYONE is the leading payment provider in Germany and Austria. In stationary shops, mobile or online - PAYONE helps merchants and service providers address the challenges of cashless payment. As a full-service payment provider, PAYONE ensures quick, easy and reliable digital payment processes. Even beyond payment, PAYONE develops customised solutions for all industries and company sizes. PAYONE is a joint venture of Worldline and the DSV Group (Deutscher Sparkassenverlag).
+
+For more information visit https://www.payone.com
 
 *To use this extension, a separate account with PAYONE is required. Additional costs incur. To create the account, please contact us through https://www.payone.com/en/contact/request-a-quote/.*
 
-You are very welcome to contribute to this plugin on Github: https://github.com/PAYONE-GmbH/woocommerce-3
+You are very welcome to contribute to this plugin on GitHub: https://github.com/PAYONE-GmbH/woocommerce-3
 
 == Installation ==
 
@@ -68,6 +88,11 @@ Please report all bugs on our Github repository at https://github.com/PAYONE-Gmb
 If you have found anything security related, please contact our technical support team, or integrations@payone.com. Please bear in mind that support requests cannot be handled through that email address. We appreciate your cooperation.
 
 == Screenshots ==
+
+1. Credit card form with PAYONE Hosted Tokenization in the checkout block
+2. SEPA Direct Debit: the mandate is shown right after entering the IBAN
+3. PayPal Express buttons in the cart
+4. Payment method settings in the WooCommerce admin
 
 == Changelog ==
 
