@@ -37,7 +37,7 @@ class AmazonPayExpress extends Base {
 		$this->set_personal_data_from_order( $order );
 		$this->set_shipping_data_from_order( $order );
 
-		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'success', 'oid' => $order->get_id() ] ) );
+		$this->set( 'successurl', Plugin::get_success_url( $order, [ 'type' => 'amazonpay', 'a' => 'success' ] ) );
 		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'error', 'oid' => $order->get_id() ] ) );
 		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'back', 'oid' => $order->get_id() ] ) );
 

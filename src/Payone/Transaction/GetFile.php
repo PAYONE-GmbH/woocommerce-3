@@ -15,25 +15,19 @@ class GetFile extends Base {
 		$this->set( 'file_format', 'PDF' );
 	}
 
-	public function execute( $mandate_identification_hash ) {
-		$args = [
-			'post_type'    => 'shop_order',
-			'post_status'  => 'any',
-			'meta_key'     => '_mandate_identification_hash',
-			'meta_value'   => $mandate_identification_hash,
-			'meta_compare' => '=',
-		];
-
-		$query = new \WP_Query( $args );
-		$posts = $query->get_posts();
-		if ( isset( $posts[0] ) ) {
-			$post  = $posts[0];
-			$order = wc_get_order( $post->ID );
-			$this->set( 'file_reference', $order->get_meta( '_mandate_identification' ) );
-
-			return $this->submit();
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @return \Payone\Payone\Api\Response|null
+	 */
+	public function execute( \WC_Order $order ) {
+		$mandate_identification = $order->get_meta( '_mandate_identification' );
+		if ( ! $mandate_identification ) {
+			return null;
 		}
 
-		return null;
+		$this->set( 'file_reference', $mandate_identification );
+
+		return $this->submit();
 	}
 }

@@ -43,7 +43,7 @@ class AmazonPay extends Base {
 		$this->set( 'add_paydata[checkoutMode]', 'ProcessOrder' );
 		$this->set( 'add_paydata[productType]', 'PayAndShip' );
 
-		$this->set( 'successurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'success', 'oid' => $order->get_id() ] ) );
+		$this->set( 'successurl', Plugin::get_success_url( $order, [ 'type' => 'amazonpay', 'a' => 'success' ] ) );
 		$this->set( 'errorurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'error', 'oid' => $order->get_id() ] ) );
 		$this->set( 'backurl', Plugin::get_callback_url( [ 'type' => 'amazonpay', 'a' => 'back', 'oid' => $order->get_id() ] ) );
 

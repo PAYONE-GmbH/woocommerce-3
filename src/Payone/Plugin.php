@@ -200,6 +200,70 @@ class Plugin {
 	 *
 	 * @return string
 	 */
+	/**
+	 * Order meta key of the secret token that is part of the success URL sent to PAYONE.
+	 */
+	const SUCCESS_TOKEN_META_KEY = '_payone_success_token';
+
+	/**
+	 * Builds the success URL for a redirect payment. The URL contains a random token that is only
+	 * known to PAYONE, so a customer cannot mark an order as paid by calling the URL directly.
+	 *
+	 * @param \WC_Order $order
+	 * @param array     $query
+	 *
+	 * @return string
+	 */
+	public static function get_success_url( \WC_Order $order, array $query ) {
+		$token = wp_generate_password( 32, false );
+		$order->update_meta_data( self::SUCCESS_TOKEN_META_KEY, $token );
+		$order->save_meta_data();
+
+		$query['oid']    = $order->get_id();
+		$query['ptoken'] = $token;
+
+		return self::get_callback_url( $query );
+	}
+
+	/**
+	 * Checks the token of a success URL and invalidates it, so the URL can only be used once.
+	 *
+	 * @param \WC_Order $order
+	 *
+	 * @return bool
+	 */
+	public static function verify_success_token( \WC_Order $order ) {
+		$expected = (string) $order->get_meta( self::SUCCESS_TOKEN_META_KEY );
+		$given    = isset( $_GET['ptoken'] ) ? (string) wp_unslash( $_GET['ptoken'] ) : '';
+
+		if ( $expected === '' || $given === '' || ! hash_equals( $expected, $given ) ) {
+			return false;
+		}
+
+		$order->delete_meta_data( self::SUCCESS_TOKEN_META_KEY );
+		$order->save_meta_data();
+
+		return true;
+	}
+
+	/**
+	 * Handles a success URL with a missing or invalid token: orders that are already paid lead to
+	 * the thank-you page, all others back to the checkout. The order itself is not changed.
+	 *
+	 * @param \WC_Order        $order
+	 * @param \WC_Payment_Gateway $gateway
+	 */
+	public static function redirect_after_invalid_success_token( \WC_Order $order, $gateway ) {
+		if ( $order->is_paid() || $order->has_status( 'on-hold' ) ) {
+			wp_redirect( $gateway->get_return_url( $order ) );
+			exit;
+		}
+
+		wc_add_notice( __( 'Payment error: ', 'payone-woocommerce-3' ) . __( 'Payment provider returned error', 'payone-woocommerce-3' ), 'error' );
+		wp_redirect( wc_get_checkout_url() );
+		exit;
+	}
+
 	public static function get_callback_url( array $query ) {
 		if ( get_option( 'permalink_structure' ) === '' ) {
 			$url = site_url() . '/?wc-api=payoneplugin';
@@ -843,6 +907,9 @@ class Plugin {
 
 					$order_id = (int) $_GET['oid'];
 					$order    = new \WC_Order( $order_id );
+					if ( ! self::verify_success_token( $order ) ) {
+						self::redirect_after_invalid_success_token( $order, $gateway );
+					}
 					if ( $order->get_status() === 'pending' ) {
 						$gateway->process_success( $order_id );
 					}
@@ -897,6 +964,9 @@ class Plugin {
 				case 'express-success':
 					$order_id = (int) $_GET['oid'];
 					$order    = new \WC_Order( $order_id );
+					if ( ! self::verify_success_token( $order ) ) {
+						self::redirect_after_invalid_success_token( $order, $gateway );
+					}
 					if ( $order->get_status() === 'pending' ) {
 						$gateway->process_success( $order_id );
 					}
@@ -909,6 +979,9 @@ class Plugin {
 
 					$order_id = (int) $_GET['oid'];
 					$order    = new \WC_Order( $order_id );
+					if ( ! self::verify_success_token( $order ) ) {
+						self::redirect_after_invalid_success_token( $order, $gateway );
+					}
 					if ( $order->get_status() === 'pending' ) {
 						$gateway->process_success( $order_id );
 					}
